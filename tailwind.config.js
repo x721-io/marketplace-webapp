@@ -30,7 +30,40 @@ module.exports = {
         buttonSecondary: colors.gray[100],
         tab: colors.gray[0]
       },
-      fontSize: {}
+      fontSize: {
+        'heading-xl': ['64px', {
+          lineHeight: '77px',
+          letterSpacing: '-1px'
+        }],
+        'heading-md': ['40px', {
+          lineHeight: '48px',
+          letterSpacing: '-1px'
+        }],
+        'heading-sm': ['32px', {
+          lineHeight: '38px',
+          letterSpacing: '-0.5px'
+        }],
+        'heading-xs': ['24px', {
+          lineHeight: '24px',
+          letterSpacing: '-0.5px'
+        }],
+        'body-xl': ['18px', {
+          lineHeight: '28px',
+          letterSpacing: '0px'
+        }],
+        'body-lg': ['16px', {
+          lineHeight: '24px',
+          letterSpacing: '0px'
+        }],
+        'body-md': ['14px', {
+          lineHeight: '21px',
+          letterSpacing: '0px'
+        }],
+        'body-sm': ['12px', {
+          lineHeight: '18px',
+          letterSpacing: '0px'
+        }],
+      }
     }
   },
   plugins: [
