@@ -3,6 +3,7 @@
 import { useAccount, useConnect } from "wagmi";
 import { useAuth } from '@/hooks/useAuth'
 import Button from '@/components/Button'
+import Text from '@/components/Text'
 
 export default function Home() {
   const { connector: activeConnector, isConnected } = useAccount()
@@ -12,9 +13,9 @@ export default function Home() {
   return (
     <>
       {isConnected && <div>Connected to {activeConnector?.name}</div>}
-      <Button variant="secondary">
+      <Text className="font-bold text-white" variant="body-14">
         disabled
-      </Button>
+      </Text>
       {connectors.map((connector) => (
         <Button
           key={connector.id}

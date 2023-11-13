@@ -49,3 +49,38 @@ export const colors = {
     '900': '#677706'
   },
 }
+
+export const typography = {
+  'heading-xl': ['64px', {
+    lineHeight: '77px',
+    letterSpacing: '-1px'
+  }],
+  'heading-md': ['40px', {
+    lineHeight: '48px',
+    letterSpacing: '-1px'
+  }],
+  'heading-sm': ['32px', {
+    lineHeight: '38px',
+    letterSpacing: '-0.5px'
+  }],
+  'heading-xs': ['24px', {
+    lineHeight: '24px',
+    letterSpacing: '-0.5px'
+  }],
+  'body-18': ['18px', {
+    lineHeight: '28px',
+    letterSpacing: '0px'
+  }],
+  'body-16': ['16px', {
+    lineHeight: '24px',
+    letterSpacing: '0px'
+  }],
+  'body-14': ['14px', {
+    lineHeight: '21px',
+    letterSpacing: '0px'
+  }],
+  'body-12': ['12px', {
+    lineHeight: '18px',
+    letterSpacing: '0px'
+  }],
+}

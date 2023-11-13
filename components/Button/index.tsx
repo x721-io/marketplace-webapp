@@ -6,7 +6,6 @@ import { classNames } from '@/utils/string'
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'secondary' | 'text'
-  children?: React.ReactNode
 }
 
 export default function Button({ size, variant, children, disabled, ...rest }: Props) {
