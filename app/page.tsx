@@ -12,9 +12,9 @@ export default function Home() {
   return (
     <>
       {isConnected && <div>Connected to {activeConnector?.name}</div>}
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <Button variant="secondary">
+        disabled
+      </Button>
       {connectors.map((connector) => (
         <Button
           key={connector.id}

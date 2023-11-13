@@ -23,11 +23,11 @@ module.exports = {
         disabled: colors.gray[200]
       },
       backgroundColor: {
-        surfaceSoft: colors.gray[100],
-        surfaceMedium: colors.gray[200],
-        surfaceHard: colors.gray[500],
+        'surface-soft': colors.gray[100],
+        'surface-medium': colors.gray[200],
+        'surface-hard': colors.gray[500],
         button: colors.gray[900],
-        buttonSecondary: colors.gray[100],
+        'button-secondary': colors.gray[100],
         tab: colors.gray[0]
       },
       fontSize: {
@@ -47,19 +47,19 @@ module.exports = {
           lineHeight: '24px',
           letterSpacing: '-0.5px'
         }],
-        'body-xl': ['18px', {
+        'body-18': ['18px', {
           lineHeight: '28px',
           letterSpacing: '0px'
         }],
-        'body-lg': ['16px', {
+        'body-16': ['16px', {
           lineHeight: '24px',
           letterSpacing: '0px'
         }],
-        'body-md': ['14px', {
+        'body-14': ['14px', {
           lineHeight: '21px',
           letterSpacing: '0px'
         }],
-        'body-sm': ['12px', {
+        'body-12': ['12px', {
           lineHeight: '18px',
           letterSpacing: '0px'
         }],
