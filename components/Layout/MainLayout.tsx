@@ -3,6 +3,8 @@
 import { useNetwork } from 'wagmi'
 import { useEffect } from 'react'
 import { CHAIN_ID } from '@/config/constants'
+import MainHeader from '@/components/Layout/MainHeader'
+import MainFooter from '@/components/Layout/MainFooter'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { chain } = useNetwork()
@@ -15,7 +17,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <main>
-      {children}
+      <div className="flex flex-col min-h-screen">
+        <MainHeader />
+        <div className="px-7 flex-1">
+          {children}
+        </div>
+        <MainFooter />
+      </div>
     </main>
   )
 };

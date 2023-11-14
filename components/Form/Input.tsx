@@ -27,7 +27,7 @@ export default function Input({
   className,
   ...rest
 }: Props) {
-  const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] flex-1'
+  const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full'
 
   const scaleClass = useMemo(() => {
     switch (scale) {
@@ -40,7 +40,7 @@ export default function Input({
       case 'md':
       default:
         return classNames(
-          'text-body-16 rounded-2xl min-w-72 h-14 p-3',
+          'text-body-14 rounded-2xl min-w-72 h-12 p-3',
           !!prependIcon && 'ps-10',
           !!appendIcon && 'pe-10'
         )
@@ -59,7 +59,7 @@ export default function Input({
   }, [success, error])
 
   return (
-    <div className={classNames(containerClass, 'flex items-center relative w-auto')}>
+    <div className={classNames('flex items-center relative w-auto', containerClass)}>
       {
         !!prependIcon && (
           <div className={classNames("absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none", prependIconContainerClass)}>

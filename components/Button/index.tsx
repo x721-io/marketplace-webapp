@@ -5,7 +5,7 @@ import { classNames } from '@/utils/string'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
-  variant?: 'primary' | 'secondary' | 'text'
+  variant?: 'primary' | 'secondary' | 'text' | 'icon'
 }
 
 export default function Button({ scale, variant, children, disabled, ...rest }: Props) {
@@ -16,17 +16,28 @@ export default function Button({ scale, variant, children, disabled, ...rest }: 
   const scaleClass = useMemo(() => {
     switch (scale) {
       case "lg":
-        return 'px-6 py-3.5 h-[52px] min-w-40 text-body-18 rounded-xl'
+        return classNames(
+          'h-[52px] min-w-40 text-body-18 rounded-xl',
+          variant === 'icon' ? 'p-4' : 'px-6 py-3.5'
+        )
       case "sm":
-        return 'px-4 py-2 h-9 min-w-[120px] text-body-14 rounded-lg'
+        return classNames(
+          'h-9 min-w-[120px] text-body-14 rounded-lg',
+          variant === 'icon' ? 'p-3' : 'px-4 py-2'
+        )
       case "md":
       default:
-        return 'px-5 py-3 h-11 min-w-[120px] text-body-14 rounded-xl'
+        return classNames(
+          'h-11 min-w-[120px] text-body-14 rounded-xl',
+          variant === 'icon' ? 'p-3' : 'px-5 py-3'
+        )
     }
-  }, [scale])
+  }, [scale, variant])
 
   const variantClass = useMemo(() => {
     switch (variant) {
+      case 'icon':
+        return 'bg-surface-soft'
       case 'text':
         if (disabled) return 'text-disabled'
         return 'bg-transparent text-primary'
