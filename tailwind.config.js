@@ -30,6 +30,12 @@ module.exports = {
         'button-secondary': colors.gray[100],
         tab: colors.gray[0]
       },
+      borderColor: {
+        primary: colors.gray[800],
+        secondary: colors.gray[600],
+        tertiary: colors.gray[400],
+        disabled: colors.gray[200]
+      },
       fontSize: {
         ...typography
       }

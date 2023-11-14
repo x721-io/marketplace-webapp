@@ -14,7 +14,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [chain])
 
   return (
-    <main className="bg-primary">
+    <main>
       {children}
     </main>
   )
