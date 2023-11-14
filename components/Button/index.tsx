@@ -17,19 +17,19 @@ export default function Button({ scale, variant, children, disabled, ...rest }: 
     switch (scale) {
       case "lg":
         return classNames(
-          'h-[52px] min-w-40 text-body-18 rounded-xl',
-          variant === 'icon' ? 'p-4' : 'px-6 py-3.5'
+          'text-body-18 rounded-xl',
+          variant === 'icon' ? 'p-4' : 'px-6 py-3.5 h-[52px] min-w-40'
         )
       case "sm":
         return classNames(
-          'h-9 min-w-[120px] text-body-14 rounded-lg',
-          variant === 'icon' ? 'p-3' : 'px-4 py-2'
+          'text-body-14 rounded-lg',
+          variant === 'icon' ? 'p-3' : 'px-4 py-2 h-9 min-w-[120px]'
         )
       case "md":
       default:
         return classNames(
-          'h-11 min-w-[120px] text-body-14 rounded-xl',
-          variant === 'icon' ? 'p-3' : 'px-5 py-3'
+          'text-body-14 rounded-xl',
+          variant === 'icon' ? 'p-3' : 'px-5 py-3 h-11 min-w-[120px]'
         )
     }
   }, [scale, variant])
@@ -53,7 +53,6 @@ export default function Button({ scale, variant, children, disabled, ...rest }: 
 
   return (
     <button
-      type="button"
       disabled={disabled}
       className={classNames(baseClass, scaleClass, variantClass)}
       {...rest}
