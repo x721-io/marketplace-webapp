@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { classNames } from '@/utils/string'
+import Input from '@/components/Form/Input'
+import Icon from '@/components/Icon'
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: { label: string, value: any }[]
@@ -14,15 +16,10 @@ export default function Select({ className, options = [], ...rest }: Props) {
   }, [className])
 
   return (
-    <select className={selectClass} {...rest}>
-      {options.map(option => (
-        <option
-          key={option.value}
-          value={option.value}
-        >
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div>
+      <Input
+        appendIcon={<Icon name="" />}
+      />
+    </div>
   )
 }
