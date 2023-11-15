@@ -4,6 +4,8 @@ import { useMemo } from 'react'
 
 import BurgerIcon from './Burger'
 import ChevronDownIcon from './ChevronDown'
+import UploadIcon from './Upload'
+import CircleIcon from './Circle'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -24,6 +26,10 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevron-down':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
+      case 'upload':
+        return <UploadIcon width={iconW} height={iconH} {...rest} />
+      case 'circle':
+        return <CircleIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }
