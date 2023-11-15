@@ -1,9 +1,5 @@
 "use client"
 
-import { useAccount, useConnect } from "wagmi";
-import { useAuth } from '@/hooks/useAuth'
-import Button from '@/components/Button'
-import Text from '@/components/Text'
 import Select from '@/components/Form/Select'
 import React, { useState } from 'react'
 import Input from '@/components/Form/Input'
@@ -23,7 +19,6 @@ export default function Home() {
           value={text}
           onChange={event => setText(event.target.value)}
         />
-
       </div>
 
       <Select
@@ -32,6 +27,8 @@ export default function Home() {
         onChange={e => setSelected(e.target.value)}
         prependIcon={<Icon name="u2u-logo" />}
       />
+
+      <Link href={'/connect'}>Connect</Link>
     </div>
   )
 }

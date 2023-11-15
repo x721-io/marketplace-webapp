@@ -1,33 +1,24 @@
-import { Connector, useAccount, useConnect, useSignMessage } from "wagmi";
-import { useCallback } from "react";
-import { SIGN_MESSAGE } from '@/config/constants'
+import { useAccount } from "wagmi";
 import API from '@/services/api/auth'
+import { sleep } from '@/utils'
 
 export const useAuth = () => {
-  const { connector: activeConnector, isConnected } = useAccount()
-  const { connect } = useConnect()
-  const { data, isError, isLoading: isSigning, isSuccess, signMessage } = useSignMessage({
-    message: SIGN_MESSAGE.LOGIN(new Date().toISOString())
-  })
+  const { address, isConnected } = useAccount()
 
-  const onConnect = useCallback(async (connector: Connector) => {
-    if (isConnected) return
-    connect({ connector })
-
-    const date = new Date().toISOString()
+  const onAuth = async (date: string, message: `0x${string}`) => {
+    if (!address) return
 
     const res = await API.connect({
       proxy: true,
       date,
-      publicKey: "publicKey",
-      signature: "signature",
-      signer: "signer"
+      publicKey: address,
+      signature: message,
+      signer: address.toLowerCase()
     })
-
-    console.log(res)
-  }, [isConnected, connect])
+    await sleep(1000)
+  }
 
   return {
-    onConnect
+    onAuth
   }
 }

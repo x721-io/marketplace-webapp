@@ -11,8 +11,7 @@ import { useAuth } from '@/hooks/useAuth'
 
 export default function TestPage() {
   const { connector: activeConnector, isConnected } = useAccount()
-  const { onConnect } = useAuth()
-  const { connectors, error: walletError, isLoading, pendingConnector } = useConnect()
+  const { connect, connectors, error: walletError, isLoading, pendingConnector } = useConnect()
 
   const contractOptions = Object.entries(contracts).map(([name, contract]) => {
     return { value: contract.address, label: name }
@@ -92,7 +91,7 @@ export default function TestPage() {
         {connectors.map((connector) => (
           <Button
             key={connector.id}
-            onClick={() => onConnect(connector)}
+            onClick={() => connect({ connector })}
           >
             {connector.name}
             {isLoading &&

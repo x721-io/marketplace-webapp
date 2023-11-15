@@ -5,6 +5,7 @@ import Input from '@/components/Form/Input'
 import { useState } from 'react'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
+import ConnectWalletButton from '@/components/Button/ConnectWallet'
 
 export default function MainHeader() {
   const [searchString, setSearchString] = useState('')
@@ -47,7 +48,7 @@ export default function MainHeader() {
         </div>
 
         <div className="hidden desktop:flex gap-4 items-center">
-          <Button>Connect wallet</Button>
+          <ConnectWalletButton />
           {/*<Button variant="icon"></Button>*/}
         </div>
 

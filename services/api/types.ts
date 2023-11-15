@@ -8,8 +8,8 @@ export namespace ApiParams {
 
   export interface Connect extends BaseParams {
     date: string
-    publicKey: string
-    signature: string
+    publicKey: `0x${string}`
+    signature: `0x${string}`
     signer: string
   }
 
