@@ -1,8 +1,8 @@
 import { Address } from 'wagmi'
-import erc721ABI from '@/abi/erc721.json'
-import erc721Factory from '@/abi/erc721-factory.json'
-import erc1155ABI from '@/abi/erc1155.json'
-import erc1155FactoryABI from '@/abi/erc1155-factory.json'
+import erc721ABI from '@/abi/ERC721Proxy.json'
+import erc721Factory from '@/abi/ERC721Factory.json'
+import erc1155ABI from '@/abi/ERC1155Proxy.json'
+import erc1155FactoryABI from '@/abi/ERC1155Factory.json'
 
 export type Contract = {
   address: Address,

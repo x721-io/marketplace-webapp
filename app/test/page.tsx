@@ -2,13 +2,18 @@
 
 import { contracts } from '@/config/contracts'
 import Select from '@/components/Form/Select'
-import { useMemo, useState } from 'react'
-import { Address, useContractRead, useContractWrite } from 'wagmi'
+import React, { useMemo, useState } from 'react'
+import { Address, useAccount, useConnect, useContractRead, useContractWrite } from 'wagmi'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import Input from '@/components/Form/Input'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function TestPage() {
+  const { connector: activeConnector, isConnected } = useAccount()
+  const { onConnect } = useAuth()
+  const { connectors, error: walletError, isLoading, pendingConnector } = useConnect()
+
   const contractOptions = Object.entries(contracts).map(([name, contract]) => {
     return { value: contract.address, label: name }
   })
@@ -59,7 +64,8 @@ export default function TestPage() {
   } = useContractWrite({
     address: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
     abi: selectedContract?.abi,
-    functionName: executeFuncName
+    functionName: executeFuncName,
+    args: args.filter(Boolean)
   })
 
   const response = useMemo(() => {
@@ -76,6 +82,29 @@ export default function TestPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {isConnected && <div>Connected to {activeConnector?.name}</div>}
+      <Text className="font-bold text-white" variant="body-14">
+        disabled
+      </Text>
+
+
+      <div className="inline-flex gap-4">
+        {connectors.map((connector) => (
+          <Button
+            key={connector.id}
+            onClick={() => onConnect(connector)}
+          >
+            {connector.name}
+            {isLoading &&
+              pendingConnector?.id === connector.id &&
+              ' (connecting)'}
+          </Button>
+
+        ))}
+      </div>
+
+
+      {walletError && <div>{walletError.message}</div>}
       <Select
         value={selectedContractAddr}
         onChange={e => setSelectedContractAddr(e.target.value as Address)}
@@ -83,7 +112,7 @@ export default function TestPage() {
       />
 
       <div className="flex gap-4">
-        <div className="w-40 flex flex-col gap-2">
+        <div className="w-56 flex flex-col gap-2 max-h-96 overflow-scroll">
           <Text variant="heading-md">
             functions
           </Text>
@@ -92,10 +121,10 @@ export default function TestPage() {
             Mutable
           </Text>
           {
-            mutableFunctions.map((item: any) => (
+            mutableFunctions.map((item: any, index: number) => (
               <Button
                 variant={item.name === mutableFuncName ? 'primary' : 'secondary'}
-                key={item.name}
+                key={index}
                 onClick={() => {
                   setMutableFuncName(item.name)
                   setViewFunctionName('')
@@ -112,10 +141,10 @@ export default function TestPage() {
             View
           </Text>
           {
-            viewFunctions.map((item: any) => (
+            viewFunctions.map((item: any, index: number) => (
               <Button
                 variant={item.name === viewFunctionName ? 'primary' : 'secondary'}
-                key={item.name}
+                key={index}
                 onClick={() => {
                   setViewFunctionName(item.name)
                   setMutableFuncName('')
@@ -137,7 +166,7 @@ export default function TestPage() {
             inputs.map((item: any, index: number) => {
 
               return (
-                <div key={item.name}>
+                <div key={index}>
                   <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     {item.name}
                   </label>
@@ -162,7 +191,7 @@ export default function TestPage() {
           </Text>
           <Button onClick={() => {
             setExecuteFuncName(viewFunctionName || mutableFuncName)
-            if (mutableFuncName) setTimeout(() => write(), 10)
+            if (mutableFuncName) setTimeout(() => write(), 100)
           }}>
             {(isMutating || isViewing) ? 'Loading...' : 'Execute'}
           </Button>
