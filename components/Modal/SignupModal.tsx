@@ -23,14 +23,14 @@ export default function SignupModal({ show, onClose }: ModalProps) {
   return (
     <Modal dismissible show={show} onClose={onClose} size="lg">
       <Modal.Body>
-        <div className="w-[400px] mx-auto flex flex-col gap-8 py-8">
+        <div className="max-w-[400px] mx-auto flex flex-col gap-8 py-8">
           <Text className="font-semibold text-primary text-center" variant="heading-md">
             Sign-up to U2 NFT!
           </Text>
           <Text className="text-secondary text-center" variant="body-18">
             Choose a display name and enter your
             email address to receive updates when
-            your NFTS sell or receive offers.
+            your NFTs sell or receive offers.
           </Text>
 
           <div className="flex flex-col gap-5">
