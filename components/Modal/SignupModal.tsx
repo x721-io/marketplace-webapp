@@ -1,28 +1,34 @@
-"use client"
-
 import { Checkbox, Label, Modal, ModalProps } from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import { useState } from 'react'
 import Button from '@/components/Button'
 import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
+import { sleep } from '@/utils'
 
-export default function SignupModal({ show, onClose }: ModalProps) {
-  const router = useRouter()
+interface Props extends ModalProps {
+  onSignupSuccess?: () => void
+}
+
+export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const { onUpdateProfile } = useAuth()
-  
+
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [isSigningUp, setIsSigningUp] = useState(false)
 
   const handleSignup = async () => {
     if (!acceptedTerms) return
     try {
+      setIsSigningUp(true)
       await onUpdateProfile({ username, email, acceptedTerms })
-      router.push('/')
+      await sleep(500)
+      onSignupSuccess && onSignupSuccess()
     } catch (e) {
       console.error('Error signing up:', e)
+    } finally {
+      setIsSigningUp(false)
     }
   }
 
@@ -65,7 +71,7 @@ export default function SignupModal({ show, onClose }: ModalProps) {
           </div>
 
           <div className="flex flex-col gap-5">
-            <Button disabled={!acceptedTerms} onClick={handleSignup}>
+            <Button loading={isSigningUp} loadingText="Signing up" disabled={!acceptedTerms} onClick={handleSignup}>
               Finish sign-up
             </Button>
             <Button variant="secondary" onClick={onClose}>

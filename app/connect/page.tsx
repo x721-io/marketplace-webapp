@@ -8,8 +8,10 @@ import Icon from '@/components/Icon'
 import SignConnectMessageModal from '@/components/Modal/SignConnectMessageModal'
 import SignupModal from '@/components/Modal/SignupModal'
 import { sleep } from '@/utils'
+import { useRouter } from 'next/navigation'
 
 export default function ConnectPage() {
+  const router = useRouter()
   const { connect, connectors, pendingConnector, isLoading } = useConnect()
   const { isConnected } = useAccount()
   const [showSignMessage, setShowSignMessage] = useState(false)
@@ -47,7 +49,7 @@ export default function ConnectPage() {
                     <div
                       key={connector.id}
                       className="cursor-pointer px-6 py-4 border border-gray-200 rounded-[20px]
-                  flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-none"
+                      flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-none"
                       onClick={() => handleConnect(connector)}
                     >
                       {connector.ready ? <Icon name={connector.id} width={40} height={40} /> : <Spinner size="xl" />}
@@ -70,6 +72,7 @@ export default function ConnectPage() {
         onClose={() => setShowSignMessage(false)} />
       <SignupModal
         show={showSignup}
+        onSignupSuccess={() => router.push('/')}
         onClose={() => setShowSignup(false)} />
     </>
   )
