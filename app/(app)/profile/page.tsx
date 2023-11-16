@@ -1,4 +1,3 @@
-
 import Button from '@/components/Button';
 import Input from '@/components/Form/Input';
 import Textarea from '@/components/Form/Textarea';
@@ -11,9 +10,7 @@ import u2uWalletSvg from '@/assets/u2uWallet.svg'
 import cryptoSvg from '@/assets/crypto.svg'
 import UploadIcon from '@/components/Icon/Upload';
 
-
 export default function ProfilePage () { 
-
     return(
         <div className="w-full relative flex flex-col items-center py-10 tablet:p-10 mobile:py-16 mobile:px-4">
             <div className="bg-cover rounded-2xl relative w-full h-[180px]" 
@@ -25,10 +22,8 @@ export default function ProfilePage () {
                         <UploadIcon />
                     </button>
                 </div>
-
             </div>
             <div className='w-full block mt-[78px] mobile:mt-[86px]'>
-
                 <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                     <ul className="flex flex-wrap -mb-px">
                         <li className="me-2">
@@ -162,7 +157,7 @@ export default function ProfilePage () {
                                     <Text className='text-secondary text-body-12'>When someone purchased one of your items</Text>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" checked/>
+                                    <input type="checkbox" value="" className="sr-only peer"/>
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
@@ -172,7 +167,7 @@ export default function ProfilePage () {
                                     <Text className='text-secondary text-body-12'>When someone bids on one of your items</Text>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" checked/>
+                                    <input type="checkbox" value="" className="sr-only peer"/>
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
@@ -182,7 +177,7 @@ export default function ProfilePage () {
                                     <Text className='text-secondary text-body-12'>When an item you made an offer on changes in price</Text>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" checked/>
+                                    <input type="checkbox" value="" className="sr-only peer"/>
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
@@ -192,7 +187,7 @@ export default function ProfilePage () {
                                     <Text className='text-secondary text-body-12'>When a timed auction you created ends</Text>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" checked/>
+                                    <input type="checkbox" value="" className="sr-only peer"/>
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
@@ -212,7 +207,7 @@ export default function ProfilePage () {
                                     <Text className='text-secondary text-body-12'>When you successfully buy an item</Text>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" checked/>
+                                    <input type="checkbox" value="" className="sr-only peer"/>
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
