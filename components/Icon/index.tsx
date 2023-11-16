@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import U2ULogo from './U2ULogo'
 import BurgerIcon from './Burger'
 import ChevronDownIcon from './ChevronDown'
+import UploadIcon from './Upload'
+import CircleIcon from './Circle'
 import MetamaskIcon from './Metamask'
 import WalletConnectIcon from './WalletConnect'
 
@@ -29,6 +31,10 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevronDown':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
+      case 'upload':
+        return <UploadIcon width={iconW} height={iconH} {...rest} />
+      case 'circle':
+        return <CircleIcon width={iconW} height={iconH} {...rest} />
       case 'metaMask':
       case 'injected':
         return <MetamaskIcon width={iconW} height={iconH} {...rest} />
