@@ -16,14 +16,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [chain])
 
   return (
-    <main>
-      <div className="flex flex-col min-h-screen">
-        <MainHeader />
-        <div className="px-7 flex-1">
-          {children}
-        </div>
-        <MainFooter />
+    <main className="flex flex-col min-h-screen">
+      <MainHeader />
+      <div className="px-7 flex-1">
+        {children}
       </div>
+      <MainFooter />
     </main>
   )
 };

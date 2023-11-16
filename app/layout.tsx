@@ -7,6 +7,7 @@ import MainLayout from "@/components/Layout/MainLayout";
 import Providers from '@/components/Providers'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
+import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,9 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <body className={inter.className}>
     <ErrorBoundary>
       <Providers>
-        <MainLayout>
-          {children}
-        </MainLayout>
+        {children}
         <ToastContainer />
       </Providers>
     </ErrorBoundary>

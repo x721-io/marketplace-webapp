@@ -3,14 +3,14 @@
 import { useMemo } from 'react'
 import { classNames } from '@/utils/string'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'secondary' | 'text' | 'icon'
 }
 
-export default function Button({ scale, variant, children, disabled, ...rest }: Props) {
+export default function Button({ className, scale, variant, children, disabled, ...rest }: ButtonProps) {
   const baseClass = useMemo(() => {
-    return `focus:outline-none ${disabled ? 'cursor-not-allowed' : 'cursor-pointer '}`
+    return `focus:outline-none transition-all ${disabled ? 'cursor-not-allowed' : 'cursor-pointer '}`
   }, [disabled])
 
   const scaleClass = useMemo(() => {
@@ -54,7 +54,7 @@ export default function Button({ scale, variant, children, disabled, ...rest }: 
   return (
     <button
       disabled={disabled}
-      className={classNames(baseClass, scaleClass, variantClass)}
+      className={classNames(baseClass, scaleClass, variantClass, className)}
       {...rest}
     >
       {children}

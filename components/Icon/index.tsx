@@ -7,6 +7,8 @@ import BurgerIcon from './Burger'
 import ChevronDownIcon from './ChevronDown'
 import UploadIcon from './Upload'
 import CircleIcon from './Circle'
+import MetamaskIcon from './Metamask'
+import WalletConnectIcon from './WalletConnect'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -27,12 +29,20 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <U2ULogo width={iconW} height={iconH} />
       case 'burger':
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
-      case 'chevron-down':
+      case 'chevronDown':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
+<<<<<<< HEAD
       case 'upload':
         return <UploadIcon width={iconW} height={iconH} {...rest} />
       case 'circle':
         return <CircleIcon width={iconW} height={iconH} {...rest} />
+=======
+      case 'metaMask':
+      case 'injected':
+        return <MetamaskIcon width={iconW} height={iconH} {...rest} />
+      case 'walletConnect':
+        return <WalletConnectIcon width={iconW} height={iconH} {...rest} />
+>>>>>>> e6b76c3bd52b295c17c1bb042771ee33f4525af5
       default:
         return null
     }

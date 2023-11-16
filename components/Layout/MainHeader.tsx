@@ -5,6 +5,8 @@ import Input from '@/components/Form/Input'
 import { useState } from 'react'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
+import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
+import defaultAvatar from '@/assets/images/default-avatar.png'
 
 export default function MainHeader() {
   const [searchString, setSearchString] = useState('')
@@ -47,7 +49,14 @@ export default function MainHeader() {
         </div>
 
         <div className="hidden desktop:flex gap-4 items-center">
-          <Button>Connect wallet</Button>
+          <ConnectWalletButton>
+            <Image
+              className="cursor-pointer"
+              src={defaultAvatar}
+              alt="Avatar"
+              width={48}
+              height={48} />
+          </ConnectWalletButton>
           {/*<Button variant="icon"></Button>*/}
         </div>
 
