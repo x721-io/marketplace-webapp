@@ -1,9 +1,8 @@
 import { AxiosRequestConfig } from 'axios'
 
-export namespace ApiParams {
+export namespace APIParams {
   interface BaseParams {
     config?: AxiosRequestConfig
-    proxy?: boolean // If true => connect to NextJS proxy Api
   }
 
   export interface Connect extends BaseParams {
@@ -14,7 +13,33 @@ export namespace ApiParams {
   }
 
   export interface UpdateProfile extends BaseParams {
-    username?: string
+    acceptedTerms?: boolean
     email?: string
+    username?: string
+  }
+}
+
+export namespace APIResponse {
+  export interface Connect {
+    accessToken: string
+    accessTokenExpire: number // 1700117015092
+    refreshToken: string
+    refreshTokenExpire: number // 1700721515092
+    userId: string
+  }
+
+  export interface Profile {
+    id: string
+    publicKey: string
+    signDate: string
+    signature: `0x${string}`
+    signedMessage: string
+    acceptedTerms: boolean
+    avatar?: string | null
+    createdAt?: string | null
+    email?: null
+    signer: `0x${string}`
+    updatedAt?: string | null
+    username?: string | null
   }
 }

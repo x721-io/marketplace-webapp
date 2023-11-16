@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css';
 import 'tailwindcss/tailwind.css'
-import MainLayout from "@/components/Layout/MainLayout";
 import Providers from '@/components/Providers'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'

@@ -7,7 +7,6 @@ import { Address, useAccount, useConnect, useContractRead, useContractWrite } fr
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import Input from '@/components/Form/Input'
-import { useAuth } from '@/hooks/useAuth'
 
 export default function TestPage() {
   const { connector: activeConnector, isConnected } = useAccount()

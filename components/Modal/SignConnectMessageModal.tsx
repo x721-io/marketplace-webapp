@@ -1,45 +1,47 @@
 import { Modal, ModalProps, Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import { useSignMessage } from 'wagmi'
+import { useAccount, useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/config/constants'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { useRouter } from 'next/navigation'
+import MarketplaceAPI from '@/services/api/marketplace'
 
 interface Props extends ModalProps {
   onSignup: () => void
 }
 
 export default function SignConnectMessageModal({ show, onClose, onSignup }: Props) {
-  const [date, setDate] = useState(new Date().toISOString())
-  const { data, isError, isLoading, isSuccess, signMessage, error } = useSignMessage({
-    message: SIGN_MESSAGE.CONNECT(date)
-  })
+  const router = useRouter()
+  const { address } = useAccount()
+  const { isError, isLoading, signMessageAsync, error } = useSignMessage()
   const { onAuth } = useAuth()
   const [isAuthenticating, setIsAuthenticating] = useState(false)
   const [authError, setAuthError] = useState('')
 
-  const handleSignMessage = () => {
-    try {
-      setAuthError('')
-      signMessage()
-    } catch (e) {
-      console.error('Error signing connect message:', e)
-    }
-  }
+  const handleSignMessage = async () => {
+    setAuthError('')
 
-  const handleAuthenticate = async () => {
-    if (!data) return
+    if (!address) return
+    const date = new Date().toISOString()
 
     try {
+      const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
       setIsAuthenticating(true)
-      await onAuth(date, data)
+      await onAuth(date, signature)
+      const { acceptedTerms } = await MarketplaceAPI.viewProfile(address)
       setIsAuthenticating(false)
-      onSignup()
+
+      if (!acceptedTerms) { // Not registered
+        onSignup()
+      } else {
+        router.push('/')
+      }
     } catch (e: any) {
-      setIsAuthenticating(false)
-      console.error('Error Authenticating:', e)
       setAuthError(e.message)
+      setIsAuthenticating(false)
+      console.error('Error signing connect message:', e)
     }
   }
 
@@ -99,16 +101,11 @@ export default function SignConnectMessageModal({ show, onClose, onSignup }: Pro
 
   useEffect(() => {
     if (show) {
-      setDate(new Date().toISOString())
       handleSignMessage()
     } else {
       setAuthError('')
     }
   }, [show])
-
-  useEffect(() => {
-    if (isSuccess) handleAuthenticate()
-  }, [isSuccess, authError]);
 
   return (
     <Modal dismissible show={show} onClose={onClose} size="md">

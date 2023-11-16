@@ -34,7 +34,7 @@ const { publicClient } = configureChains(
   [u2uChain],
   [
     jsonRpcProvider({
-      rpc: (chain: { id: any; }) => ({
+      rpc: () => ({
         http: RPC_URL
       })
     })

@@ -1,17 +1,11 @@
-export interface Profile {
-  wallet: string
-  username?: string
-  email?: string
-  avatar?: string
-  coverImage?: string
-}
+import { APIResponse } from '@/services/api/types'
 
 export interface AuthStoreState {
-  token: string | null
-  profile: Profile | null
+  credentials: APIResponse.Connect | null
+  profile: APIResponse.Profile | null
 }
 
 export interface AuthStoreAction {
-  connectWallet: (token: string) => void
-  setProfile: (profile: Profile) => void
+  setCredentials: (credentials: APIResponse.Connect) => void
+  setProfile: (profile: APIResponse.Profile) => void
 }

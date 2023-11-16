@@ -3,17 +3,17 @@ import { create } from 'zustand'
 import { AuthStoreAction, AuthStoreState } from '@/store/auth/types'
 
 const DEFAULT_STATE: AuthStoreState = {
-  token: null,
+  credentials: null,
   profile: null
 }
 
 const useAuthStore = create(devtools(persist<AuthStoreState & AuthStoreAction>(
   (set, get) => ({
     ...DEFAULT_STATE,
-    connectWallet: (token) => set(() => ({ token })),
+    setCredentials: (credentials) => set(() => ({ credentials })),
     setProfile: (profile) => set(() => ({ profile }))
   }),
-  { name: 'wallet-storage' }
+  { name: 'auth-storage' }
 )))
 
 export default useAuthStore

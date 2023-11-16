@@ -5,16 +5,22 @@ import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import { useState } from 'react'
 import Button from '@/components/Button'
+import { useAuth } from '@/hooks/useAuth'
+import { useRouter } from 'next/navigation'
 
 export default function SignupModal({ show, onClose }: ModalProps) {
-  const [name, setName] = useState('')
+  const router = useRouter()
+  const { onUpdateProfile } = useAuth()
+  
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
-  const [agree, setAgree] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
-  const handleSignup = () => {
-    if (!agree) return
+  const handleSignup = async () => {
+    if (!acceptedTerms) return
     try {
-
+      await onUpdateProfile({ username, email, acceptedTerms })
+      router.push('/')
     } catch (e) {
       console.error('Error signing up:', e)
     }
@@ -36,8 +42,8 @@ export default function SignupModal({ show, onClose }: ModalProps) {
           <div className="flex flex-col gap-5">
             <Input
               placeholder="Display name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <Input
               placeholder="Enter your email"
@@ -48,8 +54,8 @@ export default function SignupModal({ show, onClose }: ModalProps) {
             <div className="flex gap-5 items-center">
               <Checkbox
                 id="accept"
-                checked={agree}
-                onChange={() => setAgree(!agree)}
+                checked={acceptedTerms}
+                onChange={() => setAcceptedTerms(!acceptedTerms)}
               />
               <Label htmlFor="accept" className="text-body-16 text-tertiary cursor-pointer">
                 I have read and accept the <a href="#" className="text-primary">Terms of Service</a>,
@@ -59,7 +65,7 @@ export default function SignupModal({ show, onClose }: ModalProps) {
           </div>
 
           <div className="flex flex-col gap-5">
-            <Button disabled={!agree}>
+            <Button disabled={!acceptedTerms} onClick={handleSignup}>
               Finish sign-up
             </Button>
             <Button variant="secondary" onClick={onClose}>
