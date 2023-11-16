@@ -8,6 +8,7 @@ import Icon from '@/components/Icon'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import defaultAvatar from '@/assets/images/default-avatar.png'
 
+export const HEADER_HEIGHT = 88
 export default function MainHeader() {
   const [searchString, setSearchString] = useState('')
   const navs = [
@@ -17,7 +18,7 @@ export default function MainHeader() {
   ]
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 px-7">
+    <nav className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 px-7`}>
       <div className="flex flex-wrap items-center justify-between mx-auto py-4">
         <div className="flex items-center gap-6">
           <Link href="/">
@@ -49,7 +50,7 @@ export default function MainHeader() {
         </div>
 
         <div className="hidden desktop:flex gap-4 items-center">
-          <ConnectWalletButton>
+          <ConnectWalletButton mode="link">
             <Image
               className="cursor-pointer"
               src={defaultAvatar}

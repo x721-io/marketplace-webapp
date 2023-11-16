@@ -31,13 +31,14 @@ export default function SignConnectMessageModal({ show, onClose, onSignup }: Pro
       setIsAuthenticating(true)
       await onAuth(date, signature)
       const { acceptedTerms } = await MarketplaceAPI.viewProfile(address)
-      setIsAuthenticating(false)
 
       if (!acceptedTerms) { // Not registered
         onSignup()
       } else {
         router.push('/')
       }
+
+      setIsAuthenticating(false)
     } catch (e: any) {
       setAuthError(e.message)
       setIsAuthenticating(false)
