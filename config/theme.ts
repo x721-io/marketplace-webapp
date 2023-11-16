@@ -91,4 +91,8 @@ export const typography = {
     lineHeight: '44px',
     letterSpacing: '-1.5px'
   }],
+  'body-24': ['24px', {
+    lineHeight: '28px',
+    letterSpacing: '-1px'
+  }],
 }

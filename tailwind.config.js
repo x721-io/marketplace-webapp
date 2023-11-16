@@ -34,7 +34,8 @@ module.exports = {
         primary: colors.gray[800],
         secondary: colors.gray[600],
         tertiary: colors.gray[400],
-        disabled: colors.gray[200]
+        disabled: colors.gray[200],
+        surfacehard: colors.gray[500],
       },
       fontSize: {
         ...typography
