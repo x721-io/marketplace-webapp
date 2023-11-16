@@ -6,17 +6,19 @@ import SignupModal from '@/components/Modal/SignupModal'
 import WalletConnectModal from '@/components/Modal/WalletConnectModal'
 import { useAccount } from 'wagmi'
 import SignConnectMessageModal from '@/components/Modal/SignConnectMessageModal'
+import useAuthStore from '@/store/auth/store'
 
 export default function ConnectWalletButton({ children, ...rest }: ButtonProps & { children?: React.ReactNode }) {
   const { isConnected } = useAccount()
   const [showWalletConnect, setShowWalletConnect] = useState(false)
   const [showSignMessage, setShowSignMessage] = useState(false)
   const [showSignup, setShowSignup] = useState(false)
+  const acceptedTerms = useAuthStore(state => state.profile?.acceptedTerms)
   const handleConnectWallet = () => {
     setShowWalletConnect(true)
   }
 
-  if (isConnected) {
+  if (isConnected && acceptedTerms) {
     return children
   }
 

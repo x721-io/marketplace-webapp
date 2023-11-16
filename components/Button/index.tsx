@@ -2,13 +2,16 @@
 
 import { useMemo } from 'react'
 import { classNames } from '@/utils/string'
+import { Spinner } from 'flowbite-react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'secondary' | 'text' | 'icon'
+  loading?: boolean
+  loadingText?: string
 }
 
-export default function Button({ className, scale, variant, children, disabled, ...rest }: ButtonProps) {
+export default function Button({ className, loading, loadingText, scale, variant, children, disabled, ...rest }: ButtonProps) {
   const baseClass = useMemo(() => {
     return `focus:outline-none transition-all ${disabled ? 'cursor-not-allowed' : 'cursor-pointer '}`
   }, [disabled])
@@ -51,13 +54,22 @@ export default function Button({ className, scale, variant, children, disabled, 
     }
   }, [variant, disabled])
 
+  const loadingClass = useMemo(() => {
+    return loading ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''
+  }, [loading])
+
   return (
     <button
       disabled={disabled}
-      className={classNames(baseClass, scaleClass, variantClass, className)}
+      className={classNames(baseClass, scaleClass, variantClass, loadingClass, className)}
       {...rest}
     >
-      {children}
+      { loading ? (
+        <div className="flex justify-center items-center gap-3">
+          <Spinner size="sm"/>
+          {loadingText || 'Loading...'}
+        </div>
+      ) : children}
     </button>
   )
 }
