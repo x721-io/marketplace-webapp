@@ -31,18 +31,15 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevronDown':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
-<<<<<<< HEAD
       case 'upload':
         return <UploadIcon width={iconW} height={iconH} {...rest} />
       case 'circle':
         return <CircleIcon width={iconW} height={iconH} {...rest} />
-=======
       case 'metaMask':
       case 'injected':
         return <MetamaskIcon width={iconW} height={iconH} {...rest} />
       case 'walletConnect':
         return <WalletConnectIcon width={iconW} height={iconH} {...rest} />
->>>>>>> e6b76c3bd52b295c17c1bb042771ee33f4525af5
       default:
         return null
     }
