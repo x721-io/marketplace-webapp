@@ -6,7 +6,7 @@ import { Spinner } from 'flowbite-react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
-  variant?: 'primary' | 'secondary' | 'text' | 'icon'
+  variant?: 'primary' | 'secondary' | 'text' | 'icon' | 'outlined'
   loading?: boolean
   loadingText?: string
 }
@@ -55,7 +55,10 @@ export default function Button({
         return 'bg-transparent text-primary'
       case 'secondary':
         if (disabled) return 'bg-gray-100 text-disabled'
-        return 'text-primary bg-button-secondary hover:opacity-70'
+        return 'text-primary bg-button-secondary hover:bg-gray-200'
+      case 'outlined':
+        if (disabled) return 'bg-gray-100 text-disabled'
+        return 'text-primary bg-surface-soft border-surfacehard border hover:bg-gray-200'
       case 'primary':
       default:
         if (disabled) return 'text-gray-0 bg-disabled'

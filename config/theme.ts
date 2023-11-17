@@ -1,5 +1,3 @@
-import localFont from 'next/font/local'
-
 export const colors = {
   success: '#21AE46',
   warning: '#F4BD16',
@@ -88,5 +86,13 @@ export const typography = {
   'body-32': ['32px', {
     lineHeight: '40px',
     letterSpacing: '-1px'
-  }]
+  }],
+  'body-40': ['40px', {
+    lineHeight: '44px',
+    letterSpacing: '-1.5px'
+  }],
+  'body-24': ['24px', {
+    lineHeight: '28px',
+    letterSpacing: '-1px'
+  }],
 }
