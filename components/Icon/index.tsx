@@ -3,13 +3,13 @@ import defaultColors from 'tailwindcss/colors'
 import { useMemo } from 'react'
 
 import U2ULogo from './U2ULogo'
-// import BurgerIcon from './Burger'
+import BurgerIcon from './Burger'
 import ChevronDownIcon from './ChevronDown'
 import UploadIcon from './Upload'
 import CircleIcon from './Circle'
 import MetamaskIcon from './Metamask'
 import WalletConnectIcon from './WalletConnect'
-import ArrowRightIcon from '@/components/Icon/ArrowRight'
+import ArrowRightIcon from './ArrowRight'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -28,8 +28,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
     switch (name) {
       case 'u2u-logo':
         return <U2ULogo width={iconW} height={iconH} />
-      // case 'burger':
-      //   return <BurgerIcon width={iconW} height={iconH} {...rest} />
+      case 'burger':
+        return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevronDown':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
       case 'arrow-right':
