@@ -11,7 +11,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loadingText?: string
 }
 
-export default function Button({ className, loading, loadingText, scale, variant, children, disabled, ...rest }: ButtonProps) {
+export default function Button({
+  className,
+  loading,
+  loadingText,
+  scale,
+  variant,
+  children,
+  disabled,
+  ...rest
+}: ButtonProps) {
   const baseClass = useMemo(() => {
     return `focus:outline-none transition-all ${disabled ? 'cursor-not-allowed' : 'cursor-pointer '}`
   }, [disabled])
@@ -67,12 +76,18 @@ export default function Button({ className, loading, loadingText, scale, variant
       className={classNames(baseClass, scaleClass, variantClass, loadingClass, className)}
       {...rest}
     >
-      { loading ? (
-        <div className="flex justify-center items-center gap-3">
-          <Spinner size="sm"/>
-          {loadingText || 'Loading...'}
-        </div>
-      ) : children}
+      <div className="flex justify-center items-center gap-3">
+        {
+          loading ? (
+            <>
+              <Spinner size="sm" />
+              {loadingText || 'Loading...'}
+            </>
+
+          ) : children
+        }
+      </div>
+
     </button>
   )
 }

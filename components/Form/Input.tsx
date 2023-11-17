@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   width?: string
   containerClass?: string
-  scale?: 'md' | 'lg'
+  scale?: 'md' | 'lg' | 'sm'
   prependIcon?: React.ReactNode
   prependIconContainerClass?: string
   appendIcon?: React.ReactNode
@@ -36,6 +36,12 @@ export default function Input({
           'text-body-16 rounded-2xl min-w-72 h-14 p-4',
           !!prependIcon && 'ps-10',
           !!appendIcon && 'pe-10'
+        )
+      case 'sm':
+        return classNames(
+          'text-body-16 rounded-xl min-w-72 h-10 px-4 py-2',
+          !!prependIcon && 'ps-9',
+          !!appendIcon && 'pe-9'
         )
       case 'md':
       default:

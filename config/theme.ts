@@ -47,7 +47,7 @@ export const colors = {
     '700': '#B0CA13',
     '800': '#8EA50A',
     '900': '#677706'
-  },
+  }
 }
 
 export const typography = {
