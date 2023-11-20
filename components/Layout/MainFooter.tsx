@@ -37,13 +37,13 @@ export default function MainFooter() {
     }
   ]
   return (
-    <footer className="bg-white shadow px-20 py-16 flex flex-col gap-10">
-      <div className="flex justify-between">
+    <footer className="border desktop:px-20 desktop:py-16 tablet:px-8 tablet:py-10 px-4 py-8 flex flex-col gap-10">
+      <div className="flex justify-between flex-col gap-10 tablet:flex-row desktop:flex-row tablet:gap-0 desktop:gap-0">
         <Link href="/">
           <Image height={28} src={brandingSvg} alt="u2u-brand" />
         </Link>
 
-        <div className="flex gap-24 mr-24">
+        <div className="gap-10 tablet:mr-24 desktop:mr-24 grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-3">
           {links.map(group => (
             <div
               key={group.title}
@@ -61,7 +61,7 @@ export default function MainFooter() {
         </div>
       </div>
 
-      <div className="py-10 border-y border-gray-200 flex justify-between">
+      <div className="border-y border-gray-200 flex justify-between flex-col tablet:flex-row desktop:flex-row gap-10 py-6 tablet:py-10 desktop:py-10">
         <div>
           <Text className="text-primary font-medium mb-3" variant="body-18">
             Join our newsletter
@@ -72,7 +72,7 @@ export default function MainFooter() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Input containerClass="w-72" scale="sm" placeholder="Enter your email address" />
+          <Input containerClass="w-full tablet:w-72 desktop:w-72 " scale="sm" placeholder="Enter your email address" />
           <Button>
             Submit
             <Icon name="arrow-right" width={12} height={12} />
@@ -80,7 +80,7 @@ export default function MainFooter() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col tablet:flex-row desktop:flex-row justify-center tablet:justify-between desktop:justify-between items-center gap-4 tablet:gap-0 desktop:gap-0">
         <div className="flex-1">
           <Text className="text-tertiary" variant="body-12">
             © U2NFT, Inc. All rights reserved.
@@ -99,7 +99,7 @@ export default function MainFooter() {
           </Link>
         </div>
 
-        <div className="flex-1 self-end">
+        <div className="flex-1 self-center tablet:self-end desktop:self-end">
           <Text className="text-tertiary text-right" variant="body-12">
             Tabs
           </Text>
