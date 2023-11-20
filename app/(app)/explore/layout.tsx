@@ -21,19 +21,21 @@ export default function ExploreLayout({ children }: {
   }, [pathname])
 
   return (
-    <div className="w-full py-10 px-20">
-      <div className="mb-6">
-        <Text className="font-semibold text-primary mb-3" variant="heading-md">
-          Explore Collections
-        </Text>
-        <Text className="text-secondary" variant="body-14">
-          Discover and collect crypto art
-        </Text>
+    <div className="w-full px-20">
+      <div className="py-10">
+        <div className="mb-6">
+          <Text className="font-semibold text-primary mb-3" variant="heading-md">
+            Explore Collections
+          </Text>
+          <Text className="text-secondary" variant="body-14">
+            Discover and collect crypto art
+          </Text>
+        </div>
+
+        <ExploreSectionNavbar />
       </div>
 
-      <ExploreSectionNavbar />
-
-      <div>
+      <div className="pb-20">
         {children}
       </div>
     </div>

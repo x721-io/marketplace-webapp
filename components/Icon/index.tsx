@@ -12,6 +12,7 @@ import WalletConnectIcon from './WalletConnect'
 import ArrowRightIcon from './ArrowRight'
 import PlusCircleIcon from '@/components/Icon/PlusCircle'
 import SliderIcon from '@/components/Icon/Slider'
+import VerifiedIcon from '@/components/Icon/Verified'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -51,6 +52,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <PlusCircleIcon width={iconW} height={iconH} {...rest} />
       case 'slider':
         return <SliderIcon width={iconW} height={iconH} {...rest} />
+      case 'verified':
+        return <VerifiedIcon width={iconW} height={iconH} />
       default:
         return null
     }
