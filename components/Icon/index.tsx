@@ -10,6 +10,7 @@ import CircleIcon from './Circle'
 import MetamaskIcon from './Metamask'
 import WalletConnectIcon from './WalletConnect'
 import ArrowRightIcon from './ArrowRight'
+import PlusCircleIcon from '@/components/Icon/PlusCircle'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -43,6 +44,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <MetamaskIcon width={iconW} height={iconH} {...rest} />
       case 'walletConnect':
         return <WalletConnectIcon width={iconW} height={iconH} {...rest} />
+      case 'plusCircle':
+        return <PlusCircleIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

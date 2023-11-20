@@ -8,6 +8,6 @@ export default class MarketplaceAPI {
   static updateProfile = ({ config, ...params }: APIParams.UpdateProfile) => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, config)
 
   /** GET **/
+  static fetchCollections = () => marketplaceApi.post(API_ENDPOINTS.COLLECTION)
   static viewProfile = (wallet: `0x${string}`): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`)
-
 }

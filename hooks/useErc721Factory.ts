@@ -1,6 +1,6 @@
 import { useContractWrite } from 'wagmi'
 import { contracts } from '@/config/contracts'
-import erc721FactoryAbi from '@/abi/erc721-factory.json'
+import erc721FactoryAbi from '@/abi/ERC721Factory.json'
 
 export const useErc721Factory = () => {
   const { data, isLoading, isSuccess, write } = useContractWrite({
