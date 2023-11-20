@@ -3,12 +3,15 @@
 import { Dropdown, Tabs, TabsRef } from 'flowbite-react'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useMemo, useRef } from 'react'
 import Input from '@/components/Form/Input'
+import { useUIStore } from '@/store/ui/store'
 
 export default function ExploreSectionNavbar() {
   const router = useRouter()
+  const pathname = usePathname()
+  const { showFilters, toggleFilter } = useUIStore(state => state)
   const tabsRef = useRef<TabsRef>(null);
   const tabs = [
     { label: 'NFTs', href: '/explore/items' },
@@ -16,17 +19,38 @@ export default function ExploreSectionNavbar() {
     { label: 'Users', href: '/explore/users' }
   ]
 
+  const routeKey = useMemo(() => {
+    switch (true) {
+      case pathname.includes('collections'):
+        return 'collections'
+      case pathname.includes('items'):
+        return 'nfts'
+      case pathname.includes('profile'):
+        return 'profile'
+    }
+  }, [pathname])
+
+  const isFiltersVisible = useMemo(() => {
+    if (!routeKey) return false
+    return showFilters[routeKey]
+  }, [showFilters, routeKey])
+
   const handleChangeTab = (activeTab: number) => {
     return router.push(tabs[activeTab].href)
   }
 
   const handleToggleFilters = () => {
-
+    if (!routeKey) return
+    toggleFilter(routeKey)
   }
 
   return (
     <div className="flex gap-4 items-center">
-      <Button scale="lg" className="bg-surface-soft" variant="secondary" onClick={handleToggleFilters}>
+      <Button
+        scale="lg"
+        className={isFiltersVisible ? 'bg-white shadow' : `bg-surface-soft`}
+        variant="secondary"
+        onClick={handleToggleFilters}>
         Filters
         <div className="rounded-lg p-1 bg-surface-medium">
           <Icon name="slider" width={14} height={14} />
