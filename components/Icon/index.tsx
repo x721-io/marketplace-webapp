@@ -11,6 +11,7 @@ import MetamaskIcon from './Metamask'
 import WalletConnectIcon from './WalletConnect'
 import ArrowRightIcon from './ArrowRight'
 import PlusCircleIcon from '@/components/Icon/PlusCircle'
+import SliderIcon from '@/components/Icon/Slider'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -21,7 +22,9 @@ export interface IconProps {
   color?: Color | string
 }
 
-export default function Icon({ name, width, height, ...rest }: IconProps & { name: string }) {
+export default function Icon({ name, width, height, ...rest }: IconProps & {
+  name: string
+}) {
   const iconW = useMemo(() => width || 20, [width])
   const iconH = useMemo(() => height || 20, [height])
 
@@ -46,6 +49,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & { nam
         return <WalletConnectIcon width={iconW} height={iconH} {...rest} />
       case 'plusCircle':
         return <PlusCircleIcon width={iconW} height={iconH} {...rest} />
+      case 'slider':
+        return <SliderIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

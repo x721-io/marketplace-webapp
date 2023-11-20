@@ -19,7 +19,8 @@ const tab: CustomFlowbiteTheme['tab'] = {
         }
       }
     }
-  }
+  },
+  tabpanel: ''
 }
 
 const appTheme: CustomFlowbiteTheme = {

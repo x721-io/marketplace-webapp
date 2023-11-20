@@ -37,7 +37,8 @@ export default function SignConnectMessageModal({ show, onClose, onSignup }: Pro
         onSignup()
       } else {
         setProfile(profile)
-        router.push('/')
+        // todo: Fix
+        router.back()
       }
 
       setIsAuthenticating(false)

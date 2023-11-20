@@ -13,7 +13,13 @@ export const HEADER_HEIGHT = 88
 export default function MainHeader() {
   const [searchString, setSearchString] = useState('')
   const navs = [
-    { href: '/explore', label: 'Explore' },
+    {
+      label: 'Explore',
+      items: [
+        { href: '/explore/collections', label: 'Collection' },
+        { href: '/explore/items', label: 'NFT' }
+      ]
+    },
     {
       label: 'Create',
       items: [
@@ -21,7 +27,7 @@ export default function MainHeader() {
         { href: '/create/nft', label: 'NFT' }
       ]
     },
-    { label: 'Sell', items: [] }
+    { label: 'Sell', href: '#' }
   ]
 
   return (
