@@ -54,99 +54,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
+        "name": "newBaseURI",
         "type": "string"
       }
     ],
-    "name": "CreateERC721Rarible",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      }
-    ],
-    "name": "CreateERC721RaribleMeta",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      }
-    ],
-    "name": "CreateERC721RaribleUser",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      }
-    ],
-    "name": "CreateERC721RaribleUserMeta",
+    "name": "BaseUriChanged",
     "type": "event"
   },
   {
@@ -197,31 +110,6 @@
       }
     ],
     "name": "DefaultApproval",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "userAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address payable",
-        "name": "relayerAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "functionSignature",
-        "type": "bytes"
-      }
-    ],
-    "name": "MetaTransactionExecuted",
     "type": "event"
   },
   {
@@ -302,87 +190,6 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contractURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address[]",
-        "name": "operators",
-        "type": "address[]"
-      },
-      {
-        "internalType": "address",
-        "name": "transferProxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "lazyTransferProxy",
-        "type": "address"
-      }
-    ],
-    "name": "__ERC721RaribleUser_init",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contractURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "transferProxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "lazyTransferProxy",
-        "type": "address"
-      }
-    ],
-    "name": "__ERC721Rarible_init",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -459,45 +266,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "userAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "functionSignature",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "sigR",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "sigS",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint8",
-        "name": "sigV",
-        "type": "uint8"
-      }
-    ],
-    "name": "executeMetaTransaction",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -548,25 +316,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getNonce",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "nonce",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
@@ -590,30 +339,6 @@
         "internalType": "struct LibPart.Part[]",
         "name": "",
         "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      }
-    ],
-    "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -743,6 +468,35 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "royaltyInfo",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "royaltyAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -810,46 +564,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
-    ],
-    "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "symbol",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenURI",
     "outputs": [
       {
         "internalType": "string",
@@ -996,80 +712,74 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contractURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address[]",
-        "name": "operators",
-        "type": "address[]"
-      },
-      {
         "internalType": "address",
-        "name": "transferProxy",
+        "name": "owner",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "lazyTransferProxy",
+        "name": "operator",
         "type": "address"
       }
     ],
-    "name": "__ERC721RaribleUserMeta_init",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "string",
-        "name": "_name",
+        "name": "newBaseURI",
         "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contractURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "transferProxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "lazyTransferProxy",
-        "type": "address"
       }
     ],
-    "name": "__ERC721RaribleMeta_init",
+    "name": "setBaseURI",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

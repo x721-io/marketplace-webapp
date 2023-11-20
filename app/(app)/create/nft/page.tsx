@@ -8,12 +8,14 @@ import ImageUploader from '@/components/Form/ImageUploader'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Select from '@/components/Form/Select'
-import { classNames } from '@/utils/string'
+import NFTTypeSelection from '@/components/NFTTypeSelection'
+import MarketplaceAPI from '@/services/api/marketplace'
 import Icon from '@/components/Icon'
 
 export default function CreateNftPage() {
-  const [useU2U, setUseU2U] = useState(true)
-  const { handleSubmit, register } = useForm({
+  const [type, setType] = useState<'ERC721' | 'ERC1155'>()
+
+  const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       // image: '',
       name: '',
@@ -21,14 +23,33 @@ export default function CreateNftPage() {
     }
   })
 
+  const resetForm = () => {
+    reset()
+    setType(undefined)
+  }
+
   const [image, setImage] = useState<Blob | undefined>()
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onSubmit = async (data: any) => {
+    if (!image) return
+
+    try {
+      const res = await MarketplaceAPI.uploadFile(image)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  if (!type) {
+    return (
+      <NFTTypeSelection title="Select NFT type" onSelect={setType} />
+    )
   }
 
   return (
     <div className="w-full flex justify-center py-10 tablet:py-20 desktop:py-20">
-
+      <Button variant="text" onClick={resetForm}>
+        <Icon name="arrowLeft" width={24} height={24} />
+      </Button>
       <div className="flex flex-col tablet:w-[550px] w-full">
         <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold mb-6 tablet:mb-10 desktop:mb-10">
           Create New Item
@@ -62,23 +83,7 @@ export default function CreateNftPage() {
             {/* Choose collection */}
             <div>
               <Text className="text-base font-semibold mb-1">Choose collection</Text>
-              <div className="flex items-stretch gap-6">
-                <div className="flex-1 flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 border border-secondary">
-                  <Icon name="plusCircle" width={32} height={32} />
-                  <Text className="text-body-14 font-bold text-primary">Create</Text>
-                  <Text className="text-body-12 font-bold text-secondary">ERC-721</Text>
-                </div>
-                <div
-                  onClick={() => setUseU2U(true)}
-                  className={classNames(
-                    'flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl p-8',
-                    useU2U ? 'border-2 border-primary text-primary' : 'text-tertiary bg-surface-soft'
-                  )}>
-                  <Icon name="u2u-logo" width={32} height={32} />
-                  <Text className="text-body-14 font-bold text-primary">Unicorn Ultra</Text>
-                  <Text className="text-body-12 font-bold text-secondary">U2U</Text>
-                </div>
-              </div>
+              <Select options={[]} />
             </div>
 
             {/* Button finish */}

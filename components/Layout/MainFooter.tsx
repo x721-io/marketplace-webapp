@@ -75,7 +75,7 @@ export default function MainFooter() {
           <Input containerClass="w-72" scale="sm" placeholder="Enter your email address" />
           <Button>
             Submit
-            <Icon name="arrow-right" width={12} height={12} />
+            <Icon name="arrowRight" width={12} height={12} />
           </Button>
         </div>
       </div>

@@ -17,11 +17,11 @@ export default function HomePageBanner() {
           <div className="flex items-center gap-4">
             <Button className="bg-purple-500 hover:bg-purple-500/80">
               Create your NFTs
-              <Icon name="arrow-right" />
+              <Icon name="arrowRight" />
             </Button>
             <Button variant="secondary">
               Start exploring
-              <Icon name="arrow-right" />
+              <Icon name="arrowRight" />
             </Button>
           </div>
         </div>

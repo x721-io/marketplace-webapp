@@ -17,6 +17,18 @@ export namespace APIParams {
     email?: string
     username?: string
   }
+
+  export interface UpdateCollection extends BaseParams {
+    txCreationHash: string,
+    name: string,
+    symbol: string,
+    description: string,
+    type: 'ERC721' | 'ERC1155',
+    categoryId?: number,
+    shortUrl: string,
+    metadata?: any,
+    creators: string
+  }
 }
 
 export namespace APIResponse {
@@ -41,5 +53,9 @@ export namespace APIResponse {
     signer: `0x${string}`
     updatedAt?: string | null
     username?: string | null
+  }
+
+  export interface UploadImage {
+    fileHashes: string[]
   }
 }

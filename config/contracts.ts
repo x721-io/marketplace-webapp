@@ -10,9 +10,9 @@ export type Contract = {
 }
 
 export const contracts: Record<string, Contract> = {
-  erc721Factory: { address: '0x6a04845E0A0B3B394d8FF3D82533917eFEf0A15f', abi: erc721Factory },
-  erc721Meta: { address: '0xFa11e4aaE80BB788D4f066D676b7A127318957e7', abi: erc721MetaABI },
-  erc1155Factory: { address: '0x058DEe0187BE53e48b258F6879b6AEF1b9e55008', abi: erc1155FactoryABI },
-  erc1155Meta: { address: '0x8a1C41D496368018356905821dFc5e7782755Ebb', abi: erc1155MetaABI },
+  erc721Factory: { address: '0x346d828a9CD9f72ed967c18538196Ca64468805d', abi: erc721Factory },
+  erc721Meta: { address: '0x73039bafa89e6f17f9a6b0b953a01af5ecabacd2', abi: erc721MetaABI },
+  erc1155Factory: { address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c', abi: erc1155FactoryABI },
+  erc1155Meta: { address: '0xc2587c1b945b1a7be4be5423c24f1bbf54495daa', abi: erc1155MetaABI },
   exchange: { address: '0x', abi: [] }
 }

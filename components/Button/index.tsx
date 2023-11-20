@@ -19,6 +19,7 @@ export default function Button({
   variant,
   children,
   disabled,
+  type,
   ...rest
 }: ButtonProps) {
   const baseClass = useMemo(() => {
@@ -72,6 +73,7 @@ export default function Button({
 
   return (
     <button
+      type={type ?? 'button'}
       disabled={disabled}
       className={classNames(baseClass, scaleClass, variantClass, loadingClass, className)}
       {...rest}

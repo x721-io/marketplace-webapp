@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import CloseIcon from '@/components/Icon/Close'
-import { ReactHTMLElement, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { classNames } from '@/utils/string'
@@ -33,7 +33,7 @@ export default function ImageUploader({ className, image, onInput }: Props) {
       setFile(files[0]);
     } else {
       onInput && onInput(undefined)
-      setFile(undefined);
+      setFile(undefined)
     }
   }
   const handleBrowseFile = () => {

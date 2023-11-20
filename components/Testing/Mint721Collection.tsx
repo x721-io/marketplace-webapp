@@ -12,7 +12,7 @@ export default function Mint721Collection() {
     'thalos',
     'TvT',
     'ipfs:/',
-    'contract',
+    '',
     [],
     salt
   ]

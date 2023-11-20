@@ -10,9 +10,10 @@ import CircleIcon from './Circle'
 import MetamaskIcon from './Metamask'
 import WalletConnectIcon from './WalletConnect'
 import ArrowRightIcon from './ArrowRight'
-import PlusCircleIcon from '@/components/Icon/PlusCircle'
-import SliderIcon from '@/components/Icon/Slider'
-import VerifiedIcon from '@/components/Icon/Verified'
+import PlusCircleIcon from './PlusCircle'
+import SliderIcon from './Slider'
+import VerifiedIcon from './Verified'
+import ArrowLeftIcon from './ArrowLeft'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -37,8 +38,10 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevronDown':
         return <ChevronDownIcon width={iconW} height={iconH} {...rest} />
-      case 'arrow-right':
+      case 'arrowRight':
         return <ArrowRightIcon width={iconW} height={iconH} {...rest} />
+      case 'arrowLeft':
+        return <ArrowLeftIcon width={iconW} height={iconH} {...rest} />
       case 'upload':
         return <UploadIcon width={iconW} height={iconH} {...rest} />
       case 'circle':
