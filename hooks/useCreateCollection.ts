@@ -5,22 +5,24 @@ import { useCallback } from 'react'
 import { APIParams } from '@/services/api/types'
 import MarketplaceAPI from '@/services/api/marketplace'
 
-export const useErc721Factory = () => {
-  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
+export const useCreateCollection = () => {
+  const { writeAsync: write721 } = useContractWrite({
     ...contracts.erc721Factory,
     functionName: 'createToken'
   })
-
-  return { isLoading, isSuccess, error, writeAsync }
-}
-
-export const useErc1155Factory = () => {
-  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
-    ...contracts.erc721Factory,
+  const { writeAsync: write1155 } = useContractWrite({
+    ...contracts.erc1155Factory,
     functionName: 'createToken'
   })
 
-  return { isLoading, isSuccess, error, writeAsync }
+  const onCreateCollection = (type: 'ERC721' | 'ERC1155', args: any[]) => {
+    if (type === 'ERC721') {
+      return write721({ args })
+    }
+    return write1155({ args })
+  }
+
+  return { onCreateCollection }
 }
 
 export const useUpdateCollection = () => {
@@ -29,7 +31,6 @@ export const useUpdateCollection = () => {
 
   const onUpdateCollection = useCallback((params: APIParams.UpdateCollection) => {
     if (!bearerToken) return
-    console.log(params)
     return MarketplaceAPI.updateCollection({
       ...params,
       config: { headers: { 'Authorization': `Bearer ${bearerToken}` } }

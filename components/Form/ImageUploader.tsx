@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import Image from 'next/image'
 import CloseIcon from '@/components/Icon/Close'
@@ -36,10 +36,6 @@ export default function ImageUploader({ className, image, onInput }: Props) {
       setFile(undefined)
     }
   }
-  const handleBrowseFile = () => {
-    if (file) return
-    inputRef.current?.click()
-  }
 
   const handleClearImage = () => {
     onInput && onInput(undefined)
@@ -51,11 +47,12 @@ export default function ImageUploader({ className, image, onInput }: Props) {
 
   return (
     <div
-      className={classNames("relative cursor-pointer p-1 border border-tertiary border-dashed rounded-2xl w-full", className)}
-      onClick={handleBrowseFile}>
+      className={classNames(
+        "relative cursor-pointer p-1 border border-tertiary border-dashed rounded-2xl w-full",
+        className)}>
       <input
+        className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
         type="file"
-        className="hidden"
         ref={inputRef}
         onChange={(e) => handleInputImage(e.target.files)}
       />

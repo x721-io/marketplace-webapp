@@ -47,13 +47,15 @@ export default function CreateNftPage() {
 
   return (
     <div className="w-full flex justify-center py-10 tablet:py-20 desktop:py-20">
-      <Button variant="text" onClick={resetForm}>
-        <Icon name="arrowLeft" width={24} height={24} />
-      </Button>
       <div className="flex flex-col tablet:w-[550px] w-full">
-        <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold mb-6 tablet:mb-10 desktop:mb-10">
-          Create New Item
-        </Text>
+        <div className="flex items-center mb-6 tablet:mb-10 desktop:mb-10">
+          <Button variant="text" onClick={resetForm}>
+            <Icon name="arrowLeft" width={24} height={24} />
+          </Button>
+          <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
+            Create New NFT
+          </Text>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-10">
             {/* Upload file */}
@@ -68,7 +70,7 @@ export default function CreateNftPage() {
             <div>
               <Text className="text-base font-semibold mb-1">Display name</Text>
               <Input
-                {...register('name')}
+                register={register('name')}
               />
             </div>
             {/* Description */}
@@ -76,7 +78,7 @@ export default function CreateNftPage() {
               <Text className="text-base font-semibold mb-1">Description</Text>
               <Textarea
                 className="h-[160px] resize-none"
-                {...register('description')}
+                register={register('description')}
               />
             </div>
 

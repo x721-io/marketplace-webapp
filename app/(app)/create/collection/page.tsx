@@ -8,7 +8,10 @@ import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import NFTTypeSelection from '@/components/NFTTypeSelection'
-import { useErc1155Factory, useErc721Factory, useUpdateCollection } from '@/hooks/useCreateCollection'
+import {
+  useCreateCollection,
+  useUpdateCollection
+} from '@/hooks/useCreateCollection'
 import { randomWord } from '@rarible/types'
 import useAuthStore from '@/store/auth/store'
 import { BASE_API_URL } from '@/config/api'
@@ -19,8 +22,7 @@ import { toast } from 'react-toastify'
 export default function CreateNFTCollectionPage() {
   const creator = useAuthStore(state => state.profile?.id)
   const [type, setType] = useState<'ERC721' | 'ERC1155'>()
-  const { writeAsync: create721 } = useErc721Factory()
-  const { writeAsync: create1155 } = useErc1155Factory()
+  const { onCreateCollection } = useCreateCollection()
   const { onUpdateCollection } = useUpdateCollection()
   const { handleSubmit, register, reset } = useForm({
     defaultValues: {
@@ -43,8 +45,6 @@ export default function CreateNFTCollectionPage() {
   }
 
   const onSubmit = async (data: any) => {
-    console.log(data)
-
     if (!type || !creator || !image) return
     const toastId = toast.loading('Uploading Image...', { type: 'info' })
 
@@ -57,20 +57,20 @@ export default function CreateNFTCollectionPage() {
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
-      const res = type === 'ERC721' ? await create721({ args }) : await create1155({ args })
-      const res3 = await onUpdateCollection({
+      const tx = await onCreateCollection(type, args)
+      const res = await onUpdateCollection({
         name,
         symbol,
         description,
         type,
         shortUrl,
-        txCreationHash: res.hash,
+        txCreationHash: tx.hash,
         creators: creator,
         metadata: JSON.stringify({
           image: fileHashes[0]
         })
       })
-      console.log(res3)
+
       toast.update(toastId, { render: 'Collection created successfully', type: 'success', isLoading: false })
       resetForm()
     } catch (e) {
@@ -87,13 +87,17 @@ export default function CreateNFTCollectionPage() {
 
   return (
     <div className="w-full flex justify-center py-10 tablet:py-20 desktop:py-20">
-      <Button variant="text" onClick={resetForm}>
-        <Icon name="arrowLeft" width={24} height={24} />
-      </Button>
       <div className="flex flex-col tablet:w-[550px] w-full">
-        <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold mb-6 tablet:mb-10 desktop:mb-10">
-          Create New Collection
-        </Text>
+
+        <div className="flex items-center mb-6 tablet:mb-10 desktop:mb-10">
+          <Button variant="text" onClick={resetForm}>
+            <Icon name="arrowLeft" width={24} height={24} />
+          </Button>
+          <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
+            Create New Collection
+          </Text>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-10">
             {/* Upload file */}

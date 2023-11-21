@@ -30,19 +30,19 @@ export default function Button({
     switch (scale) {
       case "lg":
         return classNames(
-          'text-body-18 rounded-xl',
-          variant === 'icon' ? 'p-4' : 'px-6 py-3.5 h-[52px] min-w-40'
+          'text-body-18',
+          variant === 'icon' ? 'p-4 rounded-full w-fit' : 'px-6 py-3.5 h-[52px] min-w-40 rounded-xl'
         )
       case "sm":
         return classNames(
-          'text-body-14 rounded-lg',
-          variant === 'icon' ? 'p-3' : 'px-4 py-2 h-9 min-w-[120px]'
+          'text-body-14',
+          variant === 'icon' ? 'p-3 rounded-full w-fit' : 'px-4 py-2 h-9 min-w-[120px] rounded-lg'
         )
       case "md":
       default:
         return classNames(
           'text-body-14 rounded-xl',
-          variant === 'icon' ? 'p-3' : 'px-5 py-3 h-11 min-w-[120px]'
+          variant === 'icon' ? 'p-3 rounded-full w-fit' : 'px-5 py-3 h-11 min-w-[120px]'
         )
     }
   }, [scale, variant])
@@ -53,7 +53,7 @@ export default function Button({
         return 'bg-surface-soft'
       case 'text':
         if (disabled) return 'text-disabled'
-        return 'bg-transparent text-primary'
+        return 'bg-transparent text-primary outline-none'
       case 'secondary':
         if (disabled) return 'bg-gray-100 text-disabled'
         return 'text-primary bg-button-secondary hover:bg-gray-200'
@@ -89,7 +89,6 @@ export default function Button({
           ) : children
         }
       </div>
-
     </button>
   )
 }

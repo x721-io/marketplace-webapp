@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ErrorBoundary>
       <Providers>
         {children}
-        <ToastContainer />
+        <ToastContainer autoClose={5000} />
       </Providers>
     </ErrorBoundary>
     </body>
