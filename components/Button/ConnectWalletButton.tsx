@@ -21,6 +21,8 @@ export default function ConnectWalletButton({ mode = 'modal', children, ...rest 
   const [showSignMessage, setShowSignMessage] = useState(false)
   const [showSignup, setShowSignup] = useState(false)
   const acceptedTerms = useAuthStore(state => state.profile?.acceptedTerms)
+  const accessToken = useAuthStore(state => state.credentials?.accessToken)
+
   const handleConnectWallet = () => {
     if (mode === 'modal') {
       setShowWalletConnect(true)
@@ -29,13 +31,13 @@ export default function ConnectWalletButton({ mode = 'modal', children, ...rest 
     }
   }
 
-  if (isConnected && acceptedTerms) {
+  if (isConnected && acceptedTerms && !!accessToken) {
     return children
   }
 
   return (
     <>
-      <Button {...rest} onClick={handleConnectWallet}>
+      <Button type="button" {...rest} onClick={handleConnectWallet}>
         Connect Wallet
       </Button>
 

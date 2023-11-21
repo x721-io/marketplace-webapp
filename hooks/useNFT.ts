@@ -1,14 +1,16 @@
-import { useAccount, useContractWrite } from 'wagmi'
+import { Address, useAccount, useContractWrite } from 'wagmi'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
-import MarketplaceAPI from '@/services/api/marketplace'
 import { AssetType } from '@/types'
 import { Id, toast } from 'react-toastify'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { APIParams } from '@/services/api/types'
 
 export const useCreateNFT = () => {
+  const api = useMarketplaceApi()
   const { address } = useAccount()
   const userId = useAuthStore(state => state.profile?.id)
-  const bearerToken = useAuthStore(state => state.credentials?.accessToken)
+
   const { writeAsync: write721 } = useContractWrite({
     ...contracts.erc721,
     functionName: 'mintAndTransfer'
@@ -18,22 +20,17 @@ export const useCreateNFT = () => {
     functionName: 'mintAndTransfer'
   })
 
-  const generateTokenId = (collectionAddress: string) => MarketplaceAPI.generateTokenId({
-    collectionAddress,
-    config: { headers: { 'Authorization': `Bearer ${bearerToken}` } }
-  })
-
-  const onCreateNFT = async (type: AssetType, collection: string, params: Record<string, any>, toastId?: Id) => {
+  const onCreateNFT = async (type: AssetType, collection: Address, params: Record<string, any>, toastId?: Id) => {
     if (!userId) return
 
     if (toastId) toast.update(toastId, { render: 'Uploading Image', type: 'info' })
-    const { fileHashes } = await MarketplaceAPI.uploadFile(params.image)
+    const { fileHashes } = await api.uploadFile(params.image)
 
     if (toastId) toast.update(toastId, { render: 'Generating config', type: 'info' })
-    const { tokenId } = await generateTokenId(collection)
+    const { tokenId } = await api.generateTokenId(collection)
 
     if (toastId) toast.update(toastId, { render: 'Sending Transaction', type: 'info' })
-    const tokenURI = "ipfs:/"
+    const tokenURI = "ipfs://" + fileHashes[0]
     const args = [
       {
         tokenId,
@@ -42,8 +39,10 @@ export const useCreateNFT = () => {
         royalties: [],
         signatures: ["0x"]
       },
-      address
-    ]
+      address,
+      type === 'ERC1155' && params.amount
+    ].filter(Boolean)
+
     const { hash } = await (type === 'ERC721' ? write721({ args }) : write1155({ args }))
 
     const createNFTParams = {
@@ -53,13 +52,10 @@ export const useCreateNFT = () => {
       tokenUri: tokenURI,
       collectionId: collection,
       txCreationHash: hash,
-      creatorId: userId
-      // traits: []
-    }
-    const res = await MarketplaceAPI.createNFT({
-      ...createNFTParams,
-      config: { headers: { 'Authorization': `Bearer ${bearerToken}` } }
-    })
+      creatorId: userId,
+      traits: []
+    } as APIParams.CreateNFT
+    const res = await api.createNFT(createNFTParams)
     if (toastId) toast.update(toastId, { render: 'Item created successfully', type: 'success', isLoading: false })
   }
 

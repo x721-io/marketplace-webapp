@@ -3,24 +3,20 @@ import { AssetType, Trait } from '@/types'
 import { Address } from 'wagmi'
 
 export namespace APIParams {
-  interface BaseParams {
-    config?: AxiosRequestConfig
-  }
-
-  export interface Connect extends BaseParams {
+  export interface Connect {
     date: string
     publicKey: Address
     signature: Address
     signer: string
   }
 
-  export interface UpdateProfile extends BaseParams {
+  export interface UpdateProfile {
     acceptedTerms?: boolean
     email?: string
     username?: string
   }
 
-  export interface UpdateCollection extends BaseParams {
+  export interface UpdateCollection {
     txCreationHash: string,
     name: string,
     symbol: string,
@@ -32,12 +28,8 @@ export namespace APIParams {
     creators: string
   }
 
-  export interface GenerateTokenId extends BaseParams {
-    collectionAddress: string
-  }
-
-  export interface CreateNFT extends BaseParams {
-    id: string
+  export interface CreateNFT {
+    id: Address
     name: string,
     ipfsHash: string,
     tokenUri: string,

@@ -3,8 +3,9 @@ import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
 import { useCallback } from 'react'
 import { APIParams } from '@/services/api/types'
-import MarketplaceAPI from '@/services/api/marketplace'
 import { AssetType } from '@/types'
+import { Id } from 'react-toastify'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export const useCreateCollection = () => {
   const { writeAsync: write721 } = useContractWrite({
@@ -16,7 +17,8 @@ export const useCreateCollection = () => {
     functionName: 'createToken'
   })
 
-  const onCreateCollection = (type: AssetType, args: any[]) => {
+  const onCreateCollection = async (type: AssetType, args: any[], toastId?: Id) => {
+    const { hash } = await (type === 'ERC721' ? write721({ args }) : write1155({ args }))
     if (type === 'ERC721') {
       return write721({ args })
     }
@@ -27,15 +29,13 @@ export const useCreateCollection = () => {
 }
 
 export const useUpdateCollection = () => {
+  const api = useMarketplaceApi()
   const { credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
 
   const onUpdateCollection = useCallback((params: APIParams.UpdateCollection) => {
     if (!bearerToken) return
-    return MarketplaceAPI.updateCollection({
-      ...params,
-      config: { headers: { 'Authorization': `Bearer ${bearerToken}` } }
-    })
+    return api.updateCollection(params)
   }, [bearerToken])
 
   return { onUpdateCollection }

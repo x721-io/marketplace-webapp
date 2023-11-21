@@ -4,15 +4,16 @@ import useSWR from 'swr'
 import { useCallback, useEffect, useMemo } from 'react'
 import useAuthStore from '@/store/auth/store'
 import useAppCommonStore from '@/store/common/store'
-import MarketplaceAPI from '@/services/api/marketplace'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export const useUpdateAppData = () => {
+  const api = useMarketplaceApi()
   const { setCollection } = useAppCommonStore()
   const userId = useAuthStore(state => state.profile?.id)
 
   const { data: collectionsData, error, isLoading } = useSWR(
     !!userId ? 'true' : null,
-    () => MarketplaceAPI.fetchCollectionsByUser(userId as string),
+    () => api.fetchCollectionsByUser(userId as string),
     { refreshInterval: 3600 * 1000 }
   )
 

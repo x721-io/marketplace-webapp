@@ -15,13 +15,15 @@ import { useAppCommonData } from '@/hooks/useAppData'
 import { useCreateNFT } from '@/hooks/useNFT'
 import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
+import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 
 interface FormData {
-  image: string,
+  image?: Blob,
   name: string,
   description: string,
-  collection: Address,
+  collection?: Address,
   royalties: number
+  amount?: number
 }
 
 export default function CreateNftPage() {
@@ -40,8 +42,9 @@ export default function CreateNftPage() {
       image: '',
       name: '',
       description: '',
-      collection: '0x',
-      royalties: 5
+      collection: undefined,
+      royalties: 5,
+      amount: undefined
     }
   })
 
@@ -53,13 +56,13 @@ export default function CreateNftPage() {
   const [image, setImage] = useState<Blob | undefined>()
 
   const onSubmit = async (data: any) => {
-    if (!image || !type) return
+    if (!image || !type || !data.collection) return
 
     const toastId = toast.loading('Preparing transaction...', { type: 'info' })
 
     try {
-      const { name, description, collection, royalties } = data
-      const params = { name, description, royalties, image }
+      const { name, description, collection, royalties, amount } = data
+      const params = { name, description, royalties, image, amount }
       await onCreateNFT(type, collection, params, toastId)
     } catch (e) {
       toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
@@ -81,7 +84,7 @@ export default function CreateNftPage() {
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
           <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
-            Create New NFT
+            Create New NFT - {type}
           </Text>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -124,11 +127,24 @@ export default function CreateNftPage() {
                 )}
               />
             </div>
+
+            {
+              type === 'ERC1155' && (
+                <div>
+                  <Text className="text-base font-semibold mb-1">Number of copies</Text>
+                  <Input
+                    register={register('amount')}
+                  />
+                </div>
+              )
+            }
             {/* Button finish */}
             <div className="justify-end flex">
-              <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
-                Create Item
-              </Button>
+              <ConnectWalletButton>
+                <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
+                  Create Item
+                </Button>
+              </ConnectWalletButton>
             </div>
 
             {/* Put on marketplace */}

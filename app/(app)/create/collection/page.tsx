@@ -16,11 +16,13 @@ import { randomWord } from '@rarible/types'
 import useAuthStore from '@/store/auth/store'
 import { BASE_API_URL } from '@/config/api'
 import Icon from '@/components/Icon'
-import MarketplaceAPI from '@/services/api/marketplace'
 import { toast } from 'react-toastify'
 import { AssetType } from '@/types'
+import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export default function CreateNFTCollectionPage() {
+  const api = useMarketplaceApi()
   const creator = useAuthStore(state => state.profile?.id)
   const [type, setType] = useState<AssetType>()
   const { onCreateCollection } = useCreateCollection()
@@ -41,10 +43,6 @@ export default function CreateNFTCollectionPage() {
     setType(undefined)
   }
 
-  const handleUploadImage = async (_image: Blob) => {
-    return MarketplaceAPI.uploadFile(_image)
-  }
-
   const onSubmit = async (data: any) => {
     if (!type || !creator || !image) return
     const toastId = toast.loading('Uploading Image...', { type: 'info' })
@@ -53,7 +51,7 @@ export default function CreateNFTCollectionPage() {
       const salt = randomWord()
       const { name, symbol, description, shortUrl } = data
       const args = [name, symbol, 'ipfs:/', BASE_API_URL + '/collection/' + shortUrl, [], salt]
-      const { fileHashes } = await handleUploadImage(image)
+      const { fileHashes } = await api.uploadFile(image)
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
@@ -94,7 +92,7 @@ export default function CreateNFTCollectionPage() {
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
           <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
-            Create New Collection
+            Create New Collection - {type}
           </Text>
         </div>
 
@@ -138,7 +136,11 @@ export default function CreateNFTCollectionPage() {
 
             {/* Button finish */}
             <div className="justify-end flex">
-              <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">Finish</Button>
+              <ConnectWalletButton>
+                <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
+                  Create collection
+                </Button>
+              </ConnectWalletButton>
             </div>
           </div>
         </form>

@@ -1,11 +1,12 @@
 import { Address, useAccount } from "wagmi";
-import MarketplaceAPI from '@/services/api/marketplace'
 import { sleep } from '@/utils'
 import useAuthStore from '@/store/auth/store'
 import { useCallback } from 'react'
 import { APIParams } from '@/services/api/types'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export const useAuth = () => {
+  const api = useMarketplaceApi()
   const { address, isConnected } = useAccount()
   const { setCredentials, setProfile, credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
@@ -13,7 +14,7 @@ export const useAuth = () => {
   const onAuth = useCallback(async (date: string, message: Address) => {
     if (!address) return
 
-    const credentials = await MarketplaceAPI.connect({
+    const credentials = await api.connect({
       date,
       publicKey: address,
       signature: message,
@@ -27,12 +28,10 @@ export const useAuth = () => {
   const onUpdateProfile = useCallback(async (params: APIParams.UpdateProfile) => {
     if (!bearerToken) return
 
-    await MarketplaceAPI.updateProfile({
-      ...params, config: { headers: { 'Authorization': `Bearer ${bearerToken}` } }
-    })
+    await api.updateProfile(params)
 
     if (address) {
-      const profile = await MarketplaceAPI.viewProfile(address)
+      const profile = await api.viewProfile(address)
       setProfile(profile)
     }
   }, [bearerToken, address])
