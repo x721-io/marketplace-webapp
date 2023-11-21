@@ -12,7 +12,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean
   success?: boolean
   errorMessage?: string
-  register: UseFormRegisterReturn
+  register?: UseFormRegisterReturn
 }
 
 export default function Input({
