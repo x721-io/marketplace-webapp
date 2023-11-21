@@ -37,7 +37,7 @@ export default function MainFooter() {
     }
   ]
   return (
-    <footer className="border desktop:px-20 desktop:py-16 tablet:px-8 tablet:py-10 px-4 py-8 flex flex-col gap-10">
+    <footer className="desktop:px-20 desktop:py-16 tablet:px-8 tablet:py-10 px-4 py-8 flex flex-col gap-10">
       <div className="flex justify-between flex-col gap-10 tablet:flex-row desktop:flex-row tablet:gap-0 desktop:gap-0">
         <Link href="/">
           <Image height={28} src={brandingSvg} alt="u2u-brand" />
