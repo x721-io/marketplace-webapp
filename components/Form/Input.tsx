@@ -1,10 +1,10 @@
 import { classNames } from '@/utils/string'
-import React, { useMemo } from 'react'
+import React, { InputHTMLAttributes, useMemo } from 'react'
+import { UseFormRegisterReturn } from 'react-hook-form'
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  width?: string
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   containerClass?: string
-  scale?: 'md' | 'lg'
+  scale?: 'md' | 'lg' | 'sm'
   prependIcon?: React.ReactNode
   prependIconContainerClass?: string
   appendIcon?: React.ReactNode
@@ -12,6 +12,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean
   success?: boolean
   errorMessage?: string
+  register?: UseFormRegisterReturn
 }
 
 export default function Input({
@@ -25,6 +26,7 @@ export default function Input({
   error,
   errorMessage,
   className,
+  register,
   ...rest
 }: Props) {
   const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full'
@@ -36,6 +38,12 @@ export default function Input({
           'text-body-16 rounded-2xl min-w-72 h-14 p-4',
           !!prependIcon && 'ps-10',
           !!appendIcon && 'pe-10'
+        )
+      case 'sm':
+        return classNames(
+          'text-body-16 rounded-xl min-w-72 h-10 px-4 py-2',
+          !!prependIcon && 'ps-9',
+          !!appendIcon && 'pe-9'
         )
       case 'md':
       default:
@@ -69,6 +77,7 @@ export default function Input({
       }
       <input
         className={classNames(baseClass, scaleClass, colorClass, className)}
+        {...register}
         {...rest}
       />
       {

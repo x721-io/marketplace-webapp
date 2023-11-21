@@ -10,6 +10,13 @@ interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
 }
 
 export default function Text({ className, variant, children, ...rest }: Props) {
+  if (variant?.includes('heading')) {
+    return (
+      <h1 className={classNames(className, `text-${variant}`)} {...rest}>
+        {children}
+      </h1>
+    )
+  }
 
   return (
     <p className={classNames(className, `text-${variant || 'body-14'}`)} {...rest}>

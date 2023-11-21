@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css';
 import 'tailwindcss/tailwind.css'
@@ -7,8 +6,6 @@ import Providers from '@/components/Providers'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
 import React from 'react'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'U2U NFT Marketplace',
@@ -18,11 +15,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-    <body className={inter.className}>
+    <body>
     <ErrorBoundary>
       <Providers>
         {children}
-        <ToastContainer />
+        <ToastContainer autoClose={5000} />
       </Providers>
     </ErrorBoundary>
     </body>

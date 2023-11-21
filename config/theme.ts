@@ -47,7 +47,7 @@ export const colors = {
     '700': '#B0CA13',
     '800': '#8EA50A',
     '900': '#677706'
-  },
+  }
 }
 
 export const typography = {
@@ -85,6 +85,14 @@ export const typography = {
   }],
   'body-32': ['32px', {
     lineHeight: '40px',
+    letterSpacing: '-1px'
+  }],
+  'body-40': ['40px', {
+    lineHeight: '44px',
+    letterSpacing: '-1.5px'
+  }],
+  'body-24': ['24px', {
+    lineHeight: '28px',
     letterSpacing: '-1px'
   }],
 }
