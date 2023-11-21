@@ -4,6 +4,7 @@ import useAuthStore from '@/store/auth/store'
 import { useCallback } from 'react'
 import { APIParams } from '@/services/api/types'
 import MarketplaceAPI from '@/services/api/marketplace'
+import { AssetType } from '@/types'
 
 export const useCreateCollection = () => {
   const { writeAsync: write721 } = useContractWrite({
@@ -15,7 +16,7 @@ export const useCreateCollection = () => {
     functionName: 'createToken'
   })
 
-  const onCreateCollection = (type: 'ERC721' | 'ERC1155', args: any[]) => {
+  const onCreateCollection = (type: AssetType, args: any[]) => {
     if (type === 'ERC721') {
       return write721({ args })
     }

@@ -1,9 +1,10 @@
 import Text from '@/components/Text'
 import { classNames } from '@/utils/string'
+import { AssetType } from '@/types'
 
 interface Props {
   title: string,
-  onSelect: (type: 'ERC721' | 'ERC1155') => void
+  onSelect: (type: AssetType) => void
 }
 
 export default function NFTTypeSelection({ title, onSelect }: Props) {

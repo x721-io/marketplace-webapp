@@ -5,21 +5,43 @@ import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
 import ImageUploader from '@/components/Form/ImageUploader'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Select from '@/components/Form/Select'
 import NFTTypeSelection from '@/components/NFTTypeSelection'
-import MarketplaceAPI from '@/services/api/marketplace'
 import Icon from '@/components/Icon'
+import { AssetType, Option } from '@/types'
+import { useAppCommonData } from '@/hooks/useAppData'
+import { useCreateNFT } from '@/hooks/useNFT'
+import { Address } from 'wagmi'
+import { toast } from 'react-toastify'
+
+interface FormData {
+  image: string,
+  name: string,
+  description: string,
+  collection: Address,
+  royalties: number
+}
 
 export default function CreateNftPage() {
-  const [type, setType] = useState<'ERC721' | 'ERC1155'>()
+  const { myCollections } = useAppCommonData()
+  const { onCreateNFT } = useCreateNFT()
+  const [type, setType] = useState<AssetType>()
 
-  const { handleSubmit, register, reset } = useForm({
+  const collectionOptions: Option[] = useMemo(() => {
+    return myCollections.map(c => ({
+      label: c.name ?? c.id, value: c.id
+    }))
+  }, [myCollections])
+
+  const { handleSubmit, register, reset } = useForm<FormData>({
     defaultValues: {
-      // image: '',
+      image: '',
       name: '',
-      description: ''
+      description: '',
+      collection: '0x',
+      royalties: 5
     }
   })
 
@@ -29,13 +51,19 @@ export default function CreateNftPage() {
   }
 
   const [image, setImage] = useState<Blob | undefined>()
+
   const onSubmit = async (data: any) => {
-    if (!image) return
+    if (!image || !type) return
+
+    const toastId = toast.loading('Preparing transaction...', { type: 'info' })
 
     try {
-      const res = await MarketplaceAPI.uploadFile(image)
+      const { name, description, collection, royalties } = data
+      const params = { name, description, royalties, image }
+      await onCreateNFT(type, collection, params, toastId)
     } catch (e) {
-      console.log(e)
+      toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
+      console.error(e)
     }
   }
 
@@ -66,6 +94,11 @@ export default function CreateNftPage() {
                 onInput={setImage}
               />
             </div>
+            {/* Choose collection */}
+            <div>
+              <Text className="text-base font-semibold mb-1">Choose collection</Text>
+              <Select options={collectionOptions} register={register('collection')} />
+            </div>
             {/* Name */}
             <div>
               <Text className="text-base font-semibold mb-1">Display name</Text>
@@ -81,16 +114,21 @@ export default function CreateNftPage() {
                 register={register('description')}
               />
             </div>
-
-            {/* Choose collection */}
+            {/* Royalties */}
             <div>
-              <Text className="text-base font-semibold mb-1">Choose collection</Text>
-              <Select options={[]} />
+              <Text className="text-base font-semibold mb-1">Royalties</Text>
+              <Input
+                register={register('royalties')}
+                appendIcon={(
+                  <Text className="text-secondary">%</Text>
+                )}
+              />
             </div>
-
             {/* Button finish */}
             <div className="justify-end flex">
-              <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">Finish</Button>
+              <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
+                Create Item
+              </Button>
             </div>
 
             {/* Put on marketplace */}

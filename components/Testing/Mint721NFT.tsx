@@ -19,7 +19,7 @@ export default function Mint721NFT() {
   ]
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
-    ...contracts.erc721Meta,
+    ...contracts.erc721,
     functionName: 'mintAndTransfer',
     args: args
   })

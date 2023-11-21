@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react'
 import { classNames } from '@/utils/string'
 import './styles.css'
-import Input from '@/components/Form/Input'
-import Icon from '@/components/Icon'
+import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: { label: string, value: any }[]
+  options: {
+    label: string,
+    value: any
+  }[]
   width?: string
   containerClass?: string
   scale?: 'md' | 'lg'
@@ -14,6 +16,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: boolean
   success?: boolean
   errorMessage?: string
+  register?: UseFormRegisterReturn
 }
 
 export default function Select({
@@ -26,6 +29,7 @@ export default function Select({
   error,
   errorMessage,
   className,
+  register,
   ...rest
 }: Props) {
   const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full'
@@ -35,13 +39,13 @@ export default function Select({
       case 'lg':
         return classNames(
           'text-body-16 rounded-2xl min-w-72 h-14 p-4',
-          !!prependIcon && 'ps-10',
+          !!prependIcon && 'ps-10'
         )
       case 'md':
       default:
         return classNames(
           'text-body-14 rounded-2xl min-w-72 h-12 p-3',
-          !!prependIcon && 'ps-10',
+          !!prependIcon && 'ps-10'
         )
     }
   }, [scale, prependIcon])
@@ -66,7 +70,7 @@ export default function Select({
           </div>
         )
       }
-      <select className={classNames(baseClass, scaleClass, colorClass)} {...rest}>
+      <select className={classNames(baseClass, scaleClass, colorClass)} {...register} {...rest}>
         {
           options.map(option => (
             <option key={option.value} value={option.value}>{option.label}</option>

@@ -1,4 +1,4 @@
-import { useAccount } from "wagmi";
+import { Address, useAccount } from "wagmi";
 import MarketplaceAPI from '@/services/api/marketplace'
 import { sleep } from '@/utils'
 import useAuthStore from '@/store/auth/store'
@@ -10,7 +10,7 @@ export const useAuth = () => {
   const { setCredentials, setProfile, credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
 
-  const onAuth = useCallback(async (date: string, message: `0x${string}`) => {
+  const onAuth = useCallback(async (date: string, message: Address) => {
     if (!address) return
 
     const credentials = await MarketplaceAPI.connect({

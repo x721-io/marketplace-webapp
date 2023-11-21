@@ -11,17 +11,18 @@ import NFTTypeSelection from '@/components/NFTTypeSelection'
 import {
   useCreateCollection,
   useUpdateCollection
-} from '@/hooks/useCreateCollection'
+} from '@/hooks/useCollection'
 import { randomWord } from '@rarible/types'
 import useAuthStore from '@/store/auth/store'
 import { BASE_API_URL } from '@/config/api'
 import Icon from '@/components/Icon'
 import MarketplaceAPI from '@/services/api/marketplace'
 import { toast } from 'react-toastify'
+import { AssetType } from '@/types'
 
 export default function CreateNFTCollectionPage() {
   const creator = useAuthStore(state => state.profile?.id)
-  const [type, setType] = useState<'ERC721' | 'ERC1155'>()
+  const [type, setType] = useState<AssetType>()
   const { onCreateCollection } = useCreateCollection()
   const { onUpdateCollection } = useUpdateCollection()
   const { handleSubmit, register, reset } = useForm({
@@ -52,7 +53,6 @@ export default function CreateNFTCollectionPage() {
       const salt = randomWord()
       const { name, symbol, description, shortUrl } = data
       const args = [name, symbol, 'ipfs:/', BASE_API_URL + '/collection/' + shortUrl, [], salt]
-
       const { fileHashes } = await handleUploadImage(image)
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })

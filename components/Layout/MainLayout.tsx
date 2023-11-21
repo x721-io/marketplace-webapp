@@ -5,8 +5,12 @@ import { useEffect } from 'react'
 import { CHAIN_ID } from '@/config/constants'
 import MainHeader from '@/components/Layout/MainHeader'
 import MainFooter from '@/components/Layout/MainFooter'
+import { useUpdateAppData } from '@/hooks/useAppData'
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function MainLayout({ children }: {
+  children: React.ReactNode
+}) {
+  useUpdateAppData()
   const { chain } = useNetwork()
 
   useEffect(() => {

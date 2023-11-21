@@ -4,6 +4,9 @@ export const BASE_API_URL = process.env.NODE_ENV === 'development' ? 'https://b1
 export const API_ENDPOINTS = {
   CONNECT: '/auth/connect',
   PROFILE: '/user/profile',
-  COLLECTION: '/collection',
-  UPLOAD_IMAGE: '/common/upload-ipfs'
+  COLLECTIONS: '/collection',
+  USER_COLLECTIONS: '/collection/user',
+  UPLOAD_IMAGE: '/common/upload-ipfs',
+  TOKEN_ID: '/nft/tokenId',
+  NFT: '/nft'
 }
