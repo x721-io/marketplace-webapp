@@ -5,70 +5,60 @@ import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
 import ImageUploader from '@/components/Form/ImageUploader'
-import { useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import Select from '@/components/Form/Select'
 import NFTTypeSelection from '@/components/NFTTypeSelection'
 import Icon from '@/components/Icon'
 import { AssetType, Option } from '@/types'
 import { useAppCommonData } from '@/hooks/useAppData'
 import { useCreateNFT } from '@/hooks/useNFT'
-import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
-import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
-
-interface FormData {
-  image?: Blob,
-  name: string,
-  description: string,
-  collection?: Address,
-  royalties: number
-  amount?: number
-}
+import { contracts } from '@/config/contracts'
+import CreateNFTButton from './components/CreateNFTButton'
+import { CreateNFTForm } from '@/types/form'
+import { Address } from 'wagmi'
+import { classNames } from '@/utils/string'
 
 export default function CreateNftPage() {
   const { myCollections } = useAppCommonData()
-  const { onCreateNFT } = useCreateNFT()
+  const methods = useForm<CreateNFTForm>()
+  const collection = methods.watch('collection')
+  // const { onCreateNFT } = useCreateNFT(collection)
   const [type, setType] = useState<AssetType>()
 
-  const collectionOptions: Option[] = useMemo(() => {
-    return myCollections.map(c => ({
-      label: c.name ?? c.id, value: c.id
+  const collectionOptions = useMemo(() => {
+    const collections = myCollections.map(c => ({
+      label: c.name ?? c.id, value: c.address, type: c.type
     }))
-  }, [myCollections])
 
-  const { handleSubmit, register, reset } = useForm<FormData>({
-    defaultValues: {
-      image: '',
-      name: '',
-      description: '',
-      collection: undefined,
-      royalties: 5,
-      amount: undefined
-    }
-  })
+    return [
+      { label: `U2U`, type, value: type === 'ERC721' ? contracts.erc721.address : contracts.erc1155.address },
+      ...collections
+    ]
+  }, [myCollections, type])
 
   const resetForm = () => {
-    reset()
+    methods.reset()
     setType(undefined)
   }
 
-  const [image, setImage] = useState<Blob | undefined>()
+  // const onSubmit = async (data: CreateNFTForm) => {
+  //   if (!type || !data.collection) return
+  //
+  //   const toastId = toast.loading('Preparing transaction...', { type: 'info' })
+  //   const { collection, ...rest } = data
+  //   try {
+  //     await onCreateNFT(type, rest, toastId)
+  //   } catch (e) {
+  //     toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
+  //     console.error(e)
+  //   }
+  // }
 
-  const onSubmit = async (data: any) => {
-    if (!image || !type || !data.collection) return
-
-    const toastId = toast.loading('Preparing transaction...', { type: 'info' })
-
-    try {
-      const { name, description, collection, royalties, amount } = data
-      const params = { name, description, royalties, image, amount }
-      await onCreateNFT(type, collection, params, toastId)
-    } catch (e) {
-      toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
-      console.error(e)
-    }
-  }
+  useEffect(() => {
+    console.log(collection)
+  }, [collection]);
 
   if (!type) {
     return (
@@ -87,199 +77,238 @@ export default function CreateNftPage() {
             Create New NFT - {type}
           </Text>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-10">
-            {/* Upload file */}
-            <div>
-              <Text className="text-base font-semibold mb-1">Upload file</Text>
-              <ImageUploader
-                image={image}
-                onInput={setImage}
-              />
-            </div>
-            {/* Choose collection */}
-            <div>
-              <Text className="text-base font-semibold mb-1">Choose collection</Text>
-              <Select options={collectionOptions} register={register('collection')} />
-            </div>
-            {/* Name */}
-            <div>
-              <Text className="text-base font-semibold mb-1">Display name</Text>
-              <Input
-                register={register('name')}
-              />
-            </div>
-            {/* Description */}
-            <div>
-              <Text className="text-base font-semibold mb-1">Description</Text>
-              <Textarea
-                className="h-[160px] resize-none"
-                register={register('description')}
-              />
-            </div>
-            {/* Royalties */}
-            <div>
-              <Text className="text-base font-semibold mb-1">Royalties</Text>
-              <Input
-                register={register('royalties')}
-                appendIcon={(
-                  <Text className="text-secondary">%</Text>
-                )}
-              />
-            </div>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(data => console.log(data))}>
+            <div className="flex flex-col gap-10">
+              {/* Upload file */}
+              <div>
+                <Text className="text-base font-semibold mb-1">Upload file</Text>
+                <Controller
+                  name="image"
+                  control={methods.control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <ImageUploader
+                      image={value}
+                      onInput={onChange} />
+                  )}
+                />
+              </div>
+              {/* Choose collection */}
+              <div>
+                <Text className="text-base font-semibold mb-1">Choose collection</Text>
+                <Controller
+                  name="collection"
+                  control={methods.control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="flex items-center gap-2 w-full max-h-56 overflow-y-auto flex-wrap">
+                      {
+                        collectionOptions.map(c => (
+                          <div
+                            key={c.value}
+                            onClick={() => onChange(c.value)}
+                            className={classNames(
+                              'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8',
+                              'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
+                              c.value === value ? 'border-2 border-primary bg-white text-primary' : ' border text-tertiary bg-surface-soft'
+                            )}>
+                            <Text className="text-heading-sm font-bold text-primary text-ellipsis">{c.label}</Text>
+                            <Text className="text-body-12 text-secondary text-ellipsis">{c.type}</Text>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  )}
+                />
+              </div>
+              {/* Name */}
+              <div>
+                <Text className="text-base font-semibold mb-1">Display name</Text>
+                <Input
+                  register={methods.register('name', { required: true })}
+                />
+              </div>
+              {/* Description */}
+              <div>
+                <Text className="text-base font-semibold mb-1">Description</Text>
+                <Textarea
+                  className="h-[160px] resize-none"
+                  register={methods.register('description')}
+                />
+              </div>
+              {/* Royalties */}
+              <div>
+                <Text className="text-base font-semibold mb-1">Royalties</Text>
+                <Input
+                  register={methods.register('royalties', { required: true })}
+                  appendIcon={(
+                    <Text className="text-secondary">%</Text>
+                  )}
+                />
+              </div>
 
-            {
-              type === 'ERC1155' && (
-                <div>
-                  <Text className="text-base font-semibold mb-1">Number of copies</Text>
-                  <Input
-                    register={register('amount')}
-                  />
-                </div>
-              )
-            }
-            {/* Button finish */}
-            <div className="justify-end flex">
-              <ConnectWalletButton>
-                <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
-                  Create Item
-                </Button>
-              </ConnectWalletButton>
+              {
+                type === 'ERC1155' && (
+                  <div>
+                    <Text className="text-base font-semibold mb-1">Number of copies</Text>
+                    <Input
+                      register={methods.register('amount', { required: true })}
+                    />
+                  </div>
+                )
+              }
+
+              {/* Button finish */}
+              {
+                !!collection ? myCollections.map(c => {
+                  console.log(collection)
+                  return c.address === collection ? (
+                    <CreateNFTButton
+                      key={c.address}
+                      collection={collection}
+                    />
+                  ) : null
+                }) : (
+                  <Button disabled>
+                    Create Item
+                  </Button>
+                )
+              }
+
+              {/* Put on marketplace */}
+              {/*<div className="flex flex-col gap-6">*/}
+              {/*  <div className="flex justify-between">*/}
+              {/*    <div>*/}
+              {/*      <Text className="text-lg font-semibold mb-2">Put on marketplace</Text>*/}
+              {/*      <Text className="text-secondary">Enter price to allow users instantly purchase your NFT</Text>*/}
+              {/*    </div>*/}
+              {/*    <div>*/}
+              {/*      <label className="relative inline-flex items-center cursor-pointer">*/}
+              {/*        <input type="checkbox" value="" className="sr-only peer" />*/}
+              {/*        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
+              {/*      </label>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*  <div className="flex gap-4 w-full">*/}
+              {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined">*/}
+              {/*      <TagIcon width={24} height={24} />Fixed price*/}
+              {/*    </Button>*/}
+              {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined" disabled>*/}
+              {/*      <LockIcon width={24} height={24} />Timed auction*/}
+              {/*    </Button>*/}
+              {/*  </div>*/}
+              {/*  /!* Price *!/*/}
+              {/*  <div>*/}
+              {/*    <Text className="text-base font-semibold mb-1">Price</Text>*/}
+              {/*    <div className="flex">*/}
+              {/*      <button id="dropdown-button"*/}
+              {/*              data-dropdown-toggle="dropdown"*/}
+              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
+              {/*              type="button">U2U*/}
+              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
+              {/*             aria-hidden="true"*/}
+              {/*             xmlns="http://www.w3.org/2000/svg"*/}
+              {/*             fill="none"*/}
+              {/*             viewBox="0 0 10 6">*/}
+              {/*          <path stroke="currentColor"*/}
+              {/*                strokeLinecap="round"*/}
+              {/*                strokeLinejoin="round"*/}
+              {/*                strokeWidth="2"*/}
+              {/*                d="m1 1 4 4 4-4" />*/}
+              {/*        </svg>*/}
+              {/*      </button>*/}
+              {/*      <div className="relative w-full">*/}
+              {/*        <input type="text"*/}
+              {/*               id="search-dropdown"*/}
+              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
+              {/*               placeholder="99" />*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*  /!* Minimum bid *!/*/}
+              {/*  <div>*/}
+              {/*    <Text className="text-base font-semibold mb-1">Minimum bid</Text>*/}
+              {/*    <div className="flex">*/}
+              {/*      <button id="dropdown-button"*/}
+              {/*              data-dropdown-toggle="dropdown"*/}
+              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
+              {/*              type="button">U2U*/}
+              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
+              {/*             aria-hidden="true"*/}
+              {/*             xmlns="http://www.w3.org/2000/svg"*/}
+              {/*             fill="none"*/}
+              {/*             viewBox="0 0 10 6">*/}
+              {/*          <path stroke="currentColor"*/}
+              {/*                strokeLinecap="round"*/}
+              {/*                strokeLinejoin="round"*/}
+              {/*                strokeWidth="2"*/}
+              {/*                d="m1 1 4 4 4-4" />*/}
+              {/*        </svg>*/}
+              {/*      </button>*/}
+              {/*      <div className="relative w-full">*/}
+              {/*        <input type="text"*/}
+              {/*               id="search-dropdown"*/}
+              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
+              {/*               placeholder="99" />*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*  /!* Starting Date *!/*/}
+              {/*  <div>*/}
+              {/*    <Text className="text-base font-semibold mb-1">Starting Date</Text>*/}
+              {/*    <Select options={[]} />*/}
+              {/*  </div>*/}
+              {/*  /!* End date *!/*/}
+              {/*  <div>*/}
+              {/*    <Text className="text-base font-semibold mb-1">End date</Text>*/}
+              {/*    <div className="flex">*/}
+              {/*      <button id="dropdown-button"*/}
+              {/*              data-dropdown-toggle="dropdown"*/}
+              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
+              {/*              type="button">7 days*/}
+              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
+              {/*             aria-hidden="true"*/}
+              {/*             xmlns="http://www.w3.org/2000/svg"*/}
+              {/*             fill="none"*/}
+              {/*             viewBox="0 0 10 6">*/}
+              {/*          <path stroke="currentColor"*/}
+              {/*                strokeLinecap="round"*/}
+              {/*                strokeLinejoin="round"*/}
+              {/*                strokeWidth="2"*/}
+              {/*                d="m1 1 4 4 4-4" />*/}
+              {/*        </svg>*/}
+              {/*      </button>*/}
+              {/*      <div className="relative w-full">*/}
+              {/*        <input type="text"*/}
+              {/*               id="search-dropdown"*/}
+              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
+              {/*               placeholder="99" />*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+              {/* Unlockable content */}
+              {/*<div className="flex justify-between">*/}
+              {/*  <div>*/}
+              {/*    <Text className="text-lg font-semibold mb-2">Unlockable content</Text>*/}
+              {/*    <Text className="text-secondary">Include Content that can only be revealed by the owner</Text>*/}
+              {/*  </div>*/}
+              {/*  <div>*/}
+              {/*    <label className="relative inline-flex items-center cursor-pointer">*/}
+              {/*      <input type="checkbox" value="" className="sr-only peer" />*/}
+              {/*      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
+              {/*    </label>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+              {/*/!* Blockchain *!/*/}
+              {/*<div>*/}
+              {/*  <Text className="text-base font-semibold mb-1">Blockchain</Text>*/}
+              {/*  <Select options={[]} />*/}
+              {/*</div>*/}
             </div>
-
-            {/* Put on marketplace */}
-            {/*<div className="flex flex-col gap-6">*/}
-            {/*  <div className="flex justify-between">*/}
-            {/*    <div>*/}
-            {/*      <Text className="text-lg font-semibold mb-2">Put on marketplace</Text>*/}
-            {/*      <Text className="text-secondary">Enter price to allow users instantly purchase your NFT</Text>*/}
-            {/*    </div>*/}
-            {/*    <div>*/}
-            {/*      <label className="relative inline-flex items-center cursor-pointer">*/}
-            {/*        <input type="checkbox" value="" className="sr-only peer" />*/}
-            {/*        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
-            {/*      </label>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*  <div className="flex gap-4 w-full">*/}
-            {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined">*/}
-            {/*      <TagIcon width={24} height={24} />Fixed price*/}
-            {/*    </Button>*/}
-            {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined" disabled>*/}
-            {/*      <LockIcon width={24} height={24} />Timed auction*/}
-            {/*    </Button>*/}
-            {/*  </div>*/}
-            {/*  /!* Price *!/*/}
-            {/*  <div>*/}
-            {/*    <Text className="text-base font-semibold mb-1">Price</Text>*/}
-            {/*    <div className="flex">*/}
-            {/*      <button id="dropdown-button"*/}
-            {/*              data-dropdown-toggle="dropdown"*/}
-            {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-            {/*              type="button">U2U*/}
-            {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-            {/*             aria-hidden="true"*/}
-            {/*             xmlns="http://www.w3.org/2000/svg"*/}
-            {/*             fill="none"*/}
-            {/*             viewBox="0 0 10 6">*/}
-            {/*          <path stroke="currentColor"*/}
-            {/*                strokeLinecap="round"*/}
-            {/*                strokeLinejoin="round"*/}
-            {/*                strokeWidth="2"*/}
-            {/*                d="m1 1 4 4 4-4" />*/}
-            {/*        </svg>*/}
-            {/*      </button>*/}
-            {/*      <div className="relative w-full">*/}
-            {/*        <input type="text"*/}
-            {/*               id="search-dropdown"*/}
-            {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-            {/*               placeholder="99" />*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*  /!* Minimum bid *!/*/}
-            {/*  <div>*/}
-            {/*    <Text className="text-base font-semibold mb-1">Minimum bid</Text>*/}
-            {/*    <div className="flex">*/}
-            {/*      <button id="dropdown-button"*/}
-            {/*              data-dropdown-toggle="dropdown"*/}
-            {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-            {/*              type="button">U2U*/}
-            {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-            {/*             aria-hidden="true"*/}
-            {/*             xmlns="http://www.w3.org/2000/svg"*/}
-            {/*             fill="none"*/}
-            {/*             viewBox="0 0 10 6">*/}
-            {/*          <path stroke="currentColor"*/}
-            {/*                strokeLinecap="round"*/}
-            {/*                strokeLinejoin="round"*/}
-            {/*                strokeWidth="2"*/}
-            {/*                d="m1 1 4 4 4-4" />*/}
-            {/*        </svg>*/}
-            {/*      </button>*/}
-            {/*      <div className="relative w-full">*/}
-            {/*        <input type="text"*/}
-            {/*               id="search-dropdown"*/}
-            {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-            {/*               placeholder="99" />*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*  /!* Starting Date *!/*/}
-            {/*  <div>*/}
-            {/*    <Text className="text-base font-semibold mb-1">Starting Date</Text>*/}
-            {/*    <Select options={[]} />*/}
-            {/*  </div>*/}
-            {/*  /!* End date *!/*/}
-            {/*  <div>*/}
-            {/*    <Text className="text-base font-semibold mb-1">End date</Text>*/}
-            {/*    <div className="flex">*/}
-            {/*      <button id="dropdown-button"*/}
-            {/*              data-dropdown-toggle="dropdown"*/}
-            {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-            {/*              type="button">7 days*/}
-            {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-            {/*             aria-hidden="true"*/}
-            {/*             xmlns="http://www.w3.org/2000/svg"*/}
-            {/*             fill="none"*/}
-            {/*             viewBox="0 0 10 6">*/}
-            {/*          <path stroke="currentColor"*/}
-            {/*                strokeLinecap="round"*/}
-            {/*                strokeLinejoin="round"*/}
-            {/*                strokeWidth="2"*/}
-            {/*                d="m1 1 4 4 4-4" />*/}
-            {/*        </svg>*/}
-            {/*      </button>*/}
-            {/*      <div className="relative w-full">*/}
-            {/*        <input type="text"*/}
-            {/*               id="search-dropdown"*/}
-            {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-            {/*               placeholder="99" />*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-            {/* Unlockable content */}
-            {/*<div className="flex justify-between">*/}
-            {/*  <div>*/}
-            {/*    <Text className="text-lg font-semibold mb-2">Unlockable content</Text>*/}
-            {/*    <Text className="text-secondary">Include Content that can only be revealed by the owner</Text>*/}
-            {/*  </div>*/}
-            {/*  <div>*/}
-            {/*    <label className="relative inline-flex items-center cursor-pointer">*/}
-            {/*      <input type="checkbox" value="" className="sr-only peer" />*/}
-            {/*      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
-            {/*    </label>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-            {/*/!* Blockchain *!/*/}
-            {/*<div>*/}
-            {/*  <Text className="text-base font-semibold mb-1">Blockchain</Text>*/}
-            {/*  <Select options={[]} />*/}
-            {/*</div>*/}
-
-          </div>
-        </form>
+          </form>
+        </FormProvider>
       </div>
     </div>
   )

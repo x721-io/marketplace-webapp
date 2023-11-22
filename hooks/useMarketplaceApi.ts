@@ -27,8 +27,10 @@ export const useMarketplaceApi = () => {
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
 
       /** GET **/
-      generateTokenId: (collectionAddress: Address): Promise<{ tokenId: string }> =>
-        marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
+      generateTokenId: async (collectionAddress: Address): Promise<string> => {
+        const idHash: number = await marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader)
+        return BigInt(idHash).toString()
+      },
 
       fetchCollections: (): Promise<APIResponse.Collection[]> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS),
 
