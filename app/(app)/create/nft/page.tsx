@@ -10,21 +10,17 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import Select from '@/components/Form/Select'
 import NFTTypeSelection from '@/components/NFTTypeSelection'
 import Icon from '@/components/Icon'
-import { AssetType, Option } from '@/types'
+import { AssetType } from '@/types'
 import { useAppCommonData } from '@/hooks/useAppData'
-import { useCreateNFT } from '@/hooks/useNFT'
-import { toast } from 'react-toastify'
 import { contracts } from '@/config/contracts'
 import CreateNFTButton from './components/CreateNFTButton'
 import { CreateNFTForm } from '@/types/form'
-import { Address } from 'wagmi'
 import { classNames } from '@/utils/string'
 
 export default function CreateNftPage() {
   const { myCollections } = useAppCommonData()
   const methods = useForm<CreateNFTForm>()
   const collection = methods.watch('collection')
-  // const { onCreateNFT } = useCreateNFT(collection)
   const [type, setType] = useState<AssetType>()
 
   const collectionOptions = useMemo(() => {
@@ -42,23 +38,6 @@ export default function CreateNftPage() {
     methods.reset()
     setType(undefined)
   }
-
-  // const onSubmit = async (data: CreateNFTForm) => {
-  //   if (!type || !data.collection) return
-  //
-  //   const toastId = toast.loading('Preparing transaction...', { type: 'info' })
-  //   const { collection, ...rest } = data
-  //   try {
-  //     await onCreateNFT(type, rest, toastId)
-  //   } catch (e) {
-  //     toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
-  //     console.error(e)
-  //   }
-  // }
-
-  useEffect(() => {
-    console.log(collection)
-  }, [collection]);
 
   if (!type) {
     return (
@@ -78,7 +57,7 @@ export default function CreateNftPage() {
           </Text>
         </div>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(data => console.log(data))}>
+          <form>
             <div className="flex flex-col gap-10">
               {/* Upload file */}
               <div>
@@ -161,12 +140,12 @@ export default function CreateNftPage() {
 
               {/* Button finish */}
               {
-                !!collection ? myCollections.map(c => {
-                  console.log(collection)
-                  return c.address === collection ? (
+                !!collection ? collectionOptions.map(c => {
+                  return c.value === collection ? (
                     <CreateNFTButton
-                      key={c.address}
-                      collection={collection}
+                      assetType={type}
+                      key={c.value}
+                      collection={c.value}
                     />
                   ) : null
                 }) : (
