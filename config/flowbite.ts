@@ -24,15 +24,26 @@ const tab: CustomFlowbiteTheme['tab'] = {
             on: 'text-primary border-b-2 border-primary',
             off: 'text-secondary bg-transparent'
           }
-        },
+        }
       }
     }
   },
   tabpanel: ''
 }
 
+const table: CustomFlowbiteTheme['table'] = {
+  root: {
+    base: "w-full text-left text-sm text-secondary dark:text-gray-400 rounded-2xl",
+    shadow: "absolute bg-white dark:bg-black w-full h-full top-0 left-0 rounded-lg shadow -z-10"
+  },
+  head: {
+    base: "group/head text-heading-xs uppercase text-secondary font-semibold dark:text-gray-400"
+  }
+}
+
 const appTheme: CustomFlowbiteTheme = {
-  tab
+  tab,
+  table
 }
 
 export default appTheme

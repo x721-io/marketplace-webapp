@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Input from '@/components/Form/Input'
 import { useState } from 'react'
-import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import defaultAvatar from '@/assets/images/default-avatar.png'
@@ -16,8 +15,9 @@ export default function MainHeader() {
     {
       label: 'Explore',
       items: [
-        { href: '/explore/collections', label: 'Collection' },
-        { href: '/explore/items', label: 'NFT' }
+        { href: '/explore/collections', label: 'Collections' },
+        { href: '/explore/items', label: 'NFTs' },
+        { href: '/explore/users', label: 'Users' }
       ]
     },
     {
@@ -86,7 +86,6 @@ export default function MainHeader() {
               width={48}
               height={48} />
           </ConnectWalletButton>
-          {/*<Button variant="icon"></Button>*/}
         </div>
 
         <div className="block tablet:hidden text-secondary">

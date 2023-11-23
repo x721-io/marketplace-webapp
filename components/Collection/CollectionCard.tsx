@@ -1,18 +1,13 @@
 import Image from 'next/image'
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
+import { APIResponse } from '@/services/api/types'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  id: string,
-  name: string,
-  owners: number,
-  items: number,
-  floorPrice: number,
-  royalties: number
-  volume: number
+  collection: APIResponse.Collection
 }
 
-export default function CollectionCard({ name, owners, items, floorPrice, royalties, volume, ...rest }: Props) {
+export default function CollectionCard({ collection, ...rest }: Props) {
   return (
     <div className="flex flex-col gap-6 border border-disabled rounded-2xl p-4" {...rest}>
       <div className="flex items-center gap-3">
@@ -20,13 +15,13 @@ export default function CollectionCard({ name, owners, items, floorPrice, royalt
         <div>
           <div className="flex items-center gap-2">
             <Text className="text-primary font-semibold" variant="body-16">
-              {name}
+              {collection.name}
             </Text>
             <Icon name="verified" width={16} height={16} />
           </div>
 
           <Text className="text-secondary font-semibold" variant="body-16">
-            {floorPrice} U2U
+            {0} U2U
           </Text>
         </div>
       </div>
@@ -36,7 +31,7 @@ export default function CollectionCard({ name, owners, items, floorPrice, royalt
         <div>
           <Text className="text-secondary mb-2">Floor</Text>
           <Text variant="body-16">
-            <span className="text-primary font-semibold">{floorPrice}</span>
+            <span className="text-primary font-semibold">{0}</span>
             &nbsp;
             <span className="text-secondary">U2U</span>
           </Text>
@@ -45,7 +40,7 @@ export default function CollectionCard({ name, owners, items, floorPrice, royalt
         <div>
           <Text className="text-secondary mb-2">Volume</Text>
           <Text variant="body-16">
-            <span className="text-primary font-semibold">{volume}</span>
+            <span className="text-primary font-semibold">{0}</span>
             &nbsp;
             <span className="text-secondary">U2U</span>
           </Text>
@@ -54,23 +49,23 @@ export default function CollectionCard({ name, owners, items, floorPrice, royalt
         <div>
           <Text className="text-secondary mb-2">Items</Text>
           <Text className="text-primary font-semibold" variant="body-16">
-            {items}
+            {0}
           </Text>
         </div>
 
         <div>
           <Text className="text-secondary mb-2">Owner</Text>
           <Text className="text-primary font-semibold" variant="body-16">
-            {owners}
+            {collection.creators[0]?.username}
           </Text>
         </div>
 
-        <div>
-          <Text className="text-secondary mb-2">Royalties</Text>
-          <Text className="text-primary font-semibold" variant="body-16">
-            {royalties}%
-          </Text>
-        </div>
+        {/*<div>*/}
+        {/*  <Text className="text-secondary mb-2">Royalties</Text>*/}
+        {/*  <Text className="text-primary font-semibold" variant="body-16">*/}
+        {/*    {0}%*/}
+        {/*  </Text>*/}
+        {/*</div>*/}
       </div>
 
       {/* Highlighted NFTs */}

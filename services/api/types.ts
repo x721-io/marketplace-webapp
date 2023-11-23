@@ -2,6 +2,13 @@ import { AxiosRequestConfig } from 'axios'
 import { AssetType, Trait } from '@/types'
 import { Address } from 'wagmi'
 
+interface Creator {
+  avatar: null | string
+  email: string
+  publicKey: string
+  username: string
+}
+
 export namespace APIParams {
   export interface Connect {
     date: string
@@ -54,12 +61,12 @@ export namespace APIResponse {
     publicKey: string
     signDate: string
     signature: Address
+    signer: Address
     signedMessage: string
     acceptedTerms: boolean
     avatar?: string | null
     createdAt?: string | null
     email?: null
-    signer: Address
     updatedAt?: string | null
     username?: string | null
   }
@@ -69,19 +76,20 @@ export namespace APIResponse {
   }
 
   export interface Collection {
-    address: string | null
-    category: string | null
+    id: string
+    txCreationHash: string
+    name: string | null
+    symbol: string
+    address: string
+    description?: string | null
     categoryId: number | null
     createdAt: string
-    description: string | null
-    id: string
-    metadata: null | Record<string, any>
-    name: string | null
+    updatedAt: string
+    metadata: null | Record<string, any> | any[]
     shortUrl: string | null
     status: 'PENDING' | 'SUCCESS' | 'FAILED'
-    symbol: string
-    txCreationHash: string
     type: AssetType
+    creators: Creator[]
   }
 
   export interface CreateNFT {
