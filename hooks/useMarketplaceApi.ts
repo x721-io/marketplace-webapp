@@ -39,7 +39,12 @@ export const useMarketplaceApi = () => {
         return (data && data[0]) ? data[0]['nftCollection'].map((item: any) => item.collection) as APIResponse.Collection[] : []
       },
 
-      viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`)
+      viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`),
+
+      getUsers: async({limit}: APIParams.GetUsers): Promise<APIResponse.User[]> =>{ 
+        const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
+        return (res as any).users
+      }
     }
   }, [authHeader])
 }
