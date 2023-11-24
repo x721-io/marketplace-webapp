@@ -44,7 +44,12 @@ export const useMarketplaceApi = () => {
 
       fetchNFTById: (id: string): Promise<APIResponse.NFT> => marketplaceApi.get(API_ENDPOINTS.NFT + `/${id}`),
 
-      viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`)
+      viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`),
+
+      getUsers: async({limit}: APIParams.GetUsers): Promise<APIResponse.User[]> =>{
+        const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
+        return (res as any).users
+      }
     }
   }, [authHeader])
 }

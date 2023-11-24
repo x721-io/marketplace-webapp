@@ -68,6 +68,10 @@ export namespace APIParams {
     traits?: Trait[]
   }
 
+  export interface GetUsers {
+    limit: string
+  }
+
   export interface SearchNFT extends PaginationParams {
     traits?: { trait_type: string, value: any }[]
     collectionAddress?: Address,
@@ -169,5 +173,20 @@ export namespace APIResponse {
   export interface SearchNFTResponse {
     data: NFT[]
     paging: PaginationResponse
+  }
+
+  export interface User {
+    id: string
+    email:string
+    avatar: string | null
+    username: string | null
+    signature: Address
+    signedMessage: string
+    signer: Address
+    publicKey: string
+    signDate: string
+    acceptedTerms: boolean
+    createdAt: string
+    updatedAt?: string | null
   }
 }
