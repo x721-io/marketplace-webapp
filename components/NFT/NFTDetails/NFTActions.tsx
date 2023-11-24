@@ -1,7 +1,7 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { APIResponse } from '@/services/api/types'
-import { useMarket, useMarketStatus } from '@/hooks/useMarket'
+import { useMarketApproval, useMarketStatus } from '@/hooks/useMarket'
 import { useEffect, useState } from 'react'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import SellNFTModal from '@/components/Modal/SellNFTModal'

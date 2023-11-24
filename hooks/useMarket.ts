@@ -34,12 +34,12 @@ export const useMarketStatus = (nft: APIResponse.NFT) => {
   }
 }
 
-export const useMarket = (nft: APIResponse.NFT) => {
+export const useMarketApproval = (nft: APIResponse.NFT) => {
   const type = nft.collection.type
   const marketContract = type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market
   const wallet = useAuthStore(state => state.profile?.publicKey)
 
-  const { data: isMarketContractApproved,  } = useContractRead({
+  const { data: isMarketContractApproved, } = useContractRead({
     address: nft.collection.address,
     abi: type === 'ERC721' ? contracts.erc721.abi : contracts.erc1155.abi,
     functionName: 'isApprovedForAll',
@@ -64,4 +64,17 @@ export const useMarket = (nft: APIResponse.NFT) => {
     isFetchingApproval,
     contractCallError
   }
+}
+
+export const useSellNFT = (nft: APIResponse.NFT) => {
+  const type = nft.collection.type
+  const marketContract = type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market
+
+
+  const { writeAsync: onSellNFT, isLoading, isError, isSuccess, error } = useContractWrite({
+    ...marketContract,
+    functionName: 'createAsk',
+  })
+
+  return { onSellNFT, isLoading, isError, isSuccess, error }
 }

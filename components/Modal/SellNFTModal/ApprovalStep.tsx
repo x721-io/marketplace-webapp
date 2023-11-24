@@ -1,6 +1,6 @@
 import Text from '@/components/Text'
 import { Spinner } from 'flowbite-react'
-import { useMarket } from '@/hooks/useMarket'
+import { useMarketApproval } from '@/hooks/useMarket'
 import { APIResponse } from '@/services/api/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
@@ -19,7 +19,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
     onApproveMarketContract,
     isFetchingApproval,
     contractCallError
-  } = useMarket(nft)
+  } = useMarketApproval(nft)
 
   const {
     data,
@@ -33,7 +33,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
 
   const handleApproveMarketContract = async () => {
     try {
-      const { hash } = await onApproveMarketContract()
+      const { hash } = await onApproveMarketContract?.()
       setTxHash(hash)
     } catch (e) {
 

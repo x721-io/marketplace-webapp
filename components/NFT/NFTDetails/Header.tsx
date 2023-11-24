@@ -3,9 +3,7 @@ import Icon from '@/components/Icon'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import { useEffect, useMemo } from 'react'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
-import useAuthStore from '@/store/auth/store'
 import { useMarketStatus } from '@/hooks/useMarket'
 
 export default function NFTDetailsHeader(nft: APIResponse.NFT) {

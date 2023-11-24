@@ -4,6 +4,7 @@ import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from '@/components/Modal/SellNFTModal/ApprovalStep'
 import { APIResponse } from '@/services/api/types'
+import ListingStep from "@/components/Modal/SellNFTModal/ListingStep";
 
 interface Props extends ModalProps {
   nft: APIResponse.NFT,
@@ -22,9 +23,11 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
   const renderContent = () => {
     switch (step) {
       case 1:
-        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
+        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
       case 2:
-        return 'Step2'
+        return <ListingStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
+      case 3:
+        return 'Success'
       default:
         return <></>
     }
