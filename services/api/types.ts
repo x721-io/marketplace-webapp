@@ -38,6 +38,10 @@ export namespace APIParams {
     creatorId: string,
     traits?: Trait[]
   }
+
+  export interface GetUsers {
+    limit: string
+  }
 }
 
 export namespace APIResponse {
@@ -86,5 +90,20 @@ export namespace APIResponse {
 
   export interface CreateNFT {
     tokenId: string
+  }
+
+  export interface User {
+    id: string
+    email:string
+    avatar: string | null
+    username: string | null
+    signature: Address
+    signedMessage: string
+    signer: Address
+    publicKey: string
+    signDate: string
+    acceptedTerms: boolean
+    createdAt: string
+    updatedAt?: string | null
   }
 }
