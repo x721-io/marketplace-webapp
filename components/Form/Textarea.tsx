@@ -2,7 +2,7 @@ import { classNames } from '@/utils/string'
 import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  register: UseFormRegisterReturn
+  register?: UseFormRegisterReturn
 }
 
 export default function Textarea({ className, register, ...rest }: Props) {
