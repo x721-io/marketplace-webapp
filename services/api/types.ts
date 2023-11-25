@@ -22,6 +22,7 @@ interface MarketEvent {
   price: string // Big Number
   to: string
   from: string
+  quoteToken: Address
 }
 
 export namespace APIParams {

@@ -1,13 +1,13 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { APIResponse } from '@/services/api/types'
-import { useMarketApproval, useMarketStatus } from '@/hooks/useMarket'
+import { useMarketApproval, useNFTMarketStatus } from '@/hooks/useMarket'
 import { useEffect, useState } from 'react'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import SellNFTModal from '@/components/Modal/SellNFTModal'
 
 export default function NFTActions(nft: APIResponse.NFT) {
-  const { isOwner, isOnSale } = useMarketStatus(nft)
+  const { isOwner, isOnSale } = useNFTMarketStatus(nft)
   const [showSellModal, setShowSellModal] = useState(false)
 
   const handleSellNFT = () => {

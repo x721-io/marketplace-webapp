@@ -14,17 +14,10 @@ interface Props {
 export default function ListingStep({ nft, onSuccess, onError }: Props) {
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
   const [price, setPrice] = useState('')
+  const [quantity, setQuantity] = useState('')
 
   const handleSellNFT = async () => {
-    onSellNFT?.({
-      args: [
-        nft.collection.address,
-        nft.id,
-        5,
-        '0x3d3350A01Ad2a9AEef5A1E3e63840B6892Ba28c0',
-        price
-      ]
-    })
+    onSellNFT(price, '0x3d3350A01Ad2a9AEef5A1E3e63840B6892Ba28c0', quantity)
   }
 
   useEffect(() => {
@@ -40,12 +33,33 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
   }, [isSuccess])
 
   return (
-    <>
-      <Text className="text-base font-semibold mb-1">Price</Text>
-      <Input value={price} onChange={event => setPrice(event.target.value)} type="number"/>
-      <Button loading={isLoading} onClick={handleSellNFT}>
+    <div className="w-full flex flex-col gap-6">
+      <Text className="text-center" variant="heading-sm">
+        Create Sell Order
+      </Text>
+      <div>
+        <Text className="text-secondary font-semibold mb-1">Price</Text>
+        <Input
+          value={price}
+          onChange={event => setPrice(event.target.value)}
+          type="number" />
+      </div>
+
+      {
+        nft.collection.type === 'ERC1155' && (
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+            <Input
+              value={quantity}
+              onChange={event => setQuantity(event.target.value)}
+              type="number" />
+          </div>
+        )
+      }
+
+      <Button className="w-full" loading={isLoading} onClick={handleSellNFT}>
         Put on sale
       </Button>
-    </>
+    </div>
   )
 }

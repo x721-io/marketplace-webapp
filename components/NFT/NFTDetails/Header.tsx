@@ -4,10 +4,11 @@ import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
-import { useMarketStatus } from '@/hooks/useMarket'
+import { useNFTMarketStatus } from '@/hooks/useMarket'
+import { formatUnits } from 'ethers'
 
 export default function NFTDetailsHeader(nft: APIResponse.NFT) {
-  const { isOnSale, price } = useMarketStatus(nft)
+  const { isOnSale, price } = useNFTMarketStatus(nft)
 
   return (
     <div className="flex gap-16 items-stretch justify-center">
@@ -60,7 +61,9 @@ export default function NFTDetailsHeader(nft: APIResponse.NFT) {
             {
               isOnSale ? (
                 <Text variant="heading-md">
-                  <span className="text-primary font-semibold">{price}</span>&nbsp;
+                  <span className="text-primary font-semibold">
+                    {formatUnits(price)}
+                  </span>&nbsp;
                   <span className="text-secondary">U2U</span>
                 </Text>
               ) : (
