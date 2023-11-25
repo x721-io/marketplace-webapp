@@ -1,9 +1,13 @@
 import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSellNFT } from "@/hooks/useMarket";
 import Button from "@/components/Button";
+import { Address } from 'wagmi'
+import Select from '@/components/Form/Select'
+import { tokenOptions } from '@/config/tokens'
+import { useForm } from 'react-hook-form'
 
 interface Props {
   onSuccess: () => void
@@ -11,13 +15,18 @@ interface Props {
   nft: APIResponse.NFT
 }
 
-export default function ListingStep({ nft, onSuccess, onError }: Props) {
-  const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
-  const [price, setPrice] = useState('')
-  const [quantity, setQuantity] = useState('')
+interface FormState {
+  price: string
+  quantity: string
+  quoteToken: Address
+}
 
-  const handleSellNFT = async () => {
-    onSellNFT(price, '0x3d3350A01Ad2a9AEef5A1E3e63840B6892Ba28c0', quantity)
+export default function ListingStep({ nft, onSuccess, onError }: Props) {
+  const { register, handleSubmit } = useForm<FormState>()
+  const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
+
+  const onSubmit = async ({ price, quoteToken, quantity }: FormState) => {
+    onSellNFT(price, quoteToken, quantity)
   }
 
   useEffect(() => {
@@ -33,16 +42,24 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
   }, [isSuccess])
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <Text className="text-center" variant="heading-sm">
         Create Sell Order
       </Text>
+
       <div>
-        <Text className="text-secondary font-semibold mb-1">Price</Text>
+        <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
-          value={price}
-          onChange={event => setPrice(event.target.value)}
+          register={register('price')}
           type="number" />
+      </div>
+
+      <div>
+        <label className="text-body-14 text-secondary font-semibold mb-1">Sell using</label>
+        <Select
+          options={tokenOptions}
+          register={register('quoteToken')}
+        />
       </div>
 
       {
@@ -50,16 +67,15 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
-              value={quantity}
-              onChange={event => setQuantity(event.target.value)}
+              register={register('quantity')}
               type="number" />
           </div>
         )
       }
 
-      <Button className="w-full" loading={isLoading} onClick={handleSellNFT}>
+      <Button type={'submit'} className="w-full" loading={isLoading}>
         Put on sale
       </Button>
-    </div>
+    </form>
   )
 }
