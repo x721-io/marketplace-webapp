@@ -95,7 +95,7 @@ export namespace APIResponse {
 
   export interface Profile {
     id: string
-    publicKey: string
+    publicKey: Address
     signDate: string
     signature: Address
     signer: Address

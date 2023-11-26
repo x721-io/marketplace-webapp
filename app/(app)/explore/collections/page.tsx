@@ -21,7 +21,7 @@ export default function ExploreCollectionsPage() {
         </Table.Head>
         <Table.Body className="divide-y">
           {
-            collections && collections.map(c => (
+            Array.isArray(collections) && collections.map(c => (
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {c.name}

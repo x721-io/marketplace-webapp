@@ -27,7 +27,16 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
       case 2:
         return <ListingStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
       case 3:
-        return 'Success'
+        return (
+          <>
+            <Text className="font-semibold text-success" variant="heading-sm">
+              Success
+            </Text>
+            <Text className="text-secondary">
+              Your NFT has been put on sale!
+            </Text>
+          </>
+        )
       default:
         return <></>
     }

@@ -26,7 +26,7 @@ export default function ExploreNFTsPage() {
           )
         }>
           {
-            data?.data.map(item => (
+            Array.isArray(data?.data) && data?.data.map(item => (
               <NFTCard {...item} />
             ))
           }

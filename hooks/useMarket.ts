@@ -1,11 +1,11 @@
 import { APIResponse } from '@/services/api/types'
-import { Address, useContractRead, useContractWrite } from 'wagmi'
+import { Address, erc20ABI, useContractRead, useContractWrite } from 'wagmi'
 import { useMemo } from 'react'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
-import { parseEther } from 'ethers'
+import { MaxInt256, parseEther } from 'ethers'
 
 export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
   const { collection, sellInfo, owners } = useMemo(() => nft, [nft])
@@ -70,6 +70,38 @@ export const useMarketApproval = (nft: APIResponse.NFT) => {
     isFetchingApproval,
     contractCallError
   }
+}
+
+export const useMarketTokenApproval = (token: Address, type: AssetType) => {
+  const wallet = useAuthStore(state => state.profile?.publicKey)
+  const marketContract = type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market
+  const { txStatus, updateHash } = useTransactionStatus()
+
+  const { data: allowance } = useContractRead({
+    address: token,
+    abi: erc20ABI,
+    functionName: 'allowance',
+    args: [wallet as Address, marketContract.address],
+    enabled: !!wallet && !!token
+  })
+
+  const isTokenApproved = useMemo(() => {
+    if (!allowance) return false
+    return (allowance) > BigInt(0)
+  }, [allowance])
+
+  const { writeAsync, error: writeError } = useContractWrite({
+    address: token,
+    abi: erc20ABI,
+    functionName: 'approve',
+    args: [marketContract.address, MaxInt256]
+  })
+
+  const onApproveToken = async () => {
+    const { hash } = await writeAsync()
+    updateHash(hash)
+  }
+  return { isTokenApproved, onApproveToken, ...txStatus }
 }
 
 const useWriteMarketContract = (type: AssetType, functionName: string) => {
