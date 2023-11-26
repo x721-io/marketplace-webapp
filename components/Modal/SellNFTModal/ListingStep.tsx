@@ -43,7 +43,7 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-sm">
+      <Text className="text-center" variant="heading-xs">
         Create Sell Order
       </Text>
 

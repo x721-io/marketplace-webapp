@@ -47,7 +47,7 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-sm">
+      <Text className="text-center" variant="heading-xs">
         Purchasing {nft.collection.name} - {nft.name}
       </Text>
 

@@ -81,7 +81,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
 
   return (
     <>
-      <Text className="font-semibold text-primary text-center text-heading-sm">
+      <Text className="font-semibold text-primary text-center text-heading-xs">
         Approve market contract
       </Text>
       <Spinner size="xl" />
