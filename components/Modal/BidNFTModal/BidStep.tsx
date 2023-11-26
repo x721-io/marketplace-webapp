@@ -1,10 +1,9 @@
 import { APIResponse } from '@/services/api/types'
-import { useBuyNFT, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useBidNFT, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
-import { formatUnits } from 'ethers'
 import { findTokenByAddress } from '@/utils/token'
 import { useEffect } from 'react'
 
@@ -15,23 +14,20 @@ interface Props {
 }
 
 interface FormState {
+  price: string
   quantity: string
 }
 
-export default function BuyStep({ onSuccess, onError, nft }: Props) {
-  const { price, quoteToken } = useNFTMarketStatus(nft)
-  const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyNFT(nft)
+export default function BidStep({ onSuccess, onError, nft }: Props) {
+  const { quoteToken } = useNFTMarketStatus(nft)
+  const { onBidNFT, isSuccess, isLoading, error } = useBidNFT(nft)
   const { handleSubmit, register } = useForm<FormState>()
 
   const token = findTokenByAddress(quoteToken)
 
-  const onSubmit = async ({ quantity }: FormState) => {
+  const onSubmit = async ({ price, quantity }: FormState) => {
     try {
-      if (nft.collection.type === 'ERC721') {
-        await onBuyERC721()
-      } else {
-        await onBuyERC1155('', quantity)
-      }
+      await onBidNFT(price, quoteToken, quantity)
     } catch (e: any) {
       console.error(e)
     }
@@ -48,18 +44,20 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <Text className="text-center" variant="heading-sm">
-        Purchasing {nft.collection.name} - {nft.name}
+        Bidding {nft.collection.name} - {nft.name}
       </Text>
 
       <div>
-        <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
+        <label className="text-body-14 text-secondary font-semibold mb-1">
+          {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
+        </label>
         <Input
-          value={formatUnits(price.toString(), 18)}
+          register={register('price')}
           type="number" />
       </div>
 
       <div>
-        <label className="text-body-14 text-secondary font-semibold mb-1">Buy using</label>
+        <label className="text-body-14 text-secondary font-semibold mb-1">Bid using</label>
         <Input
           readOnly
           value={token?.symbol}

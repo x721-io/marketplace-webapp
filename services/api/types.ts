@@ -19,7 +19,7 @@ interface MarketEvent {
   nftId: {
     id: string
   },
-  price: string // Big Number
+  price: BigInt
   to: string
   from: string
   quoteToken: Address

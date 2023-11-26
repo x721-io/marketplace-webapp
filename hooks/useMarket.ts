@@ -6,6 +6,7 @@ import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { MaxInt256, parseEther } from 'ethers'
+import { bigint } from 'zod'
 
 export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
   const { collection, sellInfo, owners } = useMemo(() => nft, [nft])
@@ -25,7 +26,7 @@ export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
     const saleData = type === 'ERC721' ? sellInfo?.marketEvent721S : sellInfo?.marketEvent1155S
     if (!saleData || !saleData[0] || saleData[0]?.event !== 'AskNew') {
       return {
-        price: 0,
+        price: BigInt(0),
         quoteToken: '0x' as Address
       }
     }
@@ -180,7 +181,7 @@ export const useBidNFT = (nft: APIResponse.NFT) => {
       nft.id,
       type === 'ERC1155' && quantity,
       quoteToken,
-      price
+      parseEther(price)
     ].filter(Boolean)
 
     const { hash } = await writeAsync?.({ args })

@@ -26,19 +26,19 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
 
   const onSubmit = async ({ price, quoteToken, quantity }: FormState) => {
-    onSellNFT(price, quoteToken, quantity)
+    try {
+      onSellNFT(price, quoteToken, quantity)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
-    if (error) {
-      onError(error)
-    }
+    if (error) onError(error)
   }, [error])
 
   useEffect(() => {
-    if (isSuccess) {
-      onSuccess()
-    }
+    if (isSuccess) onSuccess()
   }, [isSuccess])
 
   return (
