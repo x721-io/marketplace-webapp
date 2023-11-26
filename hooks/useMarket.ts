@@ -26,7 +26,7 @@ export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
     if (!saleData || !saleData[0] || saleData[0]?.event !== 'AskNew') {
       return {
         price: 0,
-        quoteToken: '0x'
+        quoteToken: '0x' as Address
       }
     }
     return saleData[0]
@@ -77,7 +77,7 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
   const marketContract = type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market
   const { txStatus, updateHash } = useTransactionStatus()
 
-  const { data: allowance } = useContractRead({
+  const { data: allowance, isLoading: isFetchingApproval } = useContractRead({
     address: token,
     abi: erc20ABI,
     functionName: 'allowance',
@@ -101,7 +101,7 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
     const { hash } = await writeAsync()
     updateHash(hash)
   }
-  return { isTokenApproved, onApproveToken, ...txStatus }
+  return { isTokenApproved, onApproveToken, writeError, isFetchingApproval, ...txStatus }
 }
 
 const useWriteMarketContract = (type: AssetType, functionName: string) => {
