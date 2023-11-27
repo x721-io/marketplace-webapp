@@ -7,7 +7,7 @@ export default function CollectionFilters() {
 
   return (
     <div className="w-72 flex flex-col gap-4">
-      <Accordion>
+      <Accordion collapseAll>
         <Accordion.Panel>
           <Accordion.Title>Floor Price</Accordion.Title>
           <Accordion.Content>

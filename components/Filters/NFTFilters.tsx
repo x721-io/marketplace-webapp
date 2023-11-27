@@ -7,7 +7,7 @@ export default function NFTFilters() {
 
   return (
     <div className="w-72 flex flex-col gap-4">
-      <Accordion>
+      <Accordion collapseAll>
         <Accordion.Panel>
           <Accordion.Title>Type</Accordion.Title>
           <Accordion.Content>
@@ -29,7 +29,7 @@ export default function NFTFilters() {
         </Accordion.Panel>
       </Accordion>
 
-      <Accordion>
+      <Accordion collapseAll>
         <Accordion.Panel>
           <Accordion.Title>Status</Accordion.Title>
           <Accordion.Content>
@@ -47,7 +47,7 @@ export default function NFTFilters() {
         </Accordion.Panel>
       </Accordion>
 
-      <Accordion>
+      <Accordion collapseAll>
         <Accordion.Panel>
           <Accordion.Title>Price</Accordion.Title>
           <Accordion.Content>
