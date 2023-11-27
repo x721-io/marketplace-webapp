@@ -11,7 +11,7 @@ export default function NFTDetailsHeader(nft: APIResponse.NFT) {
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
 
   return (
-    <div className="flex gap-16 items-stretch justify-center">
+    <div className="flex gap-16 items-stretch justify-center mb-10">
       <Image
         src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
         alt=""
