@@ -5,65 +5,58 @@ import Text from '@/components/Text'
 import defaultAvatar from "@/assets/images/default-avatar.png";
 import Image from "next/image";
 import Icon from "@/components/Icon";
+import Button from '@/components/Button'
+import useAuthStore from '@/store/auth/store'
+import Link from 'next/link'
 
-interface Props extends ModalProps{
+export default function ProfileModal({ show, onClose }: ModalProps) {
+  const username = useAuthStore(state => state.profile?.username)
+  const userId = useAuthStore(state => state.profile?.id)
 
-}
-
-export default function ProfileModal({ show, onClose }: Props) {
   return (
-    <Modal dismissible position="top-right" show={show}>
+    <Modal dismissible position="top-right" show={show} size="sm">
       <Modal.Body>
-        <div className="">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex gap-3 items-center">
-              <Image
-                src={defaultAvatar}
-                alt="Avatar"
-                width={48}
-                height={48}
-              />
-              <div className="flex flex-col">
-                <Text className="text-white">Phoenix55</Text>
-                <Text className="text-secondary">View profile</Text>
-              </div>
-            </div>
-            <button className="text-white" onClick={onClose}>
-              <Icon name="arrowRight" width={20} height={20} />
-            </button>
+        <div className="flex justify-between items-centerpy-4">
+          <div className="flex gap-3 items-center">
+            <Image
+              src={defaultAvatar}
+              alt="Avatar"
+              width={48}
+              height={48}
+            />
+            <Link href={`/user/${userId}`} className="flex flex-col">
+              <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
+              <Text className="text-secondary">View profile</Text>
+            </Link>
           </div>
-
-          <div className=" py-4">
-            <a href={"/#"}>
-              <Text className="text-secondary hover:text-white" variant="body-18">
-                Orders
-              </Text>
-            </a>
-          </div>
-          <div className=" py-4">
-            <a href={"/#"}>
-              <Text className="text-secondary hover:text-white" variant="body-18">
-                Create NFT
-              </Text>
-            </a>
-          </div>
-          <div className=" py-4">
-            <div className="border-b" />
-          </div>
-          <div className=" py-4 w-full">
-            <a href={"/#"}>
-              <Text className="text-secondary hover:text-white" variant="body-18">
-                Settings
-              </Text>
-            </a>
-          </div>
-          <div className=" py-4">
-            <Text className="text-secondary hover:text-white" variant="body-18">
-              Logout
-            </Text>
-          </div>
+          <Button variant="icon" onClick={onClose}>
+            <Icon name="arrowRight" width={20} height={20} />
+          </Button>
         </div>
 
+        <div className="py-4">
+          <Link className="text-secondary hover:text-primary" href={"/"} onClick={onClose}>
+            Orders
+          </Link>
+        </div>
+        <div className="py-4">
+          <Link className="text-secondary hover:text-primary" href={"/create/nft"} onClick={onClose}>
+            Create NFT
+          </Link>
+        </div>
+        <div className="py-4">
+          <div className="border-b" />
+        </div>
+        <div className="py-4 w-full">
+          <Link className="text-secondary hover:text-primary" href={"/profile"} onClick={onClose}>
+            Settings
+          </Link>
+        </div>
+        <div className="py-4">
+          <Link href="/" className="text-secondary hover:text-primary" onClick={onClose}>
+            Logout
+          </Link>
+        </div>
       </Modal.Body>
     </Modal>
   )

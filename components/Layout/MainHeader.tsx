@@ -9,30 +9,12 @@ import ProfileModal from "@/components/Modal/ProfileModal";
 import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import Button from '@/components/Button'
+import { navs } from '@/config/nav'
 
 export const HEADER_HEIGHT = 88
 export default function MainHeader() {
   const [searchString, setSearchString] = useState('')
   const [openModal, setOpenModal] = useState(false);
-
-  const navs = [
-    {
-      label: 'Explore',
-      items: [
-        { href: '/explore/collections', label: 'Collections' },
-        { href: '/explore/items', label: 'NFTs' },
-        { href: '/explore/users', label: 'Users' }
-      ]
-    },
-    {
-      label: 'Create',
-      items: [
-        { href: '/create/collection', label: 'Collection' },
-        { href: '/create/nft', label: 'NFT' }
-      ]
-    },
-    { label: 'Sell', href: '#' }
-  ]
 
   return (
     <nav className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 px-7`}>
@@ -40,7 +22,7 @@ export default function MainHeader() {
         <div className="flex items-center gap-6">
           <div className="hidden desktop:block tablet:block">
             <Link href="/">
-              <Image height={28} src={brandingSvg} alt="u2u-brand" />
+              <Image height={40} src={brandingSvg} alt="u2u-brand" />
             </Link>
           </div>
           <div className="block tablet:hidden">

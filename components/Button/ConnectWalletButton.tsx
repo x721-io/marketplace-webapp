@@ -31,7 +31,7 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
     }
   }
 
-  if (isConnected && acceptedTerms && !!accessToken) {
+  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken) {
     return children
   }
 

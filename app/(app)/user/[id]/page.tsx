@@ -298,17 +298,17 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-4 gap-[12px] w-full">
-            {listData.map((option, index) => (
-              <NFTCard
-                key={index}
-                name={option.name}
-                amount={option.amount}
-                category={option.category}
-                isVerify={option.isVerify}
-                nftImg={option.nftImg}
-                symbol={option.symbol}
-              />
-            ))}
+            {/*{listData.map((option, index) => (*/}
+            {/*  <NFTCard*/}
+            {/*    key={index}*/}
+            {/*    name={option.name}*/}
+            {/*    amount={option.amount}*/}
+            {/*    category={option.category}*/}
+            {/*    isVerify={option.isVerify}*/}
+            {/*    nftImg={option.nftImg}*/}
+            {/*    symbol={option.symbol}*/}
+            {/*  />*/}
+            {/*))}*/}
           </div>
         </div>
       </div>

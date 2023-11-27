@@ -6,7 +6,7 @@ import Input from '@/components/Form/Input'
 import Textarea from '@/components/Form/Textarea'
 import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
 import {
   useCreateCollection,
@@ -23,9 +23,6 @@ import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { useTransaction } from 'wagmi'
 
 export default function CreateNFTCollectionPage() {
-  const { data, isLoading } = useTransaction({
-    hash: '0x149d41ad58099ca171fbf74503e48f5a89d327c7b9c7fb234f85c76eab481019'
-  })
   const api = useMarketplaceApi()
   const creator = useAuthStore(state => state.profile?.id)
   const [type, setType] = useState<AssetType>()
@@ -81,10 +78,6 @@ export default function CreateNFTCollectionPage() {
       console.error(e)
     }
   }
-
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   if (!type) {
     return (
