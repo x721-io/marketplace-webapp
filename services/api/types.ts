@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios'
 import { AssetType, Trait } from '@/types'
 import { Address } from 'wagmi'
+import { BigNumberish } from 'ethers'
 
 interface User {
   avatar: null | string
@@ -19,10 +20,11 @@ interface MarketEvent {
   nftId: {
     id: string
   },
-  price: BigInt
+  price: BigNumberish
   to: string
   from: string
   quoteToken: Address
+  operationId: string
 }
 
 export namespace APIParams {
@@ -76,8 +78,8 @@ export namespace APIParams {
     traits?: { trait_type: string, value: any }[]
     collectionAddress?: Address,
     creatorAddress?: Address,
-    priceMax?: number,
-    priceMin?: number,
+    priceMax?: BigInt,
+    priceMin?: BigInt,
     sellStatus?: MarketEventType
   }
 }

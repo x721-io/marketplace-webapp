@@ -19,18 +19,18 @@ interface FormState {
 }
 
 export default function BuyStep({ onSuccess, onError, nft }: Props) {
-  const { price, quoteToken } = useNFTMarketStatus(nft)
+  const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyNFT(nft)
   const { handleSubmit, register } = useForm<FormState>()
 
-  const token = findTokenByAddress(quoteToken)
+  const token = findTokenByAddress(saleData?.quoteToken)
 
   const onSubmit = async ({ quantity }: FormState) => {
     try {
       if (nft.collection.type === 'ERC721') {
         await onBuyERC721()
       } else {
-        await onBuyERC1155('', quantity)
+        await onBuyERC1155(quantity)
       }
     } catch (e: any) {
       console.error(e)
@@ -54,7 +54,7 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
-          value={formatUnits(price.toString(), 18)}
+          value={formatUnits(saleData?.price || '0', 18)}
           type="number" />
       </div>
 

@@ -41,10 +41,14 @@ const table: CustomFlowbiteTheme['table'] = {
   }
 }
 
-const modal: CustomFlowbiteTheme['modal'] = {
-  root: {
-    positions: {
-      'top-right': 'items-start justify-end h-screen'
+const accordion: CustomFlowbiteTheme['accordion'] = {
+  "content": {
+    "base": "py-5 px-5 last:rounded-b-lg dark:bg-gray-900 first:rounded-t-lg"
+  },
+  title: {
+    flush: {
+      on: '',
+      off: ''
     }
   }
 }
@@ -52,7 +56,7 @@ const modal: CustomFlowbiteTheme['modal'] = {
 const appTheme: CustomFlowbiteTheme = {
   tab,
   table,
-  // modal
+  accordion
 }
 
 export default appTheme

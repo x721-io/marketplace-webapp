@@ -8,7 +8,7 @@ import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 
 export default function NFTDetailsHeader(nft: APIResponse.NFT) {
-  const { isOnSale, price } = useNFTMarketStatus(nft)
+  const { isOnSale, saleData } = useNFTMarketStatus(nft)
 
   return (
     <div className="flex gap-16 items-stretch justify-center">
@@ -62,7 +62,7 @@ export default function NFTDetailsHeader(nft: APIResponse.NFT) {
               isOnSale ? (
                 <Text variant="heading-md">
                   <span className="text-primary font-semibold">
-                    {formatUnits(price)}
+                    {formatUnits(saleData?.price || '0')}
                   </span>&nbsp;
                   <span className="text-secondary">U2U</span>
                 </Text>
