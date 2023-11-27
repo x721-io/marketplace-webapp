@@ -14,5 +14,5 @@ export const navs = [
       { href: '/create/nft', label: 'NFT' }
     ]
   },
-  { label: 'Sell', href: '#' }
+  // { label: 'Sell', href: '#' }
 ]

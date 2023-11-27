@@ -20,7 +20,7 @@ export default function OnSaleNFTs() {
         </span>
       </Button>
 
-      <NFTsList showFilters={showFilters} items={[]} />
+      <NFTsList filters={['price', 'type']} showFilters={showFilters} items={[]} />
     </div>
   )
 }

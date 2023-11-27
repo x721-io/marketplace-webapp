@@ -90,12 +90,12 @@ export default function ExploreSectionNavbar() {
               label=""
               dismissOnClick={false}
               renderTrigger={() => (
-                <Button scale="lg" className="w-60 bg-surface-soft" variant="secondary">
+                <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
                   Price: Ascending
                   <div className="rounded-lg p-1 bg-surface-medium">
                     <Icon name="chevronDown" width={14} height={14} />
                   </div>
-                </Button>
+                </div>
               )}>
               <Dropdown.Item>Price: Ascending</Dropdown.Item>
               <Dropdown.Item>Price: Descending</Dropdown.Item>

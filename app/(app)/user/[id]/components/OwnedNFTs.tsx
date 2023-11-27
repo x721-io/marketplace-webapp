@@ -20,7 +20,7 @@ export default function OwnedNFTs() {
         </span>
       </Button>
 
-      <NFTsList showFilters={showFilters} items={[]} />
+      <NFTsList filters={['type', 'price']} showFilters={showFilters} items={[]} />
     </div>
   )
 }

@@ -30,8 +30,8 @@ export default function SignConnectMessageModal({ show, onClose, onSignup }: Pro
     const date = new Date().toISOString()
 
     try {
-      const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
       setIsAuthenticating(true)
+      const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
       await onAuth(date, signature)
       const profile= await api.viewProfile(address)
       if (!profile.acceptedTerms) { // Not registered

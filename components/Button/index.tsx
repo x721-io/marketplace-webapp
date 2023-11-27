@@ -1,5 +1,3 @@
-"use client"
-
 import { useMemo } from 'react'
 import { classNames } from '@/utils/string'
 import { Spinner } from 'flowbite-react'

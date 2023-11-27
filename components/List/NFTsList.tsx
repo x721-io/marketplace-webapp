@@ -1,18 +1,19 @@
 import { APIResponse } from '@/services/api/types'
-import NFTFilters from '@/components/Filters/NFTFilters'
+import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
 import { classNames } from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
 
 interface Props {
   items?: APIResponse.NFT[]
   showFilters: boolean
+  filters?: FilterType[]
+  onApplyFilters?: (filters: Record<string, any>) => void
 }
 
-export default function NFTsList({ items, showFilters }: Props) {
-
+export default function NFTsList({ items, showFilters, filters, onApplyFilters }: Props) {
   return (
     <div className="w-full flex gap-12">
-      {showFilters && <NFTFilters />}
+      {showFilters && <NFTFilters filters={filters} onApplyFilters={onApplyFilters} />}
 
       <div className="flex-1">
         <div className={
@@ -23,7 +24,9 @@ export default function NFTsList({ items, showFilters }: Props) {
         }>
           {
             Array.isArray(items) && items.map(item => (
-              <NFTCard {...item} />
+              <div key={item.id}>
+                <NFTCard {...item} />
+              </div>
             ))
           }
         </div>
