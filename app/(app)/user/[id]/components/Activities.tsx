@@ -16,7 +16,7 @@ export default function Activities() {
 
   const { data, isLoading } = useSWR(
     ['collections', { page, limit }],
-    () => api.fetchNFTEvents({ page, limit }),
+    () => api.fetchNFTEvents({ page, limit, or: [{ from: userWallet }, { to: userWallet }] }),
     { refreshInterval: 300000 }
   )
 
@@ -60,7 +60,6 @@ export default function Activities() {
       </Table>
 
       <div className="flex justify-end">
-        {/*<Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />*/}
       </div>
     </div>
   )

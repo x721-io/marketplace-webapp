@@ -13,7 +13,8 @@ export default function NFTDetails() {
   const api = useMarketplaceApi()
   const { data: item, error, isLoading } = useSWR(
     `/item/${id}`,
-    () => api.fetchNFTById(id as string)
+    () => api.fetchNFTById(id as string),
+    { refreshInterval: 300000 }
   )
 
   if (isLoading) {

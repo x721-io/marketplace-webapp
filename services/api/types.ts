@@ -16,8 +16,8 @@ export interface MarketEvent {
     }
   },
   price: BigNumberish
-  to: string
-  from: string
+  to: Address
+  from: Address
   quoteToken: Address
   operationId: string
   amounts: string
@@ -80,13 +80,24 @@ export namespace APIParams {
     sellStatus?: MarketEventType
   }
 
+
   export interface NFTEvents extends PaginationParams {
-    nftId?: string,
-    type?: AssetType,
-    from?: string,
-    to?: string,
-    quoteToken?: Address,
-    event?: MarketEventType
+    and?: {
+      nftId?: string,
+      type?: AssetType,
+      from?: string,
+      to?: string,
+      quoteToken?: Address,
+      event?: MarketEventType
+    }[]
+    or?: {
+      nftId?: string,
+      type?: AssetType,
+      from?: string,
+      to?: string,
+      quoteToken?: Address,
+      event?: MarketEventType
+    }[]
   }
 }
 
@@ -165,17 +176,15 @@ export namespace APIResponse {
       username: string
     },
     owners: {
-      nftId: string
-      quantity: number
-      userId: string
-      user: Omit<User, 'id'>
+      username: string
+      avatar: number
+      email: string
+      publicKey: Address
     }[],
     collection: Collection,
     traits: Trait[]
-    sellInfo?: {
-      marketEvent1155S: MarketEvent[],
-      marketEvent721S: MarketEvent[]
-    }
+    sellInfo?: MarketEvent[]
+    bidInfo?: MarketEvent[]
   }
 
   export interface SearchNFT {

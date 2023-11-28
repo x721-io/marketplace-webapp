@@ -12,7 +12,7 @@ export default function NFTData(props: APIResponse.NFT) {
           <OverviewTab />
         </Tabs.Item>
         <Tabs.Item title="Bids">
-          <BidsTab />
+          <BidsTab nft={props} />
         </Tabs.Item>
         <Tabs.Item title="Activities">
           <ActivitiesTab />

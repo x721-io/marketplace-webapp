@@ -6,42 +6,35 @@ import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { MaxInt256, parseEther } from 'ethers'
-import { bigint } from 'zod'
 
 export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
-  const { collection, sellInfo, owners } = useMemo(() => nft, [nft])
-
-  const type = collection.type
+  const { owners, sellInfo, bidInfo } = useMemo(() => nft, [nft])
   const userId = useAuthStore(state => state.profile?.id)
-  const userWallet = useAuthStore(state => state.profile?.publicKey)
+  const wallet = useAuthStore(state => state.profile?.publicKey)
 
-  const isOwner = useMemo(() => userId === owners[0]?.userId, [userId, owners])
+  const isOwner = useMemo(() => {
+    return owners.some(owner => owner.publicKey === wallet)
+  }, [userId, owners])
 
   const saleData = useMemo(() => {
-    const marketData = type === 'ERC721' ? sellInfo?.marketEvent721S : sellInfo?.marketEvent1155S
-    return marketData?.find(item => item.event === 'AskNew')
+    return sellInfo?.find(item => item.event === 'AskNew')
   }, [sellInfo])
 
   const isOnSale = useMemo(() => !!saleData, [saleData])
 
-  const bidData = useMemo(() => {
-    const marketData = type === 'ERC721' ? sellInfo?.marketEvent721S : sellInfo?.marketEvent1155S
-    return marketData?.find(item => item.event === 'Bid')
-  }, [sellInfo])
+  const hasBidder = useMemo(() => !!bidInfo?.length, [bidInfo])
 
-  const hasBidder = useMemo(() => !!bidData, [bidData])
-
-  const isBidder = useMemo(() => {
-    return bidData?.from === userWallet?.toLowerCase()
-  }, [bidData, userWallet])
+  const isBidder = useMemo(
+    () => bidInfo?.some(bid => bid.to === wallet?.toLowerCase()),
+    [bidInfo]
+  )
 
   return {
     isOwner,
     isOnSale,
-    isBidder,
     saleData,
-    bidData,
-    hasBidder
+    hasBidder,
+    isBidder
   }
 }
 
@@ -197,12 +190,11 @@ export const useBidNFT = (nft: APIResponse.NFT) => {
 
 export const useCancelBidNFT = (nft: APIResponse.NFT) => {
   const type = nft.collection.type
-  const { bidData } = useNFTMarketStatus(nft)
   const { txStatus, updateHash } = useTransactionStatus()
   const { writeAsync, error: writeError } = useWriteMarketContract(type, type === 'ERC721' ? 'cancelBid' : 'cancelOffer')
 
-  const onCancelBid = async () => {
-    const args = type === 'ERC721' ? [nft.collection.address, nft.id] : [bidData?.operationId]
+  const onCancelBid = async (operationId?: string) => {
+    const args = type === 'ERC721' ? [nft.collection.address, nft.id] : [operationId]
     const { hash } = await writeAsync?.({ args })
     updateHash(hash)
   }
