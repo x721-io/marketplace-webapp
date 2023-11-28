@@ -44,6 +44,14 @@ export namespace APIParams {
     acceptedTerms?: boolean
     email?: string
     username?: string
+    bio?: string
+    facebookLink?: string
+    twitterLink?: string
+    telegramLink?: string
+    discordLink?: string
+    webURL?: string
+    coverImage?: string
+    avatar?: string
   }
 
   export interface UpdateCollection {
@@ -112,6 +120,13 @@ export namespace APIResponse {
     email?: null
     updatedAt?: string | null
     username?: string | null
+    bio?: string | null
+    facebookLink?: string | null
+    twitterLink?: string | null
+    telegramLink?: string | null
+    discordLink?: string | null
+    webURL?: string | null
+    coverImage?: string | null
   }
 
   export interface UploadImage {
