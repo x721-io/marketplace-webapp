@@ -8,7 +8,10 @@ import { useMemo } from 'react'
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
-  const authHeader = useMemo(() => ({ headers: { 'Authorization': `Bearer ${bearerToken}` } }), [bearerToken])
+  const authHeader = useMemo(
+    () => ({ headers: { 'Authorization': `Bearer ${bearerToken}` } }),
+    [bearerToken]
+  )
 
   return useMemo(() => {
     return {
@@ -26,8 +29,12 @@ export const useMarketplaceApi = () => {
       },
 
       updateCollection: (params: APIParams.UpdateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
+
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
-      fetchNFTs: (params: APIParams.SearchNFT): Promise<APIResponse.SearchNFTResponse> => marketplaceApi.post(API_ENDPOINTS.SEARCH_NFTS, params),
+
+      fetchNFTs: (params: APIParams.SearchNFT): Promise<APIResponse.SearchNFT> => marketplaceApi.post(API_ENDPOINTS.SEARCH_NFTS, params),
+
+      fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
       /** GET **/
       generateTokenId: async (collectionAddress: Address): Promise<string> => {
@@ -46,7 +53,7 @@ export const useMarketplaceApi = () => {
 
       viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`),
 
-      getUsers: async({limit}: APIParams.GetUsers): Promise<APIResponse.User[]> =>{
+      getUsers: async ({ limit }: APIParams.GetUsers): Promise<APIResponse.User[]> => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
       }

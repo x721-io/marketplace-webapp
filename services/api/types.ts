@@ -1,30 +1,27 @@
-import { AxiosRequestConfig } from 'axios'
 import { AssetType, Trait } from '@/types'
 import { Address } from 'wagmi'
 import { BigNumberish } from 'ethers'
 
-interface User {
-  avatar: null | string
-  email: string | null
-  id: string
-  publicKey: Address
-  username: string
-}
-
 type Status = 'PENDING' | 'SUCCESS' | 'FAILED'
 type MarketEventType = 'AskNew' | 'AskCancel' | 'Trade' | 'AcceptBid' | 'Bid' | 'CancelBid'
 
-interface MarketEvent {
+export interface MarketEvent {
   id: string,
   event: MarketEventType
   nftId: {
     id: string
+    contract: {
+      id: Address
+      name: string
+    }
   },
   price: BigNumberish
   to: string
   from: string
   quoteToken: Address
   operationId: string
+  amounts: string
+  timestamp: BigNumberish
 }
 
 export namespace APIParams {
@@ -78,14 +75,23 @@ export namespace APIParams {
     traits?: { trait_type: string, value: any }[]
     collectionAddress?: Address,
     creatorAddress?: Address,
-    priceMax?: BigInt,
-    priceMin?: BigInt,
+    priceMax?: BigNumberish,
+    priceMin?: BigNumberish,
     sellStatus?: MarketEventType
+  }
+
+  export interface NFTEvents extends PaginationParams {
+    nftId?: string,
+    type?: AssetType,
+    from?: string,
+    to?: string,
+    quoteToken?: Address,
+    event?: MarketEventType
   }
 }
 
 export namespace APIResponse {
-  interface PaginationResponse {
+  interface Pagination {
     page: number
     limit: number
     total: number
@@ -172,14 +178,14 @@ export namespace APIResponse {
     }
   }
 
-  export interface SearchNFTResponse {
+  export interface SearchNFT {
     data: NFT[]
-    paging: PaginationResponse
+    paging: Pagination
   }
 
   export interface User {
     id: string
-    email:string
+    email: string
     avatar: string | null
     username: string | null
     signature: Address
@@ -191,4 +197,6 @@ export namespace APIResponse {
     createdAt: string
     updatedAt?: string | null
   }
+
+  export type NFTEvents = MarketEvent[]
 }
