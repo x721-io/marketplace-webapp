@@ -27,7 +27,7 @@ export default function ExploreSectionNavbar() {
         return 'collections'
       case pathname.includes('items'):
         return 'nfts'
-      case pathname.includes('profile'):
+      case pathname.includes('users'):
         return 'profile'
     }
   }, [pathname])
@@ -48,18 +48,23 @@ export default function ExploreSectionNavbar() {
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
-      <div className="order-3 desktop:order-1">
-        <Button
-          onClick={handleToggleFilters}
-          className={isFiltersVisible ? 'bg-white shadow' : `bg-surface-soft`}
-          scale="lg"
-          variant="secondary">
-          Filters
-          <span className="p-1 bg-surface-medium rounded-lg">
-          <SliderIcon width={14} height={14} />
-          </span>
-        </Button>
-      </div>
+      {
+        routeKey !== 'profile' && (
+          <div className="order-3 desktop:order-1">
+            <Button
+              onClick={handleToggleFilters}
+              className={isFiltersVisible ? 'bg-white shadow' : `bg-surface-soft`}
+              scale="lg"
+              variant="secondary">
+              Filters
+              <span className="p-1 bg-surface-medium rounded-lg">
+                <SliderIcon width={14} height={14} />
+              </span>
+            </Button>
+          </div>
+        )
+      }
+
       <div className="order-1 w-full desktop:order-2 desktop:flex-none desktop:w-auto">
         <Tabs.Group onActiveTabChange={handleChangeTab} style="default" ref={tabsRef}>
           {tabs.map(tab => (
@@ -77,24 +82,29 @@ export default function ExploreSectionNavbar() {
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5" />
       </div>
-      <div className="order-4">
-        <Dropdown
-          label=""
-          dismissOnClick={false}
-          renderTrigger={() => (
-            <Button scale="lg" className="w-60 bg-surface-soft" variant="secondary">
-              Price: Ascending
-              <div className="rounded-lg p-1 bg-surface-medium">
-                <Icon name="chevronDown" width={14} height={14} />
-              </div>
-            </Button>
-          )}>
-          <Dropdown.Item>Price: Ascending</Dropdown.Item>
-          <Dropdown.Item>Price: Descending</Dropdown.Item>
-          <Dropdown.Item>Date: Ascending</Dropdown.Item>
-          <Dropdown.Item>Date: Descending</Dropdown.Item>
-        </Dropdown>
-      </div>
+
+      {
+        routeKey !== 'profile' && (
+          <div className="order-4">
+            <Dropdown
+              label=""
+              dismissOnClick={false}
+              renderTrigger={() => (
+                <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+                  Price: Ascending
+                  <div className="rounded-lg p-1 bg-surface-medium">
+                    <Icon name="chevronDown" width={14} height={14} />
+                  </div>
+                </div>
+              )}>
+              <Dropdown.Item>Price: Ascending</Dropdown.Item>
+              <Dropdown.Item>Price: Descending</Dropdown.Item>
+              <Dropdown.Item>Date: Ascending</Dropdown.Item>
+              <Dropdown.Item>Date: Descending</Dropdown.Item>
+            </Dropdown>
+          </div>
+        )
+      }
     </div>
   )
 }

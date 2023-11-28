@@ -1,37 +1,54 @@
 'use client'
 
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import useSWR from 'swr'
-import NFTCard from '@/components/NFT/NFTCard'
+import useSWR, { useSWRConfig } from 'swr'
+import { useFilters } from '@/hooks/useFilters'
+import NFTsList from '@/components/List/NFTsList'
+import { parseEther } from 'ethers'
 import { useState } from 'react'
-import { classNames } from '@/utils/string'
-import Filters from '@/components/Filters'
+import { APIParams } from '@/services/api/types'
+import { sanitizeObject } from '@/utils'
+
+
 
 export default function ExploreNFTsPage() {
-  const [showFilters, setShowFilters] = useState(false)
   const api = useMarketplaceApi()
-  const { data, error, isLoading } = useSWR('collections', () => api.fetchNFTs({
+  const { isFiltersVisible } = useFilters()
+  const { mutate } = useSWRConfig()
+  const [activeFilters, setActiveFilters] = useState<APIParams.SearchNFT>({
     page: 1,
-    limit: 20
-  }))
+    limit: 20,
+    traits: undefined,
+    collectionAddress: undefined,
+    creatorAddress: undefined,
+    priceMax: undefined,
+    priceMin: undefined,
+    sellStatus: undefined
+  })
+
+  const { data, isLoading } = useSWR(
+    ['collections', activeFilters],
+    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
+    { refreshInterval: 10000 }
+  )
+
+  const handleApplyFilters = ({ type, sellStatus, priceMax, priceMin }: Record<string, any>) => {
+    const _activeFilters = {
+      ...activeFilters,
+      type,
+      sellStatus
+    }
+    if (Number(priceMax)) _activeFilters.priceMax = parseEther(priceMax)
+    if (Number(priceMin)) _activeFilters.priceMin = parseEther(priceMin)
+
+    setActiveFilters(_activeFilters)
+    mutate('collection')
+  }
 
   return (
-    <div className="w-full flex gap-12">
-      <Filters />
-      <div className="flex-1">
-        <div className={
-          classNames(
-            'w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 md:gap-3 transition-all',
-            showFilters ? 'lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-3' : 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 md:gap-3'
-          )
-        }>
-          {
-            Array.isArray(data?.data) && data?.data.map(item => (
-              <NFTCard {...item} />
-            ))
-          }
-        </div>
-      </div>
-    </div>
+    <NFTsList
+      onApplyFilters={handleApplyFilters}
+      showFilters={isFiltersVisible}
+      items={data?.data} />
   )
 }

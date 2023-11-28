@@ -11,21 +11,29 @@ import defaultSlider2 from '@/assets/images/default-slider-2.png'
 import defaultSlider3 from '@/assets/images/default-slider-3.png'
 import defaultSlider4 from '@/assets/images/default-slider-4.png'
 import defaultSlider5 from '@/assets/images/default-slider-5.png'
+import { useRouter } from "next/navigation";
 
 export default function HomePageBanner() {
+  const router = useRouter()
+
   return (
     <div className="flex items-stretch justify-center gap-12 bg-transparent flex-col desktop:flex-row tablet:flex-row tablet:w-full my-8 mx-4 tablet:mx-auto desktop:mx-auto">
-      <div className="flex justify-center items-center">
-        <div className="desktop:w-[611px] tablet:w-[408px] w-full tablet:pl-8">
+      <div className="flex justify-center items-center order-2 tablet:order-1">
+        <div className="desktop:w-[611px] w-full tablet:pl-8">
           <Text className="desktop:text-heading-xl text-body-40 text-primary font-semibold mb-12">
             Discover digital art and Collect NFTs
           </Text>
           <div className="flex items-center gap-4 flex-col tablet:flex-row desktop:flex-row">
-            <Button className="bg-purple-500 hover:bg-purple-500/80 w-full tablet:w-auto desktop:w-auto">
+            <Button
+              onClick={() => router.push('/create/nft')}
+              className="bg-purple-500 hover:bg-purple-500/80 w-full tablet:w-auto desktop:w-auto">
               Create your NFTs
               <Icon name="arrowRight" />
             </Button>
-            <Button className='w-full tablet:w-auto desktop:w-auto' variant="secondary">
+            <Button
+              onClick={() => router.push('/explore/items')}
+              className="w-full tablet:w-auto desktop:w-auto"
+              variant="secondary">
               Start exploring
               <Icon name="arrowRight" />
             </Button>
@@ -33,8 +41,8 @@ export default function HomePageBanner() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center">
-        <div className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-[320px] h-[320px] tablet:pr-8">
+      <div className="flex justify-center items-center order-1 tablet:order-2">
+        <div className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-full h-[320px] tablet:pr-8">
           <Carousel>
             <Image
               className="rounded-tl-xl rounded-tr-xl object-cover"

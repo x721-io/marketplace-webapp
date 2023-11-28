@@ -13,14 +13,21 @@ interface Props {
 }
 
 export default function ApprovalStep({ nft, onNext, onError }: Props) {
-  const { quoteToken } = useNFTMarketStatus(nft)
-  const { isTokenApproved, isFetchingApproval, onApproveToken, isLoading, isSuccess, error, writeError } = useMarketTokenApproval(quoteToken as Address, nft.collection.type)
+  const { saleData } = useNFTMarketStatus(nft)
+  const {
+    isTokenApproved,
+    isFetchingApproval,
+    onApproveToken, isLoading,
+    isSuccess,
+    error,
+    writeError
+  } = useMarketTokenApproval(saleData?.quoteToken as Address, nft.collection.type)
 
   const handleApproveMarketToken = async () => {
     try {
       await onApproveToken()
     } catch (e) {
-
+      console.error(e)
     }
   }
 
@@ -30,7 +37,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
         return (
           <>
             <Text className="text-secondary text-center" variant="body-18">
-              Contract not approved. Please approve before proceed ...
+              Contract not approved. Please approve before proceeding!
             </Text>
             <Button loading={isLoading} className="w-full" onClick={handleApproveMarketToken}>Approve</Button>
           </>

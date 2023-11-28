@@ -7,7 +7,6 @@ import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { Tabs } from 'flowbite-react'
 
 export default function MainFooter() {
   const links = [

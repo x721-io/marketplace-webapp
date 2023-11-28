@@ -9,15 +9,11 @@ interface Props extends ModalProps {
 }
 
 export default function CancelBidNFTModal({ nft, show, onClose }: Props) {
-  const { onCancelERC1155Bid, onCancelERC721lBid, isLoading, error } = useCancelBidNFT(nft)
+  const { onCancelBid, isLoading, error } = useCancelBidNFT(nft)
 
   const handleCancelBid = () => {
     try {
-      if (nft.collection.type === 'ERC721') {
-        onCancelERC721lBid()
-      } else {
-        onCancelERC1155Bid('')
-      }
+      onCancelBid()
     } catch (e) {
       console.error(e)
     }
