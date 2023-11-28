@@ -3,13 +3,13 @@
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import CollectionFilters from '@/components/Filters/CollectionFilters'
-import { useFilters } from '@/hooks/useFilters'
+import { useExploreSectionFilters } from '@/hooks/useFilters'
 import CollectionsList from '@/components/List/CollectionsList'
 
 export default function ExploreCollectionsPage() {
   const api = useMarketplaceApi()
   const { data: collections, error, isLoading } = useSWR('collections', api.fetchCollections)
-  const { isFiltersVisible } = useFilters()
+  const { isFiltersVisible } = useExploreSectionFilters()
 
   return (
     <div className="flex gap-6">
