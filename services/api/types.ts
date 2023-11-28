@@ -67,8 +67,8 @@ export namespace APIParams {
     traits?: Trait[]
   }
 
-  export interface GetUsers {
-    limit: string
+  export interface FetchUsers extends PaginationParams {
+
   }
 
   export interface SearchNFT extends PaginationParams {
@@ -79,7 +79,6 @@ export namespace APIParams {
     priceMin?: BigNumberish,
     sellStatus?: MarketEventType
   }
-
 
   export interface NFTEvents extends PaginationParams {
     and?: {
@@ -129,6 +128,8 @@ export namespace APIResponse {
     email?: null
     updatedAt?: string | null
     username?: string | null
+    bio?: string | null
+    coverImage?: string | null
   }
 
   export interface UploadImage {
@@ -151,6 +152,10 @@ export namespace APIResponse {
     status: Status
     type: AssetType
     creators: User[]
+    volumn: string
+    totalOwner: number
+    totalNft: number
+    floorPrice: string
   }
 
   export interface CreateNFT {
@@ -195,7 +200,7 @@ export namespace APIResponse {
   export interface User {
     id: string
     email: string
-    avatar: string | null
+    avatar?: string | null
     username: string | null
     signature: Address
     signedMessage: string
@@ -205,6 +210,8 @@ export namespace APIResponse {
     acceptedTerms: boolean
     createdAt: string
     updatedAt?: string | null
+    bio?: string | null
+    coverImage?: string | null
   }
 
   export type NFTEvents = MarketEvent[]

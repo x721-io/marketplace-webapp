@@ -16,7 +16,7 @@ export default function ExploreUsersPage() {
   const api = useMarketplaceApi()
 
   useEffect(() => {
-    api.getUsers({ limit: '10' }).then(res => setUsers(res))
+    api.fetchUsers({ limit: 10, page: 1 }).then(res => setUsers(res))
   }, [])
 
   return (

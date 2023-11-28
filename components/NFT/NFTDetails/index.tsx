@@ -25,7 +25,7 @@ export default function NFTDetails() {
 
   if (!item) {
     return (
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full h-96 flex justify-center items-center">
         <Text variant="heading-xs">
           Item not found!
         </Text>

@@ -53,9 +53,9 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.get(API_ENDPOINTS.NFT + `/${id}?bidListPage=${bidListPage}&bidListLimit=${bidListLimit}`)
       },
 
-      viewProfile: (wallet: Address): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${wallet}`),
+      viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
-      getUsers: async ({ limit }: APIParams.GetUsers): Promise<APIResponse.User[]> => {
+      fetchUsers: async ({ limit }: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
       }
