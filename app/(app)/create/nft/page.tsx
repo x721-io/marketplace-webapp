@@ -21,7 +21,7 @@ export default function CreateNftPage() {
   const api = useMarketplaceApi()
   const userId = useAuthStore(state => state.credentials?.userId)
   const { data, error, isLoading } = useSWR(
-    !!userId ? 'true' : null,
+    !!userId ? 'my-collections' : null,
     () => api.fetchCollectionsByUser(userId as string),
     { refreshInterval: 3600 * 1000 }
   )

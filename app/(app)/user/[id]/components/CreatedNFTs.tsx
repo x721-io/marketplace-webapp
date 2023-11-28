@@ -26,7 +26,7 @@ export default function CreatedNFTs() {
   })
 
   const { data, isLoading } = useSWR(
-    ['collections', activeFilters],
+    ['user-created-nfts', activeFilters],
     () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
     { refreshInterval: 300000 }
   )

@@ -26,7 +26,7 @@ export default function OnSaleNFTs() {
   })
 
   const { data, isLoading } = useSWR(
-    ['collections', activeFilters],
+    ['user-onSale-nfts', activeFilters],
     () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
     { refreshInterval: 300000 }
   )

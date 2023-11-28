@@ -15,7 +15,7 @@ export default function Activities() {
   const [limit, setLimit] = useState(20)
 
   const { data, isLoading } = useSWR(
-    ['collections', { page, limit }],
+    ['user-activities', { page, limit }],
     () => api.fetchNFTEvents({ page, limit, or: [{ from: userWallet }, { to: userWallet }] }),
     { refreshInterval: 300000 }
   )

@@ -26,11 +26,12 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
   const token = findTokenByAddress(saleData?.quoteToken)
 
   const onSubmit = async ({ quantity }: FormState) => {
+    if (!saleData) return
     try {
       if (nft.collection.type === 'ERC721') {
-        await onBuyERC721()
+        await onBuyERC721(saleData?.quoteToken, saleData?.price)
       } else {
-        await onBuyERC1155(quantity)
+        await onBuyERC1155(saleData.operationId, saleData.amounts)
       }
     } catch (e: any) {
       console.error(e)
