@@ -10,8 +10,8 @@ export interface URC20Token {
 }
 
 export interface Trait {
-  trait_type: string
-  value: string
+  trait_type?: string
+  value?: string
   display_type?: string
 }
 

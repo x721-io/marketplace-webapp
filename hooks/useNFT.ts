@@ -26,7 +26,7 @@ export const useCreateNFT = (collection: Address, type: AssetType) => {
     const { fileHashes, metadataHash } = await api.uploadFile(
       params.image,
       {
-        traits: [],
+        traits: params.traits,
         description: params.description
       })
 
@@ -67,7 +67,7 @@ export const useCreateNFT = (collection: Address, type: AssetType) => {
       txCreationHash: hash,
       imageHash: fileHashes[0],
       creatorId: userId,
-      traits: []
+      traits: metadataHash
     } as APIParams.CreateNFT
     const res = await api.createNFT(createNFTParams)
 

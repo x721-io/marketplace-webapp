@@ -64,7 +64,7 @@ export namespace APIParams {
     collectionId: string,
     txCreationHash: string,
     creatorId: string,
-    traits?: Trait[]
+    traits?: string
   }
 
   export interface FetchUsers extends PaginationParams {
