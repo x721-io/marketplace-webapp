@@ -32,6 +32,8 @@ interface FormState {
     facebookLink: string
     telegramLink: string
     discordLink: string
+    avatar: string
+    coverImage: string
 }
 
 export default function ProfilePage() {
@@ -108,13 +110,12 @@ export default function ProfilePage() {
         }
     }
 
-    const onSubmitProfile = async (data: any) => {
-        console.log('1', data)
+    const onSubmitProfile = async ({bio, username, webURL, twitterLink } : FormState) => {
         const toastId = toast.loading('Uploading Profile...', { type: 'info' })
         if (!imageAvt || !imageCover) return
         try {
             const { fileHashes } = await api.uploadFile([imageAvt, imageCover])
-            await onUpdateProfile({ username, bio, webURL, twitterLink, avatar: fileHashes[0], coverImage: fileHashes[1] })
+            await onUpdateProfile({ username, bio, webURL, twitterLink, avatar: fileHashes[0], coverImage: fileHashes[1], shortLink: username })
             toast.update(toastId, { render: 'Profile updated successfully', type: 'success', isLoading: false })
         } catch (e) {
             console.error('Error:', e)

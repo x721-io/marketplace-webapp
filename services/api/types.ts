@@ -49,6 +49,7 @@ export namespace APIParams {
     webURL?: string
     coverImage?: string
     avatar?: string
+    shortLink?: string
   }
 
   export interface UpdateCollection {
