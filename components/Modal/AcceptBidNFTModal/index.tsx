@@ -17,7 +17,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     if (!bid) return
     try {
       if (type === 'ERC721') {
-        onAcceptERC721Bid(bid.to)
+        onAcceptERC721Bid(bid.to, bid.quoteToken, bid.price)
       } else {
         onAcceptERC1155Bid(bid.operationId, bid.amounts)
       }

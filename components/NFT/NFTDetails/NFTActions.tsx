@@ -2,17 +2,21 @@ import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { APIResponse } from '@/services/api/types'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import SellNFTModal from '@/components/Modal/SellNFTModal'
 import BuyNFTModal from '@/components/Modal/BuyNFTModal'
 import BidNFTModal from '@/components/Modal/BidNFTModal'
 import CancelSellNFTModal from '@/components/Modal/CancelSellNFTModal'
 import CancelBidNFTModal from '@/components/Modal/CancelBidNFTModal'
+import useAuthStore from '@/store/auth/store'
 
 export default function NFTActions(nft: APIResponse.NFT) {
-  const alreadyBid = false
+  const wallet = useAuthStore(state => state.profile?.publicKey)
   const { isOwner, isOnSale } = useNFTMarketStatus(nft)
+  const myBid = useMemo(() => {
+    return nft.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
+  }, [nft.bidInfo])
   const [showSellModal, setShowSellModal] = useState(false)
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showBidModal, setShowBidModal] = useState(false)
@@ -50,7 +54,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
         </Button>
       </div>
       {
-        alreadyBid ? (
+        !!myBid ? (
           <Button className="w-full" variant="secondary">
             Cancel bidding
           </Button>
@@ -62,7 +66,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
       }
 
       <BuyNFTModal nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)} />
-      <BidNFTModal nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
+      <BidNFTModal bid={myBid} nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
       <CancelBidNFTModal nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
     </ConnectWalletButton>
   )

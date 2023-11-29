@@ -1,4 +1,4 @@
-import { APIResponse } from '@/services/api/types'
+import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useBidNFT, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
@@ -11,6 +11,7 @@ interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: APIResponse.NFT
+  bid: MarketEvent
 }
 
 interface FormState {
@@ -18,8 +19,8 @@ interface FormState {
   quantity: string
 }
 
-export default function BidStep({ onSuccess, onError, nft }: Props) {
-  const { quoteToken } = useNFTMarketStatus(nft)
+export default function BidStep({ bid, onSuccess, onError, nft }: Props) {
+  const { quoteToken } = bid
   const { onBidNFT, isSuccess, isLoading, error } = useBidNFT(nft)
   const { handleSubmit, register } = useForm<FormState>()
 
