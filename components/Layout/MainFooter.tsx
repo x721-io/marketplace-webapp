@@ -7,6 +7,9 @@ import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
+import { DarkThemeToggle } from 'flowbite-react'
+import SunIcon from '@/assets/svg/sun-icon'
+import MoonIcon from '@/assets/svg/moon'
 
 export default function MainFooter() {
   const links = [
@@ -99,9 +102,10 @@ export default function MainFooter() {
         </div>
 
         <div className="flex-1 self-center tablet:self-end desktop:self-end">
-          <Text className="text-tertiary text-right" variant="body-12">
-            Tabs
-          </Text>
+          <div className='bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end'>
+            <span className='p-2 bg-white rounded-xl'><SunIcon width={16} height={16}/></span>
+            <span className='p-2'><MoonIcon width={16} height={16}/></span>
+          </div>
         </div>
       </div>
     </footer>

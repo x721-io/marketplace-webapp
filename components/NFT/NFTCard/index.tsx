@@ -18,7 +18,7 @@ export default function NFTCard({ name, id, creator, collection, imageHash }: AP
   return (
     <div key={id} onClick={() => router.push(`/item/${id}`)} className="flex flex-col rounded-xl p-2 gap-2" style={{ border: '0.7px solid #E3E3E3' }}>
       <Image
-        className="cursor-pointer rounded-xl object-cover w-full h-full"
+        className="cursor-pointer rounded-xl object-cover w-full h-[220px]"
         src={imageHash ? parseImageUrl(imageHash) : defaultImg}
         alt="image"
         width={1} height={1}
