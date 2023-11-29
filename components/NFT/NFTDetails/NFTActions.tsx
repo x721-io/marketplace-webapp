@@ -46,7 +46,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
   return (
     <ConnectWalletButton className="w-full">
       {
-        isOnSale && (
+        isOnSale ? (
           <div className="flex items-center gap-3 mb-3">
             <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
               Buy Now
@@ -55,11 +55,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
               <Icon name="shoppingBag" width={16} height={16} />
             </Button>
           </div>
-        )
-      }
-
-      {
-        !!myBid ? (
+        ) : !!myBid ? (
           <Button className="w-full" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
             Cancel bidding
           </Button>
