@@ -38,7 +38,7 @@ export default function ProfilePage() {
     <div className="w-full">
       <Profile {...user} />
 
-      <div className="px-20">
+      <div className="desktop:px-20 tablet:px-20 px-4">
         <Tabs.Group style="underline">
           <Tabs.Item title={"Owned"}>
             <OwnedNFTs />

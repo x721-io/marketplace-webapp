@@ -8,11 +8,7 @@ export default function NFTDescriptions({  }: APIResponse.NFT) {
         <Text className="text-primary font-bold mb-4" variant="body-16">
           Description
         </Text>
-        <Text>
-          {}
-        </Text>
       </div>
-
     </div>
   )
 }

@@ -28,16 +28,17 @@ export default function NFTsList({ items, showFilters, filters, onApplyFilters, 
 
   return (
     <div className="w-full">
-      <div className="w-full flex gap-12 mb-7">
+      <div className={
+        classNames('w-full flex gap-12 mb-7', showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row')
+      }>
         {showFilters && <NFTFilters filters={filters} onApplyFilters={onApplyFilters} />}
 
         <div className="flex-1">
           <div className={
             classNames(
-              'w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 md:gap-3 transition-all',
-              showFilters ? 'lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-3' : 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 md:gap-3'
-            )
-          }>
+              'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3 grid-cols-2',
+              showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2' : 'desktop:grid-cols-6 tablet:grid-cols-3'
+            )}>
             {
               Array.isArray(items) && items.map(item => (
                 <div key={item.id}>

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { APIResponse } from "@/services/api/types";
 import Link from 'next/link'
 import { parseImageUrl } from '@/utils/image'
+import defaultImg from '@/assets/images/carousel-1.png'
 
 export default function ExploreUsersPage() {
   const [users, setUsers] = useState<APIResponse.User[]>([])
@@ -27,7 +28,7 @@ export default function ExploreUsersPage() {
             <div className="relative">
               <Image
                 className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                src={user.coverImage ? parseImageUrl(user.coverImage) : 'https://flowbite.com/docs/images/carousel/carousel-1.svg'}
+                src={user.coverImage ? parseImageUrl(user.coverImage) : defaultImg}
                 alt="Cover"
                 width={1} height={1}
                 style={{ width: '100%', height: '100px' }}

@@ -19,9 +19,15 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile) => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
-      uploadFile: (file: Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
+      uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
-        form.append("files", file, (file as any).name)
+        if (Array.isArray(files)) {
+          files.forEach(file => {
+            form.append('files', file)
+          })
+        } else {
+          form.append("files", files, (files as any).name)
+        }
         if (metadata) {
           form.append('metadata', JSON.stringify(metadata))
         }

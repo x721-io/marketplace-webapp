@@ -90,16 +90,16 @@ export default function CreateNFTCollectionPage() {
       <div className="flex flex-col tablet:w-[550px] w-full">
 
         <div className="flex items-center mb-6 tablet:mb-10 desktop:mb-10">
-          <Button variant="text" onClick={resetForm}>
+          <Button variant="text" onClick={resetForm} className='min-w-[60px] tablet:min-w-[120px] desktop:min-w-[120px]'>
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
-          <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
+          <Text className="text-body-32 tablet:text-body-40 desktop:text-body-40 font-semibold flex-1">
             Create New Collection - {type}
           </Text>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 p-4">
             {/* Upload file */}
             <div>
               <Text className="text-base font-semibold mb-1">Collection image</Text>

@@ -88,16 +88,16 @@ export default function CreateNftPage() {
     <div className="w-full flex justify-center py-10 tablet:py-20 desktop:py-20">
       <div className="flex flex-col tablet:w-[550px] w-full">
         <div className="flex items-center mb-6 tablet:mb-10 desktop:mb-10">
-          <Button variant="text" onClick={resetForm}>
+          <Button variant="text" onClick={resetForm} className='min-w-[60px] tablet:min-w-[120px] desktop:min-w-[120px]'>
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
-          <Text className="text-body-32 tablet:text-body-40 desktop:text-body font-semibold">
+          <Text className="text-body-32 tablet:text-body-40 desktop:text-body-40 font-semibold">
             Create New NFT - {type}
           </Text>
         </div>
         <FormProvider {...methods}>
           <form>
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-10 p-4">
               {/* Upload file */}
               <div>
                 <Text className="text-body-16 font-semibold mb-1">Upload file</Text>
