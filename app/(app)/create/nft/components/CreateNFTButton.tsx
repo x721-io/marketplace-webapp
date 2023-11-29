@@ -28,7 +28,7 @@ export default function CreateNFTButton({ disabled, collection, assetType }: Pro
     try {
       await onCreateNFT(assetType, rest, toastId)
     } catch (e) {
-      toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false })
+      toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false, autoClose: 5000 })
       console.error(e)
     }
   }

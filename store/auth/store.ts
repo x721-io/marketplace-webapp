@@ -16,4 +16,6 @@ const useAuthStore = create(devtools(persist<AuthStoreState & AuthStoreAction>(
   { name: 'auth-storage' }
 )))
 
+export const clearProfile = () => useAuthStore.setState(DEFAULT_STATE)
+
 export default useAuthStore

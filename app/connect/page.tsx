@@ -67,6 +67,7 @@ export default function ConnectPage() {
       </main>
 
       <SignConnectMessageModal
+        mode="link"
         onSignup={() => setShowSignup(true)}
         show={showSignMessage}
         onClose={() => setShowSignMessage(false)} />
