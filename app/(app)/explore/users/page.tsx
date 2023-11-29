@@ -3,13 +3,13 @@
 import PlusIcon from "@/components/Icon/Plus";
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
-import defaultCover from '@/assets/images/default-cover-user.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Image from "next/image";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { useEffect, useState } from "react";
 import { APIResponse } from "@/services/api/types";
 import Link from 'next/link'
+import { parseImageUrl } from '@/utils/image'
 
 export default function ExploreUsersPage() {
   const [users, setUsers] = useState<APIResponse.User[]>([])
@@ -27,16 +27,18 @@ export default function ExploreUsersPage() {
             <div className="relative">
               <Image
                 className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                src={defaultCover}
+                src={user.coverImage ? parseImageUrl(user.coverImage) : 'https://flowbite.com/docs/images/carousel/carousel-1.svg'}
                 alt="Cover"
+                width={1} height={1}
                 style={{ width: '100%', height: '100px' }}
               />
               <div className="absolute rounded-full"
                    style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                 <Image
                   className="cursor-pointer rounded-full object-fill"
-                  src={defaultAvatar}
+                  src={user.avatar ? parseImageUrl(user.avatar) : defaultAvatar}
                   alt="Avatar"
+                  width={1} height={1}
                   style={{ width: '100%', height: '100%' }}
                 />
               </div>
