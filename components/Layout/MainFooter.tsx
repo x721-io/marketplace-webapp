@@ -16,8 +16,8 @@ export default function MainFooter() {
     {
       title: 'Marketplace',
       items: [
-        { label: 'Explore', href: '#' },
-        { label: 'Create', href: '#' },
+        { label: 'Explore', href: '/explore/collections' },
+        { label: 'Create', href: '//create/collection' },
         { label: 'Artists', href: '#' }
       ]
     },
@@ -101,7 +101,7 @@ export default function MainFooter() {
           </Link>
         </div>
 
-        <div className="flex-1 self-center tablet:self-end desktop:self-end">
+        <div className="flex-1 self-center tablet:self-end desktop:self-end flex justify-end">
           <div className='bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end'>
             <span className='p-2 bg-white rounded-xl'><SunIcon width={16} height={16}/></span>
             <span className='p-2'><MoonIcon width={16} height={16}/></span>
