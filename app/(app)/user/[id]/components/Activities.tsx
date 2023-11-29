@@ -21,8 +21,8 @@ export default function Activities() {
   )
 
   return (
-    <div className="w-full py-7">
-      <Table striped hoverable>
+    <div className="w-full py-7 overflow-x-auto">
+      <Table striped hoverable className='overflow-x-auto'>
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Event</Table.HeadCell>

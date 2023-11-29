@@ -6,18 +6,19 @@ import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
+import { parseImageUrl } from '@/utils/image'
 
 export default function NFTDetailsHeader(nft: APIResponse.NFT) {
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
 
   return (
-    <div className="flex gap-16 items-stretch justify-center mb-10">
+    <div className="flex items-stretch justify-center mb-10 flex-col desktop:flex-row tablet:flex-row gap-8 desktop:gap-16 tablet:gap-16">
       <Image
-        src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
+        src={nft.imageHash ? parseImageUrl(nft.imageHash) : 'https://flowbite.com/docs/images/carousel/carousel-3.svg'}
         alt=""
         width={1}
         height={1}
-        className="w-[512px] h-[512px] rounded-2xl" />
+        className="desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl" />
 
       <div className="flex flex-col gap-10 justify-between">
         {/* NFT info */}
@@ -29,7 +30,7 @@ export default function NFTDetailsHeader(nft: APIResponse.NFT) {
             </Text>
           </div>
 
-          <Text className="font-bold text-primary" variant="heading-md">
+          <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24">
             {nft.name}
           </Text>
 

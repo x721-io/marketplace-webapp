@@ -204,6 +204,7 @@ export namespace APIResponse {
     traits: Trait[]
     sellInfo?: MarketEvent[]
     bidInfo?: MarketEvent[]
+    imageHash: string
   }
 
   export interface SearchNFT {

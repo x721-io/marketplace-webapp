@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function CollectionsList({ collections }: { collections?: APIResponse.Collection[] }) {
   return (
-    <Table hoverable striped>
+    <Table hoverable striped className='overflow-x-auto'>
       <Table.Head>
         <Table.HeadCell>Name</Table.HeadCell>
         <Table.HeadCell>Symbol</Table.HeadCell>
