@@ -76,7 +76,7 @@ export default function ExploreSectionNavbar() {
           ))}
         </Tabs.Group>
       </div>
-      <div className="relative flex-1 order-2 desktop:order-3">
+      <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
           className="py-4 h-14"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}

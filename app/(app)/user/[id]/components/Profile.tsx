@@ -38,7 +38,7 @@ export default function Profile({ id, username, bio, avatar, coverImage }: APIRe
               {<Icon name="verified" width={24} height={24} />}
             </div>
             <div>
-              <Text className="text-secondary text-sm">{bio}</Text>
+              <Text className="text-secondary text-sm">{bio ? bio : 'Nothing to show'}</Text>
             </div>
             {
               myId === id && (
