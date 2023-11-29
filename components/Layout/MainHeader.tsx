@@ -10,9 +10,13 @@ import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import Button from '@/components/Button'
 import { navs } from '@/config/nav'
+import useAuthStore from '@/store/auth/store'
+import { parseImageUrl } from '@/utils/image'
 
 export const HEADER_HEIGHT = 88
+
 export default function MainHeader() {
+  const avatar = useAuthStore(state => state.profile?.avatar)
   const [searchString, setSearchString] = useState('')
   const [openModal, setOpenModal] = useState(false);
 
@@ -86,7 +90,7 @@ export default function MainHeader() {
               <button onClick={() => setOpenModal(true)}>
                 <Image
                   className="cursor-pointer"
-                  src={defaultAvatar}
+                  src={avatar ? parseImageUrl(avatar) : defaultAvatar}
                   alt="Avatar"
                   width={35}
                   height={35}
