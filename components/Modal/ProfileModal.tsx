@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { Modal, ModalProps } from 'flowbite-react'
 import Text from '@/components/Text'
 import defaultAvatar from "@/assets/images/default-avatar.png";
@@ -8,10 +6,12 @@ import Icon from "@/components/Icon";
 import Button from '@/components/Button'
 import useAuthStore from '@/store/auth/store'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function ProfileModal({ show, onClose }: ModalProps) {
   const username = useAuthStore(state => state.profile?.username)
   const userId = useAuthStore(state => state.profile?.id)
+  const { onLogout } = useAuth()
 
   return (
     <Modal dismissible position="top-right" show={show} size="sm">
@@ -53,7 +53,10 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
           </Link>
         </div>
         <div className="py-4">
-          <Link href="/" className="text-secondary hover:text-primary" onClick={onClose}>
+          <Link href="#" onClick={() => {
+            onLogout()
+            onClose?.()
+          }}>
             Logout
           </Link>
         </div>

@@ -35,11 +35,16 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
       const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
       await onAuth(date, signature)
       const profile = await api.viewProfile(address)
+
       if (!profile.acceptedTerms) { // Not registered
         onSignup()
       } else {
         setProfile(profile)
-        mode === 'link' ? router.back() : onClose?.()
+        if (mode === 'link') {
+          router.back()
+        } else {
+          onClose?.()
+        }
       }
 
       setIsAuthenticating(false)

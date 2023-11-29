@@ -57,7 +57,7 @@ export default function MainHeader() {
                       </span>)}>
                     {nav.items.map((item, i) => (
                       <Dropdown.Item key={i}>
-                        <Link href={item.href}>{item.label}</Link>
+                        <Link href={item.href ?? '/'}>{item.label}</Link>
                       </Dropdown.Item>
                     ))}
                   </Dropdown>

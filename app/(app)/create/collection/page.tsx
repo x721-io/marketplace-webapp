@@ -71,10 +71,10 @@ export default function CreateNFTCollectionPage() {
         })
       })
 
-      toast.update(toastId, { render: 'Collection created successfully', type: 'success', isLoading: false })
+      toast.update(toastId, { render: 'Collection created successfully', type: 'success', isLoading: false, autoClose: 5000 })
       resetForm()
     } catch (e) {
-      toast.update(toastId, { render: `Error creating collection: ${e}`, type: 'error', isLoading: false })
+      toast.update(toastId, { render: `Error creating collection: ${e}`, type: 'error', isLoading: false, autoClose: 5000 })
       console.error(e)
     }
   }
