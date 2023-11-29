@@ -1,5 +1,5 @@
 import { APIResponse } from '@/services/api/types'
-import { useBuyNFT, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useBuyNFT, useBuyUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
@@ -20,7 +20,7 @@ interface FormState {
 
 export default function BuyStep({ onSuccess, onError, nft }: Props) {
   const { saleData } = useNFTMarketStatus(nft)
-  const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyNFT(nft)
+  const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
   const { handleSubmit, register } = useForm<FormState>()
 
   const token = findTokenByAddress(saleData?.quoteToken)
@@ -29,9 +29,9 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
     if (!saleData) return
     try {
       if (nft.collection.type === 'ERC721') {
-        await onBuyERC721(saleData?.quoteToken, saleData?.price)
+        await onBuyERC721(saleData.price)
       } else {
-        await onBuyERC1155(saleData.operationId, saleData.amounts)
+        await onBuyERC1155(saleData.operationId, saleData.price, quantity)
       }
     } catch (e: any) {
       console.error(e)

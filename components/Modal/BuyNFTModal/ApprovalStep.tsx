@@ -19,7 +19,8 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
   const {
     isTokenApproved,
     isFetchingApproval,
-    onApproveToken, isLoading,
+    onApproveToken,
+    isLoading,
     isSuccess,
     error,
     writeError
@@ -51,6 +52,15 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           <>
             <Text className="text-secondary text-center" variant="body-18">
               Token approved. Proceeding ...
+            </Text>
+            <Spinner size="xl" />
+          </>
+        )
+      default:
+        return (
+          <>
+            <Text className="text-secondary text-center" variant="body-18">
+              Verifying token approval ...
             </Text>
             <Spinner size="xl" />
           </>

@@ -35,6 +35,9 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
             <Text className="text-secondary">
               Your NFT has been put on sale!
             </Text>
+            <Button className="w-full" variant="secondary" onClick={onClose}>
+              Close and continue
+            </Button>
           </>
         )
       default:

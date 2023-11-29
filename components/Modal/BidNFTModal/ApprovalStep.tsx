@@ -1,10 +1,11 @@
 import Text from '@/components/Text'
 import { Spinner } from 'flowbite-react'
 import { useMarketTokenApproval, useNFTMarketStatus } from '@/hooks/useMarket'
-import { APIResponse } from '@/services/api/types'
+import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'wagmi'
 import Button from '@/components/Button'
+import { tokens } from '@/config/tokens'
 
 interface Props {
   onNext: () => void
@@ -13,8 +14,16 @@ interface Props {
 }
 
 export default function ApprovalStep({ nft, onNext, onError }: Props) {
-  const { quoteToken } = useNFTMarketStatus(nft)
-  const { isTokenApproved, isFetchingApproval, onApproveToken, isLoading, isSuccess, error, writeError } = useMarketTokenApproval(quoteToken as Address, nft.collection.type)
+  const quoteToken = tokens.wu2u.address
+  const {
+    isTokenApproved,
+    isFetchingApproval,
+    onApproveToken,
+    isLoading,
+    isSuccess,
+    error,
+    writeError
+  } = useMarketTokenApproval(quoteToken, nft.collection.type)
 
   const handleApproveMarketToken = async () => {
     try {
