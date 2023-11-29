@@ -10,6 +10,7 @@ import Icon from '@/components/Icon'
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
 import { parseImageUrl } from "@/utils/image";
+import defaultImg from '@/assets/images/carousel-1.png'
 
 export default function NFTCard({ name, id, creator, collection, imageHash }: APIResponse.NFT) {
   const router = useRouter()
@@ -18,7 +19,7 @@ export default function NFTCard({ name, id, creator, collection, imageHash }: AP
     <div key={id} onClick={() => router.push(`/item/${id}`)} className="flex flex-col rounded-xl p-2 gap-2" style={{ border: '0.7px solid #E3E3E3' }}>
       <Image
         className="cursor-pointer rounded-xl object-cover w-full h-full"
-        src={imageHash ? parseImageUrl(imageHash) : 'https://flowbite.com/docs/images/carousel/carousel-3.svg'}
+        src={imageHash ? parseImageUrl(imageHash) : defaultImg}
         alt="image"
         width={1} height={1}
       />

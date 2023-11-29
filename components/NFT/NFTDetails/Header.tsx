@@ -7,6 +7,7 @@ import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 import { parseImageUrl } from '@/utils/image'
+import defaultImg from '@/assets/images/carousel-1.png'
 
 export default function NFTDetailsHeader(nft: APIResponse.NFT) {
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
@@ -14,7 +15,7 @@ export default function NFTDetailsHeader(nft: APIResponse.NFT) {
   return (
     <div className="flex items-stretch justify-center mb-10 flex-col desktop:flex-row tablet:flex-row gap-8 desktop:gap-16 tablet:gap-16">
       <Image
-        src={nft.imageHash ? parseImageUrl(nft.imageHash) : 'https://flowbite.com/docs/images/carousel/carousel-3.svg'}
+        src={nft.imageHash ? parseImageUrl(nft.imageHash) : defaultImg}
         alt=""
         width={1}
         height={1}
