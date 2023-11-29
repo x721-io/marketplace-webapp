@@ -67,11 +67,11 @@ export const useCreateNFT = (collection: Address, type: AssetType) => {
       txCreationHash: hash,
       imageHash: fileHashes[0],
       creatorId: userId,
-      traits: metadataHash
+      traits: params.traits
     } as APIParams.CreateNFT
     const res = await api.createNFT(createNFTParams)
 
-    if (toastId) toast.update(toastId, { render: 'Item created successfully', type: 'success', isLoading: false })
+    if (toastId) toast.update(toastId, { render: 'Item created successfully', type: 'success', isLoading: false, autoClose: 5000 })
   }, [collection, address])
 
   return { onCreateNFT }
