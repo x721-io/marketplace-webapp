@@ -28,11 +28,11 @@ export default function NFTActions(nft: APIResponse.NFT) {
       <ConnectWalletButton className="w-full">
         {
           isOnSale ? (
-            <Button>
+            <Button className="w-full" onClick={() => setShowCancelSellModal(true)}>
               Cancel listing
             </Button>
           ) : (
-            <Button className="mb-3 w-full" onClick={() => setShowSellModal(true)}>
+            <Button className="w-full" onClick={() => setShowSellModal(true)}>
               Put on sale
             </Button>
           )
@@ -45,17 +45,22 @@ export default function NFTActions(nft: APIResponse.NFT) {
 
   return (
     <ConnectWalletButton className="w-full">
-      <div className="flex items-center gap-3 mb-3">
-        <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
-          Buy Now
-        </Button>
-        <Button className="w-12 !min-w-0 !p-2" disabled>
-          <Icon name="shoppingBag" width={16} height={16} />
-        </Button>
-      </div>
+      {
+        isOnSale && (
+          <div className="flex items-center gap-3 mb-3">
+            <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
+              Buy Now
+            </Button>
+            <Button className="w-12 !min-w-0 !p-2" disabled>
+              <Icon name="shoppingBag" width={16} height={16} />
+            </Button>
+          </div>
+        )
+      }
+
       {
         !!myBid ? (
-          <Button className="w-full" variant="secondary">
+          <Button className="w-full" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
             Cancel bidding
           </Button>
         ) : (
@@ -66,8 +71,8 @@ export default function NFTActions(nft: APIResponse.NFT) {
       }
 
       <BuyNFTModal nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)} />
-      <BidNFTModal bid={myBid} nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
-      <CancelBidNFTModal nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
+      <BidNFTModal nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
+      <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
     </ConnectWalletButton>
   )
 }

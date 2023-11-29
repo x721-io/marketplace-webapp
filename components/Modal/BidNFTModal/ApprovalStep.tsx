@@ -5,16 +5,16 @@ import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'wagmi'
 import Button from '@/components/Button'
+import { tokens } from '@/config/tokens'
 
 interface Props {
   onNext: () => void
   onError: (error: Error) => void
   nft: APIResponse.NFT
-  bid: MarketEvent
 }
 
-export default function ApprovalStep({ nft, onNext, onError, bid }: Props) {
-  const { quoteToken } = bid
+export default function ApprovalStep({ nft, onNext, onError }: Props) {
+  const quoteToken = tokens.wu2u.address
   const {
     isTokenApproved,
     isFetchingApproval,
@@ -23,7 +23,7 @@ export default function ApprovalStep({ nft, onNext, onError, bid }: Props) {
     isSuccess,
     error,
     writeError
-  } = useMarketTokenApproval(quoteToken as Address, nft.collection.type)
+  } = useMarketTokenApproval(quoteToken, nft.collection.type)
 
   const handleApproveMarketToken = async () => {
     try {

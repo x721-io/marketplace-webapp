@@ -1,17 +1,20 @@
-import { APIResponse, MarketEvent } from '@/services/api/types'
-import { useBidNFT, useNFTMarketStatus } from '@/hooks/useMarket'
+import { APIResponse } from '@/services/api/types'
+import { useBidNFT, useBidUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { findTokenByAddress } from '@/utils/token'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { tokens } from '@/config/tokens'
+import { fetchBalance, FetchBalanceResult } from '@wagmi/core'
+import { useAccount } from 'wagmi'
+import { formatEther, formatUnits } from 'ethers'
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: APIResponse.NFT
-  bid: MarketEvent
 }
 
 interface FormState {
@@ -19,16 +22,18 @@ interface FormState {
   quantity: string
 }
 
-export default function BidStep({ bid, onSuccess, onError, nft }: Props) {
-  const { quoteToken } = bid
-  const { onBidNFT, isSuccess, isLoading, error } = useBidNFT(nft)
-  const { handleSubmit, register } = useForm<FormState>()
+export default function BidStep({ onSuccess, onError, nft }: Props) {
+  const { address } = useAccount()
+  const [tokenBalance, setTokenBalance] = useState<FetchBalanceResult>()
+  const token = tokens.wu2u
 
-  const token = findTokenByAddress(quoteToken)
+  const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft)
+  const { handleSubmit, watch, register } = useForm<FormState>()
+  const [price, quantity] = watch(['price', 'quantity'])
 
   const onSubmit = async ({ price, quantity }: FormState) => {
     try {
-      await onBidNFT(price, quoteToken, quantity)
+      await onBidUsingNative(price, quantity)
     } catch (e: any) {
       console.error(e)
     }
@@ -41,6 +46,18 @@ export default function BidStep({ bid, onSuccess, onError, nft }: Props) {
   useEffect(() => {
     if (isSuccess) onSuccess()
   }, [isSuccess])
+
+  useEffect(() => {
+    (async () => {
+      if (!address) return
+
+      const balance = await fetchBalance({
+        address,
+        // token: quoteToken
+      })
+      setTokenBalance(balance)
+    })()
+  }, [address]);
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
@@ -62,22 +79,42 @@ export default function BidStep({ bid, onSuccess, onError, nft }: Props) {
         <Input
           readOnly
           value={token?.symbol}
+          appendIcon={
+            <Text>
+              Balance: {formatUnits(tokenBalance?.value || 0, 18)}
+            </Text>
+          }
         />
       </div>
 
       {
         nft.collection.type === 'ERC1155' && (
-          <div>
-            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-            <Input
-              register={register('quantity')}
-              type="number" />
-          </div>
+          <>
+            <div>
+              <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+              <Input
+                register={register('quantity')}
+                type="number" />
+            </div>
+            <div>
+              <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
+              <Input
+                readOnly
+                value={Number(price) * Number(quantity)}
+                type="number"
+                appendIcon={
+                  <Text>
+                    U2U
+                  </Text>
+                }/>
+            </div>
+          </>
+
         )
       }
 
       <Button type={'submit'} className="w-full" loading={isLoading}>
-        Purchase item
+        Place bid
       </Button>
     </form>
   )

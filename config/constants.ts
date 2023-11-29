@@ -9,4 +9,4 @@ export const CHAIN_ID = 2484
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) => `I want to login on U2UNFTMarket at ${time}. I accept the U2U Terms of Service https://unicornultra.xyz and I am at least 13 years old.`
 }
-export const SIGNATURE = '0x0000000000000000000000000000000000000000000000000000000000000000'
+export const FINGERPRINT = '0x0000000000000000000000000000000000000000000000000000000000000000'

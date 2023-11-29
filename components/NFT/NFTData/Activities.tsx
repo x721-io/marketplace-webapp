@@ -25,8 +25,8 @@ export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Event</Table.HeadCell>
-          <Table.HeadCell>Action by</Table.HeadCell>
-          <Table.HeadCell>Receiver</Table.HeadCell>
+          <Table.HeadCell>Buyer</Table.HeadCell>
+          <Table.HeadCell>Seller</Table.HeadCell>
           <Table.HeadCell>Price</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
