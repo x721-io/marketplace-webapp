@@ -5,6 +5,7 @@ import { APIResponse } from '@/services/api/types'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'wagmi'
 import Button from '@/components/Button'
+import { parseEther } from 'ethers'
 
 interface Props {
   onNext: () => void
@@ -14,6 +15,7 @@ interface Props {
 
 export default function ApprovalStep({ nft, onNext, onError }: Props) {
   const { saleData } = useNFTMarketStatus(nft)
+
   const {
     isTokenApproved,
     isFetchingApproval,
@@ -37,7 +39,9 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
         return (
           <>
             <Text className="text-secondary text-center" variant="body-18">
-              Contract not approved. Please approve before proceeding!
+              {
+                isLoading ? 'Contract not approved. Please approve before proceeding!' : 'Approving token contract'
+              }
             </Text>
             <Button loading={isLoading} className="w-full" onClick={handleApproveMarketToken}>Approve</Button>
           </>

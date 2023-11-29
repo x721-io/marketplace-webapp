@@ -18,6 +18,9 @@ export default function CreateNFTButton({ disabled, collection, assetType }: Pro
 
   const handleSubmit = async () => {
     const data = getValues()
+    if (data.traits) {
+      data.traits = data.traits.filter(trait => !!trait.trait_type && trait.value)
+    }
     if (!assetType) return
     const toastId = toast.loading('Preparing transaction...', { type: 'info' })
     const { collection, ...rest } = data

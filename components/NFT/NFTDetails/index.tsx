@@ -13,7 +13,8 @@ export default function NFTDetails() {
   const api = useMarketplaceApi()
   const { data: item, error, isLoading } = useSWR(
     `/item/${id}`,
-    () => api.fetchNFTById(id as string)
+    () => api.fetchNFTById(id as string),
+    { refreshInterval: 300000 }
   )
 
   if (isLoading) {
@@ -24,7 +25,7 @@ export default function NFTDetails() {
 
   if (!item) {
     return (
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full h-96 flex justify-center items-center">
         <Text variant="heading-xs">
           Item not found!
         </Text>

@@ -1,7 +1,7 @@
 "use client"
 
 import Button, { ButtonProps } from './index'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import SignupModal from '@/components/Modal/SignupModal'
 import WalletConnectModal from '@/components/Modal/WalletConnectModal'
 import { useAccount } from 'wagmi'
@@ -9,7 +9,7 @@ import SignConnectMessageModal from '@/components/Modal/SignConnectMessageModal'
 import useAuthStore from '@/store/auth/store'
 import { useRouter } from 'next/navigation'
 
-interface Props extends ButtonProps{
+interface Props extends ButtonProps {
   children?: React.ReactNode
   mode?: 'link' | 'modal'
 }
@@ -22,6 +22,8 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
   const [showSignup, setShowSignup] = useState(false)
   const acceptedTerms = useAuthStore(state => state.profile?.acceptedTerms)
   const accessToken = useAuthStore(state => state.credentials?.accessToken)
+  const expiredDate = useAuthStore(state => state.credentials?.accessTokenExpire)
+  const isExpired = useMemo(() => expiredDate && expiredDate < new Date().getTime(), [expiredDate])
 
   const handleConnectWallet = () => {
     if (mode === 'modal') {
@@ -31,7 +33,7 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
     }
   }
 
-  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken) {
+  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired) {
     return children
   }
 

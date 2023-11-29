@@ -11,6 +11,7 @@
   "dependencies": {
     "@rarible/types": "~0.9.16",
     "axios": "^1.6.1",
+    "date-fns": "^2.30.0",
     "ethers": "^6.8.1",
     "flowbite": "^2.1.1",
     "flowbite-react": "^0.6.4",

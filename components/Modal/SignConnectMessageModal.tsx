@@ -11,9 +11,10 @@ import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 interface Props extends ModalProps {
   onSignup: () => void
+  mode?: 'link' | 'modal'
 }
 
-export default function SignConnectMessageModal({ show, onClose, onSignup }: Props) {
+export default function SignConnectMessageModal({ show, onClose, onSignup, mode = 'modal' }: Props) {
   const api = useMarketplaceApi()
   const router = useRouter()
   const { address } = useAccount()
@@ -33,13 +34,12 @@ export default function SignConnectMessageModal({ show, onClose, onSignup }: Pro
       setIsAuthenticating(true)
       const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
       await onAuth(date, signature)
-      const profile= await api.viewProfile(address)
+      const profile = await api.viewProfile(address)
       if (!profile.acceptedTerms) { // Not registered
         onSignup()
       } else {
         setProfile(profile)
-        // todo: Fix
-        router.back()
+        mode === 'link' ? router.back() : onClose?.()
       }
 
       setIsAuthenticating(false)

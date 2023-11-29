@@ -1,30 +1,27 @@
-import { AxiosRequestConfig } from 'axios'
 import { AssetType, Trait } from '@/types'
 import { Address } from 'wagmi'
 import { BigNumberish } from 'ethers'
 
-interface User {
-  avatar: null | string
-  email: string | null
-  id: string
-  publicKey: Address
-  username: string
-}
-
 type Status = 'PENDING' | 'SUCCESS' | 'FAILED'
 type MarketEventType = 'AskNew' | 'AskCancel' | 'Trade' | 'AcceptBid' | 'Bid' | 'CancelBid'
 
-interface MarketEvent {
+export interface MarketEvent {
   id: string,
   event: MarketEventType
   nftId: {
     id: string
+    contract: {
+      id: Address
+      name: string
+    }
   },
   price: BigNumberish
-  to: string
-  from: string
+  to: Address
+  from: Address
   quoteToken: Address
   operationId: string
+  amounts: string
+  timestamp: BigNumberish
 }
 
 export namespace APIParams {
@@ -75,25 +72,44 @@ export namespace APIParams {
     collectionId: string,
     txCreationHash: string,
     creatorId: string,
-    traits?: Trait[]
+    traits?: string
   }
 
-  export interface GetUsers {
-    limit: string
+  export interface FetchUsers extends PaginationParams {
+
   }
 
   export interface SearchNFT extends PaginationParams {
     traits?: { trait_type: string, value: any }[]
     collectionAddress?: Address,
     creatorAddress?: Address,
-    priceMax?: BigInt,
-    priceMin?: BigInt,
+    priceMax?: BigNumberish,
+    priceMin?: BigNumberish,
     sellStatus?: MarketEventType
+  }
+
+  export interface NFTEvents extends PaginationParams {
+    and?: {
+      nftId?: string,
+      type?: AssetType,
+      from?: string,
+      to?: string,
+      quoteToken?: Address,
+      event?: MarketEventType
+    }[]
+    or?: {
+      nftId?: string,
+      type?: AssetType,
+      from?: string,
+      to?: string,
+      quoteToken?: Address,
+      event?: MarketEventType
+    }[]
   }
 }
 
 export namespace APIResponse {
-  interface PaginationResponse {
+  interface Pagination {
     page: number
     limit: number
     total: number
@@ -149,6 +165,10 @@ export namespace APIResponse {
     status: Status
     type: AssetType
     creators: User[]
+    volumn: string
+    totalOwner: number
+    totalNft: number
+    floorPrice: string
   }
 
   export interface CreateNFT {
@@ -174,28 +194,26 @@ export namespace APIResponse {
       username: string
     },
     owners: {
-      nftId: string
-      quantity: number
-      userId: string
-      user: Omit<User, 'id'>
+      username: string
+      avatar: number
+      email: string
+      publicKey: Address
     }[],
     collection: Collection,
     traits: Trait[]
-    sellInfo?: {
-      marketEvent1155S: MarketEvent[],
-      marketEvent721S: MarketEvent[]
-    }
+    sellInfo?: MarketEvent[]
+    bidInfo?: MarketEvent[]
   }
 
-  export interface SearchNFTResponse {
+  export interface SearchNFT {
     data: NFT[]
-    paging: PaginationResponse
+    paging: Pagination
   }
 
   export interface User {
     id: string
-    email:string
-    avatar: string | null
+    email: string
+    avatar?: string | null
     username: string | null
     signature: Address
     signedMessage: string
@@ -205,5 +223,9 @@ export namespace APIResponse {
     acceptedTerms: boolean
     createdAt: string
     updatedAt?: string | null
+    bio?: string | null
+    coverImage?: string | null
   }
+
+  export type NFTEvents = MarketEvent[]
 }

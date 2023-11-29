@@ -51,7 +51,7 @@ export default function Button({
         return 'bg-surface-soft'
       case 'text':
         if (disabled) return 'text-disabled'
-        return 'bg-transparent text-primary outline-none'
+        return 'bg-transparent text-primary outline-none !p-0 hover:underline'
       case 'secondary':
         if (disabled) return 'bg-gray-100 text-disabled'
         return 'text-primary bg-button-secondary hover:bg-gray-200'

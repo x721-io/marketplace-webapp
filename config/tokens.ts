@@ -5,7 +5,7 @@ export const tokens: Record<string, URC20Token> = {
     name: 'Unicorn Ultra Token',
     symbol: 'U2U',
     decimal: 18,
-    address: '0x3d3350A01Ad2a9AEef5A1E3e63840B6892Ba28c0'
+    address: '0x374ad52c818675e333256a39a8b64a5ae29adac1'
   }
 }
 

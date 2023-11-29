@@ -5,27 +5,31 @@ import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
 import ImageUploader from '@/components/Form/ImageUploader'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
 import Icon from '@/components/Icon'
-import { AssetType } from '@/types'
+import { AssetType, Trait } from '@/types'
 import CreateNFTButton from './components/CreateNFTButton'
 import { CreateNFTForm } from '@/types/form'
 import { classNames } from '@/utils/string'
 import useAuthStore from '@/store/auth/store'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { Accordion } from 'flowbite-react'
+import Link from 'next/link'
 
 export default function CreateNftPage() {
   const api = useMarketplaceApi()
   const userId = useAuthStore(state => state.credentials?.userId)
   const { data, error, isLoading } = useSWR(
-    !!userId ? 'true' : null,
+    !!userId ? 'my-collections' : null,
     () => api.fetchCollectionsByUser(userId as string),
     { refreshInterval: 3600 * 1000 }
   )
-  const methods = useForm<CreateNFTForm>()
+  const methods = useForm<CreateNFTForm>({
+    defaultValues: { traits: [{ trait_type: '', value: '' }] }
+  })
   const collection = methods.watch('collection')
   const [type, setType] = useState<AssetType>()
 
@@ -40,6 +44,39 @@ export default function CreateNftPage() {
     methods.reset()
     setType(undefined)
   }
+
+  const handleTraitInput = (index: number, key: keyof Trait, value: any) => {
+    const _traits = methods.getValues('traits')
+    if (!_traits) return
+    const _trait = { ..._traits[index] }
+    if (!_trait) return
+    _trait[key] = value
+    _traits[index] = _trait
+    methods.setValue('traits', _traits)
+
+    const lastTrait = _traits[_traits.length - 1]
+    if (!lastTrait) return
+    if (!lastTrait.trait_type || !lastTrait.value) return
+    _traits.push({ trait_type: '', value: '' }) // Add more trait when inputting
+    methods.setValue('traits', _traits as Trait[])
+  }
+  //
+  // useEffect(() => {
+  //   const subscription = methods.watch((value, { name }) => {
+  //     if (name === 'traits') {
+  //       const { traits } = value
+  //       if (!traits) return
+  //       const lastTrait = traits[traits.length - 1]
+  //
+  //       if (!lastTrait) return
+  //       if (!lastTrait.trait_type || !lastTrait.value) return
+  //       const _traits = [...traits]
+  //       _traits.push({ trait_type: '', value: '' }) // Add more trait when inputting
+  //       methods.setValue('traits', _traits as Trait[])
+  //     }
+  //   })
+  //   return () => subscription.unsubscribe()
+  // }, [methods.watch, methods.setValue])
 
   if (!type) {
     return (
@@ -63,7 +100,7 @@ export default function CreateNftPage() {
             <div className="flex flex-col gap-10">
               {/* Upload file */}
               <div>
-                <Text className="text-base font-semibold mb-1">Upload file</Text>
+                <Text className="text-body-16 font-semibold mb-1">Upload file</Text>
                 <Controller
                   name="image"
                   control={methods.control}
@@ -77,7 +114,7 @@ export default function CreateNftPage() {
               </div>
               {/* Choose collection */}
               <div>
-                <Text className="text-base font-semibold mb-1">Choose collection</Text>
+                <Text className="text-body-16 font-semibold mb-1">Choose collection</Text>
                 <Controller
                   name="collection"
                   control={methods.control}
@@ -85,13 +122,10 @@ export default function CreateNftPage() {
                   render={({ field: { onChange, value } }) => (
                     <div className="flex items-center gap-3 w-full max-h-56 overflow-y-auto flex-wrap">
                       {
-                        collectionOptions.map(c => (
+                        collectionOptions.length ? collectionOptions.map(c => (
                           <div
                             key={c.value}
-                            onClick={() => {
-                              console.log(c.value)
-                              onChange(c.value)
-                            }}
+                            onClick={() => onChange(c.value)}
                             className={classNames(
                               'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8',
                               'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
@@ -100,7 +134,9 @@ export default function CreateNftPage() {
                             <Text className="text-heading-sm font-bold text-primary text-ellipsis">{c.label}</Text>
                             <Text className="text-body-12 text-secondary text-ellipsis">{c.type}</Text>
                           </div>
-                        ))
+                        )) : (
+                          <Link className="text-center" href={`/create/collection`}>Create Collection</Link>
+                        )
                       }
                     </div>
                   )}
@@ -108,14 +144,14 @@ export default function CreateNftPage() {
               </div>
               {/* Name */}
               <div>
-                <Text className="text-base font-semibold mb-1">Display name</Text>
+                <Text className="text-body-16 font-semibold mb-1">Display name</Text>
                 <Input
                   register={methods.register('name', { required: true })}
                 />
               </div>
               {/* Description */}
               <div>
-                <Text className="text-base font-semibold mb-1">Description</Text>
+                <Text className="text-body-16 font-semibold mb-1">Description</Text>
                 <Textarea
                   className="h-[160px] resize-none"
                   register={methods.register('description')}
@@ -123,7 +159,7 @@ export default function CreateNftPage() {
               </div>
               {/* Royalties */}
               <div>
-                <Text className="text-base font-semibold mb-1">Royalties</Text>
+                <Text className="text-body-16 font-semibold mb-1">Royalties</Text>
                 <Input
                   register={methods.register('royalties', { required: true })}
                   appendIcon={(
@@ -135,7 +171,7 @@ export default function CreateNftPage() {
               {
                 type === 'ERC1155' && (
                   <div>
-                    <Text className="text-base font-semibold mb-1">Number of copies</Text>
+                    <Text className="text-body-16 font-semibold mb-1">Number of copies</Text>
                     <Input
                       register={methods.register('amount', { required: true })}
                     />
@@ -143,7 +179,41 @@ export default function CreateNftPage() {
                 )
               }
 
-              {/* Button finish */}
+              <Accordion collapseAll>
+                <Accordion.Panel>
+                  <Accordion.Title>Advanced settings</Accordion.Title>
+                  <Accordion.Content>
+                    <Text className="text-primary font-semibold mb-4" variant="body-16">
+                      Properties <span className="text-secondary">(Optional)</span>
+                    </Text>
+
+                    <div className="w-full flex flex-col gap-4">
+                      <Controller
+                        name="traits"
+                        control={methods.control}
+                        render={({ field: { onChange, value } }) => {
+                          return (
+                            <>{Array.isArray(value) && value.map((trait, index) => (
+                              <div key={index} className="w-full flex items-center gap-7">
+                                <Input
+                                  value={value[index].trait_type}
+                                  containerClass="flex-1"
+                                  placeholder="e.g. Size"
+                                  onChange={event => handleTraitInput(index, 'trait_type', event.target.value)} />
+                                <Input
+                                  value={value[index].value}
+                                  containerClass="flex-1"
+                                  placeholder="e.g. M"
+                                  onChange={event => handleTraitInput(index, 'value', event.target.value)} />
+                              </div>
+                            ))}</>
+                          )
+                        }} />
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Panel>
+              </Accordion>
+
               {
                 !!collection ? collectionOptions.map(c => {
                   return c.value === collection ? (
@@ -159,137 +229,6 @@ export default function CreateNftPage() {
                   </Button>
                 )
               }
-
-              {/* Put on marketplace */}
-              {/*<div className="flex flex-col gap-6">*/}
-              {/*  <div className="flex justify-between">*/}
-              {/*    <div>*/}
-              {/*      <Text className="text-lg font-semibold mb-2">Put on marketplace</Text>*/}
-              {/*      <Text className="text-secondary">Enter price to allow users instantly purchase your NFT</Text>*/}
-              {/*    </div>*/}
-              {/*    <div>*/}
-              {/*      <label className="relative inline-flex items-center cursor-pointer">*/}
-              {/*        <input type="checkbox" value="" className="sr-only peer" />*/}
-              {/*        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
-              {/*      </label>*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*  <div className="flex gap-4 w-full">*/}
-              {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined">*/}
-              {/*      <TagIcon width={24} height={24} />Fixed price*/}
-              {/*    </Button>*/}
-              {/*    <Button className="flex-1 flex gap-2.5 justify-center items-center" variant="outlined" disabled>*/}
-              {/*      <LockIcon width={24} height={24} />Timed auction*/}
-              {/*    </Button>*/}
-              {/*  </div>*/}
-              {/*  /!* Price *!/*/}
-              {/*  <div>*/}
-              {/*    <Text className="text-base font-semibold mb-1">Price</Text>*/}
-              {/*    <div className="flex">*/}
-              {/*      <button id="dropdown-button"*/}
-              {/*              data-dropdown-toggle="dropdown"*/}
-              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-              {/*              type="button">U2U*/}
-              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-              {/*             aria-hidden="true"*/}
-              {/*             xmlns="http://www.w3.org/2000/svg"*/}
-              {/*             fill="none"*/}
-              {/*             viewBox="0 0 10 6">*/}
-              {/*          <path stroke="currentColor"*/}
-              {/*                strokeLinecap="round"*/}
-              {/*                strokeLinejoin="round"*/}
-              {/*                strokeWidth="2"*/}
-              {/*                d="m1 1 4 4 4-4" />*/}
-              {/*        </svg>*/}
-              {/*      </button>*/}
-              {/*      <div className="relative w-full">*/}
-              {/*        <input type="text"*/}
-              {/*               id="search-dropdown"*/}
-              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-              {/*               placeholder="99" />*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*  /!* Minimum bid *!/*/}
-              {/*  <div>*/}
-              {/*    <Text className="text-base font-semibold mb-1">Minimum bid</Text>*/}
-              {/*    <div className="flex">*/}
-              {/*      <button id="dropdown-button"*/}
-              {/*              data-dropdown-toggle="dropdown"*/}
-              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-              {/*              type="button">U2U*/}
-              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-              {/*             aria-hidden="true"*/}
-              {/*             xmlns="http://www.w3.org/2000/svg"*/}
-              {/*             fill="none"*/}
-              {/*             viewBox="0 0 10 6">*/}
-              {/*          <path stroke="currentColor"*/}
-              {/*                strokeLinecap="round"*/}
-              {/*                strokeLinejoin="round"*/}
-              {/*                strokeWidth="2"*/}
-              {/*                d="m1 1 4 4 4-4" />*/}
-              {/*        </svg>*/}
-              {/*      </button>*/}
-              {/*      <div className="relative w-full">*/}
-              {/*        <input type="text"*/}
-              {/*               id="search-dropdown"*/}
-              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-              {/*               placeholder="99" />*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*  /!* Starting Date *!/*/}
-              {/*  <div>*/}
-              {/*    <Text className="text-base font-semibold mb-1">Starting Date</Text>*/}
-              {/*    <Select options={[]} />*/}
-              {/*  </div>*/}
-              {/*  /!* End date *!/*/}
-              {/*  <div>*/}
-              {/*    <Text className="text-base font-semibold mb-1">End date</Text>*/}
-              {/*    <div className="flex">*/}
-              {/*      <button id="dropdown-button"*/}
-              {/*              data-dropdown-toggle="dropdown"*/}
-              {/*              className=" focus:border-surfacehard focus:border rounded-tl-2xl rounded-bl-2xl flex-shrink-0 inline-flex items-center p-3 h-12 text-sm font-medium text-center bg-gray-100 text-primary focus-visible:ring-[0.5px] focus:ring-primary"*/}
-              {/*              type="button">7 days*/}
-              {/*        <svg className="w-2.5 h-2.5 ms-2.5"*/}
-              {/*             aria-hidden="true"*/}
-              {/*             xmlns="http://www.w3.org/2000/svg"*/}
-              {/*             fill="none"*/}
-              {/*             viewBox="0 0 10 6">*/}
-              {/*          <path stroke="currentColor"*/}
-              {/*                strokeLinecap="round"*/}
-              {/*                strokeLinejoin="round"*/}
-              {/*                strokeWidth="2"*/}
-              {/*                d="m1 1 4 4 4-4" />*/}
-              {/*        </svg>*/}
-              {/*      </button>*/}
-              {/*      <div className="relative w-full">*/}
-              {/*        <input type="text"*/}
-              {/*               id="search-dropdown"*/}
-              {/*               className="bg-surface-soft outline-none placeholder:text-tertiary text-primary focus-visible:ring-[0.5px] focus:ring-primary w-full border-none text-body-14 rounded-tr-2xl rounded-br-2xl p-3 h-12"*/}
-              {/*               placeholder="99" />*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
-              {/* Unlockable content */}
-              {/*<div className="flex justify-between">*/}
-              {/*  <div>*/}
-              {/*    <Text className="text-lg font-semibold mb-2">Unlockable content</Text>*/}
-              {/*    <Text className="text-secondary">Include Content that can only be revealed by the owner</Text>*/}
-              {/*  </div>*/}
-              {/*  <div>*/}
-              {/*    <label className="relative inline-flex items-center cursor-pointer">*/}
-              {/*      <input type="checkbox" value="" className="sr-only peer" />*/}
-              {/*      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>*/}
-              {/*    </label>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
-              {/*/!* Blockchain *!/*/}
-              {/*<div>*/}
-              {/*  <Text className="text-base font-semibold mb-1">Blockchain</Text>*/}
-              {/*  <Select options={[]} />*/}
-              {/*</div>*/}
             </div>
           </form>
         </FormProvider>

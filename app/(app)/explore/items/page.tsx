@@ -13,7 +13,7 @@ export default function ExploreNFTsPage() {
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
 
   const { data, isLoading } = useSWR(
-    ['collections', activeFilters],
+    ['nfts', activeFilters],
     () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
     { refreshInterval: 60000 }
   )
