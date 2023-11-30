@@ -57,21 +57,6 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
   const renderContent = () => {
     switch (true) {
-      case isLoading:
-        return (
-          <>
-            <Text className="font-semibold text-primary text-center text-heading-sm">
-              Loading...
-            </Text>
-            <Text className="text-secondary text-center" variant="body-18">
-              Sign the message in your wallet MetaMask to sign in safely
-            </Text>
-            <Spinner size="xl" />
-            <Button className="w-full" variant="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-          </>
-        )
       case isAuthenticating:
         return (
           <>
@@ -104,8 +89,22 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
             </div>
           </>
         )
+      case isLoading:
       default:
-        return null
+        return (
+          <>
+            <Text className="font-semibold text-primary text-center text-heading-sm">
+              Loading...
+            </Text>
+            <Text className="text-secondary text-center" variant="body-18">
+              Sign the message in your wallet MetaMask to sign in safely
+            </Text>
+            <Spinner size="xl" />
+            <Button className="w-full" variant="secondary" onClick={onClose}>
+              Cancel
+            </Button>
+          </>
+        )
     }
   }
 

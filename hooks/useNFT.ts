@@ -34,7 +34,7 @@ export const useCreateNFT = (collection: Address, type: AssetType) => {
     const tokenId = await api.generateTokenId(collection)
 
     if (toastId) toast.update(toastId, { render: 'Sending Transaction', type: 'info' })
-    const tokenURI = "ipfs://" + fileHashes[0]
+    const tokenURI = "ipfs://" + metadataHash
     const baseArgs: Record<string, any> =type === 'ERC1155'?{
       tokenId,
       tokenURI,

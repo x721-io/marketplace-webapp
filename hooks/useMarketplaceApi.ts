@@ -4,6 +4,7 @@ import { marketplaceApi } from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api'
 import { Address } from 'wagmi'
 import { useMemo } from 'react'
+import { getMetaDataHash } from '@/utils/nft'
 
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore()
@@ -64,6 +65,11 @@ export const useMarketplaceApi = () => {
       fetchUsers: async ({ limit }: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
+      },
+
+      getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.NFTMetaData> => {
+        const hash = getMetaDataHash(ifpsUrl)
+        return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?hash=${hash}`)
       }
     }
   }, [authHeader])

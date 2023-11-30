@@ -36,7 +36,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
       const { hash } = await onApproveMarketContract?.()
       setTxHash(hash)
     } catch (e) {
-
+      console.error(e)
     }
   }
 

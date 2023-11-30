@@ -230,4 +230,13 @@ export namespace APIResponse {
   }
 
   export type NFTEvents = MarketEvent[]
+
+  export interface NFTMetaData {
+    data: {
+      description?: string
+      traits?: Trait[]
+      fileHashes?: string[]
+      type: string
+    } & Record<string, any>
+  }
 }

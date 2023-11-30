@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import Icon from '@/components/Icon'
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
-import { parseImageUrl } from "@/utils/image";
+import { parseImageUrl } from "@/utils/nft";
 import defaultImg from '@/assets/images/carousel-1.png'
 
 export default function NFTCard({ name, id, creator, collection, imageHash }: APIResponse.NFT) {

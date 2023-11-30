@@ -4,7 +4,7 @@ import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { APIResponse } from '@/services/api/types'
 
-import ApprovalStep from './ApprovalStep'
+// import ApprovalStep from './ApprovalStep'
 import BuyStep from "./BuyStep";
 
 interface Props extends ModalProps {
@@ -13,7 +13,7 @@ interface Props extends ModalProps {
 
 export default function BuyNFTModal({ nft, show, onClose }: Props) {
   const [error, setError] = useState<Error>()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(2)
 
   const handleReset = () => {
     onClose?.()
@@ -23,8 +23,8 @@ export default function BuyNFTModal({ nft, show, onClose }: Props) {
 
   const renderContent = () => {
     switch (step) {
-      case 1:
-        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
+      // case 1:
+      //   return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
       case 2:
         return <BuyStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
       case 3:

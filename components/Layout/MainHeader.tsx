@@ -11,7 +11,7 @@ import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import Button from '@/components/Button'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
-import { parseImageUrl } from '@/utils/image'
+import { parseImageUrl } from '@/utils/nft'
 
 export const HEADER_HEIGHT = 88
 

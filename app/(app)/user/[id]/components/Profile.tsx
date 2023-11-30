@@ -6,7 +6,7 @@ import { APIResponse } from '@/services/api/types'
 import useAuthStore from '@/store/auth/store'
 import Button from '@/components/Button'
 import Link from 'next/link'
-import { parseImageUrl } from "@/utils/image";
+import { parseImageUrl } from "@/utils/nft";
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 
 export default function Profile({ id, username, bio, avatar, coverImage }: APIResponse.Profile) {

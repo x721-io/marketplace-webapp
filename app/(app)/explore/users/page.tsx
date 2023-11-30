@@ -9,7 +9,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { useEffect, useState } from "react";
 import { APIResponse } from "@/services/api/types";
 import Link from 'next/link'
-import { parseImageUrl } from '@/utils/image'
+import { parseImageUrl } from '@/utils/nft'
 import defaultImg from '@/assets/images/carousel-1.png'
 
 export default function ExploreUsersPage() {

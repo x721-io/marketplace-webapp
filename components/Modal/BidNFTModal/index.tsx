@@ -13,7 +13,7 @@ interface Props extends ModalProps {
 
 export default function BidNFTModal({ nft, show, onClose }: Props) {
   const [error, setError] = useState<Error>()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(2)
 
   const handleReset = () => {
     onClose?.()
@@ -23,8 +23,8 @@ export default function BidNFTModal({ nft, show, onClose }: Props) {
 
   const renderContent = () => {
     switch (step) {
-      case 1:
-        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
+      // case 1:
+      //   return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
       case 2:
         return <BidStep nft={nft} onError={setError} onSuccess={() => setStep(3)} />
       case 3:
