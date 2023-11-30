@@ -1,6 +1,6 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
 import LoadingScreen from '@/components/Layout/LoadingScreen'
@@ -8,10 +8,13 @@ import Text from '@/components/Text'
 import NFTData from '@/components/NFT/NFTData'
 import Image from 'next/image'
 import { parseImageUrl } from '@/utils/nft'
-import defaultImg from '@/assets/images/carousel-1.png'
+import defaultImg from '@/assets/images/default-cover-photo.png'
 import NFTMarketData from '@/components/NFT/NFTDetails/MarketData'
+import Button from '@/components/Button'
+import Icon from '@/components/Icon'
 
 export default function NFTDetails() {
+  const router = useRouter()
   const { id } = useParams()
   const api = useMarketplaceApi()
   const { data: item, error, isLoading } = useSWR(
@@ -19,7 +22,7 @@ export default function NFTDetails() {
     () => api.fetchNFTById(id as string),
     { refreshInterval: 10000 }
   )
-  const { data: metaData} = useSWR(
+  const { data: metaData } = useSWR(
     !!item?.tokenUri ? item.tokenUri : null,
     () => api.getNFTMetaData(item?.tokenUri || ''),
     { refreshInterval: 600000 }
@@ -44,6 +47,14 @@ export default function NFTDetails() {
   return (
     <div className="w-full px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10">
       <div className="flex items-start justify-center flex-col desktop:flex-row tablet:flex-row gap-8 desktop:gap-16 tablet:gap-16">
+        <div className="p-2" onClick={router.back}>
+          <Icon
+            className="cursor-pointer" name="arrowLeft"
+            width={24}
+            height={24}
+          />
+        </div>
+
         <div className="">
           <Image
             src={item.imageHash ? parseImageUrl(item.imageHash) : defaultImg}

@@ -19,7 +19,7 @@ export default function CollectionsList({ collections }: { collections?: APIResp
           Array.isArray(collections) && collections.map(c => (
             <Table.Row key={c.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                <Link href={`/collection/${c.address}`}>{c.name}</Link>
+                <Link href={`/collection/${c.id}`}>{c.name}</Link>
               </Table.Cell>
               <Table.Cell>{c.symbol}</Table.Cell>
               <Table.Cell>{parseFloat(formatEther(c.floorPrice)).toFixed(2)} U2U</Table.Cell>

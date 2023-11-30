@@ -39,16 +39,19 @@ export const useNFTFilters = (defaultState?: APIParams.SearchNFT) => {
     sellStatus: undefined
   })
 
-  const handleApplyFilters = ({ type, sellStatus, priceMax, priceMin }: Record<string, any>) => {
+  const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.SearchNFT) => {
     const _activeFilters = {
       ...activeFilters,
+      ...rest,
       page: 1,
-      limit: 20,
-      type,
-      sellStatus
+      limit: 20
     }
-    if (Number(priceMax)) _activeFilters.priceMax = parseEther(priceMax).toString()
-    if (Number(priceMin)) _activeFilters.priceMin = parseEther(priceMin).toString()
+    if (priceMax && Number(priceMax)) {
+      _activeFilters.priceMax = parseEther(priceMax.toString()).toString()
+    }
+    if (priceMin && Number(priceMin)) {
+      _activeFilters.priceMin = parseEther(priceMin.toString()).toString()
+    }
 
     setActiveFilters(_activeFilters)
   }

@@ -7,7 +7,7 @@ import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 import { parseImageUrl } from '@/utils/nft'
-import defaultImg from '@/assets/images/carousel-1.png'
+import defaultImg from '@/assets/images/default-cover-photo.png'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const { isOnSale, saleData } = useNFTMarketStatus(nft)

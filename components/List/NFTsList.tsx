@@ -1,9 +1,10 @@
-import { APIResponse } from '@/services/api/types'
+import { APIParams, APIResponse } from '@/services/api/types'
 import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
 import { classNames } from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
 import { Pagination } from 'flowbite-react'
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
+import Text from '@/components/Text'
 
 interface Paging {
   page?: number
@@ -15,12 +16,21 @@ interface Props {
   items?: APIResponse.NFT[]
   showFilters: boolean
   filters?: FilterType[]
-  onApplyFilters: (filters: Record<string, any>) => void
+  onApplyFilters: (filtersParams: APIParams.SearchNFT) => void
   onChangePage: (page: number) => void
   paging?: Paging
+  traitFilters?: APIResponse.CollectionDetails['traitAvailable']
 }
 
-export default function NFTsList({ items, showFilters, filters, onApplyFilters, paging, onChangePage }: Props) {
+export default function NFTsList({
+  items,
+  showFilters,
+  filters,
+  onApplyFilters,
+  paging,
+  traitFilters,
+  onChangePage
+}: Props) {
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
@@ -29,25 +39,41 @@ export default function NFTsList({ items, showFilters, filters, onApplyFilters, 
   return (
     <div className="w-full">
       <div className={
-        classNames('w-full flex gap-12 mb-7', showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row')
+        classNames(
+          'w-full flex gap-12 mb-7',
+          showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row')
       }>
-        {showFilters && <NFTFilters filters={filters} onApplyFilters={onApplyFilters} />}
+        {
+          showFilters &&
+          <NFTFilters
+            baseFilters={filters}
+            onApplyFilters={onApplyFilters}
+            traitsFilter={traitFilters} />
+        }
 
-        <div className="flex-1">
-          <div className={
-            classNames(
-              'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3 grid-cols-2',
-              showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2' : 'desktop:grid-cols-6 tablet:grid-cols-3'
-            )}>
-            {
-              Array.isArray(items) && items.map(item => (
-                <div key={item.id}>
-                  <NFTCard {...item} />
-                </div>
-              ))
-            }
-          </div>
-        </div>
+        {
+          items?.length ? (
+            <div className="flex-1">
+              <div className={
+                classNames(
+                  'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3 grid-cols-2',
+                  showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2' : 'desktop:grid-cols-6 tablet:grid-cols-3'
+                )}>
+                {
+                  items.map(item => (
+                    <div key={item.id}>
+                      <NFTCard {...item} />
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          ) : (
+            <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+              <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
+            </div>
+          )
+        }
       </div>
 
       <div className="flex justify-end">

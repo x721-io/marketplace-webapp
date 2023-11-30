@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { APIResponse } from "@/services/api/types";
 import Link from 'next/link'
 import { parseImageUrl } from '@/utils/nft'
-import defaultImg from '@/assets/images/carousel-1.png'
+import defaultImg from '@/assets/images/default-cover-photo.png'
 
 export default function ExploreUsersPage() {
   const [users, setUsers] = useState<APIResponse.User[]>([])

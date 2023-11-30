@@ -26,8 +26,8 @@ export interface MarketEvent {
 
 export namespace APIParams {
   interface PaginationParams {
-    page: number
-    limit: number
+    page?: number
+    limit?: number
   }
 
   export interface Connect {
@@ -82,6 +82,7 @@ export namespace APIParams {
 
   export interface SearchNFT extends PaginationParams {
     traits?: { trait_type: string, value: any }[]
+    type?: AssetType
     collectionAddress?: Address,
     creatorAddress?: Address,
     priceMax?: BigNumberish,
@@ -161,15 +162,28 @@ export namespace APIResponse {
     categoryId: number | null
     createdAt: string
     updatedAt: string
-    metadata: null | Record<string, any> | any[]
+    metadata: Record<string, any>
     shortUrl: string | null
     status: Status
     type: AssetType
     creators: User[]
+    coverImage: string | null
     volumn: string
     totalOwner: number
     totalNft: number
     floorPrice: string
+  }
+
+  export interface CollectionDetails {
+    collection: Collection
+    traitAvailable: {
+      key: string;
+      count: number;
+      traits: {
+        value: string;
+        count: number;
+      }[];
+    }[]
   }
 
   export interface CreateNFT {

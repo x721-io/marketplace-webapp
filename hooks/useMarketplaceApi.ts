@@ -44,20 +44,27 @@ export const useMarketplaceApi = () => {
       fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
       /** GET **/
-      generateTokenId: async (collectionAddress: Address): Promise<string> => {
-        const idHash: number = await marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader)
-        return BigInt(idHash).toString()
-      },
-
       fetchCollections: (): Promise<APIResponse.Collection[]> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS),
+
+      fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
       fetchCollectionsByUser: async (userId: string): Promise<APIResponse.Collection[]> => {
         const data: any = await marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}`)
         return (data && data[0]) ? data[0]['nftCollection'].map((item: any) => item.collection) as APIResponse.Collection[] : []
       },
 
+      generateTokenId: async (collectionAddress: Address): Promise<string> => {
+        const idHash: number = await marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader)
+        return BigInt(idHash).toString()
+      },
+
       fetchNFTById: (id: string, bidListPage: number = 1, bidListLimit: number = 100): Promise<APIResponse.NFT> => {
         return marketplaceApi.get(API_ENDPOINTS.NFT + `/${id}?bidListPage=${bidListPage}&bidListLimit=${bidListLimit}`)
+      },
+
+      getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.NFTMetaData> => {
+        const hash = getMetaDataHash(ifpsUrl)
+        return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?hash=${hash}`)
       },
 
       viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
@@ -65,11 +72,6 @@ export const useMarketplaceApi = () => {
       fetchUsers: async ({ limit }: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
-      },
-
-      getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.NFTMetaData> => {
-        const hash = getMetaDataHash(ifpsUrl)
-        return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?hash=${hash}`)
       }
     }
   }, [authHeader])

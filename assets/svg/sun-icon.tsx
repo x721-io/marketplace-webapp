@@ -9,7 +9,7 @@ const SunIcon = ({ width, height }: Props) => {
     return (
         <div>
             <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_694_4732)">
+                <g clipPath="url(#clip0_694_4732)">
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"

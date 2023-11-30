@@ -20,7 +20,6 @@ import { toast } from 'react-toastify'
 import { AssetType } from '@/types'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { useTransaction } from 'wagmi'
 
 export default function CreateNFTCollectionPage() {
   const api = useMarketplaceApi()
@@ -57,8 +56,8 @@ export default function CreateNFTCollectionPage() {
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
       const tx = await onCreateCollection(type, args)
-      console.log('Creation hash', tx.hash)
-      const res = await onUpdateCollection({
+
+      await onUpdateCollection({
         name,
         symbol,
         description,
@@ -71,10 +70,20 @@ export default function CreateNFTCollectionPage() {
         })
       })
 
-      toast.update(toastId, { render: 'Collection created successfully', type: 'success', isLoading: false, autoClose: 5000 })
+      toast.update(toastId, {
+        render: 'Collection created successfully',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000
+      })
       resetForm()
     } catch (e) {
-      toast.update(toastId, { render: `Error creating collection: ${e}`, type: 'error', isLoading: false, autoClose: 5000 })
+      toast.update(toastId, {
+        render: `Error creating collection: ${e}`,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000
+      })
       console.error(e)
     }
   }
@@ -90,7 +99,10 @@ export default function CreateNFTCollectionPage() {
       <div className="flex flex-col tablet:w-[550px] w-full">
 
         <div className="flex items-center mb-6 tablet:mb-10 desktop:mb-10">
-          <Button variant="text" onClick={resetForm} className='min-w-[60px] tablet:min-w-[120px] desktop:min-w-[120px]'>
+          <Button
+            variant="text"
+            onClick={resetForm}
+            className="min-w-[60px] tablet:min-w-[120px] desktop:min-w-[120px]">
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
           <Text className="text-body-32 tablet:text-body-40 desktop:text-body-40 font-semibold flex-1">
