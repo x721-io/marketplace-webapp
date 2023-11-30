@@ -57,6 +57,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
   }
 
   const handleApplyFilters = () => {
+    console.log(activeFilters)
     onApplyFilters?.(activeFilters)
   }
 
@@ -138,7 +139,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
                   scale="sm"
                   placeholder="Min"
                   type="number"
-                  onChange={e => handleChange('priceMin', e)} />
+                  onChange={e => handleChange('priceMin', e.target.value)} />
                 <Text className="text-primary">
                   to
                 </Text>
@@ -147,7 +148,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
                   scale="sm"
                   placeholder="Max"
                   type="number"
-                  onChange={e => handleChange('priceMax', e)} />
+                  onChange={e => handleChange('priceMax', e.target.value)} />
               </div>
 
               <Button className="w-full" variant="secondary" onClick={handleApplyFilters}>
