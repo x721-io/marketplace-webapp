@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 ENV NODE_OPTIONS=--max_old_space_size=3072
-RUN npm run build && npm start
+RUN npm run build
 #RUN env-cmd -f .env npm run build
 #CMD ["serve", "-s", "build"]
-#CMD ["serve", "."]
+CMD ["npm", "start"]
