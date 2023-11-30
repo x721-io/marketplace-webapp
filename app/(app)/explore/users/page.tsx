@@ -30,7 +30,7 @@ export default function ExploreUsersPage() {
                 className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
                 src={user.coverImage ? parseImageUrl(user.coverImage) : defaultImg}
                 alt="Cover"
-                width={1} height={1}
+                width={1200} height={256}
                 style={{ width: '100%', height: '100px' }}
               />
               <div className="absolute rounded-full"
@@ -39,7 +39,7 @@ export default function ExploreUsersPage() {
                   className="cursor-pointer rounded-full object-fill"
                   src={user.avatar ? parseImageUrl(user.avatar) : defaultAvatar}
                   alt="Avatar"
-                  width={1} height={1}
+                  width={60} height={60}
                   style={{ width: '100%', height: '100%' }}
                 />
               </div>

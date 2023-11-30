@@ -85,8 +85,8 @@ export default function CollectionPage() {
           </div>
         </div>
 
-        <ListGroup className="w-56">
-          <ListGroup.Item className="px-3">
+        <ListGroup className="w-56 p-3">
+          <ListGroup.Item>
             <div className="w-full flex items-center justify-between">
               <Text className="text-secondary font-semibold" variant="body-16">
                 Floor price:
@@ -96,7 +96,7 @@ export default function CollectionPage() {
               </Text>
             </div>
           </ListGroup.Item>
-          <ListGroup.Item className="px-3">
+          <ListGroup.Item>
             <div className="w-full flex items-center justify-between">
               <Text className="text-secondary font-semibold" variant="body-16">
                 Volume:
@@ -106,7 +106,7 @@ export default function CollectionPage() {
               </Text>
             </div>
           </ListGroup.Item>
-          <ListGroup.Item className="px-3">
+          <ListGroup.Item>
             <div className="w-full flex items-center justify-between">
               <Text className="text-secondary font-semibold" variant="body-16">
                 Items:
@@ -116,7 +116,7 @@ export default function CollectionPage() {
               </Text>
             </div>
           </ListGroup.Item>
-          <ListGroup.Item className="px-3">
+          <ListGroup.Item>
             <div className="w-full flex items-center justify-between">
               <Text className="text-secondary font-semibold" variant="body-16">
                 Owner:

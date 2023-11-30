@@ -16,9 +16,9 @@ export default function MainFooter() {
     {
       title: 'Marketplace',
       items: [
-        { label: 'Explore', href: '/explore/collections' },
-        { label: 'Create', href: '//create/collection' },
-        { label: 'Artists', href: '#' }
+        { label: 'Explore', href: '/explore/items' },
+        { label: 'Create', href: '/create/collection' },
+        { label: 'Artists', href: '/explore/users' }
       ]
     },
     {

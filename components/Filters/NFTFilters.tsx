@@ -159,7 +159,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
       )}
 
       {
-        !!traitsFilter && (
+        !!traitsFilter?.length && (
           <div>
             <Text className="mb-3">Properties</Text>
             <Accordion collapseAll>

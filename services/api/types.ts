@@ -216,9 +216,11 @@ export namespace APIResponse {
     }[],
     collection: Collection,
     traits: Trait[]
-    sellInfo?: MarketEvent[]
-    bidInfo?: MarketEvent[]
+    sellInfo: MarketEvent[]
+    bidInfo: MarketEvent[]
     imageHash: string
+    price?: BigNumberish
+    sellStatus?: MarketEventType
   }
 
   export interface SearchNFT {

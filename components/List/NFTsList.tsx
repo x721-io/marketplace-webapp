@@ -56,8 +56,8 @@ export default function NFTsList({
             <div className="flex-1">
               <div className={
                 classNames(
-                  'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3 grid-cols-2',
-                  showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2' : 'desktop:grid-cols-6 tablet:grid-cols-3'
+                  'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
+                  showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2'
                 )}>
                 {
                   items.map(item => (
