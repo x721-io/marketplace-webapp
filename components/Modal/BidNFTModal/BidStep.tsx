@@ -50,7 +50,6 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
   useEffect(() => {
     (async () => {
       if (!address) return
-
       const balance = await fetchBalance({
         address,
         // token: quoteToken

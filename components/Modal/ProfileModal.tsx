@@ -7,11 +7,59 @@ import Button from '@/components/Button'
 import useAuthStore from '@/store/auth/store'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
+import { useEffect, useState } from 'react'
+import { fetchBalance, FetchBalanceResult } from '@wagmi/core'
+import { tokens } from '@/config/tokens'
+import { formatEther } from 'ethers'
+import { useAccount, useContractWrite } from 'wagmi'
+import WETH_ABI from '@/abi/WETH.json'
+import { useTransactionStatus } from '@/hooks/useTransactionStatus'
+import { toast } from 'react-toastify'
+import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 
 export default function ProfileModal({ show, onClose }: ModalProps) {
+  const address = useAuthStore(state => state.profile?.publicKey)
+  const [tokenBalance, setTokenBalance] = useState<FetchBalanceResult>()
+
   const username = useAuthStore(state => state.profile?.username)
   const userId = useAuthStore(state => state.profile?.id)
   const { onLogout } = useAuth()
+
+  const { txStatus, updateHash } = useTransactionStatus()
+  const { writeAsync } = useContractWrite({
+    ...tokens.wu2u,
+    abi: WETH_ABI,
+    functionName: 'withdraw'
+  })
+
+  const handleClaimToken = async () => {
+    if (!!tokenBalance && tokenBalance?.value <= BigInt(0)) {
+      return
+    }
+    try {
+      const { hash } = await writeAsync({ args: [tokenBalance?.value] })
+      updateHash(hash)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      if (!address) return
+      const balance = await fetchBalance({
+        address,
+        token: tokens.wu2u.address
+      })
+      setTokenBalance(balance)
+    })()
+  }, [address]);
+
+  useEffect(() => {
+    if (txStatus.isSuccess) {
+      toast.success('Token balance has been successfully withdraw to your wallet', { autoClose: 5000 })
+    }
+  }, [txStatus.isSuccess]);
 
   return (
     <Modal dismissible position="top-right" show={show} size="sm">
@@ -24,7 +72,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
               width={48}
               height={48}
             />
-            <Link href={`/user/${userId}`} className="flex flex-col">
+            <Link href={`/user/${userId}`} className="flex flex-col" onClick={onClose}>
               <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
               <Text className="text-secondary">View profile</Text>
             </Link>
@@ -34,9 +82,25 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
           </Button>
         </div>
 
+        <ConnectWalletButton className="w-full p-4 my-5 bg-info/20 cursor-pointer border-[0.5px] rounded-2xl border-tertiary">
+          <div className="p-4 my-5 bg-info/20 cursor-pointer border-[0.5px] rounded-2xl border-tertiary"
+               onClick={handleClaimToken}>
+            <div className="flex items-center justify-between">
+              <Text className="font-semibold text-secondary">Market trade profits: </Text>
+              <Text className="font-bold text-primary">{formatEther(tokenBalance?.value || 0)} U2U</Text>
+            </div>
+            <Button loading={txStatus.isLoading} className="w-full" variant="text">Claim</Button>
+          </div>
+        </ConnectWalletButton>
+
         <div className="py-4">
-          <Link className="text-secondary hover:text-primary" href={"/"} onClick={onClose}>
-            Orders
+          <Link className="text-secondary hover:text-primary" href={"/explore/items"} onClick={onClose}>
+            Explore
+          </Link>
+        </div>
+        <div className="py-4">
+          <Link className="text-secondary hover:text-primary" href={"/create/collection"} onClick={onClose}>
+            Create Collection
           </Link>
         </div>
         <div className="py-4">
