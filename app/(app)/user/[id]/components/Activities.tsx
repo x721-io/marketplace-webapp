@@ -7,22 +7,22 @@ import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { Address } from 'wagmi'
 
-export default function Activities() {
-  const userWallet = useAuthStore(state => state.profile?.publicKey)
+export default function Activities({ wallet }: { wallet: Address }) {
   const api = useMarketplaceApi()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(20)
 
   const { data, isLoading } = useSWR(
-    ['user-activities', { page, limit }],
-    () => api.fetchNFTEvents({ page, limit, or: [{ from: userWallet }, { to: userWallet }] }),
+    !!wallet ? { wallet, page, limit } : null,
+    ({ wallet, page, limit }) => api.fetchNFTEvents({ page, limit, or: [{ from: wallet }, { to: wallet }] }),
     { refreshInterval: 300000 }
   )
 
   return (
     <div className="w-full py-7 overflow-x-auto">
-      <Table striped hoverable className='overflow-x-auto'>
+      <Table striped hoverable className="overflow-x-auto">
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Event</Table.HeadCell>

@@ -9,17 +9,17 @@ import { useNFTFilters } from '@/hooks/useFilters'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
+import { Address } from 'wagmi'
 
-export default function OwnedNFTs() {
+export default function OwnedNFTs({ wallet }: { wallet: Address }) {
   const [showFilters, setShowFilters] = useState(false)
-  const userWallet = useAuthStore(state => state.profile?.publicKey)
   const api = useMarketplaceApi()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters({
     page: 1,
     limit: 20,
     traits: undefined,
     collectionAddress: undefined,
-    creatorAddress: userWallet,
+    creatorAddress: wallet,
     priceMax: undefined,
     priceMin: undefined,
     sellStatus: undefined

@@ -3,7 +3,6 @@ import Button from '@/components/Button';
 import Input from '@/components/Form/Input';
 import Textarea from '@/components/Form/Textarea';
 import Icon from '@/components/Icon';
-import MoreHorizontalIcon from '@/components/Icon/MoreHorizontal';
 import Text from '@/components/Text';
 import React, { useMemo, useRef, useState } from 'react';
 import Image from 'next/image'
@@ -16,10 +15,9 @@ import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'react-toastify';
-import ImageUploader from '@/components/Form/ImageUploader';
 import CloseIcon from '@/components/Icon/Close';
-import { url } from 'inspector';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
+
 
 interface FormState {
   bio: string
@@ -38,9 +36,11 @@ interface FormState {
 
 export default function ProfilePage() {
   const { onUpdateProfile } = useAuth()
+  const { setProfile } = useAuthStore()
+
   const api = useMarketplaceApi()
   const { handleSubmit, register, formState: { errors, isDirty } } = useForm<FormState>()
-
+  const profile = useAuthStore(state => state.profile)
   const username = useAuthStore(state => state.profile?.username?.toString()) || '';
   const email = useAuthStore(state => state.profile?.email) || '';
   const bio = useAuthStore(state => state.profile?.bio) || '';
@@ -111,11 +111,13 @@ export default function ProfilePage() {
   }
 
   const onSubmitProfile = async ({ bio, username, webURL, twitterLink }: FormState) => {
-    const toastId = toast.loading('Uploading Profile...', { type: 'info' })
     if (!imageAvt || !imageCover) return
+
+    const toastId = toast.loading('Uploading Profile...', { type: 'info' })
+
     try {
       const { fileHashes } = await api.uploadFile([imageAvt, imageCover])
-      await onUpdateProfile({
+      const params = {
         username,
         bio,
         webURL,
@@ -123,7 +125,16 @@ export default function ProfilePage() {
         avatar: fileHashes[0],
         coverImage: fileHashes[1],
         shortLink: username
-      })
+      }
+      await onUpdateProfile(params)
+
+      if (profile) {
+        setProfile({
+          ...profile,
+          ...params
+        })
+      }
+
       toast.update(toastId, { render: 'Profile updated successfully', type: 'success', isLoading: false })
     } catch (e) {
       console.error('Error:', e)
@@ -196,8 +207,8 @@ export default function ProfilePage() {
               className="rounded-2xl w-full h-[180px] object-cover"
               src={previewImageCover}
               alt="Cover"
-              width={1}
-              height={1}
+              width={1200}
+              height={256}
             />
           ) : (
             <div></div>

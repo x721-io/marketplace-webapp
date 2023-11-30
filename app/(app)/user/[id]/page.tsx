@@ -14,15 +14,20 @@ import { useParams } from 'next/navigation'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import Text from '@/components/Text'
+import LoadingScreen from '@/components/Layout/LoadingScreen'
 
 export default function ProfilePage() {
   const api = useMarketplaceApi()
   const { id } = useParams()
-  const { data: user } = useSWR(
+  const { data: user, isLoading } = useSWR(
     [id],
-    () => api.viewProfile(id as string),
+    (userId) => api.viewProfile(userId.toString()),
     { refreshInterval: 600000 }
   )
+
+  if (isLoading) {
+    return <LoadingScreen />
+  }
 
   if (!user) {
     return (
@@ -41,19 +46,19 @@ export default function ProfilePage() {
       <div className="desktop:px-20 tablet:px-20 px-4">
         <Tabs.Group style="underline">
           <Tabs.Item title={"Owned"}>
-            <OwnedNFTs />
+            <OwnedNFTs wallet={user.publicKey} />
           </Tabs.Item>
           <Tabs.Item title={"On Sale"}>
-            <OnSaleNFTs />
+            <OnSaleNFTs wallet={user.publicKey} />
           </Tabs.Item>
           <Tabs.Item title={"Collections"}>
             <UserCollections />
           </Tabs.Item>
           <Tabs.Item title={"Created"}>
-            <CreatedNFTs />
+            <CreatedNFTs wallet={user.publicKey} />
           </Tabs.Item>
           <Tabs.Item title={"Activities"}>
-            <Activities />
+            <Activities wallet={user.publicKey} />
           </Tabs.Item>
         </Tabs.Group>
       </div>
