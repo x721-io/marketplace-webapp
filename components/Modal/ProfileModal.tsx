@@ -62,7 +62,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
   }, [txStatus.isSuccess]);
 
   return (
-    <Modal dismissible position="top-right" show={show} size="sm">
+    <Modal dismissible onClose={onClose} position="top-right" show={show} size="sm">
       <Modal.Body>
         <div className="flex justify-between items-centerpy-4">
           <div className="flex gap-3 items-center">
