@@ -58,7 +58,7 @@ export default function MainHeader() {
                     key={index}
                     renderTrigger={() => (
                       <Link href={nav.href}
-                        className="block py-2 px-3 font-semibold text-secondary cursor-pointer">
+                            className="block py-2 px-3 font-semibold text-secondary cursor-pointer">
                         {nav.label}
                       </Link>)}>
                     {nav.items.map((item, i) => (
@@ -85,19 +85,6 @@ export default function MainHeader() {
         <div className="flex gap-4 items-center">
           <div className="hidden tablet:block">
             <ConnectWalletButton mode="link">
-              <Image
-                onClick={() => setShowProfile(true)}
-                className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacityZ"
-                src={avatar ? parseImageUrl(avatar) : defaultAvatar}
-                alt="Avatar"
-                width={35}
-                height={35}
-              />
-            </ConnectWalletButton>
-          </div>
-
-          <div className="block tablet:hidden">
-            <ConnectWalletButton scale="sm" mode="link">
               <Image
                 onClick={() => setShowProfile(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacityZ"

@@ -1,7 +1,7 @@
 import { Address, useAccount, useDisconnect } from "wagmi";
 import { sleep } from '@/utils'
 import useAuthStore, { clearProfile } from '@/store/auth/store'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { APIParams } from '@/services/api/types'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
@@ -11,6 +11,8 @@ export const useAuth = () => {
   const { disconnect } = useDisconnect()
   const { setCredentials, setProfile, credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
+
+  const isLoggedIn = useMemo(() => !!bearerToken && credentials.accessTokenExpire > new Date().getTime(), [bearerToken, credentials])
 
   const onAuth = useCallback(async (date: string, message: Address) => {
     if (!address) return
@@ -43,6 +45,7 @@ export const useAuth = () => {
   }
 
   return {
+    isLoggedIn,
     onAuth,
     onUpdateProfile,
     bearerToken,

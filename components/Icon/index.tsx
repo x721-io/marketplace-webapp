@@ -31,7 +31,7 @@ type Color = keyof typeof defaultColors & keyof typeof colors
 export interface IconProps {
   width?: number;
   height?: number;
-  className?: string
+  className?: string | null | undefined | false
   color?: Color | string
 }
 

@@ -7,11 +7,9 @@ import Button from '@/components/Button'
 import useAuthStore from '@/store/auth/store'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect, useState } from 'react'
-import { fetchBalance, FetchBalanceResult } from '@wagmi/core'
+import { useEffect } from 'react'
 import { tokens } from '@/config/tokens'
-import { formatEther } from 'ethers'
-import { useAccount, useContractWrite } from 'wagmi'
+import { useBalance, useContractWrite } from 'wagmi'
 import WETH_ABI from '@/abi/WETH.json'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { toast } from 'react-toastify'
@@ -19,7 +17,10 @@ import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 
 export default function ProfileModal({ show, onClose }: ModalProps) {
   const address = useAuthStore(state => state.profile?.publicKey)
-  const [tokenBalance, setTokenBalance] = useState<FetchBalanceResult>()
+  const { data: tokenBalance } = useBalance({
+    address,
+    token: tokens.wu2u.address
+  })
 
   const username = useAuthStore(state => state.profile?.username)
   const userId = useAuthStore(state => state.profile?.id)
@@ -45,17 +46,6 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
   }
 
   useEffect(() => {
-    (async () => {
-      if (!address) return
-      const balance = await fetchBalance({
-        address,
-        token: tokens.wu2u.address
-      })
-      setTokenBalance(balance)
-    })()
-  }, [address]);
-
-  useEffect(() => {
     if (txStatus.isSuccess) {
       toast.success('Token balance has been successfully withdraw to your wallet', { autoClose: 5000 })
     }
@@ -64,7 +54,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
   return (
     <Modal dismissible onClose={onClose} position="top-right" show={show} size="sm">
       <Modal.Body>
-        <div className="flex justify-between items-centerpy-4">
+        <div className="flex justify-between items-center py-4">
           <div className="flex gap-3 items-center">
             <Image
               src={defaultAvatar}
@@ -87,7 +77,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
                onClick={handleClaimToken}>
             <div className="flex items-center justify-between">
               <Text className="font-semibold text-secondary">Market trade profits: </Text>
-              <Text className="font-bold text-primary">{formatEther(tokenBalance?.value || 0)} U2U</Text>
+              <Text className="font-bold text-primary">{tokenBalance?.formatted || '0'} U2U</Text>
             </div>
             <Button loading={txStatus.isLoading} className="w-full" variant="text">Claim</Button>
           </div>
