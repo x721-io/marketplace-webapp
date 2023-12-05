@@ -42,8 +42,8 @@ const table: CustomFlowbiteTheme['table'] = {
 }
 
 const accordion: CustomFlowbiteTheme['accordion'] = {
-  "content": {
-    "base": "py-5 px-5 last:rounded-b-lg dark:bg-gray-900 first:rounded-t-lg"
+  content: {
+    base: "py-5 px-5 last:rounded-b-lg first:rounded-t-lg"
   },
   title: {
     flush: {
@@ -56,7 +56,7 @@ const accordion: CustomFlowbiteTheme['accordion'] = {
 const appTheme: CustomFlowbiteTheme = {
   tab,
   table,
-  accordion
+  accordion,
 }
 
 export default appTheme
