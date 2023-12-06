@@ -18,7 +18,7 @@ export const useMarketplaceApi = () => {
     return {
       connect: (params: APIParams.Connect): Promise<APIResponse.Connect> => marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
 
-      updateProfile: (params: APIParams.UpdateProfile) => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
+      updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.Profile> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
       uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();

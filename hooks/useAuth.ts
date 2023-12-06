@@ -28,13 +28,8 @@ export const useAuth = () => {
 
   const onUpdateProfile = useCallback(async (params: APIParams.UpdateProfile) => {
     if (!bearerToken) return
-
-    await api.updateProfile(params)
-
-    if (address) {
-      const profile = await api.viewProfile(address)
-      setProfile(profile)
-    }
+    const profile = await api.updateProfile(params)
+    setProfile(profile)
   }, [bearerToken, address])
 
   const onLogout = () => {

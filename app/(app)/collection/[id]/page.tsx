@@ -21,7 +21,7 @@ import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
 import Text from '@/components/Text'
 import { parseImageUrl } from '@/utils/nft'
 import { formatEther } from 'ethers'
-import SectionCover from '../../profile/component/SectionCover'
+import BannerSection from '../../profile/component/BannerSection'
 
 export default function CollectionPage() {
   const { id } = useParams()

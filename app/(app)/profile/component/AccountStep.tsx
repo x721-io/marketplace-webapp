@@ -1,40 +1,76 @@
 "use client"
+
 import Button from '@/components/Button';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
 import React from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form'
+import useAuthStore from '@/store/auth/store'
+import { toast } from 'react-toastify'
+import { useAuth } from '@/hooks/useAuth'
 
-interface Props {
-  registerEmail:  UseFormRegisterReturn
+interface FormState {
+  email: string
 }
 
-export default function AccountStep({ registerEmail} : Props) {
+export default function AccountStep() {
+  const { onUpdateProfile } = useAuth()
+  const email = useAuthStore(state => state.profile?.email)
+  const { register, handleSubmit, reset, formState: { isDirty, errors } } = useForm<FormState>({
+    defaultValues: {
+      email: email || ''
+    }
+  })
+
+  const onSubmit = async ({ email }: FormState) => {
+    try {
+      await toast.promise(onUpdateProfile({ email }), {
+        pending: 'Updating email',
+        success: 'Email updated successfully!',
+        error: {
+          render: error => `Error report: ${error.data}`
+        }
+      })
+    } catch (e) {
+      console.error('Error:', e)
+    } finally {
+      reset({ email })
+    }
+  }
+
   return (
     <div className="flex gap-8 mb-8 flex-col">
       <div className="desktop:mt-5 mt-7 flex gap-8 w-full flex-col">
-        <div className="flex gap-1 flex-col">
-          <label className="block text-base font-semibold text-primary">Email</label>
-          <Text className="text-tertiary" variant="body-12">Your email for marketplace notifications</Text>
-          <Input
-            placeholder="Email"
-            register={registerEmail}
-          />
-          <Text className="text-tertiary" variant="body-12">Please check email and verify your email
-            address.</Text>
-          <Text className="text-tertiary flex items-center" variant="body-12">Still no
-            email? <Text className="text-primary ml-1" variant="body-12">Resend</Text></Text>
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex gap-1 flex-col mb-4">
+            <label className="block text-base font-semibold text-primary">Email</label>
+            <Text className="text-tertiary" variant="body-12">Your email for marketplace notifications</Text>
+            <Input
+              placeholder="Email"
+              register={register('email')}
+            />
+            <Text className="text-tertiary" variant="body-12">
+              Please check email and verify your email address.
+            </Text>
+            <Text className="text-tertiary flex items-center" variant="body-12">
+              Still no email? <span className="text-primary ml-1 text-body-12">Resend</span>
+            </Text>
+          </div>
+          <Button type="submit" disabled={!isDirty || !!errors.email}>
+            Update email
+          </Button>
+        </form>
+
       </div>
       <div className="flex gap-1 flex-col">
         <Text className="text-body-16 font-semibold">Danger zone</Text>
-        <Text className="text-tertiary text-body-12">Once you delete your account, there is no going back.
-          Please be certain.</Text>
+        <Text className="text-tertiary text-body-12">
+          Once you delete your account, there is no going back. Please be certain
+        </Text>
       </div>
       <div className="w-full tablet:w-auto desktop:w-auto">
         <Button className="w-full tablet:w-auto desktop:w-auto" disabled>Delete my account</Button>
       </div>
     </div>
   )
-
 }
