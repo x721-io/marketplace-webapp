@@ -13,6 +13,7 @@ import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
 import { parseImageUrl } from '@/utils/nft'
 import MobileMenuModal from '@/components/Modal/MobileMenuModal'
+import SearchInput from '@/components/Form/SearchInput'
 
 export const HEADER_HEIGHT = 88
 
@@ -38,7 +39,7 @@ export default function MainHeader() {
           </div>
 
 
-          <Input
+          <SearchInput
             containerClass="hidden desktop:block desktop:w-[420px] tablet:w-[280px]"
             value={searchString}
             placeholder="Type for collections, NFTs etc"
