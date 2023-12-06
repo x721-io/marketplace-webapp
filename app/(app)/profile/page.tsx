@@ -15,7 +15,7 @@ export default function ProfilePage() {
       <BannerSection />
 
       <div className="w-full block desktop:mt-[78px] tablet:mt-[78px] mt-[86px] desktop:px-24 px-0">
-        <Tabs.Group aria-label="Tabs with underline" style="underline">
+        <Tabs.Group style="underline">
           <Tabs.Item active title="Profile">
             <ProfileStep />
           </Tabs.Item>

@@ -108,6 +108,11 @@ export namespace APIParams {
       event?: MarketEventType
     }[]
   }
+
+  export interface Search {
+    text: string
+    mode: string
+  }
 }
 
 export namespace APIResponse {

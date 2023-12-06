@@ -2,7 +2,7 @@ import { classNames } from '@/utils/string'
 import React, { InputHTMLAttributes, useMemo } from 'react'
 import { UseFormRegisterReturn } from 'react-hook-form'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+export interface BaseInputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerClass?: string
   scale?: 'md' | 'lg' | 'sm'
   prependIcon?: React.ReactNode
@@ -28,8 +28,8 @@ export default function Input({
   className,
   register,
   ...rest
-}: Props) {
-  const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full'
+}: BaseInputProps) {
+  const baseClass = 'bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full transition-all'
 
   const scaleClass = useMemo(() => {
     switch (scale) {
@@ -41,14 +41,14 @@ export default function Input({
         )
       case 'sm':
         return classNames(
-          'text-body-16 rounded-xl min-w-72 h-10 px-4 py-2',
+          'text-body-14 rounded-xl min-w-72 h-10 px-4 py-2',
           !!prependIcon && 'ps-9',
           !!appendIcon && 'pe-9'
         )
       case 'md':
       default:
         return classNames(
-          'text-body-14 rounded-2xl min-w-72 h-12 p-3',
+          'text-body-16 rounded-2xl min-w-72 h-12 p-3',
           !!prependIcon && 'ps-10',
           !!appendIcon && 'pe-10'
         )

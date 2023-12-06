@@ -43,6 +43,8 @@ export const useMarketplaceApi = () => {
 
       fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
+      search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
+
       /** GET **/
       fetchCollections: (): Promise<APIResponse.Collection[]> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS),
 
@@ -73,6 +75,7 @@ export const useMarketplaceApi = () => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
       }
+
     }
   }, [authHeader])
 }

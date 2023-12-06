@@ -13,7 +13,7 @@ interface Props {
 export default function NFTData({ nft, metaData }: Props) {
   return (
     <div className="pb-7">
-      <Tabs.Group aria-label="Tabs with underline" style="underline">
+      <Tabs.Group style="underline">
         <Tabs.Item active title="Overview">
           <OverviewTab metaData={metaData}/>
         </Tabs.Item>

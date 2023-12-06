@@ -11,5 +11,6 @@ export const API_ENDPOINTS = {
   SEARCH_NFT: '/nft/search',
   USER: '/user/all',
   NFT_EVENTS: '/nft/events',
-  GET_METADATA: '/common/get-ipfs'
+  GET_METADATA: '/common/get-ipfs',
+  SEARCH: '/common/search-all'
 }

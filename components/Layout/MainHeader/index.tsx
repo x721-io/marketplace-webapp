@@ -1,24 +1,22 @@
 import brandingSvg from '@/assets/branding.svg'
 import Link from 'next/link'
 import Image from 'next/image'
-import Input from '@/components/Form/Input'
 import { useState } from 'react'
 import Icon from '@/components/Icon'
 import { Dropdown } from 'flowbite-react'
 import ProfileModal from "@/components/Modal/ProfileModal";
 import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
-import Button from '@/components/Button'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
 import { parseImageUrl } from '@/utils/nft'
 import MobileMenuModal from '@/components/Modal/MobileMenuModal'
+import SearchInput from '@/components/Layout/MainHeader/SearchInput'
 
 export const HEADER_HEIGHT = 88
 
 export default function MainHeader() {
   const avatar = useAuthStore(state => state.profile?.avatar)
-  const [searchString, setSearchString] = useState('')
   const [showProfile, setShowProfile] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
@@ -37,16 +35,7 @@ export default function MainHeader() {
             </Link>
           </div>
 
-
-          <Input
-            containerClass="hidden desktop:block desktop:w-[420px] tablet:w-[280px]"
-            value={searchString}
-            placeholder="Type for collections, NFTs etc"
-            onChange={event => setSearchString(event.target.value)}
-          />
-          <Button className="hidden tablet:block desktop:hidden" variant="icon">
-            <Icon className="text-secondary" name="search" width={24} height={24} />
-          </Button>
+          <SearchInput />
 
           <div className="hidden desktop:block w-full" id="navbar-default">
             <ul
@@ -57,8 +46,9 @@ export default function MainHeader() {
                     label=""
                     key={index}
                     renderTrigger={() => (
-                      <Link href={nav.href}
-                            className="block py-2 px-3 font-semibold text-secondary cursor-pointer">
+                      <Link
+                        href={nav.href}
+                        className="block py-2 px-3 font-semibold text-secondary cursor-pointer">
                         {nav.label}
                       </Link>)}>
                     {nav.items.map((item, i) => (
