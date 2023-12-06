@@ -1,21 +1,10 @@
 "use client"
-import Button from '@/components/Button';
-import Input from '@/components/Form/Input';
-import Textarea from '@/components/Form/Textarea';
-import Icon from '@/components/Icon';
-import Text from '@/components/Text';
 import React, { useMemo, useRef, useState } from 'react';
-import Image from 'next/image'
-import u2uWalletSvg from '@/assets/u2uWallet.svg'
-import cryptoSvg from '@/assets/crypto.svg'
-import UploadIcon from '@/components/Icon/Upload';
 import { Tabs } from 'flowbite-react';
 import useAuthStore from '@/store/auth/store';
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'react-toastify';
-import CloseIcon from '@/components/Icon/Close';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import AccountStep from './component/AccountStep';
 import ProfileStep from './component/ProfileStep';
