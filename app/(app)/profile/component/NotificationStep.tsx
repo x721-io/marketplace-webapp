@@ -1,4 +1,3 @@
-"use client"
 import Text from '@/components/Text';
 import React from 'react';
 

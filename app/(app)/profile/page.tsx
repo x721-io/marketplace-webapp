@@ -1,4 +1,5 @@
 "use client"
+
 import React from 'react';
 import { Tabs } from 'flowbite-react';
 import AccountStep from './component/AccountStep';

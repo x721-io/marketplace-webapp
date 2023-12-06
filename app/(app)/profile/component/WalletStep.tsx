@@ -1,9 +1,9 @@
 "use client"
+
 import Text from '@/components/Text';
 import React from 'react';
 import Image from 'next/image'
 import u2uWalletSvg from '@/assets/u2uWallet.svg'
-import cryptoSvg from '@/assets/crypto.svg'
 import useAuthStore from '@/store/auth/store'
 
 export default function WalletStep() {
