@@ -1,7 +1,7 @@
 'use client'
 
 import UploadIcon from '@/components/Icon/Upload'
-import React, { useState } from 'react'
+import React, { useRef, useState, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
@@ -21,6 +21,7 @@ import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
 import Text from '@/components/Text'
 import { parseImageUrl } from '@/utils/nft'
 import { formatEther } from 'ethers'
+import SectionCover from '../../profile/component/SectionCover'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -42,6 +43,70 @@ export default function CollectionPage() {
     }) as APIParams.SearchNFT),
     { refreshInterval: 30000 }
   )
+
+  const [imageAvt, setImageAvt] = useState<Blob | undefined>()
+  const [imageCover, setImageCover] = useState<Blob | undefined>()
+  const [file, setFile] = useState<Blob | undefined>()
+  const [fileCover, setFileCover] = useState<Blob | undefined>()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRefCover = useRef<HTMLInputElement>(null)
+
+  const previewImage = useMemo(() => {
+    if (imageAvt) {
+      if (typeof imageAvt === "string") return imageAvt;
+      return URL.createObjectURL(imageAvt)
+    }
+
+    if (!file) return ""
+    return URL.createObjectURL(file)
+  }, [file, imageAvt])
+
+  const previewImageCover = useMemo(() => {
+    if (imageCover) {
+      if (typeof imageCover === "string") return imageCover;
+      return URL.createObjectURL(imageCover)
+    }
+
+    if (!fileCover) return ""
+    return URL.createObjectURL(fileCover)
+  }, [fileCover, imageCover])
+
+  const handleInputImage = (files: FileList | null) => {
+    if (files) {
+      setImageAvt(files[0])
+      setFile(files[0])
+    } else {
+      setImageAvt(undefined)
+      setFile(undefined)
+    }
+  }
+
+  const handleInputImageCover = (files: FileList | null) => {
+    if (files) {
+      setImageCover(files[0])
+      setFileCover(files[0])
+    } else {
+      setImageCover(undefined)
+      setFileCover(undefined)
+    }
+  }
+
+  const handleClearImage = () => {
+    setImageAvt(undefined)
+    setFile(undefined)
+    if (inputRef && inputRef.current) {
+      inputRef.current.value = "";
+    }
+  }
+
+  const handleClearImageCover = () => {
+    setImageCover(undefined)
+    setFileCover(undefined)
+    if (inputRefCover && inputRefCover.current) {
+      inputRefCover.current.value = ""
+    }
+  }
+
 
   return (
     <div className="w-full relative">
@@ -66,6 +131,19 @@ export default function CollectionPage() {
           </button>
         </div>
       </div>
+
+      {/* <SectionCover
+        file={file}
+        fileCover={fileCover}
+        inputRef={inputRef}
+        inputRefCover={inputRefCover}
+        onHandleInputImage={handleInputImage}
+        onPreviewImage={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultAvatar}
+        onHandleClearImage={handleClearImage}
+        onHandleClearImageCover={handleClearImageCover}
+        onHandleInputImageCover={handleInputImageCover}
+        onPreviewImageCover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultAvatar}
+      /> */}
 
       {/* Info collection */}
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-14">

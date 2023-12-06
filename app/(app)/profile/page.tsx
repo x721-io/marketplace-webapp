@@ -151,6 +151,7 @@ export default function ProfilePage() {
           onHandleClearImageCover={handleClearImageCover}
           onHandleInputImageCover={handleInputImageCover}
           onPreviewImageCover={previewImageCover}
+          containerClass='rounded-2xl'
         />
         <div className="w-full block desktop:mt-[78px] tablet:mt-[78px] mt-[86px] desktop:px-24 px-0">
           <Tabs.Group aria-label="Tabs with underline" style="underline">

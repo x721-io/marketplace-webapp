@@ -1,10 +1,11 @@
 "use client"
 import Button from '@/components/Button';
 import React, { RefObject } from 'react';
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import UploadIcon from '@/components/Icon/Upload';
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import CloseIcon from '@/components/Icon/Close';
+import { classNames } from '@/utils/string'
 
 interface Props {
     file: Blob | undefined
@@ -12,16 +13,29 @@ interface Props {
     fileCover: Blob | undefined
     inputRefCover: RefObject<HTMLInputElement>
     onHandleInputImage: (files: FileList | null) => void
-    onPreviewImage: string
+    onPreviewImage: string | StaticImageData
     onHandleClearImage: () => void
     onHandleClearImageCover: () => void
     onHandleInputImageCover: (files: FileList | null) => void
-    onPreviewImageCover: string
+    onPreviewImageCover: string | StaticImageData
+    containerClass?: string
 }
 
-export default function SectionCover({ file, inputRef, fileCover, inputRefCover, onHandleInputImage, onPreviewImage, onHandleClearImage, onHandleClearImageCover, onHandleInputImageCover, onPreviewImageCover }: Props) {
+export default function SectionCover({ 
+    file, 
+    inputRef, 
+    fileCover, 
+    inputRefCover, 
+    onHandleInputImage, 
+    onPreviewImage, 
+    onHandleClearImage, 
+    onHandleClearImageCover, 
+    onHandleInputImageCover, 
+    onPreviewImageCover, 
+    containerClass
+    }: Props) {
     return (
-        <div className="bg-cover rounded-2xl relative w-full h-[180px]"
+        <div className= {classNames('bg-cover relative w-full h-[180px]', containerClass)}
             style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
             <div className="absolute ml-6 block w-[120px] h-[120px] bottom-[-46px]">
                 <input
