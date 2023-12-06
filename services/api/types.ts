@@ -133,18 +133,19 @@ export namespace APIResponse {
     signer: Address
     signedMessage: string
     acceptedTerms: boolean
-    avatar?: string | null
-    createdAt?: string | null
-    email?: null
-    updatedAt?: string | null
-    username?: string | null
-    bio?: string | null
-    facebookLink?: string | null
-    twitterLink?: string | null
-    telegramLink?: string | null
-    discordLink?: string | null
-    webURL?: string | null
-    coverImage?: string | null
+    avatar?: string
+    createdAt?: string
+    email?: string
+    updatedAt?: string
+    username?: string
+    bio?: string
+    facebookLink?: string
+    twitterLink?: string
+    telegramLink?: string
+    discordLink?: string
+    webURL?: string
+    coverImage?: string
+    shortLink?: string
   }
 
   export interface UploadImage {
