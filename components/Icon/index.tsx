@@ -24,13 +24,14 @@ import RefreshIcon from './Refresh'
 import ShoppingBagIcon from './ShoppingBag'
 import SearchIcon from "./Search";
 import U2NftMobileIcon from "./U2NftMobile";
+import CloseIcon from '@/components/Icon/Close'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
 export interface IconProps {
   width?: number;
   height?: number;
-  className?: string
+  className?: string | null | undefined | false
   color?: Color | string
 }
 
@@ -87,6 +88,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <SearchIcon width={iconW} height={iconH} {...rest} />
       case 'u2u-logo-mobile':
         return <U2NftMobileIcon width={iconW} height={iconH} {...rest} />
+      case 'close':
+        return <CloseIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }
