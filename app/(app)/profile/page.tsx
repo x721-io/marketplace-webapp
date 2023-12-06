@@ -21,6 +21,7 @@ import AccountStep from './component/AccountStep';
 import ProfileStep from './component/ProfileStep';
 import WalletStep from './component/WalletStep';
 import NotificationStep from './component/NotificationStep';
+import SectionCover from './component/SectionCover';
 
 
 interface FormState {
@@ -150,81 +151,33 @@ export default function ProfilePage() {
     <form onSubmit={handleSubmit(onSubmitProfile)}>
 
       <div className="w-full relative flex flex-col items-center desktop:py-10 tablet:p-10 py-16 px-4">
-        <div className="bg-cover rounded-2xl relative w-full h-[180px]"
-          style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
-          <div className="absolute ml-6 block w-[120px] h-[120px] bottom-[-46px]">
-            <input
-              className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
-              type="file"
-              ref={inputRef}
-              onChange={(e) => handleInputImage(e.target.files)}
-            />
-            {!!file ? (
-              <Image
-                className="rounded-2xl w-full h-auto object-cover"
-                src={previewImage}
-                alt="Avatar"
-                width={1}
-                height={1}
-              />
-            ) : (
-              <Image
-                className="rounded-2xl"
-                src={defaultAvatar}
-                alt="Avatar"
-                style={{ width: '100%', height: '100%' }}
-              />
-            )}
-
-            {!!file && (
-              <Button
-                variant="icon"
-                className="absolute right-[-10px] top-[-18px]"
-                onClick={handleClearImage}>
-                <CloseIcon width={14} height={14} />
-              </Button>
-            )}
-          </div>
-          <div className="absolute right-2 top-2 bg-button-secondary rounded-xl w-12 h-12">
-            <div className="absolute top-[33%] left-[31%]">
-              {!fileCover && (
-                <UploadIcon width={16} height={16} />
-              )}
-              {!!fileCover && (
-                <Button
-                  variant="icon"
-                  className=" absolute top-[-16px] left-[-10px] w-12 h-12"
-                  onClick={handleClearImageCover}>
-                  <CloseIcon width={14} height={14} />
-                </Button>
-              )}
-            </div>
-            <input
-              className={!!fileCover ? 'hidden' : `bg-button-secondary px-4 h-12 w-12 rounded-xl opacity-0`}
-              type="file"
-              ref={inputRefCover}
-              onChange={(e) => handleInputImageCover(e.target.files)}
-            />
-          </div>
-          {!!fileCover ? (
-            <Image
-              className="rounded-2xl w-full h-[180px] object-cover"
-              src={previewImageCover}
-              alt="Cover"
-              width={1200}
-              height={256}
-            />
-          ) : (
-            <div></div>
-          )}
-        </div>
+        <SectionCover
+          file={file}
+          fileCover={fileCover}
+          inputRef={inputRef}
+          inputRefCover={inputRefCover}
+          onHandleInputImage={handleInputImage}
+          onPreviewImage={previewImage}
+          onHandleClearImage={handleClearImage}
+          onHandleClearImageCover={handleClearImageCover}
+          onHandleInputImageCover={handleInputImageCover}
+          onPreviewImageCover={previewImageCover}
+        />
         <div className="w-full block desktop:mt-[78px] tablet:mt-[78px] mt-[86px] desktop:px-24 px-0">
           <Tabs.Group aria-label="Tabs with underline" style="underline">
             <Tabs.Item active title="Profile">
-              <ProfileStep username={username} bio={bio} webURL={webURL} twitterLink={twitterLink} isDirty={!isDirty} />
+              <ProfileStep
+                isDirty={!isDirty}
+                registerUsername={register('username', { required: true, value: username })}
+                registerBio={register('bio', { value: bio })}
+                registerWebURL={register('webURL', { value: webURL })}
+                registerTwitterLink={register('twitterLink', { value: twitterLink })}
+              />
             </Tabs.Item>
             <Tabs.Item active title="Account">
-              <AccountStep email={email} />
+              <AccountStep
+                registerEmail={register('email', { required: true, value: email })}
+              />
             </Tabs.Item>
             <Tabs.Item active title="Wallet">
               <WalletStep />

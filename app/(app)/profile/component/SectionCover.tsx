@@ -10,10 +10,16 @@ interface Props {
     file: Blob | undefined
     inputRef: RefObject<HTMLInputElement>
     fileCover: Blob | undefined
-    inputRefCover:RefObject<HTMLInputElement>
+    inputRefCover: RefObject<HTMLInputElement>
+    onHandleInputImage: (files: FileList | null) => void
+    onPreviewImage: string
+    onHandleClearImage: () => void
+    onHandleClearImageCover: () => void
+    onHandleInputImageCover: (files: FileList | null) => void
+    onPreviewImageCover: string
 }
 
-export default function SectionCover({ file, inputRef, fileCover, inputRefCover }: Props) {
+export default function SectionCover({ file, inputRef, fileCover, inputRefCover, onHandleInputImage, onPreviewImage, onHandleClearImage, onHandleClearImageCover, onHandleInputImageCover, onPreviewImageCover }: Props) {
     return (
         <div className="bg-cover rounded-2xl relative w-full h-[180px]"
             style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
@@ -22,13 +28,12 @@ export default function SectionCover({ file, inputRef, fileCover, inputRefCover 
                     className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
                     type="file"
                     ref={inputRef}
-                    // onChange={(e) => handleInputImage(e.target.files)}
+                    onChange={(e) => onHandleInputImage(e.target.files)}
                 />
                 {!!file ? (
                     <Image
                         className="rounded-2xl w-full h-auto object-cover"
-                        // src={previewImage}
-                        src={''}
+                        src={onPreviewImage}
                         alt="Avatar"
                         width={1}
                         height={1}
@@ -46,8 +51,8 @@ export default function SectionCover({ file, inputRef, fileCover, inputRefCover 
                     <Button
                         variant="icon"
                         className="absolute right-[-10px] top-[-18px]"
-                        // onClick={handleClearImage}
-                        >
+                        onClick={onHandleClearImage}
+                    >
                         <CloseIcon width={14} height={14} />
                     </Button>
                 )}
@@ -61,8 +66,8 @@ export default function SectionCover({ file, inputRef, fileCover, inputRefCover 
                         <Button
                             variant="icon"
                             className=" absolute top-[-16px] left-[-10px] w-12 h-12"
-                            // onClick={handleClearImageCover}
-                            >
+                            onClick={onHandleClearImageCover}
+                        >
                             <CloseIcon width={14} height={14} />
                         </Button>
                     )}
@@ -71,14 +76,13 @@ export default function SectionCover({ file, inputRef, fileCover, inputRefCover 
                     className={!!fileCover ? 'hidden' : `bg-button-secondary px-4 h-12 w-12 rounded-xl opacity-0`}
                     type="file"
                     ref={inputRefCover}
-                    // onChange={(e) => handleInputImageCover(e.target.files)}
+                    onChange={(e) => onHandleInputImageCover(e.target.files)}
                 />
             </div>
             {!!fileCover ? (
                 <Image
                     className="rounded-2xl w-full h-[180px] object-cover"
-                    // src={previewImageCover}
-                    src={''}
+                    src={onPreviewImageCover}
                     alt="Cover"
                     width={1200}
                     height={256}

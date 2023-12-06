@@ -3,14 +3,13 @@ import Button from '@/components/Button';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Props {
-  email : string
+  registerEmail:  UseFormRegisterReturn
 }
 
-export default function AccountStep({ email} : Props) {
-  const {register} = useForm<Props>()
+export default function AccountStep({ registerEmail} : Props) {
   return (
     <div className="flex gap-8 mb-8 flex-col">
       <div className="desktop:mt-5 mt-7 flex gap-8 w-full flex-col">
@@ -19,9 +18,8 @@ export default function AccountStep({ email} : Props) {
           <Text className="text-tertiary" variant="body-12">Your email for marketplace notifications</Text>
           <Input
             placeholder="Email"
-            register={register('email', { required: true, value: email })}
+            register={registerEmail}
           />
-
           <Text className="text-tertiary" variant="body-12">Please check email and verify your email
             address.</Text>
           <Text className="text-tertiary flex items-center" variant="body-12">Still no

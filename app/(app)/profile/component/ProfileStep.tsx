@@ -4,18 +4,17 @@ import Textarea from '@/components/Form/Textarea';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Props {
-    username: string
-    bio: string
-    webURL: string
-    twitterLink: string
     isDirty: boolean
+    registerUsername:  UseFormRegisterReturn
+    registerBio:  UseFormRegisterReturn
+    registerWebURL: UseFormRegisterReturn
+    registerTwitterLink: UseFormRegisterReturn
 }
 
-export default function ProfileStep({ username, bio, webURL, twitterLink, isDirty }: Props) {
-    const { register } = useForm<Props>()
+export default function ProfileStep({isDirty, registerUsername, registerBio, registerWebURL, registerTwitterLink }: Props) {
     return (
         <div>
             <div className="flex gap-8 mb-8">
@@ -24,7 +23,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
                         <label className="block mb-2 font-semibold text-primary">Display name</label>
                         <Input
                             type="text"
-                            register={register('username', { required: true, value: username })}
+                            register={registerUsername}
                         />
                     </div>
                     <div>
@@ -32,7 +31,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
                         <Input
                             prependIcon="@"
                             placeholder="Thuan Nguyen"
-                            register={register('username', { required: true, value: username })}
+                            register={registerUsername}
                         />
                         <Text className="text-tertiary mt-1" variant="body-12">Your profile will be available on
                             rarible.com/[username]</Text>
@@ -41,7 +40,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
                         <label className="block mb-2 text-base font-semibold text-primary">Bio</label>
                         <Textarea
                             className="h-[160px] resize-none"
-                            register={register('bio', { value: bio })}
+                            register={registerBio}
                         />
                     </div>
                     <div>
@@ -54,7 +53,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
                         <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
                         <Input
                             placeholder="https://"
-                            register={register('webURL', { value: webURL })}
+                            register={registerWebURL}
                             className="console.error"
                         />
                         {/* {errors.webURL && <p role="alert">Invalid</p>} */}
@@ -64,7 +63,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
                         <Input
                             prependIcon={<Icon name="circle" />}
                             placeholder="Link Twitter"
-                            register={register('twitterLink', { value: twitterLink })}
+                            register={registerTwitterLink}
                         />
                     </div>
                 </div>
@@ -72,7 +71,7 @@ export default function ProfileStep({ username, bio, webURL, twitterLink, isDirt
             <div className="w-full tablet:w-auto desktop:w-auto">
                 <Button
                     type="submit"
-                    disabled={!isDirty}
+                    disabled={isDirty}
                     className="w-full tablet:w-auto desktop:w-auto">
                     Save settings
                 </Button>
