@@ -81,7 +81,7 @@ export namespace APIParams {
 
   }
 
-  export interface SearchNFT extends PaginationParams {
+  export interface FetchNFTs extends PaginationParams {
     traits?: { trait_type: string, value: any }[]
     type?: AssetType
     collectionAddress?: Address,
@@ -231,7 +231,7 @@ export namespace APIResponse {
     sellStatus?: MarketEventType
   }
 
-  export interface SearchNFT {
+  export interface FetchNFTs {
     data: NFT[]
     paging: Pagination
   }
@@ -263,4 +263,43 @@ export namespace APIResponse {
       type: string
     } & Record<string, any>
   }
+
+  export type SearchNFTs = {
+    id: string,
+    name: string,
+    ipfsHash: string,
+    imageHash: string,
+    createdAt: string,
+    updatedAt: string,
+    status: Status,
+    tokenUri: string,
+    txCreationHash: string,
+    creatorId: string,
+    collectionId: string
+  }[]
+
+  export type SearchCollections ={
+    id: string,
+    txCreationHash: string,
+    name: string,
+    symbol: string,
+    description: string,
+    address: Address,
+    shortUrl: string,
+    metadata: string,
+    status: Status,
+    type: AssetType,
+    categoryId?: string,
+    createdAt: string,
+    updatedAt: string,
+    coverImage?: string,
+    avatar?: string
+  }[]
+
+  export type SearchUsers = {
+    id: string
+    signer: Address
+    username: string
+    avatar?: string
+  }[]
 }
