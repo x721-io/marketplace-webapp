@@ -7,10 +7,6 @@ interface Props {
 }
 
 export default function FormValidationMessages({ errors }: Props) {
-  useEffect(() => {
-    console.log(errors)
-  }, [errors])
-
   if (!errors || !Object.entries(errors).length) {
     return null
   }

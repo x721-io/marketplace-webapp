@@ -44,7 +44,8 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
       await sleep(500)
       toast.success('Signed up successfully', { autoClose: 1000 })
       onSignupSuccess && onSignupSuccess()
-    } catch (e) {
+    } catch (e: any) {
+      toast.error(`Error report: ${e.message || e}`)
       console.error('Error signing up:', e)
     } finally {
       setIsSigningUp(false)
