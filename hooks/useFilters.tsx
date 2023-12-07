@@ -27,8 +27,8 @@ export const useExploreSectionFilters = () => {
   return { isFiltersVisible }
 }
 
-export const useNFTFilters = (defaultState?: APIParams.SearchNFT) => {
-  const [activeFilters, setActiveFilters] = useState<APIParams.SearchNFT>(defaultState ?? {
+export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
+  const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>(defaultState ?? {
     page: 1,
     limit: 20,
     traits: undefined,
@@ -39,7 +39,7 @@ export const useNFTFilters = (defaultState?: APIParams.SearchNFT) => {
     sellStatus: undefined
   })
 
-  const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.SearchNFT) => {
+  const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.FetchNFTs) => {
     const _activeFilters = {
       ...activeFilters,
       ...rest,

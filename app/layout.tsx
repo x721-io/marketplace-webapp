@@ -5,7 +5,8 @@ import 'tailwindcss/tailwind.css'
 import Providers from '@/components/Providers'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
-import React from 'react'
+import React, { Suspense } from 'react'
+import LoadingPage from './loading'
 
 export const metadata: Metadata = {
   title: 'U2U NFT Marketplace',
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <body>
     <ErrorBoundary>
       <Providers>
-        {children}
+        <Suspense fallback={<LoadingPage />}>
+          {children}
+        </Suspense>
         <ToastContainer autoClose={5000} />
       </Providers>
     </ErrorBoundary>

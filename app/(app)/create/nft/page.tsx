@@ -5,7 +5,7 @@ import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
 import ImageUploader from '@/components/Form/ImageUploader'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
 import Icon from '@/components/Icon'

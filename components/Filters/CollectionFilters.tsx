@@ -1,4 +1,6 @@
-import { Accordion, Label, Radio } from 'flowbite-react'
+'use client'
+
+import { Accordion } from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'

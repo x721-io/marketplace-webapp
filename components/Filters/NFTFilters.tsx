@@ -1,3 +1,5 @@
+'use client'
+
 import { Accordion, Checkbox, Label, Radio } from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
@@ -10,12 +12,12 @@ export type FilterType = 'price' | 'type' | 'status'
 
 interface Props {
   baseFilters?: FilterType[]
-  onApplyFilters?: (filters: APIParams.SearchNFT) => void
+  onApplyFilters?: (filters: APIParams.FetchNFTs) => void
   traitsFilter?: APIResponse.CollectionDetails['traitAvailable']
 }
 
 export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], traitsFilter, onApplyFilters }: Props) {
-  const [activeFilters, setActiveFilters] = useState<APIParams.SearchNFT>({
+  const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>({
     type: undefined,
     sellStatus: undefined,
     priceMax: '',
