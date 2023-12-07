@@ -41,7 +41,7 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
       } else {
         setProfile(profile)
         if (mode === 'link') {
-          router.back()
+          router.push('/')
         } else {
           onClose?.()
         }

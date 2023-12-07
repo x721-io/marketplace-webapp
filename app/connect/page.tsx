@@ -52,7 +52,7 @@ export default function ConnectPage() {
                       flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-none"
                       onClick={() => handleConnect(connector)}
                     >
-                      {connector.ready ? <Icon name={connector.id} width={40} height={40} /> : <Spinner size="xl" />}
+                      <Icon name={connector.id} width={40} height={40} />
                       <Text>
                         {connector.name}
                       </Text>
@@ -73,7 +73,7 @@ export default function ConnectPage() {
         onClose={() => setShowSignMessage(false)} />
       <SignupModal
         show={showSignup}
-        onSignupSuccess={() => router.back()}
+        onSignupSuccess={() => router.push('/')}
         onClose={() => setShowSignup(false)} />
     </>
   )

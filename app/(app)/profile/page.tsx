@@ -7,8 +7,15 @@ import ProfileStep from './component/ProfileStep';
 import WalletStep from './component/WalletStep';
 import NotificationStep from './component/NotificationStep';
 import BannerSection from './component/BannerSection';
+import { useAuth } from '@/hooks/useAuth'
+import { redirect } from 'next/navigation'
 
 export default function ProfilePage() {
+  const { isLoggedIn } = useAuth()
+
+  if (!isLoggedIn) {
+    return redirect('/connect')
+  }
 
   return (
     <div className="w-full relative flex flex-col items-center desktop:py-10 tablet:p-10 py-16 px-4">
