@@ -1,8 +1,6 @@
 'use client'
 
 import React, { useState } from "react";
-import BgImage from "@/assets/images/user-detail-bg.png";
-import Avatar from "@/assets/images/user-avatar.png";
 import Profile from "./components/Profile";
 import { Tabs } from 'flowbite-react'
 import OwnedNFTs from './components/OwnedNFTs'
