@@ -65,6 +65,7 @@ export default function CreateNFTCollectionPage() {
         shortUrl,
         txCreationHash: tx.hash,
         creators: creator,
+        avatar: fileHashes[0],
         metadata: JSON.stringify({
           image: fileHashes[0]
         })

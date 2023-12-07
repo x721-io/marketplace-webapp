@@ -3,8 +3,10 @@ import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
 import { classNames } from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
 import { Pagination } from 'flowbite-react'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Text from '@/components/Text'
+import { Modal, ModalProps } from 'flowbite-react'
+import Button from '@/components/Button'
 
 interface Paging {
   page?: number
@@ -36,19 +38,51 @@ export default function NFTsList({
     return Math.ceil(paging.total / paging.limit)
   }, [paging])
 
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth && window.innerWidth <= 767);
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 767);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   return (
     <div className="w-full">
       <div className={
         classNames(
           'w-full flex gap-12 mb-7',
-          showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row')
+          showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row'
+        )
       }>
         {
-          showFilters &&
-          <NFTFilters
-            baseFilters={filters}
-            onApplyFilters={onApplyFilters}
-            traitsFilter={traitFilters} />
+          showFilters && (
+            isMobile ? (
+              <Modal position="bottom-right" show={showFilters} size="md" className='bg-black flex items-center justify-center'>
+                <Modal.Header>Filters</Modal.Header>
+                <Modal.Body>
+                  <NFTFilters
+                    baseFilters={filters}
+                    onApplyFilters={onApplyFilters}
+                    containerClass='w-full'
+                    traitsFilter={traitFilters} />
+                  <Button className="w-full mt-6" variant="secondary">
+                    Apply
+                  </Button>
+                </Modal.Body>
+              </Modal>
+            ) : (
+              <NFTFilters
+                baseFilters={filters}
+                onApplyFilters={onApplyFilters}
+                traitsFilter={traitFilters} />
+            )
+          )
         }
 
         {
@@ -57,7 +91,7 @@ export default function NFTsList({
               <div className={
                 classNames(
                   'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
-                  showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2'
+                  isMobile? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
                 )}>
                 {
                   items.map(item => (

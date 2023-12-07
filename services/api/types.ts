@@ -178,6 +178,7 @@ export namespace APIResponse {
     totalOwner: number
     totalNft: number
     floorPrice: string
+    avatar: string | null
   }
 
   export interface CollectionDetails {
