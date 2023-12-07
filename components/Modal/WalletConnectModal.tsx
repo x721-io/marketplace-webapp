@@ -3,16 +3,19 @@ import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import { Connector, useConnect } from 'wagmi'
 import { sleep } from '@/utils'
+import { useAuth } from '@/hooks/useAuth'
 
 interface Props extends ModalProps {
   onSignMessage: () => void
 }
 export default function WalletConnectModal({ show, onClose, onSignMessage }: Props) {
+  const { onLogout } = useAuth()
   const { connect, connectors, pendingConnector, isLoading } = useConnect()
 
   const handleConnect = async (connector: Connector) => {
     if (!connector.ready) return
     try {
+      onLogout()
       connect({ connector })
       await sleep(100)
       onSignMessage()

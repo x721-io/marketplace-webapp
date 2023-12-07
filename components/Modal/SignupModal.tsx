@@ -5,25 +5,44 @@ import { useState } from 'react'
 import Button from '@/components/Button'
 import { useAuth } from '@/hooks/useAuth'
 import { sleep } from '@/utils'
+import { useForm } from 'react-hook-form'
+import { emailRegex } from '@/utils/regex'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { toast } from 'react-toastify'
 
 interface Props extends ModalProps {
   onSignupSuccess?: () => void
 }
 
+interface FormState {
+  username: string
+  email: string
+}
+
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const { onUpdateProfile } = useAuth()
-
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+  const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+  const formRules = {
+    username: {
+      required: 'Please input username',
+      minLength: { value: 6, message: 'Username must have at least 6 characters' },
+      maxLength: { value: 25, message: 'Username cannot exceed 25 characters' }
+    },
+    email: {
+      required: 'Please input your email',
+      pattern: { value: emailRegex, message: 'Invalid email address' }
+    }
+  }
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [isSigningUp, setIsSigningUp] = useState(false)
 
-  const handleSignup = async () => {
+  const onSignup = async (data: FormState) => {
     if (!acceptedTerms) return
     try {
       setIsSigningUp(true)
-      await onUpdateProfile({ username, email, acceptedTerms })
+      await onUpdateProfile({ ...data, acceptedTerms })
       await sleep(500)
+      toast.success('Signed up successfully', { autoClose: 1000 })
       onSignupSuccess && onSignupSuccess()
     } catch (e) {
       console.error('Error signing up:', e)
@@ -35,50 +54,55 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   return (
     <Modal dismissible show={show} onClose={onClose} size="lg">
       <Modal.Body>
-        <div className="max-w-[400px] mx-auto flex flex-col gap-8 py-8">
-          <Text className="font-semibold text-primary text-center" variant="heading-md">
-            Sign-up to U2 NFT!
-          </Text>
-          <Text className="text-secondary text-center" variant="body-18">
-            Choose a display name and enter your
-            email address to receive updates when
-            your NFTs sell or receive offers.
-          </Text>
+        <form onSubmit={handleSubmit(onSignup)}>
+          <div className="max-w-[400px] mx-auto flex flex-col gap-4 py-8">
+            <Text className="font-semibold text-primary text-center" variant="heading-md">
+              Sign-up to U2 NFT!
+            </Text>
+            <Text className="text-secondary text-center" variant="body-18">
+              Choose a display name and enter your
+              email address to receive updates when
+              your NFTs sell or receive offers.
+            </Text>
 
-          <div className="flex flex-col gap-5">
-            <Input
-              placeholder="Display name"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <Input
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <div className="flex gap-5 items-center">
-              <Checkbox
-                id="accept"
-                checked={acceptedTerms}
-                onChange={() => setAcceptedTerms(!acceptedTerms)}
+            <div className="flex flex-col gap-5">
+              <Input
+                error={!!errors.username}
+                placeholder="Display name"
+                register={register('username', formRules.username)}
               />
-              <Label htmlFor="accept" className="text-body-16 text-tertiary cursor-pointer">
-                I have read and accept the <a href="#" className="text-primary">Terms of Service</a>,
-                the <a href="#" className="text-primary">Term of Creator</a> and confirm that I am at least 13 years old
-              </Label>
+              <Input
+                error={!!errors.email}
+                placeholder="Enter your email"
+                register={register('email', formRules.email)}
+              />
+
+              <div className="flex gap-5 items-center">
+                <Checkbox
+                  id="accept"
+                  checked={acceptedTerms}
+                  onChange={() => setAcceptedTerms(!acceptedTerms)}
+                />
+                <Label htmlFor="accept" className="text-body-16 text-tertiary cursor-pointer">
+                  I have read and accept the <a href="#" className="text-primary">Terms of Service</a>,
+                  the <a href="#" className="text-primary">Term of Creator</a> and confirm that I am at least 13 years
+                  old
+                </Label>
+              </div>
+
+              <FormValidationMessages errors={errors} />
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <Button type="submit" loading={isSigningUp} loadingText="Signing up" disabled={!acceptedTerms}>
+                Finish sign-up
+              </Button>
+              <Button variant="secondary" onClick={onClose}>
+                Cancel
+              </Button>
             </div>
           </div>
-
-          <div className="flex flex-col gap-5">
-            <Button loading={isSigningUp} loadingText="Signing up" disabled={!acceptedTerms} onClick={handleSignup}>
-              Finish sign-up
-            </Button>
-            <Button variant="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-          </div>
-        </div>
+        </form>
       </Modal.Body>
     </Modal>
   )
