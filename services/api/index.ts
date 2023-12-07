@@ -8,17 +8,12 @@ const BASE_REQUEST_OPTIONS = {
   }
 }
 
-const proxyApi = axios.create({
-  baseURL: '/api',
-  ...BASE_REQUEST_OPTIONS
-});
-
 const marketplaceApi = axios.create({
   baseURL: BASE_API_URL,
   ...BASE_REQUEST_OPTIONS
 });
 
-proxyApi.interceptors.response.use(
+marketplaceApi.interceptors.response.use(
   (response) => {
     return response.data;
   },
@@ -27,16 +22,6 @@ proxyApi.interceptors.response.use(
   }
 );
 
-marketplaceApi.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 export {
-  proxyApi,
   marketplaceApi
 }
