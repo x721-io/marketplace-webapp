@@ -1,36 +1,29 @@
-'use client'
-
-import React from 'react'
-import { useParams } from 'next/navigation'
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import useSWR from 'swr'
-import { ListGroup } from 'flowbite-react'
 import Icon from '@/components/Icon'
 import Text from '@/components/Text'
-import { formatEther } from 'ethers'
 
-export default function InformationSectionCollection() {
-  const { id } = useParams()
-  const api = useMarketplaceApi()
+interface Props { 
+  name: string | null | undefined
+  description: string | null | undefined
+  floorPrice: string
+  volumn: string
+  totalNft: number | undefined
+  totalOwner: number | undefined
+}
 
-  const { data, isLoading: isFetchingCollection } = useSWR(
-    !!id ? id : null,
-    (id: string) => api.fetchCollectionById(id),
-    { refreshInterval: 30000 }
-  )
+export default function InformationSectionCollection({name, description, floorPrice, totalNft, totalOwner, volumn}: Props) {
   return (
     <>
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 justify-between">
             <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">
-              {data?.collection.name}
+              {name}
             </Text>
             <Icon name="verified" width={24} height={24} />
           </div>
           <div>
             <Text className="text-secondary text-sm">
-              {data?.collection.description}
+              {description}
             </Text>
           </div>
         </div>
@@ -40,19 +33,19 @@ export default function InformationSectionCollection() {
           <div className='flex flex-col items-center'>
             <Text className='text-secondary'>Floor</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {formatEther(data?.collection.floorPrice || 0).toString()} <Text className='text-secondary font-normal'>U2U</Text>
+              {floorPrice} <Text className='text-secondary font-normal'>U2U</Text>
             </Text>
           </div>
           <div className='flex flex-col items-center'>
             <Text className='text-secondary'>Volume</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {formatEther(data?.collection.volumn || 0).toString()} <Text className='text-secondary font-normal'>U2U</Text>
+              {volumn} <Text className='text-secondary font-normal'>U2U</Text>
             </Text>
           </div>
           <div className='flex flex-col items-center'>
             <Text className='text-secondary'>Items</Text>
             <Text className="text-primary font-bold" variant="body-16">
-              {data?.collection.totalNft}
+              {totalNft}
             </Text>
           </div>
         </div>
@@ -60,7 +53,7 @@ export default function InformationSectionCollection() {
           <div className='flex flex-col items-center'>
             <Text className='text-secondary'>Owner</Text>
             <Text className="text-primary font-bold" variant="body-16">
-              {data?.collection.totalOwner}
+              {totalOwner}
             </Text>
           </div>
           <div className='flex flex-col items-center'>
