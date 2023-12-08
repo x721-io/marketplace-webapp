@@ -10,15 +10,15 @@ import Input from '@/components/Form/Input'
 
 interface Props {
     showFilters: boolean
-    setShowFilters: void
+    setShowFilters: () => void
 }
 
-export default function ListSectionCollection({ showFilters, setShowFilters }: Props) {
+export default function FiltersSectionCollection({ showFilters, setShowFilters }: Props) {
     return (
         <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">
             <div className="order-3 desktop:order-1">
                 <Button
-                    onClick={() => setShowFilters}
+                    onClick={setShowFilters}
                     className={showFilters ? 'bg-white shadow' : `bg-surface-soft`}
                     scale="lg"
                     variant="secondary">
