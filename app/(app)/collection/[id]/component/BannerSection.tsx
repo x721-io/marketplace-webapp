@@ -1,41 +1,96 @@
 'use client'
 
 import UploadIcon from '@/components/Icon/Upload'
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import Image, { StaticImageData } from 'next/image'
+import { useUpdateCollection } from "@/hooks/useCollection";
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { parseImageUrl } from '@/utils/nft'
+import { toast } from 'react-toastify'
 
-interface Props { 
+interface Props {
     cover: string | StaticImageData
     avatar: string | StaticImageData
 }
 
-export default function BannerSectionCollection({ cover, avatar} : Props) {
+export default function BannerSectionCollection({ cover, avatar }: Props) {
+    const coverImageRef = useRef<HTMLInputElement>(null)
+
+    const api = useMarketplaceApi()
+    const { onUpdateCollection } = useUpdateCollection()
+
+    console.log('Cover:', cover);
+
+    const handleInputImage = async (files: FileList | null) => {
+        if (!files) return
+        const toastId = toast.loading('Uploading Cover image...', { type: 'info' })
+        try {
+            const { fileHashes } = await api.uploadFile(files[0])
+
+            await onUpdateCollection ({
+                coverImage: fileHashes[0],
+                txCreationHash: '',
+                name: '',
+                symbol: '',
+                description: '',
+                type: null,
+                shortUrl: '',
+                creators: ''
+            })
+            toast.update(toastId, {
+                render: 'Cover image updated successfully',
+                type: 'success',
+                isLoading: false,
+                autoClose: 1000
+            })
+        } catch (e: any) {
+            toast.update(toastId, {
+                render: `Error report: ${e.message || e}`,
+                type: 'error',
+                isLoading: false,
+                autoClose: 1000
+            })
+        } finally {
+            if (coverImageRef && coverImageRef.current) {
+                coverImageRef.current.value = ""
+            }
+        }
+    }
     return (
-        <div className="bg-cover relative w-full">
-            <Image
-                src={cover}
-                width={1200} height={256}
-                alt="user-detail-bg"
-                className="object-cover w-full desktop:h-[220px] tablet:h-[220px] h-[160px]" />
-            <div className="absolute border-white rounded-2xl desktop:pl-[80px] tablet:pl-[80px] pl-4 bottom-0"
-                style={{ bottom: '0', transform: 'translateY(50%)' }}>
+        <div
+            className="bg-cover relative w-full h-[180px]"
+            style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
+
+            <div className="absolute desktop:ml-20 tablet:ml-20 ml-4 block w-[120px] h-[120px] desktop:bottom-[-46px] tablet:bottom-[-46px] bottom-[-75px]">
                 <Image
                     src={avatar}
                     alt="user-detail-bg"
                     width={120} height={120}
                     className="rounded-2xl w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px]" />
             </div>
-            <div className="absolute right-2 top-2">
-                <div className="bg-button-secondary py-3 px-4 h-12 w-12 rounded-xl ">
-                    <UploadIcon />
+
+            <div className="absolute right-2 top-2 bg-button-secondary rounded-xl w-12 h-12">
+                <div className="absolute top-[33%] left-[31%]">
+                    <UploadIcon width={16} height={16} />
                 </div>
-                {/* <input
+                <input
                     className="bg-button-secondary px-4 h-12 w-12 rounded-xl opacity-0"
                     type="file"
                     ref={coverImageRef}
-                    onChange={(e) => handleUploadCoverImage(e.target.files)}
-                /> */}
+                    onChange={(e) => handleInputImage(e.target.files)}
+                />
             </div>
+
+            {!!cover &&
+                <Image
+                    className="w-full h-[180px] object-cover"
+                    src={cover}
+                    alt="Cover"
+                    width={1200}
+                    height={256}
+                />
+            }
         </div>
     )
+
 }

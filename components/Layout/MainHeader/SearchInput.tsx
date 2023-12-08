@@ -10,6 +10,7 @@ import SearchCollectionTab from './CollectionTab'
 import SearchNFTTab from './NFTTab'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { Modal } from 'flowbite-react'
+import Input from '@/components/Form/Input'
 
 export default function SearchInput() {
   const api = useMarketplaceApi()
@@ -65,28 +66,7 @@ export default function SearchInput() {
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Search</Modal.Header>
               <Modal.Body>
-                <InputDropdown
-                  closeOnClick
-                  className=""
-                  containerClass="desktop:w-[420px] tablet:w-[280px]"
-                  scale="sm"
-                  value={text}
-                  placeholder="Type for collections, NFTs etc"
-                  onChange={event => setText(event.target.value)}
-                  renderDropdown={onclose => (
-                    <Tabs.Group style="underline" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
-                      <Tabs.Item title="Collections">
-                        <SearchCollectionTab loading={isLoading} data={data} onClose={onclose} />
-                      </Tabs.Item>
-                      <Tabs.Item title="NFTs">
-                        <SearchNFTTab loading={isLoading} data={data} onClose={onclose} />
-                      </Tabs.Item>
-                      <Tabs.Item title="Users">
-                        <SearchUserTab loading={isLoading} data={data} onClose={onclose} />
-                      </Tabs.Item>
-                    </Tabs.Group>
-                  )}
-                />
+                <Input placeholder='Type for collections, NFTs etc' />
               </Modal.Body>
             </Modal>
           </>

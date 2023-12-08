@@ -59,10 +59,11 @@ export namespace APIParams {
     description: string,
     type: AssetType,
     categoryId?: number,
-    shortUrl: string,
+    shortUrl: string ,
     metadata?: any,
     creators: string,
-    avatar?: string
+    avatar?: string,
+    coverImage?: string
   }
 
   export interface CreateNFT {
