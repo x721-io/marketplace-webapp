@@ -39,16 +39,20 @@ export default function NFTsList({
   }, [paging])
 
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth && window.innerWidth <= 767);
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 767);
-  };
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 767);
     };
+
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
 
 
