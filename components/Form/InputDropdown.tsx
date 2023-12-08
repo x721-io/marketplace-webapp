@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import Input, { BaseInputProps } from '@/components/Form/Input'
 import { classNames } from '@/utils/string'
 import { Spinner } from 'flowbite-react'
-import { JSXElement } from 'estree-jsx'
 
 interface Props extends BaseInputProps {
   closeOnClick?: boolean

@@ -69,7 +69,7 @@ const metaMaskConnector = new MetaMaskConnector({
 })
 
 export const wagmiConfig = createConfig({
-  autoConnect: false,
+  autoConnect: true,
   publicClient,
   connectors: [injectedConnector, metaMaskConnector]
 })

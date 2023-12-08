@@ -3,21 +3,19 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
-import LoadingScreen from '@/components/Layout/LoadingScreen'
 import Text from '@/components/Text'
 import NFTData from '@/components/NFT/NFTData'
 import Image from 'next/image'
 import { parseImageUrl } from '@/utils/nft'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import NFTMarketData from '@/components/NFT/NFTDetails/MarketData'
-import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 
 export default function NFTDetails() {
   const router = useRouter()
   const { id } = useParams()
   const api = useMarketplaceApi()
-  const { data: item, error, isLoading } = useSWR(
+  const { data: item } = useSWR(
     `/item/${id}`,
     () => api.fetchNFTById(id as string),
     { refreshInterval: 10000 }
@@ -27,12 +25,6 @@ export default function NFTDetails() {
     () => api.getNFTMetaData(item?.tokenUri || ''),
     { refreshInterval: 600000 }
   )
-
-  if (isLoading) {
-    return (
-      <LoadingScreen />
-    )
-  }
 
   if (!item) {
     return (

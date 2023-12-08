@@ -7,10 +7,6 @@ interface Props {
 }
 
 export default function FormValidationMessages({ errors }: Props) {
-  useEffect(() => {
-    console.log(errors)
-  }, [errors])
-
   if (!errors || !Object.entries(errors).length) {
     return null
   }
@@ -33,8 +29,8 @@ export default function FormValidationMessages({ errors }: Props) {
 
       <div className="flex flex-col gap-4">
         {Object.entries(errors).map(([key, error]) => (
-          <div className="flex items-center gap-2" key={key}>
-            <Text className="uppercase font-semibold text-error italic text-body-12">
+          <div className="flex items-start gap-2" key={key}>
+            <Text className="font-semibold text-error italic text-body-12">
               {key}:
             </Text>
             <Text className="font-semibold text-error italic text-body-12">

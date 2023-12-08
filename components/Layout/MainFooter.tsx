@@ -1,5 +1,3 @@
-"use client"
-
 import Image from 'next/image'
 import brandingSvg from '@/assets/branding.svg'
 import Link from 'next/link'
@@ -7,7 +5,6 @@ import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { DarkThemeToggle } from 'flowbite-react'
 import SunIcon from '@/assets/svg/sun-icon'
 import MoonIcon from '@/assets/svg/moon'
 
