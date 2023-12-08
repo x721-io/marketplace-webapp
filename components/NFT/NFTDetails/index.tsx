@@ -3,7 +3,6 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
-import LoadingScreen from '@/components/Layout/LoadingScreen'
 import Text from '@/components/Text'
 import NFTData from '@/components/NFT/NFTData'
 import Image from 'next/image'

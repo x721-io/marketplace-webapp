@@ -12,20 +12,16 @@ import { useParams } from 'next/navigation'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import Text from '@/components/Text'
-import LoadingScreen from '@/components/Layout/LoadingScreen'
 
 export default function ProfilePage() {
   const api = useMarketplaceApi()
   const { id } = useParams()
-  const { data: user, isLoading } = useSWR(
+  const { data: user } = useSWR(
     [id],
     (userId) => api.viewProfile(userId.toString()),
     { refreshInterval: 600000 }
   )
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
 
   if (!user) {
     return (

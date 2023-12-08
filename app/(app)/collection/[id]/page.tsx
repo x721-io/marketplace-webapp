@@ -40,7 +40,7 @@ export default function CollectionPage() {
     ([address, filters]) => api.fetchNFTs(sanitizeObject({
       ...filters,
       collectionAddress: address
-    }) as APIParams.SearchNFT),
+    }) as APIParams.FetchNFTs),
     { refreshInterval: 30000 }
   )
 

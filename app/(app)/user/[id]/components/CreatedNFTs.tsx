@@ -29,7 +29,7 @@ export default function CreatedNFTs({ wallet }: { wallet: Address }) {
 
   const { data, isLoading } = useSWR(
     ['user-created-nfts', activeFilters],
-    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
+    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.FetchNFTs),
     { refreshInterval: 300000 }
   )
 

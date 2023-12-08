@@ -16,7 +16,7 @@ interface Props {
   items?: APIResponse.NFT[]
   showFilters: boolean
   filters?: FilterType[]
-  onApplyFilters: (filtersParams: APIParams.SearchNFT) => void
+  onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void
   onChangePage: (page: number) => void
   paging?: Paging
   traitFilters?: APIResponse.CollectionDetails['traitAvailable']

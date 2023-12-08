@@ -27,7 +27,7 @@ export default function OwnedNFTs({ wallet }: { wallet: Address }) {
 
   const { data, isLoading } = useSWR(
     ['user-ownned-nfts', activeFilters],
-    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.SearchNFT),
+    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.FetchNFTs),
     { refreshInterval: 300000 }
   )
 
