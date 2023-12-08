@@ -5,7 +5,7 @@ import NFTCard from '@/components/NFT/NFTCard'
 import { Pagination } from 'flowbite-react'
 import React, { useMemo, useState, useEffect } from 'react'
 import Text from '@/components/Text'
-import { Modal, ModalProps } from 'flowbite-react'
+import { Modal } from 'flowbite-react'
 import Button from '@/components/Button'
 
 interface Paging {
@@ -22,6 +22,7 @@ interface Props {
   onChangePage: (page: number) => void
   paging?: Paging
   traitFilters?: APIResponse.CollectionDetails['traitAvailable']
+  onClose: () => void
 }
 
 export default function NFTsList({
@@ -31,7 +32,8 @@ export default function NFTsList({
   onApplyFilters,
   paging,
   traitFilters,
-  onChangePage
+  onChangePage, 
+  onClose
 }: Props) {
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
@@ -67,7 +69,7 @@ export default function NFTsList({
         {
           showFilters && (
             isMobile ? (
-              <Modal position="bottom-right" show={showFilters} size="md" className='bg-black flex items-center justify-center'>
+              <Modal position="center" onClose={onClose} show={showFilters} size="md" className='bg-black flex items-center justify-center'>
                 <Modal.Header>Filters</Modal.Header>
                 <Modal.Body>
                   <NFTFilters

@@ -61,6 +61,7 @@ export default function CollectionPage() {
           items={items?.data}
           paging={items?.paging}
           traitFilters={data?.traitAvailable}
+          onClose={() => setShowFilters(false)}
         />
       </div>
     </div>
