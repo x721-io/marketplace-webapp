@@ -22,11 +22,18 @@ export default function CollectionPage() {
   const [showFilters, setShowFilters] = useState(false)
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
 
-  const { data, isLoading: isFetchingCollection } = useSWR(
+  const { data, isLoading } = useSWR(
     !!id ? id : null,
     (id: string) => api.fetchCollectionById(id),
     { refreshInterval: 30000 }
   )
+
+  const generalInfo = useMemo(() => data?.generalInfo, [data])
+
+  const creator = useMemo(() => {
+    if (!data?.collection || !data?.collection.creators[0]) return undefined
+    return data.collection.creators[0].user
+  }, [data])
 
   const { data: items, isLoading: isFetchingItems } = useSWR(
     data?.collection.address ? [data?.collection.address, activeFilters] : null,
@@ -42,16 +49,18 @@ export default function CollectionPage() {
   return (
     <div className="w-full relative">
       <BannerSectionCollection
+        creators={data?.collection?.creators}
         cover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultCoverPhoto}
         avatar={metadata?.image ? parseImageUrl(metadata.image) : defaultAvatar} />
 
       <InformationSectionCollection
+        creator={creator}
         name={data?.collection.name}
         description={data?.collection.description}
-        floorPrice={formatEther(data?.collection.floorPrice || 0).toString()}
-        volumn={formatEther(data?.collection.volumn || 0).toString()}
-        totalNft={data?.collection.totalNft}
-        totalOwner={data?.collection.totalOwner}
+        floorPrice={formatEther(generalInfo?.floorPrice || 0).toString()}
+        volumn={formatEther(generalInfo?.volumn || 0).toString()}
+        totalNft={generalInfo?.totalNft}
+        totalOwner={generalInfo?.totalOwner}
       />
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">

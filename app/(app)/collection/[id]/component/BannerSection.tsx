@@ -21,7 +21,7 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const isOwner = useMemo(() => {
     if (!creators) return false
-    return creators.some(creator => creator.address === wallet) ?? false
+    return creators.some(creator => creator.user.publicKey.toLowerCase() === wallet.toLowerCase()) ?? false
   }, [creators, wallet])
 
   const api = useMarketplaceApi()
@@ -35,13 +35,6 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
 
       await onUpdateCollection({
         coverImage: fileHashes[0],
-        txCreationHash: '',
-        name: '',
-        symbol: '',
-        description: '',
-        type: null,
-        shortUrl: '',
-        creators: ''
       })
       toast.update(toastId, {
         render: 'Cover image updated successfully',
@@ -64,7 +57,7 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
   }
   return (
     <div
-      className="bg-cover relative w-full h-[180px]"
+      className="bg-cover relative w-full h-[80px] tablet:h-[180px] desktop:h-[220px]"
       style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
 
       <div className="absolute desktop:ml-20 tablet:ml-20 ml-4 block w-[120px] h-[120px] desktop:bottom-[-46px] tablet:bottom-[-46px] bottom-[-75px]">
@@ -72,18 +65,17 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
           src={avatar}
           alt="user-detail-bg"
           width={120} height={120}
-          className="rounded-2xl w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px]" />
+          className="rounded-2xl" />
       </div>
 
       {
         isOwner && (
           <div className="absolute right-2 top-2 bg-button-secondary rounded-xl w-12 h-12">
-
             <div className="absolute top-[33%] left-[31%]">
               <UploadIcon width={16} height={16} />
             </div>
             <input
-              className="bg-button-secondary px-4 h-12 w-12 rounded-xl opacity-0"
+              className="opacity-0"
               type="file"
               ref={coverImageRef}
               onChange={(e) => handleInputImage(e.target.files)}
@@ -94,7 +86,7 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
 
       {!!cover &&
         <Image
-          className="w-full h-[180px] object-cover"
+          className="w-full h-full object-cover"
           src={cover}
           alt="Cover"
           width={1200}

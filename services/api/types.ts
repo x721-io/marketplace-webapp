@@ -53,16 +53,6 @@ export namespace APIParams {
   }
 
   export interface UpdateCollection {
-    txCreationHash: string,
-    name: string,
-    symbol: string,
-    description: string,
-    type: AssetType,
-    categoryId?: number,
-    shortUrl: string ,
-    metadata?: any,
-    creators: string,
-    avatar?: string,
     coverImage?: string
   }
 
@@ -185,12 +175,8 @@ export namespace APIResponse {
     shortUrl: string | null
     status: Status
     type: AssetType
-    creators: User[]
+    creators: { userId: string, user: User }[]
     coverImage: string | null
-    volumn: string
-    totalOwner: number
-    totalNft: number
-    floorPrice: string
     avatar: string | null
   }
 
@@ -203,7 +189,13 @@ export namespace APIResponse {
         value: string;
         count: number;
       }[];
-    }[]
+    }[],
+    generalInfo: {
+      volumn: string
+      totalOwner: number
+      totalNft: number
+      floorPrice: string
+    }
   }
 
   export interface CreateNFT {
@@ -290,7 +282,7 @@ export namespace APIResponse {
     collectionId: string
   }[]
 
-  export type SearchCollections ={
+  export type SearchCollections = {
     id: string,
     txCreationHash: string,
     name: string,
