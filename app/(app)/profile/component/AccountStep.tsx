@@ -23,19 +23,19 @@ export default function AccountStep() {
   })
 
   const onSubmit = async ({ email }: FormState) => {
-    // try {
-    //   await toast.promise(onUpdateProfile({ email }), {
-    //     pending: 'Updating email',
-    //     success: 'Email updated successfully!',
-    //     error: {
-    //       render: error => `Error report: ${error.data}`
-    //     }
-    //   })
-    // } catch (e) {
-    //   console.error('Error:', e)
-    // } finally {
-    //   reset({ email })
-    // }
+    try {
+      await toast.promise(onUpdateProfile({ email }), {
+        pending: 'Updating email',
+        success: 'Email updated successfully!',
+        error: {
+          render: error => `Error report: ${error.data}`
+        }
+      })
+    } catch (e) {
+      console.error('Error:', e)
+    } finally {
+      reset({ email })
+    }
   }
 
   return (

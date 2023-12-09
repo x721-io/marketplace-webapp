@@ -6,3 +6,7 @@ export const urlRegex = new RegExp("^(https?:\\/\\/)?" + // protocol
   "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
   "(\\#[-a-z\\d_]*)?$", // fragment locator
   "i")
+
+export const noWhitespaceRegex = new RegExp("[^-\s]")
+
+export const alphabetOnlyRegex = new RegExp(/^[A-Z]+$/i)

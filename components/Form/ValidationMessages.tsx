@@ -12,7 +12,7 @@ export default function FormValidationMessages({ errors }: Props) {
   }
 
   return (
-    <div className="w-full flex gap-4 my-4 px-6 py-4 rounded-2xl bg-surface-soft/50">
+    <div className="w-full flex gap-4 my-4 px-6 py-4 rounded-2xl bg-surface-soft/50 border border-error">
       <svg
         viewBox="0 0 24 24"
         className="text-error"
@@ -27,16 +27,11 @@ export default function FormValidationMessages({ errors }: Props) {
           fill="currentColor" />
       </svg>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         {Object.entries(errors).map(([key, error]) => (
-          <div className="flex items-start gap-2" key={key}>
-            <Text className="font-semibold text-error italic text-body-12">
-              {key}:
-            </Text>
-            <Text className="font-semibold text-error italic text-body-12">
-              {error?.message as string}
-            </Text>
-          </div>
+          <Text key={key} className="font-semibold text-error italic text-body-12">
+            {error?.message as string}
+          </Text>
         ))}
       </div>
     </div>

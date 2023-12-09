@@ -11,6 +11,18 @@ export default function Dropdown({ className, dropdown, activator, dropdownConta
   const [showDropdown, setShowDropdown] = useState(false)
   const container = useRef<HTMLDivElement>(null)
 
+  const handler = (event: any) => {
+    if (!container || !container.current || !dropdown) return
+    if (!container.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  });
+
   return (
     <div
       className={classNames('relative', className)}
