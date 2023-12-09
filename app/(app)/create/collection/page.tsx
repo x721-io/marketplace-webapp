@@ -220,7 +220,6 @@ export default function CreateNFTCollectionPage() {
                   />
                 )}
               />
-
             </div>
             {/* Name */}
             <div>
@@ -254,10 +253,7 @@ export default function CreateNFTCollectionPage() {
             {/* Button finish */}
             <div className="justify-end">
               <ConnectWalletButton>
-                <Button
-                  type="submit"
-                  className="w-full tablet:w-auto desktop:w-auto"
-                  disabled={validating || uploading}>
+                <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
                   Create collection
                 </Button>
               </ConnectWalletButton>
