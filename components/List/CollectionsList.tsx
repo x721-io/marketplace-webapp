@@ -34,8 +34,8 @@ export default function CollectionsList({ collections }: { collections?: APIResp
                 </Link>
               </Table.Cell>
               <Table.Cell className="whitespace-normal max-w-[3000px] overflow-hidden">{c.symbol}</Table.Cell>
-              <Table.Cell>{parseFloat(formatEther(c.floorPrice)).toFixed(2)} U2U</Table.Cell>
-              <Table.Cell>{parseFloat(formatEther(c.volumn)).toFixed(2)} U2U</Table.Cell>
+              <Table.Cell>{parseFloat(formatEther(c.floorPrice || 0)).toFixed(2)} U2U</Table.Cell>
+              <Table.Cell>{parseFloat(formatEther(c.volumn || 0)).toFixed(2)} U2U</Table.Cell>
               <Table.Cell>{c.totalNft}</Table.Cell>
               <Table.Cell>{c.totalOwner}</Table.Cell>
             </Table.Row>

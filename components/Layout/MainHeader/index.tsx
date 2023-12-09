@@ -4,8 +4,6 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Icon from '@/components/Icon'
 import Dropdown from '@/components/Dropdown'
-// import { Dropdown } from 'flowbite-react/lib/esm/components/Dropdown'
-// import { DropdownItem } from 'flowbite-react/lib/esm/components/Dropdown/DropdownItem'
 import ProfileModal from "@/components/Modal/ProfileModal";
 import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
@@ -80,7 +78,7 @@ export default function MainHeader() {
             <ConnectWalletButton mode="link">
               <Image
                 onClick={() => setShowProfile(true)}
-                className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacityZ"
+                className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
                 src={avatar ? parseImageUrl(avatar) : defaultAvatar}
                 alt="Avatar"
                 width={35}

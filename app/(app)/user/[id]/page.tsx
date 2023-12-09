@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Profile from "./components/Profile";
-import { Tabs } from 'flowbite-react'
+import { Spinner, Tabs } from 'flowbite-react'
 import OwnedNFTs from './components/OwnedNFTs'
 import OnSaleNFTs from './components/OnSaleNFTs'
 import UserCollections from './components/UserCollections'
@@ -16,17 +16,24 @@ import Text from '@/components/Text'
 export default function ProfilePage() {
   const api = useMarketplaceApi()
   const { id } = useParams()
-  const { data: user } = useSWR(
+  const { data: user, isLoading } = useSWR(
     [id],
     (userId) => api.viewProfile(userId.toString()),
     { refreshInterval: 600000 }
   )
 
+  if (isLoading) {
+    return (
+      <div className="w-full h-96 p-10 flex justify-center items-center">
+        <Spinner size="xl" />
+      </div>
+    )
+  }
 
   if (!user) {
     return (
-      <div className="w-full flex justify-center items-center h-96">
-        <Text variant="heading-xs">
+      <div className="w-full h-96 p-10 flex justify-center items-center">
+        <Text className="font-semibold text-body-32">
           User does not exist!
         </Text>
       </div>

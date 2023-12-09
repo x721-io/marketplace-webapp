@@ -14,6 +14,7 @@ import WETH_ABI from '@/abi/WETH.json'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { toast } from 'react-toastify'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
+import { parseImageUrl } from '@/utils/nft'
 
 export default function ProfileModal({ show, onClose }: ModalProps) {
   const address = useAuthStore(state => state.profile?.publicKey)
@@ -24,6 +25,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
 
   const username = useAuthStore(state => state.profile?.username)
   const userId = useAuthStore(state => state.profile?.id)
+  const avatar = useAuthStore(state => state.profile?.avatar)
   const { onLogout } = useAuth()
 
   const { txStatus, updateHash } = useTransactionStatus()
@@ -57,7 +59,8 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
         <div className="flex justify-between items-center py-4">
           <div className="flex gap-3 items-center">
             <Image
-              src={defaultAvatar}
+              className="rounded-full"
+              src={avatar ? parseImageUrl(avatar) : defaultAvatar}
               alt="Avatar"
               width={48}
               height={48}

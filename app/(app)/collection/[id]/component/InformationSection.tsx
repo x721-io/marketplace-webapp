@@ -44,13 +44,13 @@ export default function InformationSectionCollection({ data }: Props) {
           <div className="flex flex-col items-center">
             <Text className="text-secondary">Floor</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {floorPrice} <Text className="text-secondary font-normal">U2U</Text>
+              {formatEther(floorPrice || 0)} <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
           <div className="flex flex-col items-center">
             <Text className="text-secondary">Volume</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {volumn} <Text className="text-secondary font-normal">U2U</Text>
+              {formatEther(volumn || 0)} <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
           <div className="flex flex-col items-center">

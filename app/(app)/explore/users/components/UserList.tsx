@@ -49,22 +49,21 @@ export default function ExploreUserList() {
                   <Text className="font-medium">{user.username}</Text>
                   <VerifyIcon width={16} height={16} />
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex gap-2">
-                    <Text className="text-body-12 font-medium">2k</Text>
-                    <Text className="text-body-12 text-secondary">Followers</Text>
-                  </div>
-                  <div className="flex gap-2">
-                    <Text className="text-body-12 font-medium">2k</Text>
-                    <Text className="text-body-12 text-secondary">Followers</Text>
-                  </div>
-                </div>
+                {/*<div className="flex gap-3">*/}
+                {/*  <div className="flex gap-2">*/}
+                {/*    <Text className="text-body-12 font-medium">2k</Text>*/}
+                {/*    <Text className="text-body-12 text-secondary">Followers</Text>*/}
+                {/*  </div>*/}
+                {/*  <div className="flex gap-2">*/}
+                {/*    <Text className="text-body-12 font-medium">2k</Text>*/}
+                {/*    <Text className="text-body-12 text-secondary">Followers</Text>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
               </div>
-              <div>
-                <button className="p-2 rounded-lg">
-                  <PlusIcon width={36} height={36} />
-                </button>
-              </div>
+
+              {/*<button className="p-2 rounded-lg">*/}
+              {/*  <PlusIcon width={36} height={36} />*/}
+              {/*</button>*/}
             </div>
           </div>
         </Link>

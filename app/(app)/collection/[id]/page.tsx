@@ -10,11 +10,9 @@ import NFTsList from '@/components/List/NFTsList'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
 import { parseImageUrl } from '@/utils/nft'
-import { formatEther } from 'ethers'
 import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
-import useAuthStore from '@/store/auth/store'
 import { Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 
@@ -29,8 +27,6 @@ export default function CollectionPage() {
     (id: string) => api.fetchCollectionById(id),
     { refreshInterval: 30000 }
   )
-
-  const generalInfo = useMemo(() => data?.generalInfo, [data])
 
   const { data: items, isLoading: isFetchingItems } = useSWR(
     data?.collection.address ? [data?.collection.address, activeFilters] : null,

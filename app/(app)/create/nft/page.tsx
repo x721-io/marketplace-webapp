@@ -149,7 +149,12 @@ export default function CreateNftPage() {
     try {
       await toast.promise(onCreateNFT(data), {
         pending: 'Sending transaction',
-        success: 'Item created successfully',
+        success: {
+          render: () => {
+            resetForm()
+            return 'Item created successfully'
+          }
+        },
         error: { render: error => `Error report: ${error.data}` }
       })
     } catch (e) {
