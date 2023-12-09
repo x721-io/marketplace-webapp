@@ -35,6 +35,12 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form)
       },
 
+      uploadMetadata: (data: Record<string, any>): Promise<APIResponse.UploadMetadata> => {
+        const form = new FormData();
+        form.append('metadata', JSON.stringify(data))
+        return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form)
+      },
+
       updateCollection: (params: APIParams.UpdateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
 
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
@@ -59,6 +65,8 @@ export const useMarketplaceApi = () => {
         mode: 'USER',
         text
       }),
+
+      validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
       /** GET **/
       fetchCollections: (): Promise<APIResponse.Collection[]> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS),
@@ -89,8 +97,7 @@ export const useMarketplaceApi = () => {
       fetchUsers: async ({ limit }: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
         const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
         return (res as any).users
-      }
-
+      },
     }
   }, [authHeader])
 }

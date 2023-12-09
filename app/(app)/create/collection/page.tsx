@@ -5,8 +5,8 @@ import ImageUploader from '@/components/Form/ImageUploader'
 import Input from '@/components/Form/Input'
 import Textarea from '@/components/Form/Textarea'
 import Button from '@/components/Button'
-import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
 import {
   useCreateCollection,
@@ -20,56 +20,114 @@ import { toast } from 'react-toastify'
 import { AssetType } from '@/types'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { alphabetOnlyRegex } from '@/utils/regex'
+import { parseImageUrl } from '@/utils/nft'
+import { waitForTransaction } from '@wagmi/core'
+
+interface CollectionFormState {
+  image: string
+  name: string,
+  symbol: string,
+  description: string,
+  shortUrl: string
+}
 
 export default function CreateNFTCollectionPage() {
+  const [validating, setValidating] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const api = useMarketplaceApi()
   const creator = useAuthStore(state => state.profile?.id)
   const [type, setType] = useState<AssetType>()
   const { onCreateCollection } = useCreateCollection()
   const { onUpdateCollection } = useUpdateCollection()
-  const { handleSubmit, register, reset } = useForm({
-    defaultValues: {
-      name: '',
-      symbol: '',
-      description: '',
-      shortUrl: ''
-    }
-  })
+  const {
+    handleSubmit,
+    register,
+    reset,
+    watch,
+    setError,
+    clearErrors,
+    control,
+    setValue,
+    formState: { errors }
+  } = useForm<CollectionFormState>({ reValidateMode: 'onChange' })
 
-  const [image, setImage] = useState<Blob | undefined>()
+  const formRules = {
+    name: {
+      required: 'Collection name is required!'
+    },
+    symbol: {
+      required: 'Symbol is required!',
+      pattern: { value: alphabetOnlyRegex, message: 'Collection symbol should contain only alphabet characters' }
+    },
+    shortUrl: {
+      pattern: { value: alphabetOnlyRegex, message: 'Short url should contain only alphabet characters' }
+    },
+    description: {
+      maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
+    },
+    image: {
+      required: 'Collection image is required!'
+    }
+  }
+  const image = watch('image')
+
+  const handleUploadImage = async (file?: Blob) => {
+    if (!file) {
+      setValue('image', '')
+      return
+    }
+    setUploading(true)
+    try {
+      await toast.promise(api.uploadFile(file), {
+        pending: 'Uploading image...',
+        success: {
+          render: (data) => {
+            setValue('image', data.data?.fileHashes[0] as string)
+            return 'Collection image uploaded successfully'
+          }
+        },
+        error: {
+          render: (error) => `Uploading error: ${error.data}`
+        }
+      })
+    } finally {
+      setUploading(false)
+    }
+  }
 
   const resetForm = () => {
     reset()
     setType(undefined)
   }
 
-  const onSubmit = async (data: any) => {
-    if (!type || !creator || !image) return
-    const toastId = toast.loading('Uploading Image...', { type: 'info' })
+  const onSubmit = async (data: CollectionFormState) => {
+    if (!type || !creator) return
+    const toastId = toast.loading('Preparing data...', { type: 'info' })
 
     try {
       const salt = randomWord()
-      const { name, symbol, description, shortUrl } = data
-      const args = [name, symbol, 'ipfs:/', BASE_API_URL + '/collection/' + shortUrl, [], salt]
-      const { fileHashes } = await api.uploadFile(image)
+      const { name, symbol, description, shortUrl, image } = data
+
+      const metadata = { name, symbol, description, type, shortUrl, image }
+
+      const { metadataHash } = await api.uploadMetadata(metadata)
+      const fullShortUrl = BASE_API_URL + '/collection/' + shortUrl
+      const args = [name, symbol, `ipfs://${metadataHash}`, fullShortUrl, [], salt]
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
       const tx = await onCreateCollection(type, args)
-
-      await onUpdateCollection({
-        name,
-        symbol,
-        description,
-        type,
-        shortUrl,
-        txCreationHash: tx.hash,
-        creators: creator,
-        avatar: fileHashes[0],
-        metadata: JSON.stringify({
-          image: fileHashes[0]
+      await Promise.all([
+        waitForTransaction({ hash: tx.hash }),
+        onUpdateCollection({
+          ...metadata,
+          txCreationHash: tx.hash,
+          creators: creator,
+          metadata: JSON.stringify(metadata)
         })
-      })
+      ])
 
       toast.update(toastId, {
         render: 'Collection created successfully',
@@ -88,6 +146,39 @@ export default function CreateNFTCollectionPage() {
       console.error(e)
     }
   }
+
+  const handleValidateInput = async (name: string, value: Record<string, any>) => {
+    try {
+      setValidating(true)
+      if (name === 'name' && !!value.name) {
+        const existed = await api.validateInput({ key: 'collectionName', value: value.name })
+        if (existed) setError('name', { type: 'custom', message: 'Collection name already existed' })
+        else clearErrors('name')
+      }
+
+      if (name === 'symbol' && !!value.symbol) {
+        const existed = await api.validateInput({ key: 'collectionSymbol', value: value.symbol })
+        if (existed) setError('symbol', { type: 'custom', message: 'Collection symbol already existed' })
+        else clearErrors('symbol')
+      }
+
+      if (name === 'shortUrl' && !!value.shortUrl) {
+        const existed = await api.validateInput({ key: 'collectionShortUrl', value: value.shortUrl })
+        if (existed) setError('shortUrl', { type: 'custom', message: 'Short url already existed' })
+        else clearErrors('shortUrl')
+      }
+    } finally {
+      setValidating(false)
+    }
+  }
+
+  useEffect(() => {
+    const subscription = watch(async (value, { name, type }) => {
+      if (!name) return
+      handleValidateInput(name, value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   if (!type) {
     return (
@@ -112,32 +203,39 @@ export default function CreateNFTCollectionPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-10 p-4">
+          <div className="flex flex-col gap-4 p-4">
             {/* Upload file */}
             <div>
               <Text className="text-base font-semibold mb-1">Collection image</Text>
-              <ImageUploader
-                image={image}
-                onInput={setImage}
+              <Controller
+                name="image"
+                control={control}
+                rules={formRules.image}
+                render={() => (
+                  <ImageUploader
+                    image={image ? parseImageUrl(image) : undefined}
+                    onInput={handleUploadImage}
+                    loading={uploading}
+                    error={!!errors.image}
+                  />
+                )}
               />
             </div>
             {/* Name */}
             <div>
               <Text className="text-base font-semibold mb-1">Display name</Text>
-              <Input register={register('name')}
-              />
+              <Input register={register('name', formRules.name)} error={!!errors.name} />
             </div>
             {/* Symbol */}
             <div>
               <Text className="text-base font-semibold mb-1">Symbol</Text>
-              <Input
-                register={register('symbol')}
-              />
+              <Input register={register('symbol', formRules.symbol)} error={!!errors.symbol} />
             </div>
             <div>
               <Text className="text-base font-semibold mb-1">Short URL</Text>
               <Input
-                register={register('shortUrl')}
+                error={!!errors.shortUrl}
+                register={register('shortUrl', formRules.shortUrl)}
               />
             </div>
             {/* Description */}
@@ -145,14 +243,20 @@ export default function CreateNFTCollectionPage() {
               <Text className="text-base font-semibold mb-1">Description (optional)</Text>
               <Textarea
                 className="h-[160px] resize-none"
-                register={register('description')}
+                register={register('description', formRules.description)}
+                error={!!errors.description}
               />
             </div>
+
+            <FormValidationMessages errors={errors} />
 
             {/* Button finish */}
             <div className="justify-end">
               <ConnectWalletButton>
-                <Button type="submit" className="w-full tablet:w-auto desktop:w-auto">
+                <Button
+                  type="submit"
+                  className="w-full tablet:w-auto desktop:w-auto"
+                  disabled={validating || uploading}>
                   Create collection
                 </Button>
               </ConnectWalletButton>

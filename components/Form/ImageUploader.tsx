@@ -6,14 +6,17 @@ import { useMemo, useRef, useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { classNames } from '@/utils/string'
+import { Spinner } from 'flowbite-react'
 
 interface Props {
   className?: string
   image?: string | Blob
   onInput?: (file: Blob | undefined) => void
+  loading?: boolean
+  error?: boolean
 }
 
-export default function ImageUploader({ className, image, onInput }: Props) {
+export default function ImageUploader({ className, image, onInput, loading, error }: Props) {
   const [file, setFile] = useState<Blob | undefined>()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -29,16 +32,16 @@ export default function ImageUploader({ className, image, onInput }: Props) {
 
   const handleInputImage = (files: FileList | null) => {
     if (files) {
-      onInput && onInput(files[0])
+      onInput?.(files[0])
       setFile(files[0]);
     } else {
-      onInput && onInput(undefined)
+      onInput?.(undefined)
       setFile(undefined)
     }
   }
 
   const handleClearImage = () => {
-    onInput && onInput(undefined)
+    onInput?.(undefined)
     setFile(undefined)
     if (inputRef && inputRef.current) {
       inputRef.current.value = "";
@@ -48,7 +51,8 @@ export default function ImageUploader({ className, image, onInput }: Props) {
   return (
     <div
       className={classNames(
-        "relative cursor-pointer p-1 border border-tertiary border-dashed rounded-2xl w-full",
+        "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full",
+        error ? 'border-error' : 'border-tertiary',
         className)}>
       <input
         className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
@@ -61,8 +65,8 @@ export default function ImageUploader({ className, image, onInput }: Props) {
         <Image
           src={previewImage}
           alt=""
-          width={1}
-          height={1}
+          width={256}
+          height={256}
           className="w-full h-auto object-cover rounded-2xl" />
       ) : (
         <div className="w-full px-10 py-20 flex flex-col justify-center items-center gap-6">
@@ -75,14 +79,15 @@ export default function ImageUploader({ className, image, onInput }: Props) {
         </div>
       )}
 
-      {!!file && (
-        <Button
-          variant="icon"
-          className="absolute right-0 top-[-18px]"
-          onClick={handleClearImage}>
-          <CloseIcon width={20} height={20} />
-        </Button>
-      )}
+      {!!file &&
+        (loading ? <Spinner className="absolute right-0 top-[-18px]" /> :
+          <Button
+            variant="icon"
+            className="absolute right-0 top-[-18px]"
+            onClick={handleClearImage}>
+            <CloseIcon width={20} height={20} />
+          </Button>)
+      }
     </div>
   )
 }

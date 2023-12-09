@@ -62,7 +62,6 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
   }
 
   const handleApplyFilters = () => {
-    console.log(activeFilters)
     onApplyFilters?.(activeFilters)
   }
 

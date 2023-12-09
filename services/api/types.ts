@@ -115,8 +115,15 @@ export namespace APIParams {
     text: string
     mode: string
   }
+
+  export interface ValidateInput {
+    key: 'username' | 'email' | 'shortLink' | 'collectionName' | 'collectionShortUrl' | 'collectionSymbol' | 'nftName',
+    value: string
+    collectionId?: string
+  }
 }
 
+/** API Response types **/
 export namespace APIResponse {
   interface Pagination {
     page: number
@@ -157,6 +164,10 @@ export namespace APIResponse {
 
   export interface UploadImage {
     fileHashes: string[],
+    metadataHash: string
+  }
+
+  export interface UploadMetadata {
     metadataHash: string
   }
 
