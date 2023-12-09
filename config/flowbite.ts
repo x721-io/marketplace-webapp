@@ -53,10 +53,17 @@ const accordion: CustomFlowbiteTheme['accordion'] = {
   }
 }
 
+const modal: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-full max-h-[90vh]"
+  }
+}
+
 const appTheme: CustomFlowbiteTheme = {
   tab,
   table,
   accordion,
+  modal
 }
 
 export default appTheme

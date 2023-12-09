@@ -59,9 +59,11 @@ export namespace APIParams {
     description: string,
     type: AssetType,
     categoryId?: number,
-    shortUrl: string,
+    shortUrl: string ,
     metadata?: any,
-    creators: string
+    creators: string,
+    avatar?: string,
+    coverImage?: string
   }
 
   export interface CreateNFT {
@@ -189,6 +191,7 @@ export namespace APIResponse {
     totalOwner: number
     totalNft: number
     floorPrice: string
+    avatar: string | null
   }
 
   export interface CollectionDetails {
