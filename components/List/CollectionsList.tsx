@@ -29,7 +29,7 @@ export default function CollectionsList({ collections }: { collections?: APIResp
           Array.isArray(collections) && collections.map(c => (
             <Table.Row key={c.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-normal font-medium text-gray-900 max-w-[300px] overflow-hidden">
-                <Link className="text-ellipsis hover:underline" href={`/collection/${c.id}`}>
+                <Link className="text-ellipsis hover:underline" href={`/collection/${c.shortUrl}`}>
                   {c.name}
                 </Link>
               </Table.Cell>

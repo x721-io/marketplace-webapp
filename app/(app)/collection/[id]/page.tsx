@@ -15,6 +15,8 @@ import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
 import useAuthStore from '@/store/auth/store'
+import { Spinner } from 'flowbite-react'
+import Text from '@/components/Text'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -30,11 +32,6 @@ export default function CollectionPage() {
 
   const generalInfo = useMemo(() => data?.generalInfo, [data])
 
-  const creator = useMemo(() => {
-    if (!data?.collection || !data?.collection.creators[0]) return undefined
-    return data.collection.creators[0].user
-  }, [data])
-
   const { data: items, isLoading: isFetchingItems } = useSWR(
     data?.collection.address ? [data?.collection.address, activeFilters] : null,
     ([address, filters]) => api.fetchNFTs(sanitizeObject({
@@ -46,6 +43,24 @@ export default function CollectionPage() {
 
   const metadata = useMemo(() => data ? JSON.parse(data?.collection.metadata) : {}, [data])
 
+  if (isLoading) {
+    return (
+      <div className="w-full h-96 p-10 flex justify-center items-center">
+        <Spinner size="xl" />
+      </div>
+    )
+  }
+
+  if (!data?.collection) {
+    return (
+      <div className="w-full h-96 p-10 flex justify-center items-center">
+        <Text className="font-semibold text-body-32">
+          Collection does not exist!
+        </Text>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full relative">
       <BannerSectionCollection
@@ -53,15 +68,7 @@ export default function CollectionPage() {
         cover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultCoverPhoto}
         avatar={metadata?.image ? parseImageUrl(metadata.image) : defaultAvatar} />
 
-      <InformationSectionCollection
-        creator={creator}
-        name={data?.collection.name}
-        description={data?.collection.description}
-        floorPrice={formatEther(generalInfo?.floorPrice || 0).toString()}
-        volumn={formatEther(generalInfo?.volumn || 0).toString()}
-        totalNft={generalInfo?.totalNft}
-        totalOwner={generalInfo?.totalOwner}
-      />
+      <InformationSectionCollection data={data} />
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
         <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />

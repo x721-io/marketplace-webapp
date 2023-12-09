@@ -2,36 +2,40 @@ import Icon from '@/components/Icon'
 import Text from '@/components/Text'
 import { APIResponse } from '@/services/api/types'
 import Link from 'next/link'
+import { formatEther } from 'ethers'
+import { useMemo } from 'react'
 
 interface Props {
-  creator: APIResponse.User
-  name: string
-  floorPrice: string
-  volumn: string
-  totalNft: number | undefined
-  totalOwner: number | undefined
+  data: APIResponse.CollectionDetails
 }
 
-export default function InformationSectionCollection({ name,creator, description, floorPrice, totalNft, totalOwner, volumn }: Props) {
+export default function InformationSectionCollection({ data }: Props) {
+  const { floorPrice, volumn, totalNft, totalOwner } = useMemo(() => data.generalInfo, [data.generalInfo])
+  const creator = useMemo(() => {
+    if (!data.collection.creators[0]) return undefined
+    return data.collection.creators[0].user
+  }, [data.collection])
+
   return (
     <>
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 justify-between">
-            <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">
-              {name}
+            <Text className="font-semibold text-primary desktop:text-body-32 tablet:text-body-32 text-body-24">
+              {data.collection.name}
             </Text>
             <Icon name="verified" width={24} height={24} />
           </div>
           <Link
             href={`/user/${creator?.id}`}
-            className="font-semibold desktop:text-body-16 hover:underline">
-            Creator: {creator?.username}
+            className="font-semibold text-secondary text-body-16 hover:underline">
+            Creator: <span className="text-primary font-bold">{creator?.username}</span>
           </Link>
-          <Text className="text-secondary text-sm">
-            <span className="text-primary font-semibold">Description:</span>
-            <br/>
-            {description}
+          <Text className="text-secondary text-body-16 font-semibold">
+            Symbol: <span className="text-primary font-bold">{data.collection.symbol}</span>
+          </Text>
+          <Text className="text-secondary">
+            {data.collection.description}
           </Text>
         </div>
       </div>
