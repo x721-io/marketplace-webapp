@@ -1,78 +1,84 @@
-import { Address, useAccount, useContractWrite } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
-import { Id, toast } from 'react-toastify'
+import { writeContract, waitForTransaction } from '@wagmi/core'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { APIParams } from '@/services/api/types'
-import { useCallback } from 'react'
+import { parseImageUrl } from '@/utils/nft'
 
-export const useCreateNFT = (collection: Address, type: AssetType) => {
+export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi()
   const { address } = useAccount()
   const userId = useAuthStore(state => state.profile?.id)
 
   const proxyContract = type === 'ERC721' ? contracts.erc721Proxy : contracts.erc1155Proxy
-  const { writeAsync } = useContractWrite({
-    address: collection,
-    abi: proxyContract.abi,
-    functionName: 'mintAndTransfer'
-  })
 
-  const onCreateNFT = useCallback(async (type: AssetType, params: Record<string, any>, toastId?: Id) => {
-    if (!userId || !collection) return
+  const onCreateNFT = async (params: Record<string, any>) => {
+    if (!userId || !type) return
 
-    if (toastId) toast.update(toastId, { render: 'Uploading Image', type: 'info' })
-    const { fileHashes, metadataHash } = await api.uploadFile(
-      params.image,
-      {
-        traits: params.traits,
-        description: params.description
-      })
+    const tokenId = await api.generateTokenId(params.collection)
 
-    if (toastId) toast.update(toastId, { render: 'Generating config', type: 'info' })
-    const tokenId = await api.generateTokenId(collection)
+    const metadata = {
+      id: tokenId,
+      name: params.name,
+      description: params.description,
+      collectionAddress: params.collection,
+      image: parseImageUrl(params.image),
+      creatorId: userId,
+      attributes: params.traits,
+      royalties: [{ account: address, value: params.royalties }]
+    }
 
-    if (toastId) toast.update(toastId, { render: 'Sending Transaction', type: 'info' })
+    const { metadataHash } = await api.uploadMetadata(metadata)
+
     const tokenURI = "ipfs://" + metadataHash
-    const baseArgs: Record<string, any> =type === 'ERC1155'?{
+
+    const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
       tokenId,
       tokenURI,
       supply: params.amount,
       creators: [{ account: address, value: 10000 }],
-      royalties: [],
+      royalties: [{ account: address, value: params.royalties }],
       signatures: ["0x"]
     } : {
       tokenId,
       tokenURI,
       creators: [{ account: address, value: 10000 }],
-      royalties: [],
+      royalties: [{ account: address, value: params.royalties }],
       signatures: ["0x"]
     }
-    // if (type === 'ERC1155') baseArgs.supply = params.amount
+
     const args = [
-      baseArgs,
+      tokenArgs,
       address,
       type === 'ERC1155' && params.amount
     ].filter(Boolean)
 
-    const { hash } = await writeAsync({ args })
+    const tx = await writeContract({
+      address: params.collection,
+      abi: proxyContract.abi,
+      functionName: 'mintAndTransfer',
+      args
+    })
 
     const createNFTParams = {
       id: tokenId,
       name: params.name,
       ipfsHash: metadataHash,
       tokenUri: tokenURI,
-      collectionId: collection,
-      txCreationHash: hash,
-      imageHash: fileHashes[0],
+      collectionId: params.collection,
+      txCreationHash: tx.hash,
+      imageHash: params.image,
       creatorId: userId,
       traits: params.traits
     } as APIParams.CreateNFT
-    const res = await api.createNFT(createNFTParams)
 
-    if (toastId) toast.update(toastId, { render: 'Item created successfully', type: 'success', isLoading: false, autoClose: 5000 })
-  }, [collection, address])
+    await Promise.all([
+      waitForTransaction({ hash: tx.hash }),
+      api.createNFT(createNFTParams)
+    ])
+  }
 
   return { onCreateNFT }
 }

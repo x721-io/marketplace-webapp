@@ -71,7 +71,6 @@ export default function CreateNFTCollectionPage() {
       required: 'Collection image is required!'
     }
   }
-  const image = watch('image')
 
   const handleUploadImage = async (file?: Blob) => {
     if (!file) {
@@ -89,7 +88,10 @@ export default function CreateNFTCollectionPage() {
           }
         },
         error: {
-          render: (error) => `Uploading error: ${error.data}`
+          render: (error) => {
+            setValue('image', '')
+            return `Uploading error: ${(error.data as any).message}`
+          }
         }
       })
     } finally {
@@ -211,9 +213,9 @@ export default function CreateNFTCollectionPage() {
                 name="image"
                 control={control}
                 rules={formRules.image}
-                render={() => (
+                render={({ field: { value } }) => (
                   <ImageUploader
-                    image={image ? parseImageUrl(image) : undefined}
+                    image={!!value ? parseImageUrl(value) : undefined}
                     onInput={handleUploadImage}
                     loading={uploading}
                     error={!!errors.image}
