@@ -8,7 +8,7 @@ import React from 'react'
 export default function CollectionsList({ collections }: { collections?: APIResponse.Collection[] }) {
   if (!collections || !collections.length) {
     return (
-      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed mt-7">
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
       </div>
     )
@@ -28,10 +28,12 @@ export default function CollectionsList({ collections }: { collections?: APIResp
         {
           Array.isArray(collections) && collections.map(c => (
             <Table.Row key={c.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                <Link href={`/collection/${c.id}`}>{c.name}</Link>
+              <Table.Cell className="whitespace-normal font-medium text-gray-900 max-w-[300px] overflow-hidden">
+                <Link className="text-ellipsis hover:underline" href={`/collection/${c.id}`}>
+                  {c.name}
+                </Link>
               </Table.Cell>
-              <Table.Cell>{c.symbol}</Table.Cell>
+              <Table.Cell className="whitespace-normal max-w-[3000px] overflow-hidden">{c.symbol}</Table.Cell>
               <Table.Cell>{parseFloat(formatEther(c.floorPrice)).toFixed(2)} U2U</Table.Cell>
               <Table.Cell>{parseFloat(formatEther(c.volumn)).toFixed(2)} U2U</Table.Cell>
               <Table.Cell>{c.totalNft}</Table.Cell>
