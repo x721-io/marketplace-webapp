@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
@@ -14,6 +14,7 @@ import { formatEther } from 'ethers'
 import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
+import useAuthStore from '@/store/auth/store'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -35,11 +36,14 @@ export default function CollectionPage() {
     }) as APIParams.FetchNFTs),
     { refreshInterval: 30000 }
   )
+
+  const metadata = useMemo(() => data ? JSON.parse(data?.collection.metadata) : {}, [data])
+
   return (
     <div className="w-full relative">
       <BannerSectionCollection
         cover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultCoverPhoto}
-        avatar={data?.collection.avatar ? parseImageUrl(data?.collection.avatar) : defaultAvatar} />
+        avatar={metadata?.image ? parseImageUrl(metadata.image) : defaultAvatar} />
 
       <InformationSectionCollection
         name={data?.collection.name}
@@ -52,7 +56,7 @@ export default function CollectionPage() {
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
         <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />
-        
+
         <NFTsList
           filters={['status', 'price']}
           onApplyFilters={handleApplyFilters}

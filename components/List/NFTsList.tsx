@@ -22,7 +22,7 @@ interface Props {
   onChangePage: (page: number) => void
   paging?: Paging
   traitFilters?: APIResponse.CollectionDetails['traitAvailable']
-  onClose: () => void
+  onClose?: () => void
 }
 
 export default function NFTsList({
@@ -40,8 +40,8 @@ export default function NFTsList({
     return Math.ceil(paging.total / paging.limit)
   }, [paging])
 
-
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 767);
@@ -63,7 +63,7 @@ export default function NFTsList({
       <div className={
         classNames(
           'w-full flex gap-12 mb-7',
-          showFilters ? 'flex-col tablet:flex-row desktop:flex-row' : 'flex-row'
+          showFilters ? 'flex-col tablet:flex-row desktop:flex-row tablet:items-start' : 'flex-row'
         )
       }>
         {

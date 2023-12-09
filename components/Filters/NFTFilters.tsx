@@ -72,19 +72,28 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
               <Radio
-                id="status-all"
+                id="type-all"
                 value=""
-                checked={activeFilters.sellStatus === undefined}
-                onChange={e => handleChange('sellStatus', e)} />
-              <Label htmlFor="status-all">All</Label>
+                checked={activeFilters.type === undefined}
+                onChange={() => handleChange('type', undefined)}
+              />
+              <Label htmlFor="type-all">All</Label>
             </div>
             <div className="flex gap-3 items-center">
               <Radio
-                id="status-buy"
-                value="AskNew"
-                checked={activeFilters.sellStatus === 'AskNew'}
-                onChange={e => handleChange('sellStatus', e)} />
-              <Label htmlFor="type-buy">Buy now</Label>
+                id="type-single"
+                value="ERC721"
+                checked={activeFilters.type === 'ERC721'}
+                onChange={() => handleChange('type', 'ERC721')} />
+              <Label htmlFor="type-single">Single edition</Label>
+            </div>
+            <div className="flex gap-3 items-center">
+              <Radio
+                id="type-multiple"
+                value="ERC1155"
+                checked={activeFilters.type === 'ERC1155'}
+                onChange={() => handleChange('type', 'ERC1155')} />
+              <Label htmlFor="type-multiple">Multiple editions</Label>
             </div>
           </div>
         </Collapsible>
@@ -97,7 +106,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
                 id="status-all"
                 value=""
                 checked={activeFilters.sellStatus === undefined}
-                onChange={e => handleChange('sellStatus', e)} />
+                onChange={() => handleChange('sellStatus', undefined)} />
               <Label htmlFor="status-all">All</Label>
             </div>
             <div className="flex gap-3 items-center">
@@ -105,7 +114,7 @@ export default function NFTFilters({ baseFilters = ['price', 'type', 'status'], 
                 id="status-buy"
                 value="AskNew"
                 checked={activeFilters.sellStatus === 'AskNew'}
-                onChange={e => handleChange('sellStatus', e)} />
+                onChange={() => handleChange('sellStatus', 'AskNew')} />
               <Label htmlFor="type-buy">Buy now</Label>
             </div>
           </div>
