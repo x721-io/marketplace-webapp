@@ -1,15 +1,14 @@
 import { APIResponse } from '@/services/api/types'
-import { useBidNFT, useBidUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useBidUsingNative } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
-import { findTokenByAddress } from '@/utils/token'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { tokens } from '@/config/tokens'
-import { fetchBalance, FetchBalanceResult } from '@wagmi/core'
-import { useAccount } from 'wagmi'
-import { formatEther, formatUnits } from 'ethers'
+import { useAccount, useBalance } from 'wagmi'
+import { formatUnits, parseEther } from 'ethers'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
 
 interface Props {
   onSuccess: () => void
@@ -24,11 +23,46 @@ interface FormState {
 
 export default function BidStep({ onSuccess, onError, nft }: Props) {
   const { address } = useAccount()
-  const [tokenBalance, setTokenBalance] = useState<FetchBalanceResult>()
+  const { data: tokenBalance } = useBalance({
+    address: address,
+    enabled: !!address
+  })
   const token = tokens.wu2u
 
   const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft)
-  const { handleSubmit, watch, register } = useForm<FormState>()
+  const {
+    handleSubmit,
+    watch,
+    register,
+    formState: { errors }
+  } = useForm<FormState>()
+  const formRules = {
+    price: {
+      required: 'Please input bid price',
+      min: { value: 0, message: 'Price cannot be zero' },
+      validate: {
+        isNumber: (v: any) => !isNaN(v) || 'Please input a valid number',
+        balance: (v: any) => {
+          if (!tokenBalance?.value) return 'Not enough balance'
+          if (nft.collection.type === 'ERC1155') {
+            const totalPrice = Number(price) * Number(quantity)
+            const totalPriceBN = parseEther(totalPrice.toString())
+            return totalPriceBN < tokenBalance.value || 'Not enough balance'
+          }
+          const priceBN = parseEther(String(v))
+          return priceBN < tokenBalance.value || 'Not enough balance'
+        },
+      }
+    },
+    quantity: {
+      validate: {
+        required: (v: any) => {
+          if (nft.collection.type === 'ERC721') return true
+          return (!!v && !isNaN(v) && Number(v) > 0) || 'Please input the number of quantity'
+        }
+      }
+    }
+  }
   const [price, quantity] = watch(['price', 'quantity'])
 
   const onSubmit = async ({ price, quantity }: FormState) => {
@@ -47,17 +81,6 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
     if (isSuccess) onSuccess()
   }, [isSuccess])
 
-  useEffect(() => {
-    (async () => {
-      if (!address) return
-      const balance = await fetchBalance({
-        address,
-        // token: quoteToken
-      })
-      setTokenBalance(balance)
-    })()
-  }, [address]);
-
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <Text className="text-center" variant="heading-xs">
@@ -69,8 +92,9 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
           {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
         </label>
         <Input
-          register={register('price')}
-          type="number" />
+          error={!!errors.price}
+          register={register('price', formRules.price)}
+        />
       </div>
 
       <div>
@@ -92,26 +116,25 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
             <div>
               <Text className="text-secondary font-semibold mb-1">Quantity</Text>
               <Input
-                register={register('quantity')}
-                type="number" />
+                type="number"
+                register={register('quantity', formRules.quantity)}
+              />
             </div>
             <div>
               <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
               <Input
                 readOnly
                 value={Number(price) * Number(quantity)}
-                type="number"
                 appendIcon={
                   <Text>
                     U2U
                   </Text>
-                }/>
+                } />
             </div>
           </>
-
         )
       }
-
+      <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Place bid
       </Button>

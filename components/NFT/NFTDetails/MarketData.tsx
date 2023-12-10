@@ -11,6 +11,7 @@ import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
+  const type = nft.collection.type
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
 
   return (
@@ -29,27 +30,35 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         </Text>
 
         <Text className="text-secondary" variant="body-16">
-          Created by <Link href={`/user/${nft.creator.id}`} className="text-primary underline">{nft.creator.username}</Link>
+          Created by <Link href={`/user/${nft.creator.id}`}
+                           className="text-primary underline">{nft.creator.username}</Link>
         </Text>
 
         <div>
           <Text className="text-secondary mb-2" variant="body-16">
-            Owner{nft.collection.type === 'ERC1155' && `(s): ${nft.owners.length}`}
+            Owner{type === 'ERC1155' && `(s): ${nft.owners.length}`}
           </Text>
           {
             nft.owners.map(owner => (
-              <Link
-                className="hover:underline flex items-center gap-2 px-2"
-                href={`/user/${owner.publicKey}`}
-                key={owner.username}>
-                <Image
-                  width={56}
-                  height={56}
-                  className="w-6 h-6 rounded-full"
-                  src={owner.avatar ? parseImageUrl(owner.avatar) : defaultAvatar}
-                  alt="avatar" />
-                {owner.username}
-              </Link>
+              <div className="flex items-center gap-2" key={owner.publicKey}>
+                <Link
+                  className="hover:underline flex items-center gap-1 px-2"
+                  href={`/user/${owner.publicKey}`}>
+                  <Image
+                    width={56}
+                    height={56}
+                    className="w-6 h-6 rounded-full"
+                    src={owner.avatar ? parseImageUrl(owner.avatar) : defaultAvatar}
+                    alt="avatar" />
+                  {owner.username}
+                </Link>
+                {type === 'ERC1155' && (
+                  <>
+                    -
+                    <Text> quantity: {owner.quantity}</Text>
+                  </>
+                )}
+              </div>
             ))
           }
         </div>
@@ -72,23 +81,43 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
       {/* Actions */}
       <div className="bg-surface-soft shadow rounded-2xl p-3">
         <div className="p-4">
-          <Text className="text-secondary mb-2 font-semibold" variant="body-16">
-            Price
-          </Text>
-          {
-            isOnSale ? (
-              <Text variant="heading-md">
-                  <span className="text-primary font-semibold">
-                    {formatUnits(saleData?.price || '0')}
-                  </span>&nbsp;
-                <span className="text-secondary">U2U</span>
+          <div className="flex justify-between items-start">
+            <div>
+              <Text className="text-secondary mb-2 font-semibold" variant="body-16">
+                Price
               </Text>
-            ) : (
-              <Text>
-                # Not for sale
-              </Text>
-            )
-          }
+              {
+                isOnSale ? (
+                  <div className="flex items-start justify-between">
+                    <Text variant="heading-md">
+                      <span className="text-primary font-semibold">
+                        {formatUnits(saleData?.price || '0')}
+                      </span>&nbsp;
+                      <span className="text-secondary">U2U</span>
+                    </Text>
+                  </div>
+                ) : (
+                  <Text>
+                    # Not for sale
+                  </Text>
+                )
+              }
+            </div>
+
+            {
+              type === 'ERC1155' && isOnSale && (
+                <div>
+                  <Text className="text-secondary mb-2 font-semibold text-right" variant="body-16">
+                    Quantity
+                  </Text>
+                  <Text className="text-right" variant="heading-md">
+                    {saleData?.amounts}
+                  </Text>
+                </div>
+              )
+            }
+          </div>
+
         </div>
 
         <NFTActions {...nft} />

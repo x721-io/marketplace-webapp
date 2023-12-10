@@ -126,13 +126,13 @@ export const useSellNFT = (nft: APIResponse.NFT) => {
   const { txStatus, updateHash } = useTransactionStatus()
   const { writeAsync, error: writeError } = useWriteMarketContract(type, 'createAsk')
 
-  const onSellNFT = async (price: string, quoteToken: Address, quantity?: string) => {
+  const onSellNFT = async (price: number, quoteToken: Address, quantity?: number) => {
     const args = [
       nft.collection.address,
       nft.id,
       type === 'ERC1155' && quantity,
       quoteToken,
-      parseEther(price)
+      parseEther(String(price))
     ].filter(Boolean)
     const { hash } = await writeAsync?.({ args })
     updateHash(hash)
@@ -188,7 +188,7 @@ export const useBuyUsingNative = (nft: APIResponse.NFT) => {
     updateHash(hash)
   }
 
-  const onBuyERC1155 = async (operationId: string, price: BigNumberish, quantity: string) => {
+  const onBuyERC1155 = async (operationId: string, price: BigNumberish, quantity: number) => {
     const { hash } = await writeAsync?.({
       args: [operationId, quantity],
       value: BigInt(price) * BigInt(quantity)
@@ -283,7 +283,7 @@ export const useAcceptBidNFT = (nft: APIResponse.NFT) => {
     updateHash(hash)
   }
 
-  const onAcceptERC1155Bid = async (offerId: string, quantity: string) => {
+  const onAcceptERC1155Bid = async (offerId: string, quantity: number) => {
     const { hash } = await writeAsync?.({
       args: [offerId, quantity]
     })

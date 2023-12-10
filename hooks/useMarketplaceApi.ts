@@ -41,6 +41,8 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form)
       },
 
+      createCollection: (params: APIParams.CreateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
+
       updateCollection: (params: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS, params, authHeader),
 
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),

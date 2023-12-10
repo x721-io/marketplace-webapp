@@ -4,6 +4,10 @@ import { ModalProps } from 'flowbite-react'
 import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useAcceptBidNFT } from '@/hooks/useMarket'
 import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import Input from '@/components/Form/Input'
+import { errors } from 'web3'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
 
 interface Props {
   nft: APIResponse.NFT,
@@ -13,17 +17,26 @@ interface Props {
   onClose?: () => void
 }
 
+interface FormState {
+  quantity: number
+}
+
 export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }: Props) {
   const { onAcceptERC721Bid, onAcceptERC1155Bid, isLoading, error, isSuccess } = useAcceptBidNFT(nft)
+  const { handleSubmit, register, formState: { errors } } = useForm<FormState>({
+    defaultValues: {
+      quantity: bid?.amounts ? Number(bid.amounts) : 0
+    }
+  })
   const type = nft.collection.type
 
-  const handleAcceptBid = () => {
+  const onSubmit = ({ quantity }: FormState) => {
     if (!bid) return
     try {
       if (type === 'ERC721') {
         onAcceptERC721Bid(bid.to, bid.quoteToken, bid.price)
       } else {
-        onAcceptERC1155Bid(bid.operationId, bid.amounts)
+        onAcceptERC1155Bid(bid.operationId, quantity)
       }
     } catch (e) {
       console.error(e)
@@ -38,22 +51,47 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
   }, [isSuccess])
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
         {nft.collection.name} - {nft.name}
       </Text>
-      <Text className="text-secondary text-center mb-7" variant="body-18">
-        Are you sure to accept this bid?
-      </Text>
+      {
+        type === 'ERC721' ? (
+          <Text className="text-secondary text-center mb-7" variant="body-18">
+            Are you sure to accept this bid?
+          </Text>
+        ) : (
+          <Input
+            error={!!errors.quantity}
+            type="number"
+            appendIcon={
+              <Text>
+                Available: {bid?.amounts}
+              </Text>
+            }
+            register={
+              register(
+                'quantity',
+                {
+                  validate: {
+                    required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
+                    amount: v => (v <= Number(bid?.amounts)) || 'Quantity cannot exceed bid amount'
+                  }
+                }
+              )}
+          />
+        )
+      }
+      <FormValidationMessages errors={errors} />
 
       <div className="flex gap-4">
         <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={handleAcceptBid} loading={isLoading}>
-          Yes
+        <Button type="submit" loading={isLoading}>
+          Accept bid
         </Button>
       </div>
-    </>
+    </form>
   )
 }

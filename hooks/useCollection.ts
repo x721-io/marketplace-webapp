@@ -5,7 +5,7 @@ import { AssetType } from '@/types'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export const useCreateCollection = () => {
-  const onCreateCollection = async (type: AssetType, args: any[]) => {
+  const onCreateCollectionContract = async (type: AssetType, args: any[]) => {
     if (type === 'ERC721') {
       return writeContract({
         ...contracts.erc721Factory,
@@ -20,13 +20,13 @@ export const useCreateCollection = () => {
     })
   }
 
-  return { onCreateCollection }
+  return { onCreateCollectionContract }
 }
 
 export const useUpdateCollection = () => {
   const api = useMarketplaceApi()
 
-  const onUpdateCollection = (params: APIParams.UpdateCollection) => api.updateCollection(params)
+  const onCreateCollection = (params: APIParams.CreateCollection) => api.createCollection(params)
 
-  return { onUpdateCollection }
+  return { onCreateCollection }
 }

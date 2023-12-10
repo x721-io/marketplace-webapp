@@ -1,13 +1,16 @@
 import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSellNFT } from "@/hooks/useMarket";
 import Button from "@/components/Button";
 import { Address } from 'wagmi'
 import Select from '@/components/Form/Select'
 import { tokenOptions } from '@/config/tokens'
 import { useForm } from 'react-hook-form'
+import useAuthStore from '@/store/auth/store'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { formatUnits } from 'ethers'
 
 interface Props {
   onSuccess: () => void
@@ -16,14 +19,42 @@ interface Props {
 }
 
 interface FormState {
-  price: string
-  quantity: string
+  price: number
+  quantity: number
   quoteToken: Address
 }
 
 export default function ListingStep({ nft, onSuccess, onError }: Props) {
-  const { register, handleSubmit } = useForm<FormState>()
+  const type = nft.collection.type
+  const wallet = useAuthStore(state => state.profile?.publicKey)
+  const ownerData = useMemo(() => {
+    if (!wallet) return undefined
+    return nft.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
+  }, [wallet, nft])
+  const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
+
+  const formRules = {
+    price: {
+      required: 'Please input price',
+      validate: {
+        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number'
+      }
+    },
+    quantity: {
+      validate: {
+        required: (v: number) => {
+          if (type === 'ERC721') return true
+          return (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to sell'
+        },
+        amount: (v: number) => {
+          if (type === 'ERC721') return true
+          if (!ownerData) return 'Quantity exceeds owned amount'
+          return v <= Number(ownerData.quantity) || 'Quantity exceeds owned amount'
+        }
+      }
+    }
+  }
 
   const onSubmit = async ({ price, quoteToken, quantity }: FormState) => {
     try {
@@ -50,8 +81,8 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
-          register={register('price')}
-          type="number" />
+          error={!!errors.price}
+          register={register('price', formRules.price)} />
       </div>
 
       <div>
@@ -67,12 +98,18 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
-              register={register('quantity')}
-              type="number" />
+              error={!!errors.quantity}
+              register={register('quantity', formRules.quantity)}
+              type="number"
+              appendIcon={
+                <Text className="mr-5">
+                  Owned: {ownerData?.quantity}
+                </Text>
+              }/>
           </div>
         )
       }
-
+      <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Put on sale
       </Button>

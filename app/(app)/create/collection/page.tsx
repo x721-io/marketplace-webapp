@@ -39,8 +39,8 @@ export default function CreateNFTCollectionPage() {
   const api = useMarketplaceApi()
   const creator = useAuthStore(state => state.profile?.id)
   const [type, setType] = useState<AssetType>()
-  const { onCreateCollection } = useCreateCollection()
-  const { onUpdateCollection } = useUpdateCollection()
+  const { onCreateCollectionContract } = useCreateCollection()
+  const { onCreateCollection } = useUpdateCollection()
   const {
     handleSubmit,
     register,
@@ -120,10 +120,10 @@ export default function CreateNFTCollectionPage() {
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
-      const tx = await onCreateCollection(type, args)
+      const tx = await onCreateCollectionContract(type, args)
       await Promise.all([
         waitForTransaction({ hash: tx.hash }),
-        onUpdateCollection({
+        onCreateCollection({
           ...metadata,
           txCreationHash: tx.hash,
           creators: creator,
@@ -138,9 +138,9 @@ export default function CreateNFTCollectionPage() {
         autoClose: 5000
       })
       resetForm()
-    } catch (e) {
+    } catch (e: any) {
       toast.update(toastId, {
-        render: `Error creating collection: ${e}`,
+        render: `Error creating collection: ${e.message ?? e}`,
         type: 'error',
         isLoading: false,
         autoClose: 5000

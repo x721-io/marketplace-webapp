@@ -21,7 +21,7 @@ export interface MarketEvent {
   quoteToken: Address
   operationId: string
   amounts: string
-  timestamp: BigNumberish
+  timestamp: number
 }
 
 export namespace APIParams {
@@ -54,6 +54,19 @@ export namespace APIParams {
 
   export interface UpdateCollection {
     coverImage?: string
+  }
+
+  export interface CreateCollection {
+    txCreationHash: Address
+    name: string,
+    symbol: string,
+    description: string,
+    type: AssetType,
+    categoryId?: number,
+    shortUrl: string,
+    metadata?: any,
+    creators: string,
+    avatar?: string,
   }
 
   export interface CreateNFT {
@@ -213,6 +226,7 @@ export namespace APIResponse {
     txCreationHash: string,
     creatorId: string,
     collectionId: string,
+    supply?: string
     creator: {
       avatar: null | string
       email: string | null
@@ -222,9 +236,10 @@ export namespace APIResponse {
     },
     owners: {
       username: string
-      avatar: number
+      avatar: string
       email: string
       publicKey: Address
+      quantity: string
     }[],
     collection: Collection,
     traits: Trait[]

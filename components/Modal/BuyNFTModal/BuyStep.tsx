@@ -1,15 +1,15 @@
 import { APIResponse } from '@/services/api/types'
-import { useBuyNFT, useBuyUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useBuyUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
 import { useForm } from 'react-hook-form'
-import { formatUnits } from 'ethers'
+import { formatEther, formatUnits, parseEther } from 'ethers'
 import { findTokenByAddress } from '@/utils/token'
 import { useEffect, useMemo, useState } from 'react'
-import { fetchBalance, FetchBalanceResult } from '@wagmi/core'
-import { tokens } from '@/config/tokens'
-import { useAccount } from 'wagmi'
+import { useAccount, useBalance } from 'wagmi'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { bigint } from 'zod'
 
 interface Props {
   onSuccess: () => void
@@ -18,18 +18,25 @@ interface Props {
 }
 
 interface FormState {
-  quantity: string
+  quantity: number
 }
 
 export default function BuyStep({ onSuccess, onError, nft }: Props) {
   const { address } = useAccount()
-  const [tokenBalance, setTokenBalance] = useState<FetchBalanceResult>()
+  const { data: tokenBalance } = useBalance({
+    address: address,
+    enabled: !!address
+  })
   const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
-  const { handleSubmit, watch, register } = useForm<FormState>()
+  const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState>()
   const quantity = watch('quantity')
-
   const token = useMemo(() => findTokenByAddress(saleData?.quoteToken), [saleData])
+
+  const totalPriceBN = useMemo(() => {
+    if (!quantity) return BigInt(0)
+    return BigInt(saleData?.price || '0') * BigInt(quantity)
+  }, [quantity])
 
   const onSubmit = async ({ quantity }: FormState) => {
     if (!saleData) return
@@ -52,18 +59,6 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
     if (isSuccess) onSuccess()
   }, [isSuccess])
 
-  useEffect(() => {
-    (async () => {
-      if (!address) return
-
-      const balance = await fetchBalance({
-        address,
-        // token: quoteToken
-      })
-      setTokenBalance(balance)
-    })()
-  }, [address]);
-
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <Text className="text-center" variant="heading-xs">
@@ -73,8 +68,13 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          readOnly
           value={formatUnits(saleData?.price || '0', 18)}
-          type="number" />
+          appendIcon={
+            <Text>
+              Quantity: {saleData?.amounts}
+            </Text>
+          } />
       </div>
 
       <div>
@@ -96,25 +96,36 @@ export default function BuyStep({ onSuccess, onError, nft }: Props) {
             <div>
               <Text className="text-secondary font-semibold mb-1">Quantity</Text>
               <Input
-                register={register('quantity')}
+                error={!!errors.quantity}
+                register={register('quantity', {
+                  validate: {
+                    required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
+                    max: v => v <= Number(saleData?.amounts) || 'Quantity exceeds sale amount',
+                    balance: v => {
+                      if (!tokenBalance?.value) return 'Not enough balance'
+                      const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)
+                      return totalPriceBN < tokenBalance.value || 'Not enough balance'
+                    }
+                  }
+                })}
                 type="number" />
             </div>
             <div>
               <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
               <Input
                 readOnly
-                value={Number(saleData?.price || '0') * Number(quantity)}
+                value={formatEther(totalPriceBN)}
                 type="number"
                 appendIcon={
                   <Text>
                     U2U
                   </Text>
-                }/>
+                } />
             </div>
           </>
         )
       }
-
+      <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Purchase item
       </Button>

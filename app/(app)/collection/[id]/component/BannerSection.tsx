@@ -20,12 +20,11 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
   const coverImageRef = useRef<HTMLInputElement>(null)
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const isOwner = useMemo(() => {
-    if (!creators) return false
+    if (!creators || !wallet) return false
     return creators.some(creator => creator.user.publicKey.toLowerCase() === wallet.toLowerCase()) ?? false
   }, [creators, wallet])
 
   const api = useMarketplaceApi()
-  const { onUpdateCollection } = useUpdateCollection()
 
   const handleInputImage = async (files: FileList | null) => {
     if (!files) return
@@ -33,7 +32,7 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
     try {
       const { fileHashes } = await api.uploadFile(files[0])
 
-      await onUpdateCollection({
+      await api.updateCollection({
         coverImage: fileHashes[0],
       })
       toast.update(toastId, {
