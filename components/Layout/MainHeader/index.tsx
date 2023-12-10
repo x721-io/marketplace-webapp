@@ -26,8 +26,8 @@ export default function MainHeader() {
       <div className="flex flex-wrap items-center justify-between mx-auto py-4">
         <div className="flex items-center gap-6">
           <div className="hidden desktop:block tablet:block">
-            <Link href="/">
-              <Image height={40} src={brandingSvg} alt="u2u-brand" />
+            <Link href="/" className="w-fit">
+              <Image className="h-10 object-contain desktop:w-[248px] tablet:w-fit" height={100} src={brandingSvg} alt="u2u-brand" />
             </Link>
           </div>
           <div className="block tablet:hidden">

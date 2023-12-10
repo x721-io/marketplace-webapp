@@ -13,8 +13,8 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
   const { connect, connectors, pendingConnector, isLoading } = useConnect()
 
   const handleConnect = async (connector: Connector) => {
-    if (!connector.ready) return
     try {
+      while (!connector.ready) {}
       onLogout()
       connect({ connector })
       await sleep(100)
