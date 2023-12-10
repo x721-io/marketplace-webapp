@@ -70,7 +70,8 @@ export namespace APIParams {
   }
 
   export interface CreateNFT {
-    id: Address
+    id: string
+    u2uId: string
     name: string,
     ipfsHash: string,
     imageHash: string,
@@ -211,12 +212,18 @@ export namespace APIResponse {
     }
   }
 
+  export interface GenerateTokenId {
+    u2uId: string
+    id: string
+  }
+
   export interface CreateNFT {
     tokenId: string
   }
 
   export interface NFT {
     id: string
+    u2uId: string
     name: string
     ipfsHash: string
     createdAt: string
@@ -226,7 +233,7 @@ export namespace APIResponse {
     txCreationHash: string,
     creatorId: string,
     collectionId: string,
-    supply?: string
+    totalSupply?: string
     creator: {
       avatar: null | string
       email: string | null

@@ -37,6 +37,8 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         <div>
           <Text className="text-secondary mb-2" variant="body-16">
             Owner{type === 'ERC1155' && `(s): ${nft.owners.length}`}
+            {' '}
+            {type === 'ERC1155' && `Total supply: ${nft.totalSupply}`}
           </Text>
           {
             nft.owners.map(owner => (

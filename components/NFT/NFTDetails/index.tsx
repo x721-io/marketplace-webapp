@@ -15,11 +15,11 @@ import React from 'react'
 
 export default function NFTDetails() {
   const router = useRouter()
-  const { id } = useParams()
+  const { id, collectionAddress } = useParams()
   const api = useMarketplaceApi()
   const { data: item, isLoading, error } = useSWR(
-    `/item/${id}`,
-    () => api.fetchNFTById(id as string),
+    [collectionAddress, id],
+    ([collectionAddress, id]) => api.fetchNFTById(collectionAddress as string, id as string),
     { refreshInterval: 10000 }
   )
   const { data: metaData } = useSWR(

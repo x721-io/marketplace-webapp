@@ -4,7 +4,6 @@ import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
 import { writeContract, waitForTransaction } from '@wagmi/core'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { APIParams } from '@/services/api/types'
 import { parseImageUrl } from '@/utils/nft'
 
 export const useCreateNFT = (type: AssetType) => {
@@ -17,10 +16,11 @@ export const useCreateNFT = (type: AssetType) => {
   const onCreateNFT = async (params: Record<string, any>) => {
     if (!userId || !type) return
 
-    const tokenId = await api.generateTokenId(params.collection)
+    const { id, u2uId } = await api.generateTokenId(params.collection)
+    console.log(u2uId)
 
     const metadata = {
-      id: tokenId,
+      id: id,
       name: params.name,
       description: params.description,
       collectionAddress: params.collection,
@@ -35,14 +35,14 @@ export const useCreateNFT = (type: AssetType) => {
     const tokenURI = "ipfs://" + metadataHash
 
     const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
-      tokenId,
+      u2uId,
       tokenURI,
       supply: params.amount,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: params.royalties }],
       signatures: ["0x"]
     } : {
-      tokenId,
+      u2uId,
       tokenURI,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: params.royalties }],
@@ -63,7 +63,8 @@ export const useCreateNFT = (type: AssetType) => {
     })
 
     const createNFTParams = {
-      id: tokenId,
+      id,
+      u2uId,
       name: params.name,
       ipfsHash: metadataHash,
       tokenUri: tokenURI,
@@ -72,7 +73,7 @@ export const useCreateNFT = (type: AssetType) => {
       imageHash: params.image,
       creatorId: userId,
       traits: params.traits
-    } as APIParams.CreateNFT
+    }
 
     await Promise.all([
       waitForTransaction({ hash: tx.hash }),

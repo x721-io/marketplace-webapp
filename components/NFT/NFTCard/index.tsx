@@ -3,20 +3,19 @@
 import React from "react";
 import Image from "next/image";
 import { APIResponse } from '@/services/api/types'
-import { useRouter } from 'next/navigation'
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
 import { parseImageUrl } from "@/utils/nft";
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import { formatEther } from 'ethers'
+import Link from 'next/link'
 
 export default function NFTCard({ name, id, price, collection, imageHash }: APIResponse.NFT) {
-  const router = useRouter()
 
   return (
-    <div
+    <Link
       key={id}
-      onClick={() => router.push(`/item/${id}`)}
+      href={`/item/${collection.address}/${id}`}
       className="flex flex-col rounded-xl p-2 gap-2"
       style={{ border: '0.7px solid #E3E3E3' }}>
       <Image
@@ -33,6 +32,6 @@ export default function NFTCard({ name, id, price, collection, imageHash }: APIR
       <Text className="text-body-12 px-1 font-normal">
         {price ? formatEther(price) : 0} U2U
       </Text>
-    </div>
+    </Link>
   )
 }

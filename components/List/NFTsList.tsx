@@ -3,11 +3,10 @@ import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
 import { classNames } from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
 import { Pagination } from 'flowbite-react'
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import Text from '@/components/Text'
-import { Modal } from 'flowbite-react'
-import Button from '@/components/Button'
 import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
+import { isMobile } from 'react-device-detect'
 
 interface Paging {
   page?: number
@@ -41,23 +40,6 @@ export default function NFTsList({
     return Math.ceil(paging.total / paging.limit)
   }, [paging])
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 767);
-    };
-
-    if (typeof window !== 'undefined') {
-      handleResize();
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, []);
-
   return (
     <div className="w-full">
       <div className={
@@ -68,13 +50,13 @@ export default function NFTsList({
       }>
         {
           isMobile ? (
-            <MobileFiltersModal
-              show={showFilters}
-              onClose={onClose}
-              baseFilters={filters}
-              onApplyFilters={onApplyFilters}
-              traitsFilter={traitFilters}
-            />
+              <MobileFiltersModal
+                show={showFilters}
+                onClose={onClose}
+                baseFilters={filters}
+                onApplyFilters={onApplyFilters}
+                traitsFilter={traitFilters}
+              />
             ) :
             showFilters && (
               <NFTFilters
