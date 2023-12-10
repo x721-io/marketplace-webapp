@@ -9,7 +9,6 @@ import { findTokenByAddress } from '@/utils/token'
 import { useEffect, useMemo } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
-import { bigint } from 'zod'
 
 interface Props {
   onSuccess: () => void

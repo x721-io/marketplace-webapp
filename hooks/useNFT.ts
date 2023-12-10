@@ -35,20 +35,19 @@ export const useCreateNFT = (type: AssetType) => {
     const tokenURI = "ipfs://" + metadataHash
 
     const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
-      u2uId,
+      tokenId: u2uId,
       tokenURI,
       supply: params.amount,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: params.royalties }],
       signatures: ["0x"]
     } : {
-      u2uId,
+      tokenId: u2uId,
       tokenURI,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: params.royalties }],
       signatures: ["0x"]
     }
-
     const args = [
       tokenArgs,
       address,
@@ -63,8 +62,8 @@ export const useCreateNFT = (type: AssetType) => {
     })
 
     const createNFTParams = {
-      id,
-      u2uId,
+      id: id.toString(),
+      u2uId: BigInt(u2uId),
       name: params.name,
       ipfsHash: metadataHash,
       tokenUri: tokenURI,

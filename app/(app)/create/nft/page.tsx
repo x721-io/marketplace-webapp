@@ -155,7 +155,7 @@ export default function CreateNftPage() {
             return 'Item created successfully'
           }
         },
-        error: { render: error => `Error report: ${error.data}` }
+        error: { render: error => `Error report: ${(error.data as any).message ?? error.data}` }
       })
     } catch (e) {
       console.error(e)
