@@ -24,10 +24,17 @@ export const useExploreSectionFilters = () => {
     return showFilters[routeKey]
   }, [showFilters, routeKey])
 
-  return { isFiltersVisible }
+  const handleToggleFilters = () => {
+    if (!routeKey) return
+    toggleFilter(routeKey)
+  }
+
+  return { isFiltersVisible, routeKey, handleToggleFilters }
 }
 
 export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
+
+
   const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>(defaultState ?? {
     page: 1,
     limit: 20,

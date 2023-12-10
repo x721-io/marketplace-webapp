@@ -3,17 +3,17 @@
 import { Dropdown, Tabs, TabsRef } from 'flowbite-react'
 import Button from '@/components/Button'
 import { usePathname, useRouter } from 'next/navigation'
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import Input from '@/components/Form/Input'
-import { useUIStore } from '@/store/ui/store'
 import SliderIcon from '@/components/Icon/Sliders'
 import CommandIcon from '@/components/Icon/Command'
 import Icon from '@/components/Icon'
+import { useExploreSectionFilters } from '@/hooks/useFilters'
 
 export default function ExploreSectionNavbar() {
-  const router = useRouter()
+  const { handleToggleFilters, isFiltersVisible, routeKey } = useExploreSectionFilters()
   const pathname = usePathname()
-  const { showFilters, toggleFilter } = useUIStore(state => state)
+  const router = useRouter()
   const tabsRef = useRef<TabsRef>(null);
   const tabs = [
     { label: 'NFTs', href: '/explore/items' },
@@ -21,29 +21,8 @@ export default function ExploreSectionNavbar() {
     { label: 'Users', href: '/explore/users' }
   ]
 
-  const routeKey = useMemo(() => {
-    switch (true) {
-      case pathname.includes('collections'):
-        return 'collections'
-      case pathname.includes('items'):
-        return 'nfts'
-      case pathname.includes('users'):
-        return 'profile'
-    }
-  }, [pathname])
-
-  const isFiltersVisible = useMemo(() => {
-    if (!routeKey) return false
-    return showFilters[routeKey]
-  }, [showFilters, routeKey])
-
   const handleChangeTab = (activeTab: number) => {
     return router.push(tabs[activeTab].href)
-  }
-
-  const handleToggleFilters = () => {
-    if (!routeKey) return
-    toggleFilter(routeKey)
   }
 
   return (

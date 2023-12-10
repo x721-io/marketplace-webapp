@@ -23,7 +23,9 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
   const acceptedTerms = useAuthStore(state => state.profile?.acceptedTerms)
   const accessToken = useAuthStore(state => state.credentials?.accessToken)
   const expiredDate = useAuthStore(state => state.credentials?.accessTokenExpire)
-  const isExpired = useMemo(() => expiredDate && expiredDate < new Date().getTime(), [expiredDate])
+  const isExpired = useMemo(() => {
+    return !!expiredDate && expiredDate < Date.now()
+  }, [expiredDate])
 
   const handleConnectWallet = () => {
     if (mode === 'modal') {

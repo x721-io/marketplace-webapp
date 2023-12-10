@@ -10,12 +10,14 @@ import { parseImageUrl } from '@/utils/nft'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import NFTMarketData from '@/components/NFT/NFTDetails/MarketData'
 import Icon from '@/components/Icon'
+import { Spinner } from 'flowbite-react'
+import React from 'react'
 
 export default function NFTDetails() {
   const router = useRouter()
   const { id } = useParams()
   const api = useMarketplaceApi()
-  const { data: item } = useSWR(
+  const { data: item, isLoading, error } = useSWR(
     `/item/${id}`,
     () => api.fetchNFTById(id as string),
     { refreshInterval: 10000 }
@@ -25,6 +27,14 @@ export default function NFTDetails() {
     () => api.getNFTMetaData(item?.tokenUri || ''),
     { refreshInterval: 600000 }
   )
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-96 p-10 flex justify-center items-center">
+        <Spinner size="xl" />
+      </div>
+    )
+  }
 
   if (!item) {
     return (

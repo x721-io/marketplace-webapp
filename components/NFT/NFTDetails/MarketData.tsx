@@ -7,7 +7,8 @@ import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 import { parseImageUrl } from '@/utils/nft'
-import defaultImg from '@/assets/images/default-cover-photo.png'
+import defaultAvatar from '@/assets/images/default-avatar-user.png'
+import Link from 'next/link'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
@@ -28,8 +29,30 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         </Text>
 
         <Text className="text-secondary" variant="body-16">
-          Created by <span className="text-primary underline">{nft.creator.username}</span>
+          Created by <Link href={`/user/${nft.creator.id}`} className="text-primary underline">{nft.creator.username}</Link>
         </Text>
+
+        <div>
+          <Text className="text-secondary mb-2" variant="body-16">
+            Owner{nft.collection.type === 'ERC1155' && `(s): ${nft.owners.length}`}
+          </Text>
+          {
+            nft.owners.map(owner => (
+              <Link
+                className="hover:underline flex items-center gap-2 px-2"
+                href={`/user/${owner.publicKey}`}
+                key={owner.username}>
+                <Image
+                  width={56}
+                  height={56}
+                  className="w-6 h-6 rounded-full"
+                  src={owner.avatar ? parseImageUrl(owner.avatar) : defaultAvatar}
+                  alt="avatar" />
+                {owner.username}
+              </Link>
+            ))
+          }
+        </div>
       </div>
 
       <div className="inline-flex gap-3">

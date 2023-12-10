@@ -37,7 +37,11 @@ export default function CollectionPage() {
     { refreshInterval: 30000 }
   )
 
-  const metadata = useMemo(() => data ? JSON.parse(data?.collection.metadata) : {}, [data])
+  const metadata = useMemo(() => {
+    if (!data?.collection.metadata) return {}
+    if (typeof data.collection.metadata !== 'string') return data.collection.metadata
+    return JSON.parse(data?.collection.metadata)
+  }, [data])
 
   if (isLoading) {
     return (

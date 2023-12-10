@@ -171,7 +171,7 @@ export namespace APIResponse {
     categoryId: number | null
     createdAt: string
     updatedAt: string
-    metadata: Record<string, any>
+    metadata: Record<string, any> | string
     shortUrl: string | null
     status: Status
     type: AssetType

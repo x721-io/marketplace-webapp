@@ -1,13 +1,14 @@
 import { Table } from 'flowbite-react'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import useAuthStore from '@/store/auth/store'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { Address } from 'wagmi'
+import Text from '@/components/Text'
 
 export default function Activities({ wallet }: { wallet: Address }) {
   const api = useMarketplaceApi()
@@ -19,6 +20,14 @@ export default function Activities({ wallet }: { wallet: Address }) {
     ({ wallet, page, limit }) => api.fetchNFTEvents({ page, limit, or: [{ from: wallet }, { to: wallet }] }),
     { refreshInterval: 300000 }
   )
+
+  if (!data?.length) {
+    return (
+      <div className="p-7 rounded-2xl border border-disabled border-dashed mt-7">
+        <Text className="text-secondary text-center text-sm">Nothing to show</Text>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full py-7 overflow-x-auto">

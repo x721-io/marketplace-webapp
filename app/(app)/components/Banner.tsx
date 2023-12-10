@@ -48,30 +48,35 @@ export default function HomePageBanner() {
               className="rounded-tl-xl rounded-tr-xl object-cover"
               src={defaultSlider1}
               alt="Cover"
+              width={500}
               style={{ width: '100%', height: '100%' }}
             />
             <Image
               className="rounded-tl-xl rounded-tr-xl object-cover"
               src={defaultSlider2}
               alt="Cover"
+              width={500}
               style={{ width: '100%', height: '100%' }}
             />
             <Image
               className="rounded-tl-xl rounded-tr-xl object-cover"
               src={defaultSlider3}
               alt="Cover"
+              width={500}
               style={{ width: '100%', height: '100%' }}
             />
             <Image
               className="rounded-tl-xl rounded-tr-xl object-cover"
               src={defaultSlider4}
               alt="Cover"
+              width={500}
               style={{ width: '100%', height: '100%' }}
             />
             <Image
               className="rounded-tl-xl rounded-tr-xl object-cover"
               src={defaultSlider5}
               alt="Cover"
+              width={500}
               style={{ width: '100%', height: '100%' }}
             />
           </Carousel>

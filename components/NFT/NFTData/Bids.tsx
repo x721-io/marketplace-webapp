@@ -1,12 +1,13 @@
 import { Table } from 'flowbite-react'
 import { APIResponse, MarketEvent } from '@/services/api/types'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import { format } from 'date-fns'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import Button from '@/components/Button'
 import AcceptBidNFTModal from '@/components/Modal/AcceptBidNFTModal'
+import Text from '@/components/Text'
 
 export default function BidsTab({ nft }: { nft: APIResponse.NFT }) {
   const { isOwner } = useNFTMarketStatus(nft)
@@ -19,6 +20,12 @@ export default function BidsTab({ nft }: { nft: APIResponse.NFT }) {
     setSelectedBid(bid)
     setShowAcceptBid(true)
   }
+
+  if (!bids.length) return (
+    <div className="p-7 rounded-2xl border border-disabled border-dashed mt-7">
+      <Text className="text-secondary text-center text-sm">Nothing to show</Text>
+    </div>
+  )
 
   return (
     <div className="py-7 overflow-x-auto">

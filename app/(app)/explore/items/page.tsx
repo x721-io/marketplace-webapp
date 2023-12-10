@@ -9,7 +9,7 @@ import { sanitizeObject } from '@/utils'
 
 export default function ExploreNFTsPage() {
   const api = useMarketplaceApi()
-  const { isFiltersVisible } = useExploreSectionFilters()
+  const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
 
   const { data, isLoading } = useSWR(
@@ -25,6 +25,7 @@ export default function ExploreNFTsPage() {
       showFilters={isFiltersVisible}
       items={data?.data}
       paging={data?.paging}
+      onClose={handleToggleFilters}
     />
   )
 }

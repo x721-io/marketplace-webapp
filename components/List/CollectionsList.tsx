@@ -8,7 +8,7 @@ import React from 'react'
 export default function CollectionsList({ collections }: { collections?: APIResponse.Collection[] }) {
   if (!collections || !collections.length) {
     return (
-      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed mt-7">
         <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
       </div>
     )

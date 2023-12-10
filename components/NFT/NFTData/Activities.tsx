@@ -1,12 +1,13 @@
 import { Table } from 'flowbite-react'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
 import { APIResponse } from '@/services/api/types'
 import { format } from 'date-fns'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
+import Text from '@/components/Text'
 
 export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
   const api = useMarketplaceApi()
@@ -18,6 +19,14 @@ export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
     () => api.fetchNFTEvents({ page, limit, and: [{ nftId: nft.id }] }),
     { refreshInterval: 300000 }
   )
+
+  if (!data?.length) {
+    return (
+      <div className="p-7 rounded-2xl border border-disabled border-dashed mt-7">
+        <Text className="text-secondary text-center text-sm">Nothing to show</Text>
+      </div>
+    )
+  }
 
   return (
     <div className="py-7 overflow-x-auto">
