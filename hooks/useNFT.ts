@@ -17,7 +17,6 @@ export const useCreateNFT = (type: AssetType) => {
     if (!userId || !type) return
 
     const { id, u2uId } = await api.generateTokenId(params.collection)
-    console.log(u2uId)
 
     const metadata = {
       id: id,

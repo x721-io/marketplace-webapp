@@ -56,7 +56,7 @@ export default function CollectionCard({ collection, ...rest }: Props) {
         <div>
           <Text className="text-secondary mb-2">Owner</Text>
           <Text className="text-primary font-semibold" variant="body-16">
-            {collection.creators[0]?.username}
+            {collection.creators[0]?.user.username}
           </Text>
         </div>
 

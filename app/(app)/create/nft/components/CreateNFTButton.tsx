@@ -13,7 +13,7 @@ interface Props extends ButtonProps {
 }
 
 export default function CreateNFTButton({ disabled, collection, assetType }: Props) {
-  const { onCreateNFT } = useCreateNFT(collection, assetType)
+  const { onCreateNFT } = useCreateNFT(assetType)
   const { getValues } = useFormContext<CreateNFTForm>()
 
   const handleSubmit = async () => {
@@ -26,7 +26,7 @@ export default function CreateNFTButton({ disabled, collection, assetType }: Pro
     const { collection, ...rest } = data
 
     try {
-      await onCreateNFT(assetType, rest, toastId)
+      await onCreateNFT(data)
     } catch (e) {
       toast.update(toastId, { render: `Error Minting item: ${e}`, type: 'error', isLoading: false, autoClose: 5000 })
       console.error(e)

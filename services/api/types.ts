@@ -192,6 +192,10 @@ export namespace APIResponse {
     creators: { userId: string, user: User }[]
     coverImage: string | null
     avatar: string | null
+    volumn: string
+    totalOwner: number
+    totalNft: number
+    floorPrice: string
   }
 
   export interface CollectionDetails {
@@ -210,6 +214,11 @@ export namespace APIResponse {
       totalNft: number
       floorPrice: string
     }
+  }
+
+  export interface CollectionsData {
+    data: Collection[],
+    paging: Pagination
   }
 
   export interface GenerateTokenId {
