@@ -64,6 +64,7 @@ export default function CollectionPage() {
   return (
     <div className="w-full relative">
       <BannerSectionCollection
+        collectionId={data.collection.id}
         creators={data?.collection?.creators}
         cover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultCoverPhoto}
         avatar={metadata?.image ? parseImageUrl(metadata.image) : defaultAvatar} />

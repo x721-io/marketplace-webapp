@@ -9,14 +9,17 @@ import { parseImageUrl } from '@/utils/nft'
 import { toast } from 'react-toastify'
 import useAuthStore from '@/store/auth/store'
 import { APIResponse } from '@/services/api/types'
+import { useAuth } from '@/hooks/useAuth'
 
 interface Props {
   cover: string | StaticImageData
   avatar: string | StaticImageData
   creators?: APIResponse.CollectionDetails['collection']['creators']
+  collectionId: string
 }
 
-export default function BannerSectionCollection({ cover, avatar, creators }: Props) {
+export default function BannerSectionCollection({ collectionId, cover, avatar, creators }: Props) {
+  const { isLoggedIn } = useAuth()
   const coverImageRef = useRef<HTMLInputElement>(null)
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const isOwner = useMemo(() => {
@@ -33,7 +36,8 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
       const { fileHashes } = await api.uploadFile(files[0])
 
       await api.updateCollection({
-        coverImage: fileHashes[0],
+        id: collectionId,
+        coverImage: fileHashes[0]
       })
       toast.update(toastId, {
         render: 'Cover image updated successfully',
@@ -68,7 +72,7 @@ export default function BannerSectionCollection({ cover, avatar, creators }: Pro
       </div>
 
       {
-        isOwner && (
+        isOwner && isLoggedIn && (
           <div className="absolute right-2 top-2 bg-button-secondary rounded-xl w-12 h-12">
             <div className="absolute top-[33%] left-[31%]">
               <UploadIcon width={16} height={16} />

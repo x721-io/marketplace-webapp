@@ -53,7 +53,8 @@ export namespace APIParams {
   }
 
   export interface UpdateCollection {
-    coverImage?: string
+    coverImage: string
+    id: string
   }
 
   export interface CreateCollection {
