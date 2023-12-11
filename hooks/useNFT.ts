@@ -32,19 +32,20 @@ export const useCreateNFT = (type: AssetType) => {
     const { metadataHash } = await api.uploadMetadata(metadata)
 
     const tokenURI = "ipfs://" + metadataHash
+    const royalties = Number(params.royalties) * 100
 
     const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
       tokenId: BigInt(u2uId),
       tokenURI,
       supply: params.amount,
       creators: [{ account: address, value: 10000 }],
-      royalties: [{ account: address, value: params.royalties }],
+      royalties: [{ account: address, value: royalties }],
       signatures: ["0x"]
     } : {
       tokenId: BigInt(u2uId),
       tokenURI,
       creators: [{ account: address, value: 10000 }],
-      royalties: [{ account: address, value: params.royalties }],
+      royalties: [{ account: address, value: royalties }],
       signatures: ["0x"]
     }
     const args = [
