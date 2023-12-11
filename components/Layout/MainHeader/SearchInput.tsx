@@ -31,9 +31,19 @@ export default function SearchInput() {
     }
   }, [activeTab])
 
-  const { data, isLoading } = useSWR(
-    !!text ? [text, mode] : null,
-    ([text, mode]) => api.search({ text, mode }),
+  const { data: collectionSearchData, isLoading: searchingCollection } = useSWR(
+    (!!text && mode === 'COLLECTION') ? text : null,
+    (text) => api.searchCollections(text),
+    { revalidateOnFocus: false }
+  )
+  const { data: nftSearchData, isLoading: searchingNFT } = useSWR(
+    (!!text && mode === 'NFT') ? text : null,
+    (text) => api.searchNFTs(text),
+    { revalidateOnFocus: false }
+  )
+  const { data: userSearchData, isLoading: searchingUser } = useSWR(
+    (!!text && mode === 'USER') ? text : null,
+    (text) => api.searchUsers(text),
     { revalidateOnFocus: false }
   )
 
@@ -82,13 +92,13 @@ export default function SearchInput() {
             renderDropdown={onclose => (
               <Tabs.Group style="underline" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
                 <Tabs.Item title="Collections">
-                  <SearchCollectionTab loading={isLoading} data={data} onClose={onclose} />
+                  <SearchCollectionTab loading={searchingCollection} data={collectionSearchData} onClose={onclose} />
                 </Tabs.Item>
                 <Tabs.Item title="NFTs">
-                  <SearchNFTTab loading={isLoading} data={data} onClose={onclose} />
+                  <SearchNFTTab loading={searchingNFT} data={nftSearchData} onClose={onclose} />
                 </Tabs.Item>
                 <Tabs.Item title="Users">
-                  <SearchUserTab loading={isLoading} data={data} onClose={onclose} />
+                  <SearchUserTab loading={searchingUser} data={userSearchData} onClose={onclose} />
                 </Tabs.Item>
               </Tabs.Group>
             )}

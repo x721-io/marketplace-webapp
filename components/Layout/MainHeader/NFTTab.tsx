@@ -32,7 +32,7 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
       {data.slice(0, 100).map(nft => (
         <Link
           onClick={onClose}
-          href={`/item/${nft.collectionId}/${nft.id}`}
+          href={`/item/${nft.collection?.address}/${nft.id}`}
           key={nft.id}
           className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1  opacity-60 hover:opacity-100 transition-opacity">
           <div className="flex flex-1 items-center gap-2">

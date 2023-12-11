@@ -67,7 +67,7 @@ export default function BannerSectionCollection({ collectionId, cover, avatar, c
         <Image
           src={avatar}
           alt="user-detail-bg"
-          width={120} height={120}
+          width={1440} height={220}
           className="rounded-2xl" />
       </div>
 

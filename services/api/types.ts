@@ -312,6 +312,7 @@ export namespace APIResponse {
     txCreationHash: string,
     creatorId: string,
     collectionId: string
+    collection: Collection
   }[]
 
   export type SearchCollections = {

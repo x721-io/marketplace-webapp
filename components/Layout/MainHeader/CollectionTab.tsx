@@ -44,7 +44,7 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
                   width={40}
                   height={40}
                   src={parseImageUrl(metadata?.image)}
-                  alt="Collection Image" />
+                  alt="Image" />
                 <div>
                   <Text className="font-semibold text-primary mb-1" variant="body-12">
                     {collection.name}
