@@ -40,7 +40,7 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
               className="w-12 h-12 rounded-xl object-cover"
               width={40}
               height={40}
-              src={parseImageUrl(nft.imageHash)}
+              src={parseImageUrl(nft.image)}
               alt="NFT Image" />
             <Text className="font-semibold text-primary" variant="body-12">
               {nft.name}

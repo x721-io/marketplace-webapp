@@ -10,7 +10,7 @@ import defaultImg from '@/assets/images/default-cover-photo.png'
 import { formatEther } from 'ethers'
 import Link from 'next/link'
 
-export default function NFTCard({ name, id, price, collection, imageHash }: APIResponse.NFT) {
+export default function NFTCard({ name, id, price, collection, image }: APIResponse.NFT) {
 
   return (
     <Link
@@ -20,7 +20,7 @@ export default function NFTCard({ name, id, price, collection, imageHash }: APIR
       style={{ border: '0.7px solid #E3E3E3' }}>
       <Image
         className="cursor-pointer rounded-xl object-cover w-full h-[220px]"
-        src={imageHash ? parseImageUrl(imageHash) : defaultImg}
+        src={image || defaultImg}
         alt="image"
         width={220} height={220}
       />

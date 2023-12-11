@@ -59,7 +59,7 @@ export default function NFTDetails() {
 
         <div className="">
           <Image
-            src={item.imageHash ? parseImageUrl(item.imageHash) : defaultImg}
+            src={item.image ? parseImageUrl(item.image) : defaultImg}
             alt=""
             width={512}
             height={512}

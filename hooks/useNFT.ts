@@ -69,7 +69,7 @@ export const useCreateNFT = (type: AssetType) => {
       tokenUri: tokenURI,
       collectionId: params.collection,
       txCreationHash: tx.hash,
-      imageHash: params.image,
+      image: params.image,
       creatorId: userId,
       traits: params.traits
     }

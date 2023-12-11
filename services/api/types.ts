@@ -75,7 +75,7 @@ export namespace APIParams {
     u2uId: string
     name: string,
     ipfsHash: string,
-    imageHash: string,
+    image: string,
     tokenUri: string,
     collectionId: string,
     txCreationHash: string,
@@ -262,7 +262,7 @@ export namespace APIResponse {
     traits: Trait[]
     sellInfo: MarketEvent[]
     bidInfo: MarketEvent[]
-    imageHash: string
+    image: string
     price?: BigNumberish
     sellStatus?: MarketEventType
   }
@@ -304,7 +304,7 @@ export namespace APIResponse {
     id: string,
     name: string,
     ipfsHash: string,
-    imageHash: string,
+    image: string,
     createdAt: string,
     updatedAt: string,
     status: Status,
