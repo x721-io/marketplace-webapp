@@ -42,7 +42,7 @@ export const useCreateNFT = (type: AssetType) => {
       royalties: [{ account: address, value: royalties }],
       signatures: ["0x"]
     } : {
-      tokenId: BigInt(u2uId),
+      tokenId: BigInt(u2uId).toString(),
       tokenURI,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: royalties }],
@@ -63,7 +63,7 @@ export const useCreateNFT = (type: AssetType) => {
 
     const createNFTParams = {
       id: id.toString(),
-      u2uId: BigInt(u2uId),
+      u2uId: BigInt(u2uId).toString(),
       name: params.name,
       ipfsHash: metadataHash,
       tokenUri: tokenURI,

@@ -72,7 +72,7 @@ export namespace APIParams {
 
   export interface CreateNFT {
     id: string
-    u2uId: BigInt
+    u2uId: string
     name: string,
     ipfsHash: string,
     imageHash: string,
