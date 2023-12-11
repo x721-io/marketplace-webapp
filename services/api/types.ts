@@ -75,7 +75,7 @@ export namespace APIParams {
     u2uId: string
     name: string,
     ipfsHash: string,
-    image: string,
+    // image: string,
     tokenUri: string,
     collectionId: string,
     txCreationHash: string,
