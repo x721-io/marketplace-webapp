@@ -129,7 +129,7 @@ export const useSellNFT = (nft: APIResponse.NFT) => {
   const onSellNFT = async (price: number, quoteToken: Address, quantity?: number) => {
     const args = [
       nft.collection.address,
-      nft.id,
+      nft.u2uId ?? nft.id,
       type === 'ERC1155' && quantity,
       quoteToken,
       parseEther(String(price))
@@ -147,7 +147,7 @@ export const useCancelSellNFT = (nft: APIResponse.NFT) => {
   const { writeAsync, error: writeError } = useWriteMarketContract(type, 'cancelAsk')
 
   const onCancelSell = async (operationId?: string) => {
-    const args = type === 'ERC721' ? [nft.collection.address, nft.id] : [operationId]
+    const args = type === 'ERC721' ? [nft.collection.address, nft.u2uId ?? nft.id] : [operationId]
     const { hash } = await writeAsync?.({ args })
     updateHash(hash)
   }
@@ -161,7 +161,7 @@ export const useBuyNFT = (nft: APIResponse.NFT) => {
 
   const onBuyERC721 = async (quoteToken: Address, price: BigNumberish) => {
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.id, quoteToken, price, FINGERPRINT]
+      args: [nft.collection.address, nft.u2uId ?? nft.id, quoteToken, price, FINGERPRINT]
     })
     updateHash(hash)
   }
@@ -182,7 +182,7 @@ export const useBuyUsingNative = (nft: APIResponse.NFT) => {
 
   const onBuyERC721 = async (price: BigNumberish) => {
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.id, FINGERPRINT],
+      args: [nft.collection.address, nft.u2uId ?? nft.id, FINGERPRINT],
       value: BigInt(price)
     })
     updateHash(hash)
@@ -210,7 +210,7 @@ export const useBidNFT = (nft: APIResponse.NFT) => {
   const onBidNFT = async (price: string, quoteToken: Address, quantity?: string) => {
     const args = [
       nft.collection.address,
-      nft.id,
+      nft.u2uId ?? nft.id,
       type === 'ERC1155' && quantity,
       quoteToken,
       parseEther(price)
@@ -233,11 +233,11 @@ export const useBidUsingNative = (nft: APIResponse.NFT) => {
   const onBidUsingNative = async (price: string, quantity?: string) => {
     const args = type === 'ERC721' ? [
       nft.collection.address,
-      nft.id,
+      nft.u2uId ?? nft.id,
       FINGERPRINT
     ] : [
       nft.collection.address,
-      nft.id,
+      nft.u2uId ?? nft.id,
       quantity,
       parseEther(price)
     ]
@@ -260,7 +260,7 @@ export const useCancelBidNFT = (nft: APIResponse.NFT) => {
   } = useWriteMarketContract(type, type === 'ERC721' ? 'cancelBid' : 'cancelOffer')
 
   const onCancelBid = async (operationId?: string) => {
-    const args = type === 'ERC721' ? [nft.collection.address, nft.id] : [operationId]
+    const args = type === 'ERC721' ? [nft.collection.address, nft.u2uId ?? nft.id] : [operationId]
     const { hash } = await writeAsync?.({ args })
     updateHash(hash)
   }
@@ -278,7 +278,7 @@ export const useAcceptBidNFT = (nft: APIResponse.NFT) => {
 
   const onAcceptERC721Bid = async (bidder: Address, quoteToken: Address, price: BigNumberish) => {
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.id, bidder, quoteToken, price]
+      args: [nft.collection.address, nft.u2uId ?? nft.id, bidder, quoteToken, price]
     })
     updateHash(hash)
   }
