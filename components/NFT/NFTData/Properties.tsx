@@ -6,25 +6,26 @@ export default function PropertiesTab({ metaData }: { metaData?: APIResponse.NFT
   return (
     <div className="flex flex-col gap-4 py-7">
       {
-        metaData?.data.traits?.length ? (
+        metaData?.data.attributes?.length ? (
           <>
             <div className="flex items-center">
               <div className="flex-1">
                 <Text className="text-secondary font-bold">Name</Text>
               </div>
               <div className="flex-1">
-                <Text className="text-secondary font-bold">Rarity</Text>
+                <Text className="text-secondary font-bold">Value</Text>
               </div>
             </div>
             {
-              Array.isArray(metaData?.data.traits) && metaData?.data.traits.map(trait => (
+              Array.isArray(metaData?.data.attributes) && metaData?.data.attributes.map(trait => (
                 <div key={trait.trait_type} className="flex items-center p-3 rounded-2xl border border-tertiary">
                   <div className="flex-1">
                     <Text className="text-secondary font-bold mb-1">{trait.trait_type}</Text>
-                    <Text className="text-body-16 font-bold">{trait.value}</Text>
+                    {/*<Text className="text-body-16 font-bold">{trait.value}</Text>*/}
                   </div>
                   <div className="flex-1">
-                    <Text className="text-body-16 font-bold">5%</Text>
+                    <Text className="text-body-16 font-bold">{trait.value}</Text>
+                    {/*<Text className="text-body-16 font-bold">5%</Text>*/}
                   </div>
                 </div>
               ))
