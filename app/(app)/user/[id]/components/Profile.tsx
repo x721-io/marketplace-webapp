@@ -34,9 +34,9 @@ export default function Profile({ id, username, bio, avatar, coverImage }: APIRe
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-14">
         <div className="">
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-2 justify-between">
+            <div className="flex items-center gap-2">
               <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">{username}</Text>
-              {<Icon name="verified" width={24} height={24} />}
+              <Icon name="verified" width={24} height={24} />
             </div>
             <div>
               <Text className="text-secondary text-sm">{bio ? bio : 'Nothing to show'}</Text>
@@ -52,9 +52,9 @@ export default function Profile({ id, username, bio, avatar, coverImage }: APIRe
             }
           </div>
         </div>
-        <button className="bg-button-secondary h-10 w-10 rounded-xl flex justify-center items-center ">
+        {/* <button className="bg-button-secondary h-10 w-10 rounded-xl flex justify-center items-center ">
           <Icon name="moreVertical" width={20} height={20} />
-        </button>
+        </button> */}
       </div>
     </div>
   )
