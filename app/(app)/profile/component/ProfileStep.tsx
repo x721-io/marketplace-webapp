@@ -11,7 +11,6 @@ import { useAuth } from '@/hooks/useAuth'
 
 interface ProfileFormState {
   bio: string
-  email: string
   username: string
   shortLink: string
   twitterLink: string
@@ -19,23 +18,22 @@ interface ProfileFormState {
   facebookLink: string
   telegram: string
   discord: string
-  avatar: string
-  coverImage: string
 }
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
 
-  const { handleSubmit, register, formState: { isDirty,  } } = useForm<ProfileFormState>({
+  const { handleSubmit, register, formState: { isDirty } } = useForm<ProfileFormState>({
     defaultValues: profile || {
       bio: '',
+      shortLink: '',
       username: '',
       twitterLink: '',
       webURL: '',
       facebookLink: '',
       telegram: '',
-      discord: '',
+      discord: ''
     }
   })
 
@@ -62,21 +60,21 @@ export default function ProfileStep() {
       <div className="flex gap-8 mb-8">
         <div className="desktop:mt-5 tablet:mt-5 mt-7 flex gap-8 w-full flex-col">
           <div>
-            <label className="block mb-2 font-semibold text-primary">Display name</label>
+            <label className="block mb-2 font-semibold text-primary">Username</label>
             <Input
               type="text"
               register={register('username')}
             />
           </div>
           <div>
-            <label className="block mb-2 text-base font-semibold text-primary">Username</label>
+            <label className="block mb-2 text-base font-semibold text-primary">Short link</label>
             <Input
               prependIcon="@"
-              placeholder="Your username"
+              placeholder="shorlink"
               register={register('shortLink')}
             />
             <Text className="text-tertiary mt-1" variant="body-12">
-              Your profile will be available on https://marketplace.uniultra.xyz/user/[username]
+              Your profile will be available on https://marketplace.uniultra.xyz/user/[shortLink]
             </Text>
           </div>
           <div>
