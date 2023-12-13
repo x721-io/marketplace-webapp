@@ -71,7 +71,7 @@ export const useMarketplaceApi = () => {
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
       /** GET **/
-      fetchCollections: (): Promise<APIResponse.CollectionsData> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS),
+      fetchCollections: ({limit, page}: APIParams.FetchCollections): Promise<APIResponse.CollectionsData> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `?limit=${limit}&page=${page}`),
 
       fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
