@@ -43,7 +43,8 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
     creatorAddress: undefined,
     priceMax: undefined,
     priceMin: undefined,
-    sellStatus: undefined
+    sellStatus: undefined,
+    owner: undefined,
   })
 
   const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.FetchNFTs) => {

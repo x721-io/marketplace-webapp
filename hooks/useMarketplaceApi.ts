@@ -77,7 +77,7 @@ export const useMarketplaceApi = () => {
 
       fetchCollectionsByUser: async (userId: string): Promise<APIResponse.Collection[]> => {
         const data: any = await marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}`)
-        return (data) ? data['nftCollection'].map((item: any) => item.collection) as APIResponse.Collection[] : []
+        return (data) ? data as APIResponse.Collection[] : []
       },
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
