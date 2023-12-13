@@ -19,7 +19,8 @@ export default function OwnedNFTs({ wallet }: { wallet: Address }) {
     limit: 20,
     traits: undefined,
     collectionAddress: undefined,
-    creatorAddress: wallet,
+    creatorAddress: undefined,
+    owner: wallet,
     priceMax: undefined,
     priceMin: undefined,
     sellStatus: undefined
