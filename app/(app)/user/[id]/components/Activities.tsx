@@ -2,7 +2,6 @@ import { Table } from 'flowbite-react'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
 import React, { useState } from 'react'
-import useAuthStore from '@/store/auth/store'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
@@ -45,7 +44,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
           {
             Array.isArray(data) && data.map(row => {
               if (!row.nftId) {
-                return;
+                return null
               }
               const token = findTokenByAddress(row.quoteToken)
               console.log(data)
