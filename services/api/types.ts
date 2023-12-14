@@ -87,6 +87,10 @@ export namespace APIParams {
 
   }
 
+  export interface FetchCollections extends PaginationParams {
+
+  }
+
   export interface FetchNFTs extends PaginationParams {
     traits?: { trait_type: string, value: any }[]
     type?: AssetType
