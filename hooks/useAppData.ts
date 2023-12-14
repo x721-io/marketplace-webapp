@@ -13,13 +13,13 @@ export const useUpdateAppData = () => {
 
   const { data: collectionsData, error, isLoading } = useSWR(
     !!userId ? 'true' : null,
-    () => api.fetchCollectionsByUser(userId as string),
+    () => api.fetchCollectionsByUser(userId as string,{ page: 1, limit: 10 }, true),
     { refreshInterval: 3600 * 1000 }
   )
 
   useEffect(() => {
     if (userId && collectionsData) {
-      setCollection(userId, collectionsData)
+      setCollection(userId, collectionsData?.data)
     }
   }, [userId, collectionsData])
 }

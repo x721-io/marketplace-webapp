@@ -42,7 +42,7 @@ export default function CreateNftPage() {
   const userId = useAuthStore(state => state.credentials?.userId)
   const { data, error, isLoading } = useSWR(
     !!userId ? 'my-collections' : null,
-    () => api.fetchCollectionsByUser(userId as string),
+    () => api.fetchCollectionsByUser(userId as string,{ page: 1, limit: 10 }, true),
     { refreshInterval: 3600 * 1000 }
   )
   const {
@@ -86,7 +86,7 @@ export default function CreateNftPage() {
   }
 
   const collectionOptions = useMemo(() => {
-    const collections = data?.map(c => ({
+    const collections = data?.data.map(c => ({
       label: c.name ?? c.id, value: c.address, type: c.type
     })) || []
     return collections.filter(c => c.type === type)

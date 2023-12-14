@@ -75,9 +75,9 @@ export const useMarketplaceApi = () => {
 
       fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
-      fetchCollectionsByUser: async (userId: string): Promise<APIResponse.Collection[]> => {
-        const data: any = await marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}`)
-        return (data) ? data as APIResponse.Collection[] : []
+      fetchCollectionsByUser: async (userId: string, {limit, page}: APIParams.FetchCollectionById, hasBase: boolean): Promise<APIResponse.CollectionsData> => {
+        const data: any = await marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}?limit=${limit}&page=${page}&hasBase=${hasBase}`)
+        return data 
       },
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
