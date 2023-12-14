@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import useAuthStore from '@/store/auth/store'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks/useAuth'
+import { urlRegex } from '@/utils/regex';
+import FormValidationMessages from '@/components/Form/ValidationMessages';
 
 interface ProfileFormState {
   bio: string
@@ -24,7 +26,7 @@ export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
 
-  const { handleSubmit, register, formState: { isDirty } } = useForm<ProfileFormState>({
+  const { handleSubmit, register, formState: { isDirty, errors } } = useForm<ProfileFormState>({
     defaultValues: profile || {
       bio: '',
       shortLink: '',
@@ -96,7 +98,10 @@ export default function ProfileStep() {
             <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
             <Input
               placeholder="https://"
-              register={register('webURL')}
+              error={!!errors.webURL}
+              register={register('webURL', {
+                pattern: { value: urlRegex, message: 'Invalid web url address' }
+              })}
               className="console.error"
             />
           </div>
@@ -105,18 +110,25 @@ export default function ProfileStep() {
             <Input
               prependIcon={<Icon name="circle" />}
               placeholder="https://twitter.com/[your-twitter-username]"
-              register={register('twitterLink')}
+              error={!!errors.twitterLink}
+              register={register('twitterLink', {
+                pattern: { value: urlRegex, message: 'Invalid twitter url address' }
+              })}
             />
           </div>
           <div>
             <label className="block mb-2 text-base font-semibold text-primary">Facebook</label>
             <Input
               placeholder="https://www.facebook.com/[your-facebook-username]"
-              register={register('facebookLink')}
+              error={!!errors.facebookLink}
+              register={register('facebookLink', {
+                pattern: { value: urlRegex, message: 'Invalid facebook url address' }
+              })}
             />
           </div>
         </div>
       </div>
+      <FormValidationMessages errors={errors}/>
       <div className="w-full tablet:w-auto desktop:w-auto">
         <Button
           type="submit"
