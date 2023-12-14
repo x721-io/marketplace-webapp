@@ -47,7 +47,6 @@ export default function Activities({ wallet }: { wallet: Address }) {
                 return null
               }
               const token = findTokenByAddress(row.quoteToken)
-              console.log(data)
               return (
                 <Table.Row key={row.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
