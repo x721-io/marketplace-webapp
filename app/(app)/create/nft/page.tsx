@@ -4,7 +4,6 @@ import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
-import ImageUploader from '@/components/Form/ImageUploader'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
@@ -22,6 +21,7 @@ import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { parseImageUrl } from '@/utils/nft'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { useCreateNFT } from '@/hooks/useNFT'
+import ImageUploadNft from "@/components/Form/ImageUploadNft";
 
 interface NFTFormState {
   image: string,
@@ -213,7 +213,7 @@ export default function CreateNftPage() {
                 control={control}
                 rules={formRules.image}
                 render={({ field: { value } }) => (
-                  <ImageUploader
+                  <ImageUploadNft
                     loading={uploading}
                     error={!!errors.image}
                     image={!!value ? parseImageUrl(value) : ''}
