@@ -25,20 +25,20 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
     },
     video: {
       extensions: ['mp4', 'MOV'],
-      size: 1000000000,
+      size: 100000000,
     },
     audio: {
       extensions: ['mp3', 'ogg'],
-      size: 1000000000,
+      size: 100000000,
     },
   };
-
   const [file, setFile] = useState<Blob | undefined>()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const inputNewRef = useRef<HTMLInputElement>(null)
+  const inputFileRef = useRef<HTMLInputElement>(null)
+  const inputCoverRef = useRef<HTMLInputElement>(null)
   const [fileImage, setFileImage] = useState<Blob | undefined>()
+  const [fileType, setFileType] = useState<any>();
 
-  const previewImage = useMemo(() => {
+  const previewUploadFile = useMemo(() => {
     if (image) {
       if (typeof image === "string") return image;
       return URL.createObjectURL(image)
@@ -48,19 +48,7 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
     return URL.createObjectURL(file)
   }, [file, image])
 
-  // const handleInputImage = (files: FileList | null) => {
-  //   if (files) {
-  //     onInput?.(files[0])
-  //     setFile(files[0]);
-  //   } else {
-  //     onInput?.(undefined)
-  //     setFile(undefined)
-  //   }
-  // }
-
-  const [fileType, setFileType] = useState<any>();
-
-  const handleInputImage = (files: FileList | null) => {
+  const handleInputUploadFile = (files: FileList | null) => {
     if (files && files.length > 0) {
       const file = files[0];
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -74,8 +62,8 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
         newFileType = 'audio';
       } else {
         toast.error(`File extension is not valid.`)
-        if (inputRef && inputRef.current) {
-          inputRef.current.value = "";
+        if (inputFileRef && inputFileRef.current) {
+          inputFileRef.current.value = "";
         }
       }
 
@@ -94,25 +82,16 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
     }
   };
 
-  const handleClearImage = () => {
+  const handleClearUploadFile = () => {
     onInput?.(undefined)
     setFile(undefined)
     setFileImage(undefined)
-    if (inputRef && inputRef.current) {
-      inputRef.current.value = "";
+    if (inputFileRef && inputFileRef.current) {
+      inputFileRef.current.value = "";
     }
   }
 
-  const handleInputNewImage = (filesImage: FileList | null) => {
-    if (filesImage) {
-      onInput?.(filesImage[0])
-      setFileImage(filesImage[0]);
-    } else {
-      onInput?.(undefined)
-      setFileImage(undefined)
-    }
-  }
-  const previewImageUploadCover = useMemo(() => {
+  const previewUploadCover = useMemo(() => {
     if (image) {
       if (typeof image === "string") return image;
       return URL.createObjectURL(image)
@@ -122,11 +101,21 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
     return URL.createObjectURL(fileImage)
   }, [fileImage, image])
 
-  const handleClearImageNew = () => {
+  const handleInputUploadCover = (filesImage: FileList | null) => {
+    if (filesImage) {
+      onInput?.(filesImage[0])
+      setFileImage(filesImage[0]);
+    } else {
+      onInput?.(undefined)
+      setFileImage(undefined)
+    }
+  }
+  
+  const handleClearUploadCover = () => {
     onInput?.(undefined)
     setFileImage(undefined)
-    if (inputNewRef && inputNewRef.current) {
-      inputNewRef.current.value = "";
+    if (inputCoverRef && inputCoverRef.current) {
+      inputCoverRef.current.value = "";
     }
   }
 
@@ -140,14 +129,14 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
         <input
           className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
           type="file"
-          ref={inputRef}
-          onChange={(e) => handleInputImage(e.target.files)}
+          ref={inputFileRef}
+          onChange={(e) => handleInputUploadFile(e.target.files)}
         />
 
         {!!file ? (
           fileType && fileType === 'image' ?
             <Image
-              src={previewImage}
+              src={previewUploadFile}
               alt=""
               width={256}
               height={256}
@@ -181,7 +170,7 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
             <Button
               variant="icon"
               className="absolute right-0 top-[-18px]"
-              onClick={handleClearImage}>
+              onClick={handleClearUploadFile}>
               <CloseIcon width={20} height={20} />
             </Button>)
         }
@@ -199,13 +188,13 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
               <input
                 className={`absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
                 type="file"
-                ref={inputNewRef}
+                ref={inputCoverRef}
                 accept=".png,.jpeg, .png"
-                onChange={(e) => handleInputNewImage(e.target.files)}
+                onChange={(e) => handleInputUploadCover(e.target.files)}
               />
               {!!fileImage ?
                 <Image
-                  src={previewImageUploadCover}
+                  src={previewUploadCover}
                   alt=""
                   width={256}
                   height={256}
@@ -225,7 +214,7 @@ export default function ImageUploadNft({ className, image, onInput, loading, err
                   <Button
                     variant="icon"
                     className="absolute right-0 top-[-18px]"
-                    onClick={handleClearImageNew}>
+                    onClick={handleClearUploadCover}>
                     <CloseIcon width={20} height={20} />
                   </Button>)
               }

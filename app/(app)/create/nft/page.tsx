@@ -105,11 +105,11 @@ export default function CreateNftPage() {
     setUploading(true)
     try {
       await toast.promise(api.uploadFile(file), {
-        pending: 'Uploading image...',
+        pending: 'Uploading file...',
         success: {
           render: (data) => {
             setValue('image', data.data?.fileHashes[0] as string)
-            return 'Collection image uploaded successfully'
+            return 'Collection file uploaded successfully'
           }
         },
         error: {
