@@ -21,7 +21,7 @@ import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { parseImageUrl } from '@/utils/nft'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { useCreateNFT } from '@/hooks/useNFT'
-import ImageUploadNft from "@/components/Form/ImageUploadNft";
+import ImageUploader from "@/components/Form/ImageUploader";
 
 interface NFTFormState {
   image: string,
@@ -213,7 +213,7 @@ export default function CreateNftPage() {
                 control={control}
                 rules={formRules.image}
                 render={({ field: { value } }) => (
-                  <ImageUploadNft
+                  <ImageUploader
                     loading={uploading}
                     error={!!errors.image}
                     image={!!value ? parseImageUrl(value) : ''}

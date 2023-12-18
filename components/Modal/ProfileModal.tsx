@@ -70,14 +70,17 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
               <Text className="text-secondary">View profile</Text>
             </Link>
           </div>
-          <Button variant="icon" onClick={onClose}>
-            <Icon name="arrowRight" width={20} height={20} />
-          </Button>
+
+          <Link href={`/user/${userId}`}>
+            <Button variant="icon" onClick={onClose}>
+              <Icon name="arrowRight" width={20} height={20} />
+            </Button>
+          </Link>
         </div>
 
         <ConnectWalletButton className="w-full p-4 my-5 bg-info/20 cursor-pointer border-[0.5px] rounded-2xl border-tertiary">
           <div className="p-4 my-5 bg-info/20 cursor-pointer border-[0.5px] rounded-2xl border-tertiary"
-               onClick={handleClaimToken}>
+            onClick={handleClaimToken}>
             <div className="flex items-center justify-between">
               <Text className="font-semibold text-secondary">Market trade profits: </Text>
               <Text className="font-bold text-primary">{tokenBalance?.formatted || '0'} U2U</Text>
