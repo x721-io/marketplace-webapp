@@ -4,10 +4,12 @@ import Icon from '@/components/Icon'
 import { Connector, useAccount, useConnect } from 'wagmi'
 import { sleep } from '@/utils'
 import { useAuth } from '@/hooks/useAuth'
+import { useEffect } from 'react'
 
 interface Props extends ModalProps {
   onSignMessage: () => void
 }
+
 export default function WalletConnectModal({ show, onClose, onSignMessage }: Props) {
   const { onLogout } = useAuth()
   const { isConnected } = useAccount()
@@ -15,18 +17,22 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
 
   const handleConnect = async (connector: Connector) => {
     try {
-      while (!connector.ready) {}
       onLogout()
       if (!isConnected) {
         connect({ connector })
       }
-      await sleep(100)
-      onSignMessage()
-      onClose && onClose()
+
     } catch (e) {
       console.error('Error connecting wallet:', e)
     }
   }
+
+  useEffect(() => {
+    if (isConnected) {
+      onSignMessage()
+      onClose && onClose()
+    }
+  }, [isConnected]);
 
   return (
     <Modal dismissible show={show} onClose={onClose} size="lg">
@@ -46,7 +52,7 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
                   <div
                     key={connector.id}
                     className="cursor-pointer px-10 py-4 border border-gray-200 rounded-[20px]
-                      flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-none"
+                      flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-transparent"
                     onClick={() => handleConnect(connector)}>
                     {connector.ready ? <Icon name={connector.id} width={40} height={40} /> : <Spinner size="xl" />}
                     <Text>

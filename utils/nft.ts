@@ -1,13 +1,8 @@
 import { BASE_API_URL } from '@/config/api'
 
-export const parseImageUrl = (hash?: string) => {
-  if (!hash) return ''
-  return BASE_API_URL + '/common/get-file-ipfs?hash=' + hash
-}
-
-export const parseIpfsUrl = (hash?: string) => {
-  if (!hash) return ''
-  return BASE_API_URL + '/common/ipfs-serve?ipfsPath=' + hash
+export const parseImageUrl = (url?: string) => {
+  if (!url) return ''
+  return BASE_API_URL + '/common/ipfs-serve?ipfsPath=' + url
 }
 
 export const getMetaDataHash = (url: string) => {
