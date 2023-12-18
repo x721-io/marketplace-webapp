@@ -253,16 +253,14 @@ export default function CreateNFTCollectionPage() {
             <FormValidationMessages errors={errors} />
 
             {/* Button finish */}
-            <div className="justify-end">
-              <ConnectWalletButton>
-                <Button
-                  disabled={validating || uploading}
-                  type="submit"
-                  className="w-full tablet:w-auto desktop:w-auto">
-                  Create collection
-                </Button>
-              </ConnectWalletButton>
-            </div>
+            <ConnectWalletButton>
+              <Button
+                disabled={validating || uploading}
+                type="submit"
+                className="w-full tablet:w-auto desktop:w-auto">
+                Create collection
+              </Button>
+            </ConnectWalletButton>
           </div>
         </form>
       </div>

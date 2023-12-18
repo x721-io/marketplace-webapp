@@ -1,4 +1,5 @@
-import { Address, useAccount, useDisconnect } from "wagmi";
+import { Address, useAccount } from "wagmi";
+import { disconnect } from '@wagmi/core'
 import { sleep } from '@/utils'
 import useAuthStore, { clearProfile } from '@/store/auth/store'
 import { useCallback, useMemo } from 'react'
@@ -8,7 +9,6 @@ import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 export const useAuth = () => {
   const api = useMarketplaceApi()
   const { address } = useAccount()
-  const { disconnect } = useDisconnect()
   const { setCredentials, setProfile, credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
 
@@ -34,8 +34,8 @@ export const useAuth = () => {
     setProfile(profile)
   }, [bearerToken, address])
 
-  const onLogout = () => {
-    disconnect()
+  const onLogout = async () => {
+    await disconnect()
     clearProfile()
   }
 

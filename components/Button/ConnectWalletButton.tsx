@@ -16,13 +16,18 @@ interface Props extends ButtonProps {
 
 export default function ConnectWalletButton({ className, mode = 'modal', children, ...rest }: Props) {
   const router = useRouter()
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
   const [showWalletConnect, setShowWalletConnect] = useState(false)
   const [showSignMessage, setShowSignMessage] = useState(false)
   const [showSignup, setShowSignup] = useState(false)
   const acceptedTerms = useAuthStore(state => state.profile?.acceptedTerms)
   const accessToken = useAuthStore(state => state.credentials?.accessToken)
   const expiredDate = useAuthStore(state => state.credentials?.accessTokenExpire)
+  const userWallet = useAuthStore(state => state.profile?.publicKey)
+  const isCorrectWallet = useMemo(() => {
+    if (!userWallet || !address) return false
+    return userWallet.toLowerCase() === address.toLowerCase()
+  }, [userWallet, address, isConnected])
   const isExpired = useMemo(() => {
     return !!expiredDate && expiredDate < Date.now()
   }, [expiredDate])
@@ -35,7 +40,7 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
     }
   }
 
-  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired) {
+  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired && isCorrectWallet) {
     return children
   }
 

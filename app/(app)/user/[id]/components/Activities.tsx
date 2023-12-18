@@ -56,8 +56,8 @@ export default function Activities({ wallet }: { wallet: Address }) {
                     {row.event}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link href={`/item/${row.nftId.id}`}>
-                      {row.nftId.contract.name} - {row.nftId.id}
+                    <Link href={`/item/${row.nftId.contract.id}/${row.nftId.tokenId}`}>
+                      {row.nftId.contract.name} - {row.nftId.tokenId}
                     </Link>
                   </Table.Cell>
                   <Table.Cell>

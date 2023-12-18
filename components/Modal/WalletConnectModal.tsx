@@ -16,7 +16,6 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
 
   const handleConnect = async (connector: Connector) => {
     try {
-      onLogout()
       if (!isConnected) {
         await connect({ connector })
       }

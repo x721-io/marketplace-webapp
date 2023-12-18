@@ -10,6 +10,7 @@ export interface MarketEvent {
   event: MarketEventType
   nftId: {
     id: string
+    tokenId: string
     contract: {
       id: Address
       name: string
