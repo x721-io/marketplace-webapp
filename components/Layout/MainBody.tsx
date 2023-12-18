@@ -9,7 +9,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
   const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
 
   useEffect(() => {
-    if (chain?.id && chain?.id !== CHAIN_ID) {
+    if (chain?.id && chain?.id !== Number(CHAIN_ID)) {
       toast.warning('Wrong network detected', {
         position: 'bottom-center',
         autoClose: false,
@@ -19,7 +19,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
             variant="text"
             onClick={(e) => {
               closeToast(e)
-              switchNetwork?.(CHAIN_ID)
+              switchNetwork?.(Number(CHAIN_ID))
             }}
           >Change network</Button>
         )

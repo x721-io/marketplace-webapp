@@ -6,7 +6,7 @@ import { defineChain } from "viem";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 export const u2uChain = defineChain({
-  id: CHAIN_ID,
+  id: Number(CHAIN_ID),
   name: NETWORK_NAME,
   network: NETWORK_NAME,
   nativeCurrency: {
