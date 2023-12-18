@@ -17,7 +17,7 @@ export default function BidNFTModal({ nft, show, onClose }: Props) {
 
   const handleReset = () => {
     onClose?.()
-    setStep(1)
+    setStep(2)
     setError(undefined)
   }
 
