@@ -6,16 +6,22 @@ import { APIParams } from '@/services/api/types'
 import { useState } from 'react'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
+import { useUIStore } from '@/store/ui/store'
+import { useExploreSectionFilters } from '@/hooks/useFilters'
 
 export default function ExploreCollectionList() {
   const api = useMarketplaceApi()
-  const [activePagination, setActivePagination] = useState<APIParams.FetchCollections>({
+
+  const [activePagination, setActivePagination] = useState({
     page: 1,
     limit: 10
   })
+  const { queryString } = useUIStore(state => state)
+  const { searchKey } = useExploreSectionFilters()
+
   const { data: collections, error, isLoading } = useSWR(
-    ['collections', activePagination],
-    () => api.fetchCollections(sanitizeObject(activePagination) as APIParams.FetchCollections),
+    { ...activePagination, name: queryString[searchKey] },
+    (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
     { refreshInterval: 30000 }
   )
 

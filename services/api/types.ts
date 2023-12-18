@@ -85,12 +85,13 @@ export namespace APIParams {
   }
 
   export interface FetchUsers extends PaginationParams {
-
+    name: string
   }
 
   export interface FetchCollections extends PaginationParams {
-
+    name: string
   }
+
   export interface FetchCollectionById extends PaginationParams {
 
   }

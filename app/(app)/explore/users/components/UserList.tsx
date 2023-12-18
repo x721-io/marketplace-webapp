@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { APIResponse } from '@/services/api/types'
+import React from 'react'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,18 +9,30 @@ import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Text from '@/components/Text'
 import VerifyIcon from '@/components/Icon/Verify'
-import PlusIcon from '@/components/Icon/Plus'
+import useSWR from 'swr'
+import { useUIStore } from '@/store/ui/store'
+import { useExploreSectionFilters } from '@/hooks/useFilters'
 
 export default function ExploreUserList() {
-  const [users, setUsers] = useState<APIResponse.User[]>([])
   const api = useMarketplaceApi()
+  const { queryString } = useUIStore(state => state)
+  const { searchKey } = useExploreSectionFilters()
+  const { data, isLoading } = useSWR(
+    { limit: 10, page: 1, name: queryString[searchKey] },
+    params => api.fetchUsers(params)
+  )
 
-  useEffect(() => {
-    api.fetchUsers({ limit: 10, page: 1 }).then(res => setUsers(res))
-  }, [])
+  if (!data || !data.length) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+        <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
+      </div>
+    )
+  }
+
   return (
     <>
-      {users.map((user: any, index: number) => (
+      {data.map((user: any, index: number) => (
         <Link key={user.username} href={`/user/${user.id}`}>
           <div className="flex flex-col rounded-xl" style={{ border: '0.7px solid #E3E3E3' }}>
             <div className="relative">

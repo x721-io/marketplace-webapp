@@ -9,9 +9,12 @@ import SliderIcon from '@/components/Icon/Sliders'
 import CommandIcon from '@/components/Icon/Command'
 import Icon from '@/components/Icon'
 import { useExploreSectionFilters } from '@/hooks/useFilters'
+import { useUIStore } from '@/store/ui/store'
 
 export default function ExploreSectionNavbar() {
-  const { handleToggleFilters, isFiltersVisible, routeKey } = useExploreSectionFilters()
+  const { handleToggleFilters, isFiltersVisible, routeKey, searchKey } = useExploreSectionFilters()
+  const { setQueryString, queryString } = useUIStore(state => state)
+
   const pathname = usePathname()
   const router = useRouter()
   const tabsRef = useRef<TabsRef>(null);
@@ -57,6 +60,8 @@ export default function ExploreSectionNavbar() {
       </div>
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
+          onChange={e => setQueryString(searchKey, e.target.value)}
+          value={queryString[searchKey]}
           className="py-4 h-14"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5" />

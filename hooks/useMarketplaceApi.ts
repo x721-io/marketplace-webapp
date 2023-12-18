@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from '@/config/api'
 import { Address } from 'wagmi'
 import { useMemo } from 'react'
 import { getMetaDataHash } from '@/utils/nft'
+import { parseQueries } from '@/utils'
 
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore()
@@ -43,7 +44,10 @@ export const useMarketplaceApi = () => {
 
       createCollection: (params: APIParams.CreateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
 
-      updateCollection: ({ coverImage, id }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader),
+      updateCollection: ({
+        coverImage,
+        id
+      }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader),
 
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
 
@@ -71,13 +75,15 @@ export const useMarketplaceApi = () => {
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
       /** GET **/
-      fetchCollections: ({limit, page}: APIParams.FetchCollections): Promise<APIResponse.CollectionsData> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `?limit=${limit}&page=${page}`),
+      fetchCollections: (params: APIParams.FetchCollections): Promise<APIResponse.CollectionsData> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + parseQueries(params)),
 
       fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
-      fetchCollectionsByUser: async (userId: string, {limit, page}: APIParams.FetchCollectionById, hasBase: boolean): Promise<APIResponse.CollectionsData> => {
-        const data: any = await marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}?limit=${limit}&page=${page}&hasBase=${hasBase}`)
-        return data 
+      fetchCollectionsByUser: async (userId: string, {
+        limit,
+        page
+      }: APIParams.FetchCollectionById, hasBase: boolean): Promise<APIResponse.CollectionsData> => {
+        return marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}?limit=${limit}&page=${page}&hasBase=${hasBase}`)
       },
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
@@ -93,8 +99,8 @@ export const useMarketplaceApi = () => {
 
       viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
-      fetchUsers: async ({ limit }: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
-        const res = await marketplaceApi.get(API_ENDPOINTS.USER + `?limit=${limit}`)
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
+        const res = await marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
         return (res as any).users
       }
     }

@@ -3,19 +3,33 @@ import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui/store'
 import { APIParams } from '@/services/api/types'
 import { parseEther } from 'ethers'
+import { FilterKey, SearchKey } from '@/store/ui/types'
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname()
   const { showFilters, toggleFilter } = useUIStore(state => state)
 
-  const routeKey = useMemo(() => {
+  const routeKey: FilterKey = useMemo(() => {
     switch (true) {
       case pathname.includes('collections'):
         return 'collections'
-      case pathname.includes('items'):
-        return 'nfts'
       case pathname.includes('profile'):
         return 'profile'
+      case pathname.includes('items'):
+      default:
+        return 'nfts'
+    }
+  }, [pathname])
+
+  const searchKey: SearchKey =  useMemo(() => {
+    switch (true) {
+      case pathname.includes('collections'):
+        return 'collections'
+      case pathname.includes('users'):
+        return 'users'
+      case pathname.includes('items'):
+      default:
+        return 'nfts'
     }
   }, [pathname])
 
@@ -29,12 +43,10 @@ export const useExploreSectionFilters = () => {
     toggleFilter(routeKey)
   }
 
-  return { isFiltersVisible, routeKey, handleToggleFilters }
+  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey }
 }
 
 export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
-
-
   const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>(defaultState ?? {
     page: 1,
     limit: 20,
@@ -44,7 +56,7 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
     priceMax: undefined,
     priceMin: undefined,
     sellStatus: undefined,
-    owner: undefined,
+    owner: undefined
   })
 
   const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.FetchNFTs) => {

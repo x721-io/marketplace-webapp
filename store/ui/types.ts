@@ -1,9 +1,12 @@
-type PageKey = 'collections' | 'nfts' | 'profile'
+export type FilterKey = 'collections' | 'nfts' | 'profile'
+export type SearchKey = 'collections' | 'nfts' | 'users'
 
 export interface UIState {
-  showFilters: Record<PageKey, boolean>
+  showFilters: Record<FilterKey, boolean>
+  queryString: Record<SearchKey, string>
 }
 
 export interface UIAction {
-  toggleFilter: (key: PageKey, bool?: boolean) => void
+  toggleFilter: (key: FilterKey, bool?: boolean) => void
+  setQueryString: (key: SearchKey, text: string) => void
 }
