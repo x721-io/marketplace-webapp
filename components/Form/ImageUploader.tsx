@@ -7,6 +7,7 @@ import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { classNames } from '@/utils/string'
 import { Spinner } from 'flowbite-react'
+import { toast } from 'react-toastify'
 
 interface Props {
   className?: string
@@ -31,12 +32,13 @@ export default function ImageUploader({ className, image, onInput, loading, erro
   }, [file, image])
 
   const handleInputImage = (files: FileList | null) => {
-    if (files) {
+    if (files && files[0].size < 1000000) {
       onInput?.(files[0])
       setFile(files[0]);
     } else {
       onInput?.(undefined)
       setFile(undefined)
+      toast.error(`File extension is larger than the allowed size`)
     }
   }
 
@@ -58,6 +60,7 @@ export default function ImageUploader({ className, image, onInput, loading, erro
         className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
         type="file"
         ref={inputRef}
+        accept=".png,.jpeg, .png, .gif"
         onChange={(e) => handleInputImage(e.target.files)}
       />
 
@@ -71,7 +74,7 @@ export default function ImageUploader({ className, image, onInput, loading, erro
       ) : (
         <div className="w-full px-10 py-20 flex flex-col justify-center items-center gap-6">
           <Text className="font-semibold text-secondary" variant="body-24">
-            PNG, GIF, WEBP, MP4 or MP3. Max 100mb.
+            PNG, JPG, JPEG., GIF Max 10mb.
           </Text>
           <Button variant="primary">
             Choose File

@@ -4,7 +4,6 @@ import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
-import ImageUploader from '@/components/Form/ImageUploader'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import NFTTypeSelection from '@/components/NFT/NFTTypeSelection'
@@ -22,6 +21,7 @@ import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { parseImageUrl } from '@/utils/nft'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { useCreateNFT } from '@/hooks/useNFT'
+import ImageUploader from "@/components/Form/ImageUploader";
 
 interface NFTFormState {
   image: string,
@@ -105,11 +105,11 @@ export default function CreateNftPage() {
     setUploading(true)
     try {
       await toast.promise(api.uploadFile(file), {
-        pending: 'Uploading image...',
+        pending: 'Uploading file...',
         success: {
           render: (data) => {
             setValue('image', data.data?.fileHashes[0] as string)
-            return 'Collection image uploaded successfully'
+            return 'Collection file uploaded successfully'
           }
         },
         error: {
@@ -236,12 +236,12 @@ export default function CreateNftPage() {
                           key={c.value}
                           onClick={() => onChange(c.value)}
                           className={classNames(
-                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8',
+                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 text-center',
                             'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
                             c.value === value ? 'border-2 border-primary bg-white text-primary' : ' border text-tertiary bg-surface-soft'
                           )}>
-                          <Text className="text-heading-sm font-bold text-primary text-ellipsis">{c.label}</Text>
-                          <Text className="text-body-12 text-secondary text-ellipsis">{c.type}</Text>
+                          <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>
+                          <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.type}</Text>
                         </div>
                       )) : (
                         <div className="flex justify-center items-center w-full h-40">

@@ -26,10 +26,10 @@ export default function NFTCard({ name, id, price, collection, image }: APIRespo
       />
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
-        <Text className="text-secondary text-body-12">{name}</Text>
+        <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis">{name}</Text>
       </div>
-      <Text className="font-medium px-1">{collection.name}</Text>
-      <Text className="text-body-12 px-1 font-normal">
+      <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis">{collection.name}</Text>
+      <Text className="text-body-12 px-1 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
         {price ? formatEther(price) : 0} U2U
       </Text>
     </Link>
