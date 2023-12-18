@@ -89,7 +89,10 @@ export namespace APIParams {
   }
 
   export interface FetchCollections extends PaginationParams {
-    name: string
+    name?: string
+    min?: string
+    max?: string
+    creatorAddress?: Address
   }
 
   export interface FetchCollectionById extends PaginationParams {
@@ -101,8 +104,8 @@ export namespace APIParams {
     type?: AssetType
     collectionAddress?: Address,
     creatorAddress?: Address,
-    priceMax?: BigNumberish,
-    priceMin?: BigNumberish,
+    priceMax?: string,
+    priceMin?: string,
     sellStatus?: MarketEventType,
     owner?: Address,
   }

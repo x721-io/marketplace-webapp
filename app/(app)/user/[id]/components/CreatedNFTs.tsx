@@ -8,7 +8,6 @@ import { APIParams } from '@/services/api/types'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { useNFTFilters } from '@/hooks/useFilters'
-import useAuthStore from '@/store/auth/store'
 import { useParams } from 'next/navigation'
 import { Address } from 'wagmi'
 

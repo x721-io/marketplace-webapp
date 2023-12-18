@@ -137,7 +137,7 @@ export default function NFTFilters({
                 containerClass="w-24"
                 scale="sm"
                 placeholder="Min"
-                type="number"
+                value={activeFilters.priceMin as string}
                 onChange={e => handleChange('priceMin', e.target.value)} />
               <Text className="text-primary">
                 to
@@ -146,7 +146,7 @@ export default function NFTFilters({
                 containerClass="w-24"
                 scale="sm"
                 placeholder="Max"
-                type="number"
+                value={activeFilters.priceMax as string}
                 onChange={e => handleChange('priceMax', e.target.value)} />
             </div>
             <BrowserView>

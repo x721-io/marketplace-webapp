@@ -4,6 +4,7 @@ import { useUIStore } from '@/store/ui/store'
 import { APIParams } from '@/services/api/types'
 import { parseEther } from 'ethers'
 import { FilterKey, SearchKey } from '@/store/ui/types'
+import { sanitizeObject } from '@/utils'
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname()
@@ -21,7 +22,7 @@ export const useExploreSectionFilters = () => {
     }
   }, [pathname])
 
-  const searchKey: SearchKey =  useMemo(() => {
+  const searchKey: SearchKey = useMemo(() => {
     switch (true) {
       case pathname.includes('collections'):
         return 'collections'
@@ -59,18 +60,18 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
     owner: undefined
   })
 
-  const handleApplyFilters = ({ priceMax, priceMin, ...rest }: APIParams.FetchNFTs) => {
-    const _activeFilters = {
+  const handleApplyFilters = (params: APIParams.FetchNFTs) => {
+    const _activeFilters = sanitizeObject({
       ...activeFilters,
-      ...rest,
+      ...params,
       page: 1,
       limit: 20
+    })
+    if (params.priceMax && !isNaN(Number(params.priceMax))) {
+      _activeFilters.priceMax = parseEther(params.priceMax.toString()).toString()
     }
-    if (priceMax && Number(priceMax)) {
-      _activeFilters.priceMax = parseEther(priceMax.toString()).toString()
-    }
-    if (priceMin && Number(priceMin)) {
-      _activeFilters.priceMin = parseEther(priceMin.toString()).toString()
+    if (params.priceMin && !isNaN(Number(params.priceMin))) {
+      _activeFilters.priceMin = parseEther(params.priceMin.toString()).toString()
     }
 
     setActiveFilters(_activeFilters)
@@ -81,6 +82,46 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
       ...activeFilters,
       page
     })
+  }
+
+  return {
+    activeFilters,
+    handleChangePage,
+    handleApplyFilters
+  }
+}
+
+export const useCollectionFilters = (defaultState?: APIParams.FetchCollections) => {
+  const [activeFilters, setActiveFilters] = useState<APIParams.FetchCollections>(defaultState ?? {
+    page: 1,
+    limit: 20,
+    max: '',
+    min: ''
+  })
+
+  const handleChangePage = (page: number) => {
+    setActiveFilters({
+      ...activeFilters,
+      page
+    })
+  }
+
+  const handleApplyFilters = (params: APIParams.FetchCollections) => {
+    const _activeFilters = sanitizeObject({
+      ...activeFilters,
+      ...params,
+      page: 1,
+      limit: 20
+    })
+
+    if (params.max && !isNaN(Number(params.max))) {
+      _activeFilters.max = parseEther(params.max.toString()).toString()
+    }
+    if (params.min && !isNaN(Number(params.min))) {
+      _activeFilters.min = parseEther(params.min.toString()).toString()
+    }
+
+    setActiveFilters(_activeFilters)
   }
 
   return {
