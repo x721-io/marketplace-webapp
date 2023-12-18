@@ -2,9 +2,8 @@ import { Modal, ModalProps, Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import { Connector, useAccount, useConnect } from 'wagmi'
-import { sleep } from '@/utils'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect } from 'react'
+import { connect } from '@wagmi/core'
 
 interface Props extends ModalProps {
   onSignMessage: () => void
@@ -13,26 +12,20 @@ interface Props extends ModalProps {
 export default function WalletConnectModal({ show, onClose, onSignMessage }: Props) {
   const { onLogout } = useAuth()
   const { isConnected } = useAccount()
-  const { connect, connectors, pendingConnector, isLoading } = useConnect()
+  const { connectors, pendingConnector } = useConnect()
 
   const handleConnect = async (connector: Connector) => {
     try {
       onLogout()
       if (!isConnected) {
-        connect({ connector })
+        await connect({ connector })
       }
-
+      onSignMessage()
+      onClose && onClose()
     } catch (e) {
       console.error('Error connecting wallet:', e)
     }
   }
-
-  useEffect(() => {
-    if (isConnected) {
-      onSignMessage()
-      onClose && onClose()
-    }
-  }, [isConnected]);
 
   return (
     <Modal dismissible show={show} onClose={onClose} size="lg">
@@ -58,7 +51,6 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
                     <Text>
                       {connector.name}
                     </Text>
-                    {isLoading && pendingConnector?.id === connector.id && <Spinner size="xl" />}
                   </div>
                 )
               })
