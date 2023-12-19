@@ -6,22 +6,23 @@ import { useNetwork, useSwitchNetwork } from 'wagmi'
 
 export default function MainBody({ children }: { children: React.ReactNode }) {
   const { chain } = useNetwork()
-  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
+  const { switchNetwork } = useSwitchNetwork()
 
   useEffect(() => {
-    if (chain?.id && chain?.id !== Number(CHAIN_ID)) {
-      toast.warning('Wrong network detected', {
+    if (!!chain?.id && chain?.id !== Number(CHAIN_ID)) {
+      toast.warning(<p className="whitespace-nowrap">Wrong network detected</p>, {
+        toastId: 'changeNetwork',
         position: 'bottom-center',
+        closeOnClick: false,
         autoClose: false,
         closeButton: ({ closeToast }) => (
-          <Button
-            className="text-body-16 font-semibold text-info"
-            variant="text"
+          <div
+            className="cursor-pointer whitespace-nowrap flex justify-center items-center text-body-14 font-semibold text-info mr-2"
             onClick={(e) => {
-              closeToast(e)
               switchNetwork?.(Number(CHAIN_ID))
+              closeToast(e)
             }}
-          >Change network</Button>
+          >Change now</div>
         )
       })
     }
