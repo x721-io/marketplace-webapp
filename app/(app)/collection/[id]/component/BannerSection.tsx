@@ -1,11 +1,9 @@
 'use client'
 
 import UploadIcon from '@/components/Icon/Upload'
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Image, { StaticImageData } from 'next/image'
-import { useUpdateCollection } from "@/hooks/useCollection";
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { parseImageUrl } from '@/utils/nft'
 import { toast } from 'react-toastify'
 import useAuthStore from '@/store/auth/store'
 import { APIResponse } from '@/services/api/types'

@@ -20,7 +20,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
     { refreshInterval: 300000 }
   )
 
-  if (!data?.length) {
+  if (!data || !data?.length) {
     return (
       <div className="p-7 rounded-2xl border border-disabled border-dashed mt-7">
         <Text className="text-secondary text-center text-sm">Nothing to show</Text>
@@ -43,7 +43,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
         <Table.Body className="divide-y">
           {
             Array.isArray(data) && data.map(row => {
-              if (!row.nftId) {
+              if (!row?.nftId) {
                 return null
               }
               const token = findTokenByAddress(row.quoteToken)
