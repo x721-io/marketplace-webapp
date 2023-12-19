@@ -24,6 +24,10 @@ import { useCreateNFT } from '@/hooks/useNFT'
 import ImageUploader from "@/components/Form/ImageUploader";
 
 interface NFTFormState {
+  media: {
+    image: string
+    animated: string
+  }
   image: string,
   name: string,
   description: string,
@@ -42,7 +46,7 @@ export default function CreateNftPage() {
   const userId = useAuthStore(state => state.credentials?.userId)
   const { data, error, isLoading } = useSWR(
     !!userId ? 'my-collections' : null,
-    () => api.fetchCollectionsByUser(userId as string,{ page: 1, limit: 10 }, true),
+    () => api.fetchCollectionsByUser(userId as string, { page: 1, limit: 10 }, true),
     { refreshInterval: 3600 * 1000 }
   )
   const {
@@ -166,7 +170,11 @@ export default function CreateNftPage() {
     try {
       setValidating(true)
       if (name === 'name' && !!value.name) {
-        const existed = await api.validateInput({ key: 'nftName', value: value.name, collectionId: getValues('collection') })
+        const existed = await api.validateInput({
+          key: 'nftName',
+          value: value.name,
+          collectionId: getValues('collection')
+        })
         if (existed) setError('name', { type: 'custom', message: 'NFT name already existed' })
         else clearErrors('name')
       }
@@ -217,6 +225,7 @@ export default function CreateNftPage() {
                     loading={uploading}
                     error={!!errors.image}
                     image={!!value ? parseImageUrl(value) : ''}
+                    accept=".png,.jpeg, .png, .gif, .webp, .mp3, .mp4"
                     onInput={handleUploadImage} />
                 )}
               />
@@ -244,7 +253,7 @@ export default function CreateNftPage() {
                           <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.type}</Text>
                         </div>
                       )) : (
-                        <div className="flex justify-center items-center w-full h-40">
+                        <div className="flex justify-center items-center w-full h-40 rounded-2xl border border-dashed border-disabled">
                           <Link className="text-center" href={`/create/collection`}>Create Collection</Link>
                         </div>
                       )
