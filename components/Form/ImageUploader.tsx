@@ -15,9 +15,10 @@ interface Props {
   onInput?: (file: Blob | undefined) => void
   loading?: boolean
   error?: boolean
+  accept?: string
 }
 
-export default function ImageUploader({ className, image, onInput, loading, error }: Props) {
+export default function ImageUploader({ className, image, onInput, loading, error, accept }: Props) {
   const [file, setFile] = useState<Blob | undefined>()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -60,7 +61,7 @@ export default function ImageUploader({ className, image, onInput, loading, erro
         className={!!file ? 'hidden' : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
         type="file"
         ref={inputRef}
-        accept=".png,.jpeg, .png, .gif"
+        accept={accept}
         onChange={(e) => handleInputImage(e.target.files)}
       />
 
@@ -73,8 +74,8 @@ export default function ImageUploader({ className, image, onInput, loading, erro
           className="w-full h-auto object-cover rounded-2xl" />
       ) : (
         <div className="w-full px-10 py-20 flex flex-col justify-center items-center gap-6">
-          <Text className="font-semibold text-secondary" variant="body-24">
-            PNG, JPG, JPEG., GIF Max 10mb.
+          <Text className="font-semibold text-secondary text-center" variant="body-24">
+            <span className="uppercase">{accept?.split(',').join(', ')}</span> Max 100mb.
           </Text>
           <Button variant="primary">
             Choose File
