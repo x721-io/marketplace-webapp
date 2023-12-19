@@ -99,10 +99,7 @@ export const useMarketplaceApi = () => {
 
       viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
-      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.User[]> => {
-        const res = await marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
-        return (res as any).users
-      }
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
     }
   }, [authHeader])
 }
