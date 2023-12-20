@@ -18,17 +18,13 @@ import Link from 'next/link'
 import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
-import { parseImageUrl } from '@/utils/nft'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { useCreateNFT } from '@/hooks/useNFT'
 import ImageUploader from "@/components/Form/ImageUploader";
+import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 
 interface NFTFormState {
-  media: {
-    image: string
-    animated: string
-  }
-  image: string,
+  media: Blob[],
   name: string,
   description: string,
   collection: Address,
@@ -63,9 +59,25 @@ export default function CreateNftPage() {
   } = useForm<NFTFormState>({
     defaultValues: { traits: [{ trait_type: '', value: '' }] }
   })
+
+  const media = watch('media')
+  const isNonImageNFT = useMemo(() => {
+    if (!media || !media?.length) return false
+    const fileType = media[0].type.split('/')[0]
+    if (!fileType) return false
+    return fileType !== 'image'
+  }, [media])
+
   const formRules = {
-    image: {
-      required: 'Collection image is required!'
+    media: {
+      validate: {
+        required: (v: Blob[]) => v.length > 0 || 'Collection image is required!',
+        audio: (values: Blob[]) => {
+          const firstFileType = values[0].type.split('/')[0]
+          if (firstFileType && firstFileType !== 'audio') return true
+          return !!values[1] || 'Cover photo is required'
+        }
+      },
     },
     name: {
       required: 'Collection name is required!'
@@ -90,7 +102,7 @@ export default function CreateNftPage() {
   }
 
   const collectionOptions = useMemo(() => {
-    const collections = data?.data.map(c => ({
+    const collections = data?.data?.map(c => ({
       label: c.name ?? c.id, value: c.address, type: c.type
     })) || []
     return collections.filter(c => c.type === type)
@@ -101,30 +113,19 @@ export default function CreateNftPage() {
     setType(undefined)
   }
 
-  const handleUploadImage = async (file?: Blob) => {
+  const handleSelectMedia = (file?: Blob) => {
     if (!file) {
-      setValue('image', '')
-      return
+      setValue('media', [])
+    } else {
+      setValue('media', [file])
     }
-    setUploading(true)
-    try {
-      await toast.promise(api.uploadFile(file), {
-        pending: 'Uploading file...',
-        success: {
-          render: (data) => {
-            setValue('image', data.data?.fileHashes[0] as string)
-            return 'Collection file uploaded successfully'
-          }
-        },
-        error: {
-          render: (error) => {
-            setValue('image', '')
-            return `Uploading error: ${(error.data as any).message}`
-          }
-        }
-      })
-    } finally {
-      setUploading(false)
+  }
+
+  const handleSelectCoverImage = (file?: Blob) => {
+    if (!file) {
+      setValue('media', [media[0]])
+    } else {
+      setValue('media', [media[0], file])
     }
   }
 
@@ -144,25 +145,41 @@ export default function CreateNftPage() {
     setValue('traits', _traits as Trait[])
   }
 
-  const onSubmit = async (data: NFTFormState) => {
-    if (data.traits) {
-      data.traits = data.traits.filter(trait => !!trait.trait_type && trait.value)
-    }
+  const onSubmit = async ({ media, traits, ...rest }: NFTFormState) => {
     if (!type) return
 
+    const _traits = !!traits ? traits.filter(trait => !!trait.trait_type && trait.value) : []
+    const createNFTToast = toast.loading('Uploading Media...', { type: 'info' })
+
     try {
-      await toast.promise(onCreateNFT(data), {
-        pending: 'Sending transaction',
-        success: {
-          render: () => {
-            resetForm()
-            return 'Item created successfully'
-          }
-        },
-        error: { render: error => `Error report: ${(error.data as any).message ?? error.data}` }
+      const { fileHashes } = await api.uploadFile(media)
+      toast.update(createNFTToast, { render: 'Sending transaction' })
+
+      const [media1, media2] = fileHashes
+      const params = {
+        ...rest,
+        traits: _traits,
+        image: isNonImageNFT ? media2 : media1,
+        animation_url: isNonImageNFT ? media1 : undefined
+      }
+
+      await onCreateNFT(params)
+
+      toast.update(createNFTToast, {
+        render: 'Item created successfully!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 1000
       })
+      resetForm()
     } catch (e) {
       console.error(e)
+      toast.update(createNFTToast, {
+        render: error => `Error report: ${error.data}`,
+        type: 'error',
+        isLoading: false,
+        autoClose: 1000
+      })
     }
   }
 
@@ -170,6 +187,9 @@ export default function CreateNftPage() {
     try {
       setValidating(true)
       if (name === 'name' && !!value.name) {
+        if (!getValues('collection')) {
+          return
+        }
         const existed = await api.validateInput({
           key: 'nftName',
           value: value.name,
@@ -217,19 +237,37 @@ export default function CreateNftPage() {
             <div>
               <Text className="text-body-16 font-semibold mb-1">Upload file</Text>
               <Controller
-                name="image"
+                name="media"
                 control={control}
-                rules={formRules.image}
+                rules={formRules.media}
                 render={({ field: { value } }) => (
                   <ImageUploader
                     loading={uploading}
-                    error={!!errors.image}
-                    image={!!value ? parseImageUrl(value) : ''}
-                    accept=".png,.jpeg, .png, .gif, .webp, .mp3, .mp4"
-                    onInput={handleUploadImage} />
+                    error={!!errors.media}
+                    accept={ALLOWED_FILE_TYPES}
+                    onInput={handleSelectMedia} />
                 )}
               />
             </div>
+            {
+              isNonImageNFT && (
+                <div>
+                  <Text className="text-body-16 font-semibold mb-1">Upload Cover Image</Text>
+                  <Controller
+                    name="media"
+                    control={control}
+                    render={({ field: { value } }) => (
+                      <ImageUploader
+                        loading={uploading}
+                        error={!!errors.media}
+                        accept={ALLOWED_IMAGE_TYPES}
+                        onInput={handleSelectCoverImage} />
+                    )}
+                  />
+                </div>
+              )
+            }
+
             {/* Choose collection */}
             <div>
               <Text className="text-body-16 font-semibold mb-1">Choose collection</Text>
@@ -292,17 +330,15 @@ export default function CreateNftPage() {
               />
             </div>
 
-            {
-              type === 'ERC1155' && (
-                <div>
-                  <Text className="text-body-16 font-semibold mb-1">Number of copies</Text>
-                  <Input
-                    error={!!errors.amount}
-                    register={register('amount', formRules.amount)}
-                  />
-                </div>
-              )
-            }
+            {type === 'ERC1155' && (
+              <div>
+                <Text className="text-body-16 font-semibold mb-1">Number of copies</Text>
+                <Input
+                  error={!!errors.amount}
+                  register={register('amount', formRules.amount)}
+                />
+              </div>
+            )}
 
             <Accordion collapseAll>
               <Accordion.Panel>

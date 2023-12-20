@@ -7,7 +7,6 @@ import useSWR from 'swr'
 import Text from '@/components/Text'
 import Link from 'next/link'
 import Image from 'next/image'
-import { parseImageUrl } from '@/utils/nft'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '@/components/Icon/Verify'
@@ -38,7 +37,7 @@ export default function ExploreUsersPage() {
             <div className="relative">
               <Image
                 className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                src={user.coverImage ? parseImageUrl(user.coverImage) : defaultImg}
+                src={user.coverImage || defaultImg}
                 alt="Cover"
                 width={1200} height={256}
                 style={{ width: '100%', height: '100px' }}
@@ -47,7 +46,7 @@ export default function ExploreUsersPage() {
                    style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                 <Image
                   className="cursor-pointer rounded-full object-fill"
-                  src={user.avatar ? parseImageUrl(user.avatar) : defaultAvatar}
+                  src={user.avatar || defaultAvatar}
                   alt="Avatar"
                   width={60} height={60}
                   style={{ width: '100%', height: '100%' }}

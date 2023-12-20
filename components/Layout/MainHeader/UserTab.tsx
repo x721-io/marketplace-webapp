@@ -3,7 +3,6 @@ import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
 import Image from 'next/image'
-import { parseImageUrl } from '@/utils/nft'
 import defaultAvatar from '@/assets/images/default-avatar.png'
 import Link from 'next/link'
 
@@ -41,7 +40,7 @@ export default function SearchUserTab({ loading, data, onClose }: Props) {
               className="w-12 h-12 rounded-xl object-cover"
               width={40}
               height={40}
-              src={user.avatar ? parseImageUrl(user.avatar) : defaultAvatar}
+              src={user.avatar || defaultAvatar}
               alt="Avatar" />
             <Text className="font-semibold text-primary" variant="body-12">
               {user.username}

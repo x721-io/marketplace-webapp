@@ -9,7 +9,6 @@ import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
-import { parseImageUrl } from '@/utils/nft'
 import MobileMenuModal from '@/components/Modal/MobileMenuModal'
 import SearchInput from '@/components/Layout/MainHeader/SearchInput'
 import Text from '@/components/Text'
@@ -79,7 +78,7 @@ export default function MainHeader() {
               <Image
                 onClick={() => setShowProfile(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
-                src={avatar ? parseImageUrl(avatar) : defaultAvatar}
+                src={avatar || defaultAvatar}
                 alt="Avatar"
                 width={35}
                 height={35}

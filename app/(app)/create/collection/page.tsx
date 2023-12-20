@@ -21,12 +21,12 @@ import { AssetType } from '@/types'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
-import { alphabetOnlyRegex } from '@/utils/regex'
+import { noSpecialCharacterRegex } from '@/utils/regex'
 import { parseImageUrl } from '@/utils/nft'
 import { waitForTransaction } from '@wagmi/core'
 
 interface CollectionFormState {
-  image: string
+  avatar: string
   name: string,
   symbol: string,
   description: string,
@@ -59,10 +59,10 @@ export default function CreateNFTCollectionPage() {
     },
     symbol: {
       required: 'Symbol is required!',
-      pattern: { value: alphabetOnlyRegex, message: 'Collection symbol should contain only alphabet characters' }
+      pattern: { value: noSpecialCharacterRegex, message: 'Collection symbol should not contain special characters' }
     },
     shortUrl: {
-      pattern: { value: alphabetOnlyRegex, message: 'Short url should contain only alphabet characters' }
+      pattern: { value: noSpecialCharacterRegex, message: 'Short url should not contain special characters' }
     },
     description: {
       maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
@@ -74,7 +74,7 @@ export default function CreateNFTCollectionPage() {
 
   const handleUploadImage = async (file?: Blob) => {
     if (!file) {
-      setValue('image', '')
+      setValue('avatar', '')
       return
     }
     setUploading(true)
@@ -83,13 +83,13 @@ export default function CreateNFTCollectionPage() {
         pending: 'Uploading image...',
         success: {
           render: (data) => {
-            setValue('image', data.data?.fileHashes[0] as string)
+            setValue('avatar', parseImageUrl(data.data?.fileHashes[0]) as string)
             return 'Collection image uploaded successfully'
           }
         },
         error: {
           render: (error) => {
-            setValue('image', '')
+            setValue('avatar', '')
             return `Uploading error: ${(error.data as any).message}`
           }
         }
@@ -110,24 +110,20 @@ export default function CreateNFTCollectionPage() {
 
     try {
       const salt = randomWord()
-      const { name, symbol, description, shortUrl, image } = data
-
-      const metadata = { name, symbol, description, type, shortUrl, image }
-
-      const { metadataHash } = await api.uploadMetadata(metadata)
-      const fullShortUrl = BASE_API_URL + '/collection/' + shortUrl
-      const args = [name, symbol, `ipfs://${metadataHash}`, fullShortUrl, [], salt]
+      const fullShortUrl = BASE_API_URL + '/collection/' + data.shortUrl
+      const args = [data.name, data.symbol, `ipfs://`, fullShortUrl, [], salt]
 
       toast.update(toastId, { render: 'Sending transaction', type: 'info' })
 
       const tx = await onCreateCollectionContract(type, args)
       await Promise.all([
         waitForTransaction({ hash: tx.hash }),
+
         onCreateCollection({
-          ...metadata,
+          ...data,
+          type,
           txCreationHash: tx.hash,
-          creators: creator,
-          metadata: JSON.stringify(metadata)
+          creators: creator
         })
       ])
 
@@ -210,15 +206,16 @@ export default function CreateNFTCollectionPage() {
             <div>
               <Text className="text-base font-semibold mb-1">Collection image</Text>
               <Controller
-                name="image"
+                name="avatar"
                 control={control}
                 rules={formRules.image}
                 render={({ field: { value } }) => (
                   <ImageUploader
-                    image={!!value ? parseImageUrl(value) : undefined}
+                    value={value}
                     onInput={handleUploadImage}
                     loading={uploading}
-                    error={!!errors.image}
+                    error={!!errors.avatar}
+                    accept=".png,.jpeg, .png, .gif, .webp"
                   />
                 )}
               />

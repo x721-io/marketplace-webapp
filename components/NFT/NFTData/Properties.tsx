@@ -6,7 +6,7 @@ export default function PropertiesTab({ metaData }: { metaData?: APIResponse.NFT
   return (
     <div className="flex flex-col gap-4 py-7">
       {
-        metaData?.data.attributes?.length ? (
+        Array.isArray(metaData?.data?.attributes) && metaData?.data.attributes?.length ? (
           <>
             <div className="flex items-center">
               <div className="flex-1">

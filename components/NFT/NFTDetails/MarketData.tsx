@@ -6,7 +6,6 @@ import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
-import { parseImageUrl } from '@/utils/nft'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 
@@ -50,7 +49,7 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
                     width={56}
                     height={56}
                     className="w-6 h-6 rounded-full"
-                    src={owner.avatar ? parseImageUrl(owner.avatar) : defaultAvatar}
+                    src={owner.avatar || defaultAvatar}
                     alt="avatar" />
                   {owner.username}
                 </Link>

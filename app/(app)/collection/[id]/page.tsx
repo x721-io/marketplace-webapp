@@ -9,7 +9,6 @@ import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
-import { parseImageUrl } from '@/utils/nft'
 import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
@@ -66,8 +65,8 @@ export default function CollectionPage() {
       <BannerSectionCollection
         collectionId={data.collection.id}
         creators={data?.collection?.creators}
-        cover={data?.collection.coverImage ? parseImageUrl(data?.collection.coverImage) : defaultCoverPhoto}
-        avatar={metadata?.image ? parseImageUrl(metadata.image) : defaultAvatar} />
+        cover={data?.collection.coverImage || defaultCoverPhoto}
+        avatar={data?.collection.avatar || defaultAvatar} />
 
       <InformationSectionCollection data={data} />
 

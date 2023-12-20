@@ -3,8 +3,6 @@ import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
 import Image from 'next/image'
-import { parseImageUrl } from '@/utils/nft'
-import defaultAvatar from "@/assets/images/default-avatar.png";
 import Link from 'next/link'
 
 interface Props {
@@ -31,7 +29,6 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
   return (
     <div className="py-7 flex flex-col gap-3">
       {data.slice(0, 100).map(collection => {
-          const metadata = collection.metadata ? JSON.parse(collection.metadata) : { image: defaultAvatar }
           return (
             <Link
               onClick={onClose}
@@ -43,7 +40,7 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
                   className="w-12 h-12 rounded-xl object-cover"
                   width={40}
                   height={40}
-                  src={parseImageUrl(metadata?.image)}
+                  src={collection.avatar || ''}
                   alt="Image" />
                 <div>
                   <Text className="font-semibold text-primary mb-1" variant="body-12">

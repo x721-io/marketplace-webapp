@@ -76,7 +76,7 @@ export default function NFTsList({
                 )}>
                 {
                   items.map(item => (
-                    <div key={item.id}>
+                    <div key={item.u2uId}>
                       <NFTCard {...item} />
                     </div>
                   ))

@@ -6,12 +6,11 @@ import useSWR from 'swr'
 import Text from '@/components/Text'
 import NFTData from '@/components/NFT/NFTData'
 import Image from 'next/image'
-import { parseImageUrl } from '@/utils/nft'
-import defaultImg from '@/assets/images/default-cover-photo.png'
 import NFTMarketData from '@/components/NFT/NFTDetails/MarketData'
 import Icon from '@/components/Icon'
 import { Spinner } from 'flowbite-react'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 
 export default function NFTDetails() {
   const router = useRouter()
@@ -22,11 +21,69 @@ export default function NFTDetails() {
     ([collectionAddress, id]) => api.fetchNFTById(collectionAddress as string, id as string),
     { refreshInterval: 10000 }
   )
+
   const { data: metaData } = useSWR(
     !!item?.tokenUri ? item.tokenUri : null,
-    () => api.getNFTMetaData(item?.tokenUri || ''),
+    (uri) => api.getNFTMetaData(uri),
     { refreshInterval: 600000 }
   )
+
+  const displayMedia = useMemo(() => item?.animationUrl || item?.image, [item])
+  const fileExtension = useMemo(() => displayMedia?.split('.').pop(), [displayMedia])
+
+  const fileType = useMemo(() => {
+    if (!fileExtension) return 'image'
+
+    switch (true) {
+      case ALLOWED_AUDIO_TYPES.includes(fileExtension):
+        return 'audio'
+      case ALLOWED_VIDEO_TYPES.includes(fileExtension):
+        return 'video'
+      case ALLOWED_IMAGE_TYPES.includes(fileExtension):
+        return 'image'
+      default:
+        return 'image'
+    }
+  }, [displayMedia, fileExtension])
+
+  const renderMedia = () => {
+    if (!displayMedia) return null
+    switch (fileType) {
+      case "audio":
+        return (
+          <div className="relative desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] p-2 rounded-2xl mb-10">
+            <Image
+              src={item?.image || ''}
+              alt=""
+              width={512}
+              height={512}
+              className="object-cover w-full h-full rounded-2xl" />
+            <audio className="w-[95%] absolute bottom-1 h-[25px]" controls>
+              <source src={displayMedia} type={`${fileType}/${fileExtension}`} />
+              Your browser does not support the audio tag.
+            </audio>
+          </div>
+        )
+      case "video":
+        return (
+          <video
+            className="desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl mb-10"
+            controls>
+            <source src={displayMedia} type={`${fileType}/${fileExtension}`} />
+            Your browser does not support the video tag.
+          </video>
+        )
+      case "image":
+        return (
+          <Image
+            src={displayMedia}
+            alt=""
+            width={512}
+            height={512}
+            className="object-cover desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl mb-10" />
+        )
+    }
+  }
 
   if (isLoading) {
     return (
@@ -58,12 +115,7 @@ export default function NFTDetails() {
         </div>
 
         <div className="">
-          <Image
-            src={item.image || defaultImg}
-            alt=""
-            width={512}
-            height={512}
-            className="object-cover desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl mb-10" />
+          {renderMedia()}
           <NFTData nft={item} metaData={metaData} />
         </div>
         <NFTMarketData nft={item} />
