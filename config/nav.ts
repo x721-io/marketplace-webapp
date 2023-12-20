@@ -22,5 +22,5 @@ export const navs: NavItem[] = [
       { href: '/create/nft', label: 'NFT' }
     ]
   },
-  { label: 'Sell', href: '#' }
+  // { label: 'Sell', href: '#' }
 ]
