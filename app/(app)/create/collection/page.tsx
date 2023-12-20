@@ -215,6 +215,7 @@ export default function CreateNFTCollectionPage() {
                     onInput={handleUploadImage}
                     loading={uploading}
                     error={!!errors.avatar}
+                    maxSize={2}
                     accept=".png,.jpeg, .png, .gif, .webp"
                   />
                 )}

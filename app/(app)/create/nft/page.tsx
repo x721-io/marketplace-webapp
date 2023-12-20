@@ -242,6 +242,7 @@ export default function CreateNftPage() {
                 rules={formRules.media}
                 render={({ field: { value } }) => (
                   <ImageUploader
+                    maxSize={100}
                     loading={uploading}
                     error={!!errors.media}
                     accept={ALLOWED_FILE_TYPES}
@@ -261,6 +262,7 @@ export default function CreateNftPage() {
                         loading={uploading}
                         error={!!errors.media}
                         accept={ALLOWED_IMAGE_TYPES}
+                        maxSize={2}
                         onInput={handleSelectCoverImage} />
                     )}
                   />
