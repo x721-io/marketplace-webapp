@@ -9,6 +9,7 @@ import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
 import { parseImageUrl } from '@/utils/nft'
+import { formatDisplayedBalance } from '@/utils'
 
 interface Paging {
   page?: number
@@ -83,16 +84,16 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
                     </div>
                   </div>
                   <div className="flex gap-2 flex-col">
+                    <Text className="text-body-12 font-medium">Items</Text>
+                    <Text className="text-body-12 text-secondary">{c.totalNft}</Text>
+                  </div>
+                  <div className="flex gap-2 flex-col">
                     <Text className="text-body-12 font-medium">Volume</Text>
-                    <Text className="text-body-12 text-secondary">{parseFloat(formatEther(c.volumn || 0)).toFixed(2)} U2U</Text>
+                    <Text className="text-body-12 text-secondary">{formatDisplayedBalance(formatEther(c.volumn || 0), 2)} U2U</Text>
                   </div>
                   <div className="flex gap-2 flex-col">
                     <Text className="text-body-12 font-medium">Floor</Text>
-                    <Text className="text-body-12 text-secondary">{parseFloat(formatEther(c.floorPrice || 0)).toFixed(2)} U2U</Text>
-                  </div>
-                  <div className="flex gap-2 flex-col">
-                    <Text className="text-body-12 font-medium">Item</Text>
-                    <Text className="text-body-12 text-secondary">{parseFloat(formatEther(c.floorPrice || 0)).toFixed(2)} U2U</Text>
+                    <Text className="text-body-12 text-secondary">{formatDisplayedBalance(formatEther(c.floorPrice || 0), 2)} U2U</Text>
                   </div>
                 </div>
               </div>

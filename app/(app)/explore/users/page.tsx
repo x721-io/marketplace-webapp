@@ -7,12 +7,10 @@ import useSWR from 'swr'
 import Text from '@/components/Text'
 import Link from 'next/link'
 import Image from 'next/image'
-import { parseImageUrl } from '@/utils/nft'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '@/components/Icon/Verify'
 import React, { useMemo, useState } from 'react'
-import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import { Pagination } from 'flowbite-react'
 
@@ -21,15 +19,14 @@ export default function ExploreUsersPage() {
   const { queryString } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
 
-  const [activePagination, setActivePagination] = useState<APIParams.FetchUsers>( {
+  const [activePagination, setActivePagination] = useState<APIParams.FetchUsers>({
     page: 1,
-    limit: 10
+    limit: 20
   })
 
   const { data: users, isLoading } = useSWR(
-    {...activePagination, search: queryString[searchKey]},
-    (param) => api.fetchUsers(sanitizeObject(param) as APIParams.FetchUsers),
-    { refreshInterval: 30000 }
+    { ...activePagination, search: queryString[searchKey] },
+    params => api.fetchUsers(params)
   )
 
   const totalPage = useMemo(() => {
@@ -44,32 +41,33 @@ export default function ExploreUsersPage() {
     })
   }
 
-  if (!users?.data || !users.data.length) {
+  if (!users?.data || !users?.data.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
       </div>
     )
   }
+
   return (
     <>
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
-        {users.data.map((user: any, index: number) => (
+        {users?.data?.map((user: any, index: number) => (
           <Link key={user.username} href={`/user/${user.id}`}>
             <div className="flex flex-col rounded-xl" style={{ border: '0.7px solid #E3E3E3' }}>
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                  src={user.coverImage ? parseImageUrl(user.coverImage) : defaultImg}
+                  src={user.coverImage || defaultImg}
                   alt="Cover"
                   width={1200} height={256}
                   style={{ width: '100%', height: '100px' }}
                 />
                 <div className="absolute rounded-full"
-                  style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
+                     style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-fill"
-                    src={user.avatar ? parseImageUrl(user.avatar) : defaultAvatar}
+                    src={user.avatar || defaultAvatar}
                     alt="Avatar"
                     width={60} height={60}
                     style={{ width: '100%', height: '100%' }}
@@ -102,6 +100,7 @@ export default function ExploreUsersPage() {
           </Link>
         ))}
       </div>
+
       <div className="flex justify-end">
         <Pagination currentPage={users.paging?.page ?? 1} totalPages={totalPage} onPageChange={handleChangePage} />
       </div>

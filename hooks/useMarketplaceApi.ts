@@ -4,7 +4,6 @@ import { marketplaceApi } from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api'
 import { Address } from 'wagmi'
 import { useMemo } from 'react'
-import { getMetaDataHash } from '@/utils/nft'
 import { parseQueries } from '@/utils'
 
 export const useMarketplaceApi = () => {
@@ -30,6 +29,7 @@ export const useMarketplaceApi = () => {
         } else {
           form.append("files", files, (files as any).name)
         }
+
         if (metadata) {
           form.append('metadata', JSON.stringify(metadata))
         }
@@ -93,8 +93,7 @@ export const useMarketplaceApi = () => {
       },
 
       getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.NFTMetaData> => {
-        const hash = getMetaDataHash(ifpsUrl)
-        return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?hash=${hash}`)
+        return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)
       },
 
       viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),

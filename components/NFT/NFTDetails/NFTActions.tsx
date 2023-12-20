@@ -13,7 +13,7 @@ import useAuthStore from '@/store/auth/store'
 
 export default function NFTActions(nft: APIResponse.NFT) {
   const wallet = useAuthStore(state => state.profile?.publicKey)
-  const { isOwner, isOnSale } = useNFTMarketStatus(nft)
+  const { isOwner, isOnSale, saleData } = useNFTMarketStatus(nft)
   const myBid = useMemo(() => {
     return nft.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
   }, [nft.bidInfo])
@@ -25,21 +25,26 @@ export default function NFTActions(nft: APIResponse.NFT) {
 
   if (isOwner) {
     return (
-      <ConnectWalletButton className="w-full">
-        {
-          isOnSale ? (
-            <Button className="w-full" onClick={() => setShowCancelSellModal(true)}>
-              Cancel listing
-            </Button>
-          ) : (
-            <Button className="w-full" onClick={() => setShowSellModal(true)}>
-              Put on sale
-            </Button>
-          )
-        }
-        <SellNFTModal nft={nft} show={showSellModal} onClose={() => setShowSellModal(false)} />
-        <CancelSellNFTModal nft={nft} show={showCancelSellModal} onClose={() => setShowCancelSellModal(false)} />
-      </ConnectWalletButton>
+      <div className="w-full">
+        <p className="text-secondary text-body-16 font-medium text-center mb-2">
+          You own this NFT
+        </p>
+        <ConnectWalletButton className="w-full">
+          {
+            isOnSale ? (
+              <Button className="w-full" onClick={() => setShowCancelSellModal(true)}>
+                Cancel listing
+              </Button>
+            ) : (
+              <Button className="w-full" onClick={() => setShowSellModal(true)}>
+                Put on sale
+              </Button>
+            )
+          }
+          <SellNFTModal nft={nft} show={showSellModal} onClose={() => setShowSellModal(false)} />
+          <CancelSellNFTModal nft={nft} show={showCancelSellModal} onClose={() => setShowCancelSellModal(false)} />
+        </ConnectWalletButton>
+      </div>
     )
   }
 
@@ -66,7 +71,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
         )
       }
 
-      <BuyNFTModal nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)} />
+      <BuyNFTModal saleData={saleData} nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)} />
       <BidNFTModal nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
       <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
     </ConnectWalletButton>

@@ -14,13 +14,14 @@ import WETH_ABI from '@/abi/WETH.json'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { toast } from 'react-toastify'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
-import { parseImageUrl } from '@/utils/nft'
 
 export default function ProfileModal({ show, onClose }: ModalProps) {
   const address = useAuthStore(state => state.profile?.publicKey)
   const { data: tokenBalance } = useBalance({
     address,
-    token: tokens.wu2u.address
+    token: tokens.wu2u.address,
+    formatUnits: 'ether',
+    watch: true
   })
 
   const username = useAuthStore(state => state.profile?.username)
@@ -60,7 +61,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
           <div className="flex gap-3 items-center">
             <Image
               className="rounded-full"
-              src={avatar ? parseImageUrl(avatar) : defaultAvatar}
+              src={avatar || defaultAvatar}
               alt="Avatar"
               width={48}
               height={48}

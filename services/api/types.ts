@@ -75,8 +75,7 @@ export namespace APIParams {
     id: string
     u2uId: string
     name: string,
-    ipfsHash: string,
-    // image: string,
+    image: string,
     tokenUri: string,
     collectionId: string,
     txCreationHash: string,
@@ -112,7 +111,11 @@ export namespace APIParams {
 
   export interface NFTEvents extends PaginationParams {
     and?: {
-      nftId?: string,
+      nftId_?: {
+        tokenId: string
+        contract_contains: Address
+      }
+      tokenId?: string,
       type?: AssetType,
       from?: string,
       to?: string,
@@ -120,12 +123,13 @@ export namespace APIParams {
       event?: MarketEventType
     }[]
     or?: {
-      nftId?: string,
+      tokenId?: string,
       type?: AssetType,
       from?: string,
       to?: string,
       quoteToken?: Address,
-      event?: MarketEventType
+      event?: MarketEventType,
+      contract_contains?: Address
     }[]
   }
 
@@ -270,12 +274,14 @@ export namespace APIResponse {
       email: string
       publicKey: Address
       quantity: string
+      id: string
     }[],
     collection: Collection,
     traits: Trait[]
     sellInfo: MarketEvent[]
     bidInfo: MarketEvent[]
     image: string
+    animationUrl: string
     price?: BigNumberish
     sellStatus?: MarketEventType
   }
@@ -309,13 +315,11 @@ export namespace APIResponse {
 
   export type NFTEvents = MarketEvent[]
 
-  export interface NFTMetaData {
-    data: {
-      description?: string
-      traits?: Trait[]
-      fileHashes?: string[]
-      type: string
-    } & Record<string, any>
+  export interface NFTMetaData extends Record<string, any> {
+    description?: string
+    traits?: Trait[]
+    fileHashes?: string[]
+    type: string
   }
 
   export type SearchNFTs = {
@@ -323,6 +327,7 @@ export namespace APIResponse {
     name: string,
     ipfsHash: string,
     image: string,
+    animationUrl: string
     createdAt: string,
     updatedAt: string,
     status: Status,

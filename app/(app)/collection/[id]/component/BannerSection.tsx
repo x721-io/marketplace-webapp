@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import useAuthStore from '@/store/auth/store'
 import { APIResponse } from '@/services/api/types'
 import { useAuth } from '@/hooks/useAuth'
+import { parseImageUrl } from '@/utils/nft'
 
 interface Props {
   cover: string | StaticImageData
@@ -35,7 +36,7 @@ export default function BannerSectionCollection({ collectionId, cover, avatar, c
 
       await api.updateCollection({
         id: collectionId,
-        coverImage: fileHashes[0]
+        coverImage: parseImageUrl(fileHashes[0])
       })
       toast.update(toastId, {
         render: 'Cover image updated successfully',

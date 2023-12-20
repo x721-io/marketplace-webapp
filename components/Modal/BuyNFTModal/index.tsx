@@ -2,16 +2,17 @@ import { Modal, ModalProps } from 'flowbite-react'
 import { useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import { APIResponse } from '@/services/api/types'
+import { APIResponse, MarketEvent } from '@/services/api/types'
 
 // import ApprovalStep from './ApprovalStep'
 import BuyStep from "./BuyStep";
 
 interface Props extends ModalProps {
   nft: APIResponse.NFT,
+  saleData?: MarketEvent
 }
 
-export default function BuyNFTModal({ nft, show, onClose }: Props) {
+export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const [error, setError] = useState<Error>()
   const [step, setStep] = useState(2)
 
@@ -26,7 +27,7 @@ export default function BuyNFTModal({ nft, show, onClose }: Props) {
       // case 1:
       //   return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
       case 2:
-        return <BuyStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
+        return <BuyStep saleData={saleData} nft={nft} onError={setError} onSuccess={() => setStep(3)} />
       case 3:
         return (
           <>

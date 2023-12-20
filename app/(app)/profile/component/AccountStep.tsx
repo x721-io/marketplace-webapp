@@ -28,7 +28,7 @@ export default function AccountStep() {
         pending: 'Updating email',
         success: 'Email updated successfully!',
         error: {
-          render: error => `Error report: ${error.data}`
+          render: error => `Error report: ${(error.data as any).message}`
         }
       })
     } catch (e) {

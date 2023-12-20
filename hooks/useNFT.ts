@@ -4,6 +4,7 @@ import useAuthStore from '@/store/auth/store'
 import { AssetType } from '@/types'
 import { writeContract, waitForTransaction } from '@wagmi/core'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { MARKETPLACE_URL } from '@/config/constants'
 import { parseImageUrl } from '@/utils/nft'
 
 export const useCreateNFT = (type: AssetType) => {
@@ -15,63 +16,63 @@ export const useCreateNFT = (type: AssetType) => {
 
   const onCreateNFT = async (params: Record<string, any>) => {
     if (!userId || !type) return
+    const { collection, description, image, traits, royalties, name, amount, animation_url } = params
 
-    const { id, u2uId } = await api.generateTokenId(params.collection)
+    const { id, u2uId } = await api.generateTokenId(collection)
 
     const metadata = {
       id: id,
-      name: params.name,
-      description: params.description,
-      collectionAddress: params.collection,
-      image: parseImageUrl(params.image),
+      name: name,
+      description: description,
+      collectionAddress: collection,
+      image: parseImageUrl(image),
+      animation_url: parseImageUrl(animation_url),
+      external_url: MARKETPLACE_URL + `/item/${collection}/${id}`,
       creatorId: userId,
-      attributes: params.traits,
-      royalties: [{ account: address, value: params.royalties }]
+      attributes: traits,
+      royalties: [{ account: address, value: royalties }]
     }
 
     const { metadataHash } = await api.uploadMetadata(metadata)
 
-    const tokenURI = "ipfs://" + metadataHash
-    const royalties = Number(params.royalties) * 100
-
     const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
       tokenId: BigInt(u2uId),
-      tokenURI,
-      supply: params.amount,
+      tokenURI: metadataHash,
+      supply: amount,
       creators: [{ account: address, value: 10000 }],
-      royalties: [{ account: address, value: royalties }],
+      royalties: [{ account: address, value: Number(royalties) * 100 }],
       signatures: ["0x"]
     } : {
       tokenId: BigInt(u2uId).toString(),
-      tokenURI,
+      tokenURI: metadataHash,
       creators: [{ account: address, value: 10000 }],
       royalties: [{ account: address, value: royalties }],
       signatures: ["0x"]
     }
-    const args = [
+    const contractArgs = [
       tokenArgs,
       address,
-      type === 'ERC1155' && params.amount
+      type === 'ERC1155' && amount
     ].filter(Boolean)
 
     const tx = await writeContract({
-      address: params.collection,
+      address: collection,
       abi: proxyContract.abi,
       functionName: 'mintAndTransfer',
-      args
+      args: contractArgs
     })
 
     const createNFTParams = {
       id: id.toString(),
       u2uId: BigInt(u2uId).toString(),
-      name: params.name,
+      name,
       ipfsHash: metadataHash,
-      tokenUri: tokenURI,
-      collectionId: params.collection,
+      tokenUri: metadataHash,
+      collectionId: collection,
       txCreationHash: tx.hash,
-      // image: params.image,
+      image,
       creatorId: userId,
-      traits: params.traits
+      traits: traits
     }
 
     await Promise.all([

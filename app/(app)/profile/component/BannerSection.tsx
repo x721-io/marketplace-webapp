@@ -16,21 +16,13 @@ export default function BannerSection() {
   const avatarRef = useRef<HTMLInputElement>(null)
   const coverImageRef = useRef<HTMLInputElement>(null)
 
-  const previewAvatar = useMemo(() => {
-    return avatar ? parseImageUrl(avatar) : defaultAvatar
-  }, [avatar])
-
-  const previewCoverImage = useMemo(() => {
-    return coverImage ? parseImageUrl(coverImage) : ''
-  }, [coverImage])
-
   const handleUploadAvatar = async (files: FileList | null) => {
     if (!files) return
     const toastId = toast.loading('Uploading Avatar image...', { type: 'info' })
     try {
       const { fileHashes } = await api.uploadFile(files[0])
       await onUpdateProfile({
-        avatar: fileHashes[0]
+        avatar: parseImageUrl(fileHashes[0])
       })
       toast.update(toastId, {
         render: 'Avatar updated successfully',
@@ -59,7 +51,7 @@ export default function BannerSection() {
     try {
       const { fileHashes } = await api.uploadFile(files[0])
       await onUpdateProfile({
-        coverImage: fileHashes[0]
+        coverImage: parseImageUrl(fileHashes[0])
       })
       toast.update(toastId, {
         render: 'Cover image updated successfully',
@@ -94,7 +86,7 @@ export default function BannerSection() {
         />
         <Image
           className="rounded-2xl w-full h-auto object-cover"
-          src={previewAvatar}
+          src={avatar || defaultAvatar}
           alt="Avatar"
           width={256}
           height={256}
@@ -114,10 +106,10 @@ export default function BannerSection() {
       </div>
 
       {
-        !!previewCoverImage && (
+        !!coverImage && (
           <Image
             className="rounded-2xl w-full h-[180px] object-cover"
-            src={previewCoverImage}
+            src={coverImage}
             alt="Cover"
             width={1200}
             height={256}
