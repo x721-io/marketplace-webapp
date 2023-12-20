@@ -62,7 +62,7 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
           }
         </Table.Body>
       </Table>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-20">
         <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
       </div>
     </>
