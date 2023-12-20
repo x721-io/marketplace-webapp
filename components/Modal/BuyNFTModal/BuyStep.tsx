@@ -1,4 +1,4 @@
-import { APIResponse } from '@/services/api/types'
+import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useBuyUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
@@ -14,19 +14,20 @@ interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: APIResponse.NFT
+  saleData?: MarketEvent
 }
 
 interface FormState {
   quantity: number
 }
 
-export default function BuyStep({ onSuccess, onError, nft }: Props) {
+export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   const { address } = useAccount()
   const { data: tokenBalance } = useBalance({
     address: address,
     enabled: !!address
   })
-  const { saleData } = useNFTMarketStatus(nft)
+  // const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
   const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState>()
   const quantity = watch('quantity')

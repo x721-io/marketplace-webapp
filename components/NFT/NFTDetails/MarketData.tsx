@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const type = nft.collection.type
-  const { isOnSale, saleData } = useNFTMarketStatus(nft)
+  const { isOnSale, saleData, isOwner } = useNFTMarketStatus(nft)
 
   return (
     <div className="flex flex-col gap-10 justify-between">
@@ -29,40 +29,32 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         </Text>
 
         <Text className="text-secondary" variant="body-16">
-          Created by <Link href={`/user/${nft.creator.id}`}
-                           className="text-primary underline">{nft.creator.username}</Link>
+          Created by {' '}
+          <Link href={`/user/${nft.creator.id}`} className="text-primary underline">
+            {nft.creator.username}
+          </Link>
         </Text>
 
-        <div>
-          <Text className="text-secondary mb-2" variant="body-16">
-            Owner{type === 'ERC1155' && `(s): ${nft.owners.length}`}
-            {' '}
-            {type === 'ERC1155' && `Total supply: ${nft.totalSupply}`}
-          </Text>
-          {
-            nft.owners.map(owner => (
-              <div className="flex items-center gap-2" key={owner.publicKey}>
-                <Link
-                  className="hover:underline flex items-center gap-1 px-2"
-                  href={`/user/${owner.publicKey}`}>
-                  <Image
-                    width={56}
-                    height={56}
-                    className="w-6 h-6 rounded-full"
-                    src={owner.avatar || defaultAvatar}
-                    alt="avatar" />
-                  {owner.username}
-                </Link>
-                {type === 'ERC1155' && (
-                  <>
-                    -
-                    <Text> quantity: {owner.quantity}</Text>
-                  </>
-                )}
-              </div>
-            ))
-          }
-        </div>
+        {
+          type === 'ERC721' && (
+            <div className="flex items-center gap-2">
+              <Text className="text-secondary" variant="body-16">
+                Current Owner:
+              </Text>
+              <Link
+                className="hover:underline flex items-center gap-1"
+                href={`/user/${nft.owners[0].id}`}>
+                <Image
+                  width={56}
+                  height={56}
+                  className="w-6 h-6 rounded-full"
+                  src={nft.owners[0].avatar || defaultAvatar}
+                  alt="avatar" />
+                {nft.owners[0].username}
+              </Link>
+            </div>
+          )
+        }
       </div>
 
       <div className="inline-flex gap-3">
@@ -85,24 +77,18 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
           <div className="flex justify-between items-start">
             <div>
               <Text className="text-secondary mb-2 font-semibold" variant="body-16">
-                Price
+                {type === 'ERC1155' && 'Best '}Price
               </Text>
-              {
-                isOnSale ? (
-                  <div className="flex items-start justify-between">
-                    <Text variant="heading-md">
+              {isOnSale ? (
+                <div className="flex items-start justify-between">
+                  <Text variant="heading-md">
                       <span className="text-primary font-semibold">
                         {formatUnits(saleData?.price || '0')}
                       </span>&nbsp;
-                      <span className="text-secondary">U2U</span>
-                    </Text>
-                  </div>
-                ) : (
-                  <Text>
-                    # Not for sale
+                    <span className="text-secondary">U2U</span>
                   </Text>
-                )
-              }
+                </div>
+              ) : <Text># Not for sale</Text>}
             </div>
 
             {

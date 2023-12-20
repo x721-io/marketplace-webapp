@@ -16,7 +16,15 @@ export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
 
   const { data, isLoading } = useSWR(
     ['nft-activities'],
-    () => api.fetchNFTEvents({ page, limit, and: [{ nftId: nft.u2uId ?? nft.id }] }),
+    () => api.fetchNFTEvents({
+      page,
+      limit,
+      and: [{
+        nftId_: {
+          tokenId: nft.u2uId ?? nft.id, contract_contains: nft.collection.address
+        }
+      }]
+    }),
     { refreshInterval: 300000 }
   )
 

@@ -16,10 +16,13 @@ export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
   const wallet = useAuthStore(state => state.profile?.publicKey)
 
   const isOwner = useMemo(() => {
+    if (!wallet) return false
     return owners.some(owner => owner.publicKey === wallet)
-  }, [userId, owners])
+  }, [userId, owners, wallet])
 
-  const isOnSale = useMemo(() => !!sellInfo?.length, [sellInfo])
+  const isOnSale = useMemo(() => {
+    return !!sellInfo?.length
+  }, [sellInfo])
 
   const hasBidder = useMemo(() => !!bidInfo?.length, [bidInfo])
 

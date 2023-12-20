@@ -10,7 +10,7 @@ export default function OverviewTab({ metaData }: { metaData?: APIResponse.NFTMe
         Description
       </Text>
       {
-        !metaData?.data?.description ? (
+        !metaData?.description ? (
           <div className="p-7 rounded-2xl border border-disabled border-dashed">
             <Text className="text-secondary text-center text-sm">
               Nothing to show
@@ -18,7 +18,7 @@ export default function OverviewTab({ metaData }: { metaData?: APIResponse.NFTMe
           </div>
         ) : (
           <Text className="text-secondary text-sm">
-            {metaData?.data?.description}
+            {metaData?.description}
           </Text>
         )
       }
