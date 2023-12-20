@@ -8,6 +8,7 @@ import Text from "@/components/Text";
 import { formatEther } from 'ethers'
 import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function NFTCard({ name, id, price, collection, image, animationUrl }: APIResponse.NFT) {
   const displayMedia = image || animationUrl
@@ -68,7 +69,7 @@ export default function NFTCard({ name, id, price, collection, image, animationU
     <Link
       key={id}
       href={`/item/${collection.address}/${id}`}
-      className="flex flex-col rounded-xl p-2 gap-2"
+      className="h-full flex flex-col rounded-xl p-2 gap-2"
       style={{ border: '0.7px solid #E3E3E3' }}>
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
@@ -77,7 +78,7 @@ export default function NFTCard({ name, id, price, collection, image, animationU
       </div>
       <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis">{collection.name}</Text>
       <Text className="text-body-12 px-1 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-        {price ? formatEther(price) : 0} U2U
+        {!!price && `${formatDisplayedBalance(formatEther(price), 2)} U2U`}
       </Text>
     </Link>
   )

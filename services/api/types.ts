@@ -84,7 +84,7 @@ export namespace APIParams {
   }
 
   export interface FetchUsers extends PaginationParams {
-    search: string
+    search?: string
   }
 
   export interface FetchCollections extends PaginationParams {
@@ -306,6 +306,11 @@ export namespace APIResponse {
     updatedAt?: string | null
     bio?: string | null
     coverImage?: string | null
+  }
+
+  export interface UsersData {
+    data: User[],
+    paging: Pagination
   }
 
   export type NFTEvents = MarketEvent[]

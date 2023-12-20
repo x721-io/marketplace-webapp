@@ -4,6 +4,7 @@ import { APIResponse } from '@/services/api/types'
 import Link from 'next/link'
 import { formatEther } from 'ethers'
 import { useMemo } from 'react'
+import { formatDisplayedBalance } from '@/utils'
 
 interface Props {
   data: APIResponse.CollectionDetails
@@ -44,13 +45,13 @@ export default function InformationSectionCollection({ data }: Props) {
           <div className="flex flex-col items-center">
             <Text className="text-secondary">Floor</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {formatEther(floorPrice || 0)} <span className="text-secondary font-normal">U2U</span>
+              {formatDisplayedBalance(formatEther(floorPrice || 0), 2)} <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
           <div className="flex flex-col items-center">
             <Text className="text-secondary">Volume</Text>
             <Text className="text-primary font-bold flex items-center gap-1" variant="body-16">
-              {formatEther(volumn || 0)} <span className="text-secondary font-normal">U2U</span>
+              {formatDisplayedBalance(formatEther(volumn || 0), 2)} <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
           <div className="flex flex-col items-center">

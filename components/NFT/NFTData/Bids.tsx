@@ -8,6 +8,7 @@ import { useNFTMarketStatus } from '@/hooks/useMarket'
 import Button from '@/components/Button'
 import AcceptBidNFTModal from '@/components/Modal/AcceptBidNFTModal'
 import Text from '@/components/Text'
+import { formatThousandDelimiter } from '@/utils'
 
 export default function BidsTab({ nft }: { nft: APIResponse.NFT }) {
   const { isOwner } = useNFTMarketStatus(nft)
@@ -52,7 +53,7 @@ export default function BidsTab({ nft }: { nft: APIResponse.NFT }) {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {row.to}
                     </Table.Cell>
-                    <Table.Cell>{formatUnits(row.price, token?.decimal)}</Table.Cell>
+                    <Table.Cell>{formatThousandDelimiter(formatUnits(row.price, token?.decimal))}</Table.Cell>
                     {type === 'ERC1155' && (<Table.Cell>{row.amounts}</Table.Cell>)}
                     <Table.Cell>{format(Number(row.timestamp) * 1000, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>
                     <Table.Cell>

@@ -4,6 +4,12 @@ import { formatEther } from 'ethers'
 import Link from 'next/link'
 import Text from '@/components/Text'
 import React, { useEffect, useMemo } from 'react'
+import Image from 'next/image'
+import defaultImg from '@/assets/images/default-cover-photo.png'
+import defaultAvatar from '@/assets/images/default-avatar-user.png'
+import VerifyIcon from '../Icon/Verify'
+import { parseImageUrl } from '@/utils/nft'
+import { formatDisplayedBalance } from '@/utils'
 
 interface Paging {
   page?: number
@@ -32,37 +38,70 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
     return Math.ceil(paging.total / paging.limit)
   }, [paging])
 
+  const metadata = useMemo(() => {
+    return collections.map((collection) => {
+      if (!collection.metadata) return {};
+      if (typeof collection.metadata !== 'string') return collection.metadata;
+      return JSON.parse(collection.metadata);
+    });
+  }, [collections]);
+
   return (
     <>
-      <Table hoverable striped className='overflow-x-auto'>
-        <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Symbol</Table.HeadCell>
-          <Table.HeadCell>Floor price</Table.HeadCell>
-          <Table.HeadCell>Volume</Table.HeadCell>
-          <Table.HeadCell>Items</Table.HeadCell>
-          <Table.HeadCell>Owners</Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {
-            Array.isArray(collections) && collections.map(c => (
-              <Table.Row key={c.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-normal font-medium text-gray-900 max-w-[300px] overflow-hidden">
-                  <Link className="text-ellipsis hover:underline" href={`/collection/${c.shortUrl}`}>
-                    {c.name}
-                  </Link>
-                </Table.Cell>
-                <Table.Cell className="whitespace-normal max-w-[300px] overflow-hidden break-words">{c.symbol}</Table.Cell>
-                <Table.Cell>{parseFloat(formatEther(c.floorPrice || 0)).toFixed(2)} U2U</Table.Cell>
-                <Table.Cell>{parseFloat(formatEther(c.volumn || 0)).toFixed(2)} U2U</Table.Cell>
-                <Table.Cell>{c.totalNft}</Table.Cell>
-                <Table.Cell>{c.totalOwner}</Table.Cell>
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table>
-      <div className="flex justify-end">
+      <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
+        {Array.isArray(collections) && collections.map((c, index) => (
+          <Link key={c.id} href={`/collection/${c.shortUrl}`}>
+            <div className="flex flex-col rounded-xl" style={{ border: '0.7px solid #E3E3E3' }}>
+              <div className="relative">
+                <Image
+                  className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
+                  src={c.coverImage ? parseImageUrl(c.coverImage) : defaultImg}
+                  alt="Cover"
+                  width={1200} height={256}
+                  style={{ width: '100%', height: '100px' }}
+                />
+                <div className="absolute rounded-full"
+                  style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
+                  <Image
+                    className="cursor-pointer rounded-full object-fill"
+                    src={metadata[index] && metadata[index].image ? parseImageUrl(metadata[index].image) : defaultAvatar}
+                    alt="Avatar"
+                    width={60} height={60}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </div>
+              </div>
+              <div className="pt-6 px-3 pb-4 flex justify-between">
+                <div className="flex gap-2 w-full justify-between">
+                  <div className="flex gap-2 flex-col">
+                    <div className='flex gap-1 items-center'>
+                      <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
+                      <VerifyIcon width={16} height={16} />
+                    </div>
+                    <div className="flex gap-2">
+                      <Text className="text-body-12 font-medium">{c.totalOwner}</Text>
+                      <Text className="text-body-12 text-secondary">Owners</Text>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 flex-col">
+                    <Text className="text-body-12 font-medium">Items</Text>
+                    <Text className="text-body-12 text-secondary">{c.totalNft}</Text>
+                  </div>
+                  <div className="flex gap-2 flex-col">
+                    <Text className="text-body-12 font-medium">Volume</Text>
+                    <Text className="text-body-12 text-secondary">{formatDisplayedBalance(formatEther(c.volumn || 0), 2)} U2U</Text>
+                  </div>
+                  <div className="flex gap-2 flex-col">
+                    <Text className="text-body-12 font-medium">Floor</Text>
+                    <Text className="text-body-12 text-secondary">{formatDisplayedBalance(formatEther(c.floorPrice || 0), 2)} U2U</Text>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div className="flex justify-end mt-20">
         <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
       </div>
     </>

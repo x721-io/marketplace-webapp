@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { Address } from 'wagmi'
 import Text from '@/components/Text'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function Activities({ wallet }: { wallet: Address }) {
   const api = useMarketplaceApi()
@@ -61,7 +62,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    {formatUnits(row.price, token?.decimal)} {token?.symbol}
+                    {formatDisplayedBalance(formatUnits(row.price, token?.decimal), 2)} {token?.symbol}
                   </Table.Cell>
                 </Table.Row>
               )

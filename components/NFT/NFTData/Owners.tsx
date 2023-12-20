@@ -7,6 +7,7 @@ import { formatEther } from 'ethers'
 import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
 import BuyNFTModal from '@/components/Modal/BuyNFTModal'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
   const [modals, setModals] = useState<Record<string, any>>({})
@@ -44,7 +45,7 @@ export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
                     <p className="text-secondary text-body-14 font-semibold">
                       {owner.sellInfo.amounts} / {owner.quantity} item(s) on sale for
                       <span className="text-primary">
-                        {" "}{formatEther(owner.sellInfo.price)} U2U
+                        {" "}{formatDisplayedBalance(formatEther(owner.sellInfo.price), 2)} U2U
                       </span>
                       {" "}each
                     </p>

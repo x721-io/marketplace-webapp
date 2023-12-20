@@ -22,6 +22,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { useCreateNFT } from '@/hooks/useNFT'
 import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
+import PlusCircleIcon from "@/components/Icon/PlusCircle";
 
 interface NFTFormState {
   media: Blob[],
@@ -279,6 +280,19 @@ export default function CreateNftPage() {
                 rules={formRules.collection}
                 render={({ field: { onChange, value } }) => (
                   <div className="flex items-center gap-3 w-full max-h-56 overflow-y-auto flex-wrap">
+                    {
+                      type === 'ERC721' || type === 'ERC1155' ?
+                        <Link href={`/create/collection`}>
+                          <div className={classNames(
+                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border text-primary bg-white',
+                            'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
+                          )}>
+                            <PlusCircleIcon width={24} height={24} />
+                            <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721'? 'ERC721': 'ERC1155'}</span></span>
+                          </div>
+                        </Link>
+                        : ''
+                    }
                     {
                       collectionOptions.length ? collectionOptions.map(c => (
                         <div

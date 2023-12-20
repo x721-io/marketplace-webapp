@@ -67,7 +67,7 @@ export default function ExploreSectionNavbar() {
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5" />
       </div>
 
-      {
+      {/* {
         routeKey !== 'profile' && (
           <div className="order-4">
             <Dropdown
@@ -88,7 +88,7 @@ export default function ExploreSectionNavbar() {
             </Dropdown>
           </div>
         )
-      }
+      } */}
     </div>
   )
 }

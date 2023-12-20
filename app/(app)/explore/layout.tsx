@@ -34,7 +34,7 @@ export default function ExploreLayout({ children }: {
         <ExploreSectionNavbar />
       </div>
 
-      <div className="pb-20">
+      <div>
         {children}
       </div>
     </div>

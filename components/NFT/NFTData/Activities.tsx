@@ -8,6 +8,7 @@ import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
 import Text from '@/components/Text'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
   const api = useMarketplaceApi()
@@ -64,7 +65,7 @@ export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
                     <Link href={`/user/${row.from}`}>{row.from}</Link>
                   </Table.Cell>
                   <Table.Cell>
-                    {formatUnits(row.price, token?.decimal)} - {token?.symbol}
+                    {formatDisplayedBalance(formatUnits(row.price, token?.decimal), 2)} - {token?.symbol}
                   </Table.Cell>
                 </Table.Row>
               )

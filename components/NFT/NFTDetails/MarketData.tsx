@@ -8,6 +8,7 @@ import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const type = nft.collection.type
@@ -83,7 +84,7 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                       <span className="text-primary font-semibold">
-                        {formatUnits(saleData?.price || '0')}
+                        {formatDisplayedBalance(formatUnits(saleData?.price || '0'), 2)}
                       </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
