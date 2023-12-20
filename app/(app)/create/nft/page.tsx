@@ -262,7 +262,7 @@ export default function CreateNftPage() {
                         loading={uploading}
                         error={!!errors.media}
                         accept={ALLOWED_IMAGE_TYPES}
-                        maxSize={2}
+                        maxSize={20}
                         onInput={handleSelectCoverImage} />
                     )}
                   />
