@@ -172,10 +172,10 @@ export default function CreateNftPage() {
         autoClose: 1000
       })
       resetForm()
-    } catch (e) {
+    } catch (e: any) {
       console.error(e)
       toast.update(createNFTToast, {
-        render: error => `Error report: ${error.data}`,
+        render: error => `Error report: ${e.message}`,
         type: 'error',
         isLoading: false,
         autoClose: 1000
