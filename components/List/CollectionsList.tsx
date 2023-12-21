@@ -8,7 +8,6 @@ import Image from 'next/image'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
-import { parseImageUrl } from '@/utils/nft'
 import { formatDisplayedBalance } from '@/utils'
 
 interface Paging {
@@ -37,14 +36,6 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
   }, [paging])
-
-  const metadata = useMemo(() => {
-    return collections.map((collection) => {
-      if (!collection.metadata) return {};
-      if (typeof collection.metadata !== 'string') return collection.metadata;
-      return JSON.parse(collection.metadata);
-    });
-  }, [collections]);
 
   return (
     <>

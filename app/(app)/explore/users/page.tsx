@@ -26,7 +26,8 @@ export default function ExploreUsersPage() {
 
   const { data: users, isLoading } = useSWR(
     { ...activePagination, search: queryString[searchKey] },
-    params => api.fetchUsers(params)
+    params => api.fetchUsers(params),
+    { refreshInterval: 10000 }
   )
 
   const totalPage = useMemo(() => {
