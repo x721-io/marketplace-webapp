@@ -33,7 +33,7 @@ export default function CollectionPage() {
       ...filters,
       collectionAddress: address
     }) as APIParams.FetchNFTs),
-    { refreshInterval: 30000 }
+    { refreshInterval: 10000 }
   )
 
   const metadata = useMemo(() => {
