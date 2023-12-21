@@ -55,7 +55,7 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                  src={c.coverImage ? parseImageUrl(c.coverImage) : defaultImg}
+                  src={c.coverImage || defaultImg}
                   alt="Cover"
                   width={1200} height={256}
                   style={{ width: '100%', height: '100px' }}
@@ -64,7 +64,7 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
                   style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-fill"
-                    src={metadata[index] && metadata[index].image ? parseImageUrl(metadata[index].image) : defaultAvatar}
+                    src={c.avatar || defaultAvatar}
                     alt="Avatar"
                     width={60} height={60}
                     style={{ width: '100%', height: '100%' }}
