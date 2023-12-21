@@ -34,7 +34,7 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
                     appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
                     appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5" />
             </div>
-            <div className="order-4">
+            {/* <div className="order-4">
                 <Dropdown
                     label=""
                     dismissOnClick={false}
@@ -51,7 +51,7 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
                     <Dropdown.Item>Date: Ascending</Dropdown.Item>
                     <Dropdown.Item>Date: Descending</Dropdown.Item>
                 </Dropdown>
-            </div>
+            </div> */}
         </div>
     )
 }

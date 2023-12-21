@@ -32,9 +32,9 @@ export default function ProfilePage() {
           <Tabs.Item active title="Wallet">
             <WalletStep />
           </Tabs.Item>
-          <Tabs.Item active title="Notification">
+          {/* <Tabs.Item active title="Notification">
             <NotificationStep />
-          </Tabs.Item>
+          </Tabs.Item> */}
         </Tabs.Group>
       </div>
     </div>
