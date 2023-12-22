@@ -17,7 +17,7 @@ export default function OverviewTab({ metaData }: { metaData?: APIResponse.NFTMe
             </Text>
           </div>
         ) : (
-          <Text className="text-secondary text-sm">
+          <Text className="text-secondary text-sm w-full break-words">
             {metaData?.description}
           </Text>
         )

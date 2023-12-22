@@ -33,14 +33,8 @@ export default function CollectionPage() {
       ...filters,
       collectionAddress: address
     }) as APIParams.FetchNFTs),
-    { refreshInterval: 30000 }
+    { refreshInterval: 10000 }
   )
-
-  const metadata = useMemo(() => {
-    if (!data?.collection.metadata) return {}
-    if (typeof data.collection.metadata !== 'string') return data.collection.metadata
-    return JSON.parse(data?.collection.metadata)
-  }, [data])
 
   if (isLoading) {
     return (

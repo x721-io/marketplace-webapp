@@ -13,7 +13,7 @@ import useAuthStore from '@/store/auth/store'
 
 export default function NFTActions(nft: APIResponse.NFT) {
   const wallet = useAuthStore(state => state.profile?.publicKey)
-  const { isOwner, isOnSale, saleData } = useNFTMarketStatus(nft)
+  const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(nft)
   const myBid = useMemo(() => {
     return nft.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
   }, [nft.bidInfo])
@@ -31,7 +31,7 @@ export default function NFTActions(nft: APIResponse.NFT) {
         </p>
         <ConnectWalletButton className="w-full">
           {
-            isOnSale ? (
+            (isOnSale && isSeller) ? (
               <Button className="w-full" onClick={() => setShowCancelSellModal(true)}>
                 Cancel listing
               </Button>

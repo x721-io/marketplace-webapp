@@ -35,7 +35,7 @@ export default function ExploreSectionNavbar() {
           <div className="order-3 desktop:order-1">
             <Button
               onClick={handleToggleFilters}
-              className={isFiltersVisible ? 'bg-white shadow' : `bg-surface-soft`}
+              className={isFiltersVisible ? 'bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]' : `bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px]`}
               scale="lg"
               variant="secondary">
               Filters

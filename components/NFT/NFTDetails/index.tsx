@@ -51,7 +51,7 @@ export default function NFTDetails() {
     switch (fileType) {
       case "audio":
         return (
-          <div className="relative desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] p-2 rounded-2xl mb-10">
+          <div className="relative desktop:w-[512px] desktop:h-[512px] tablet:h-auto w-full h-[280px] p-2 rounded-2xl mb-10">
             <Image
               src={item?.image || ''}
               alt=""
@@ -67,7 +67,7 @@ export default function NFTDetails() {
       case "video":
         return (
           <video
-            className="desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl mb-10"
+            className="desktop:w-[512px] desktop:h-[512px] tablet:h-auto w-full h-[280px] rounded-2xl mb-10"
             controls>
             <source src={displayMedia} type={`${fileType}/${fileExtension}`} />
             Your browser does not support the video tag.
@@ -80,7 +80,7 @@ export default function NFTDetails() {
             alt=""
             width={512}
             height={512}
-            className="object-cover desktop:w-[512px] desktop:h-[512px] tablet:w-[424px] tablet:h-[424px] w-full h-[280px] rounded-2xl mb-10" />
+            className="object-cover desktop:w-[512px] desktop:h-[512px] tablet:h-auto w-full h-[280px] rounded-2xl mb-10" />
         )
     }
   }
@@ -105,7 +105,7 @@ export default function NFTDetails() {
 
   return (
     <div className="w-full px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10">
-      <div className="flex items-start justify-center flex-col desktop:flex-row tablet:flex-row gap-8 desktop:gap-16 tablet:gap-16">
+      <div className="flex items-start justify-center flex-col desktop:flex-row gap-8 desktop:gap-16 tablet:gap-16">
         <div className="p-2" onClick={router.back}>
           <Icon
             className="cursor-pointer" name="arrowLeft"
@@ -114,11 +114,11 @@ export default function NFTDetails() {
           />
         </div>
 
-        <div className="">
+        <div className="desktop:w-1/3 w-full">
           {renderMedia()}
           <NFTData nft={item} metaData={metaData} />
         </div>
-        <NFTMarketData nft={item} />
+        <NFTMarketData nft={item}/>
       </div>
     </div>
   )

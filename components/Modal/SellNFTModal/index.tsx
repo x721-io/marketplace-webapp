@@ -1,4 +1,4 @@
-import { Modal, ModalProps } from 'flowbite-react'
+import { Modal, ModalProps, Tooltip } from 'flowbite-react'
 import { useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
@@ -23,9 +23,9 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
   const renderContent = () => {
     switch (step) {
       case 1:
-        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
+        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
       case 2:
-        return <ListingStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
+        return <ListingStep nft={nft} onError={setError} onSuccess={() => setStep(3)} />
       case 3:
         return (
           <>
@@ -58,9 +58,11 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
                 <Text className="font-semibold text-error text-center text-heading-sm">
                   Error report
                 </Text>
-                <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-                  {error?.message}
-                </Text>
+                <Tooltip content={error?.message} placement="bottom">
+                  <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                    {error?.message}
+                  </Text>
+                </Tooltip>
 
                 <Button className="w-full" variant="secondary" onClick={handleReset}>
                   Close

@@ -13,7 +13,7 @@ import { classNames } from '@/utils/string'
 import useAuthStore from '@/store/auth/store'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { Accordion } from 'flowbite-react'
+import { Accordion, Tooltip } from 'flowbite-react'
 import Link from 'next/link'
 import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
@@ -23,6 +23,7 @@ import { useCreateNFT } from '@/hooks/useNFT'
 import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
+import { useRouter } from "next/navigation";
 
 interface NFTFormState {
   media: Blob[],
@@ -35,6 +36,7 @@ interface NFTFormState {
 }
 
 export default function CreateNftPage() {
+  const router = useRouter()
   const [type, setType] = useState<AssetType>()
   const [validating, setValidating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -173,6 +175,7 @@ export default function CreateNftPage() {
         autoClose: 1000
       })
       resetForm()
+      router.push('/explore/items')
     } catch (e: any) {
       console.error(e)
       toast.update(createNFTToast, {
@@ -284,11 +287,11 @@ export default function CreateNftPage() {
                       type === 'ERC721' || type === 'ERC1155' ?
                         <Link href={`/create/collection`}>
                           <div className={classNames(
-                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border text-primary bg-white',
-                            'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
+                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border-2 text-primary bg-white',
+                            'hover:border-primary hover:bg-white hover:text-primary transition-all',
                           )}>
                             <PlusCircleIcon width={24} height={24} />
-                            <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721'? 'ERC721': 'ERC1155'}</span></span>
+                            <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721' ? 'ERC721' : 'ERC1155'}</span></span>
                           </div>
                         </Link>
                         : ''
@@ -300,11 +303,14 @@ export default function CreateNftPage() {
                           onClick={() => onChange(c.value)}
                           className={classNames(
                             'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 text-center',
-                            'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
-                            c.value === value ? 'border-2 border-primary bg-white text-primary' : ' border text-tertiary bg-surface-soft'
+                            'hover:border-primary hover:bg-white hover:text-primary border-2 transition-all',
+                            c.value === value ? 'border-primary bg-white text-primary' : 'text-tertiary bg-surface-soft'
                           )}>
-                          <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>
+                          <Tooltip content={c.label} placement="top">
+                            <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>
+                          </Tooltip>
                           <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.type}</Text>
+
                         </div>
                       )) : (
                         <div className="flex justify-center items-center w-full h-40 rounded-2xl border border-dashed border-disabled">

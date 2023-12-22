@@ -15,6 +15,7 @@ export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
   const owners = useMemo(() => {
     return nft.owners.map(owner => {
       const sellInfo = nft.sellInfo.find(item => item.from.toLowerCase() === owner.publicKey.toLowerCase())
+      console.log(sellInfo)
       return {
         ...owner,
         sellInfo
@@ -57,11 +58,11 @@ export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
                 </div>
               </Link>
 
-              {(!!owner.sellInfo) && owner.publicKey.toLowerCase() === userWallet?.toLowerCase() ? (
+              {owner.publicKey.toLowerCase() === userWallet?.toLowerCase() ? (
                 <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[120px] text-center">
                   This is me
                 </div>
-              ) : (
+              ) : (!!owner.sellInfo) && (
                 <>
                   <BuyNFTModal
                     saleData={owner.sellInfo}

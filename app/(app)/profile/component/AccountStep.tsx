@@ -56,9 +56,9 @@ export default function AccountStep() {
             <Text className="text-tertiary" variant="body-12">
               Please check email and verify your email address.
             </Text>
-            <Text className="text-tertiary flex items-center" variant="body-12">
+            {/* <Text className="text-tertiary flex items-center" variant="body-12">
               Still no email? <span className="text-primary ml-1 text-body-12">Resend</span>
-            </Text>
+            </Text> */}
           </div>
           <FormValidationMessages errors={errors}/>
           <Button type="submit" disabled={!isDirty}>
@@ -67,7 +67,7 @@ export default function AccountStep() {
         </form>
 
       </div>
-      <div className="flex gap-1 flex-col">
+      {/* <div className="flex gap-1 flex-col">
         <Text className="text-body-16 font-semibold">Danger zone</Text>
         <Text className="text-tertiary text-body-12">
           Once you delete your account, there is no going back. Please be certain
@@ -75,7 +75,7 @@ export default function AccountStep() {
       </div>
       <div className="w-full tablet:w-auto desktop:w-auto">
         <Button className="w-full tablet:w-auto desktop:w-auto" disabled>Delete my account</Button>
-      </div>
+      </div> */}
     </div>
   )
 }

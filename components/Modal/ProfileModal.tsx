@@ -86,7 +86,10 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
               <Text className="font-semibold text-secondary">Market trade profits: </Text>
               <Text className="font-bold text-primary">{tokenBalance?.formatted || '0'} U2U</Text>
             </div>
-            <Button loading={txStatus.isLoading} className="w-full" variant="text">Claim</Button>
+            {
+              tokenBalance?.formatted == '0' ? <Text className='text-center mt-2 text-secondary'>Claim</Text> : <Button loading={txStatus.isLoading} className="w-full" variant="text">Claim</Button>
+            }
+            
           </div>
         </ConnectWalletButton>
 

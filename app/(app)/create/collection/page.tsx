@@ -24,6 +24,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { noSpecialCharacterRegex } from '@/utils/regex'
 import { parseImageUrl } from '@/utils/nft'
 import { waitForTransaction } from '@wagmi/core'
+import { useRouter } from 'next/navigation'
 
 interface CollectionFormState {
   avatar: string
@@ -34,6 +35,7 @@ interface CollectionFormState {
 }
 
 export default function CreateNFTCollectionPage() {
+  const router = useRouter()
   const [validating, setValidating] = useState(false)
   const [uploading, setUploading] = useState(false)
   const api = useMarketplaceApi()
@@ -134,6 +136,7 @@ export default function CreateNFTCollectionPage() {
         autoClose: 5000
       })
       resetForm()
+      router.push('/explore/collections')
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error creating collection: ${e.message ?? e}`,

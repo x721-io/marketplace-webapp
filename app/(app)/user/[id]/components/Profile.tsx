@@ -18,7 +18,7 @@ export default function Profile({ id, username, bio, avatar, coverImage }: APIRe
           src={coverImage || defaultCoverPhoto}
           width={1200} height={220}
           alt="user-detail-bg"
-          className="w-full desktop:h-[220px] tablet:h-[220px] h-[160px]" />
+          className="w-full desktop:h-[220px] tablet:h-[220px] h-[160px] object-cover" />
 
         <div className="absolute border-white rounded-2xl desktop:pl-[80px] tablet:pl-[80px] pl-4"
              style={{ bottom: '0', transform: 'translateY(50%)' }}>

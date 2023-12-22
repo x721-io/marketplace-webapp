@@ -9,6 +9,8 @@ import { formatEther } from 'ethers'
 import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 import { formatDisplayedBalance } from '@/utils'
+import { Tooltip } from "flowbite-react";
+import { classNames } from '@/utils/string'
 
 export default function NFTCard({ name, id, price, collection, image, animationUrl }: APIResponse.NFT) {
   const displayMedia = image || animationUrl
@@ -56,7 +58,7 @@ export default function NFTCard({ name, id, price, collection, image, animationU
       case "image":
         return (
           <Image
-            className="cursor-pointer rounded-xl object-cover w-full h-[220px]"
+            className="cursor-pointer rounded-xl object-cover w-full desktop:h-[220px] tablet:h-[180px] h-[130px] "
             src={displayMedia}
             alt="image"
             width={220} height={220}
@@ -69,14 +71,18 @@ export default function NFTCard({ name, id, price, collection, image, animationU
     <Link
       key={id}
       href={`/item/${collection.address}/${id}`}
-      className="h-full flex flex-col rounded-xl p-2 gap-2"
-      style={{ border: '0.7px solid #E3E3E3' }}>
+      className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft'}
+      >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
-        <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis">{name}</Text>
+        <Tooltip content={name} placement="top">
+          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">{name}</Text>
+        </Tooltip>
       </div>
-      <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis">{collection.name}</Text>
+      <Tooltip content={collection.name} placement="bottom">
+        <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[200px] w-[150px]">{collection.name}</Text>
+      </Tooltip>
       <Text className="text-body-12 px-1 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
         {!!price && `${formatDisplayedBalance(formatEther(price), 2)} U2U`}
       </Text>

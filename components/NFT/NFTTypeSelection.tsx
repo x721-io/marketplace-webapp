@@ -1,6 +1,8 @@
 import Text from '@/components/Text'
 import { classNames } from '@/utils/string'
 import { AssetType } from '@/types'
+import CheckCircleIcon from '../Icon/CheckCircle'
+import MultiSelectIcon from '../Icon/MultiSelect'
 
 interface Props {
   title: string,
@@ -21,9 +23,10 @@ export default function NFTTypeSelection({ title, onSelect }: Props) {
         <div
           onClick={() => onSelect('ERC721')}
           className={classNames(
-            'flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl tablet:p-8 desktop:p-8 p-4',
+            'flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl tablet:p-8 desktop:px-3 desktop:py-8 p-4',
             'hover:border-2 hover:border-primary hover:bg-white hover:text-primary border text-tertiary bg-surface-soft'
           )}>
+          <CheckCircleIcon width={32} height={32} />
           <Text className="desktop:text-heading-sm tablet:text-heading-sm text-body-24 font-bold text-primary text-center">Single Item</Text>
           <Text className="text-body-12 font-bold text-secondary text-center">If you want to highlight the uniqueness
             and individuality of your item</Text>
@@ -31,9 +34,10 @@ export default function NFTTypeSelection({ title, onSelect }: Props) {
         <div
           onClick={() => onSelect('ERC1155')}
           className={classNames(
-            'flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl tablet:p-8 desktop:p-8 p-4',
+            'flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl tablet:p-8 desktop:px-3 desktop:py-8 p-4',
             'hover:border-2 hover:border-primary hover:bg-white hover:text-primary border text-tertiary bg-surface-soft'
           )}>
+            <MultiSelectIcon width={32} height={32} />
           <Text className="desktop:text-heading-sm tablet:text-heading-sm text-body-24 font-bold text-primary text-center">Multiple Edition</Text>
           <Text className="text-body-12 font-bold text-secondary text-center">If you want to share your NFT with a large
             number of community members</Text>
