@@ -15,7 +15,6 @@ export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
   const owners = useMemo(() => {
     return nft.owners.map(owner => {
       const sellInfo = nft.sellInfo.find(item => item.from.toLowerCase() === owner.publicKey.toLowerCase())
-      console.log(sellInfo)
       return {
         ...owner,
         sellInfo

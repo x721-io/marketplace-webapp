@@ -100,7 +100,7 @@ export default function ProfileStep() {
               placeholder="https://"
               error={!!errors.webURL}
               register={register('webURL', {
-                pattern: { value: urlRegex, message: 'Wrong format web url address' }
+                pattern: { value: urlRegex, message: 'Wrong web url format' }
               })}
               className="console.error"
             />
@@ -112,7 +112,7 @@ export default function ProfileStep() {
               placeholder="https://twitter.com/[your-twitter-username]"
               error={!!errors.twitterLink}
               register={register('twitterLink', {
-                pattern: { value: urlRegex, message: 'Wrong format twitter url address' }
+                pattern: { value: urlRegex, message: 'Wrong twitter url format' }
               })}
             />
           </div>
@@ -122,7 +122,7 @@ export default function ProfileStep() {
               placeholder="https://www.facebook.com/[your-facebook-username]"
               error={!!errors.facebookLink}
               register={register('facebookLink', {
-                pattern: { value: urlRegex, message: 'Wrong format facebook url address' }
+                pattern: { value: urlRegex, message: 'Wrong facebook url format' }
               })}
             />
           </div>
