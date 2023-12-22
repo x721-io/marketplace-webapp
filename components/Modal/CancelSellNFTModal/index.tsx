@@ -1,4 +1,4 @@
-import { Modal, ModalProps } from 'flowbite-react'
+import { Modal, ModalProps, Tooltip } from 'flowbite-react'
 import { APIResponse } from '@/services/api/types'
 import { useCancelSellNFT } from '@/hooks/useMarket'
 import Text from '@/components/Text'
@@ -44,9 +44,11 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
                       <Text className="font-semibold text-error text-center text-heading-sm">
                         Error report
                       </Text>
-                      <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-                        {error?.message}
-                      </Text>
+                      <Tooltip content={error?.message} placement="bottom">
+                        <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                          {error?.message}
+                        </Text>
+                      </Tooltip>
 
                       <Button className="w-full" variant="secondary" onClick={onClose}>
                         Close
@@ -59,9 +61,11 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
                       <Text className="font-semibold text-success text-center text-heading-sm">
                         Success
                       </Text>
-                      <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-                        Sale has been cancelled
-                      </Text>
+                      <Tooltip content="Sale has been cancelled" placement="bottom">
+                        <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                          Sale has been cancelled
+                        </Text>
+                      </Tooltip>
 
                       <Button className="w-full" variant="secondary" onClick={onClose}>
                         Close and continue

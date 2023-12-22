@@ -1,4 +1,4 @@
-import { Modal, ModalProps, Spinner } from 'flowbite-react'
+import { Modal, ModalProps, Spinner, Tooltip } from 'flowbite-react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useAccount, useSignMessage } from 'wagmi'
@@ -75,9 +75,11 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
             <Text className="font-semibold text-error text-center text-heading-sm">
               Error report
             </Text>
-            <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-              {error?.message || authError}
-            </Text>
+            <Tooltip content={error?.message || authError} placement="bottom">
+              <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                {error?.message || authError}
+              </Text>
+            </Tooltip>
 
             <div>
               <Button className="w-full mb-5" variant="primary" onClick={handleSignMessage}>

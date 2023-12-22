@@ -13,7 +13,7 @@ import { classNames } from '@/utils/string'
 import useAuthStore from '@/store/auth/store'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { Accordion } from 'flowbite-react'
+import { Accordion, Tooltip } from 'flowbite-react'
 import Link from 'next/link'
 import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
@@ -288,7 +288,7 @@ export default function CreateNftPage() {
                             'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
                           )}>
                             <PlusCircleIcon width={24} height={24} />
-                            <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721'? 'ERC721': 'ERC1155'}</span></span>
+                            <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721' ? 'ERC721' : 'ERC1155'}</span></span>
                           </div>
                         </Link>
                         : ''
@@ -303,8 +303,11 @@ export default function CreateNftPage() {
                             'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
                             c.value === value ? 'border-2 border-primary bg-white text-primary' : ' border text-tertiary bg-surface-soft'
                           )}>
-                          <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>
+                          <Tooltip content={c.label} placement="top">
+                            <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>
+                          </Tooltip>
                           <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.type}</Text>
+
                         </div>
                       )) : (
                         <div className="flex justify-center items-center w-full h-40 rounded-2xl border border-dashed border-disabled">

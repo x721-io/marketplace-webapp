@@ -1,4 +1,4 @@
-import { Modal, ModalProps } from 'flowbite-react'
+import { Modal, ModalProps, Tooltip } from 'flowbite-react'
 import { useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
@@ -57,9 +57,11 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 <Text className="font-semibold text-error text-center text-heading-sm">
                   Error report
                 </Text>
-                <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-                  {error?.message}
-                </Text>
+                <Tooltip content={error?.message} placement="bottom">
+                  <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                    {error?.message}
+                  </Text>
+                </Tooltip>
 
                 <Button className="w-full" variant="secondary" onClick={handleReset}>
                   Close

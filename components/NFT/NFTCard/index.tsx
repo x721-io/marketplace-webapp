@@ -9,6 +9,7 @@ import { formatEther } from 'ethers'
 import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 import { formatDisplayedBalance } from '@/utils'
+import { Tooltip } from "flowbite-react";
 
 export default function NFTCard({ name, id, price, collection, image, animationUrl }: APIResponse.NFT) {
   const displayMedia = image || animationUrl
@@ -74,9 +75,13 @@ export default function NFTCard({ name, id, price, collection, image, animationU
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
-        <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis">{name}</Text>
+        <Tooltip content={name} placement="top">
+          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis max-w-[235px]">{name}</Text>
+        </Tooltip>
       </div>
-      <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis">{collection.name}</Text>
+      <Tooltip content={collection.name} placement="bottom">
+        <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis max-w-[235px]">{collection.name}</Text>
+      </Tooltip>
       <Text className="text-body-12 px-1 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
         {!!price && `${formatDisplayedBalance(formatEther(price), 2)} U2U`}
       </Text>

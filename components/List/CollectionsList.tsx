@@ -1,4 +1,4 @@
-import { Pagination, Table } from 'flowbite-react'
+import { Pagination, Table, Tooltip } from 'flowbite-react'
 import { APIResponse } from '@/services/api/types'
 import { formatEther } from 'ethers'
 import Link from 'next/link'
@@ -66,7 +66,9 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
                 <div className="flex gap-2 w-full justify-between">
                   <div className="flex gap-2 flex-col">
                     <div className='flex gap-1 items-center'>
-                      <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
+                      <Tooltip content={c.name} placement="bottom">
+                        <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
+                      </Tooltip>
                       <VerifyIcon width={16} height={16} />
                     </div>
                     <div className="flex gap-2">
