@@ -19,7 +19,7 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
             <div className="order-3 desktop:order-1">
                 <Button
                     onClick={setShowFilters}
-                    className={showFilters ? 'bg-white shadow' : `bg-surface-soft`}
+                    className={showFilters ? 'bg-white shadow h-[56px]' : `bg-surface-soft h-[56px]`}
                     scale="lg"
                     variant="secondary">
                     Filters

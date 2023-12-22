@@ -65,7 +65,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
                 <div className="absolute rounded-full"
                   style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
-                    className="cursor-pointer rounded-full object-fill"
+                    className="cursor-pointer rounded-full object-cover"
                     src={c.avatar || defaultAvatar}
                     alt="Avatar"
                     width={60} height={60}
