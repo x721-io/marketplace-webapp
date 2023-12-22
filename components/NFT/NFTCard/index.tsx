@@ -71,7 +71,7 @@ export default function NFTCard({ name, id, price, collection, image, animationU
     <Link
       key={id}
       href={`/item/${collection.address}/${id}`}
-      className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft'}
+      className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:border-hard/70 border-soft transition-all'}
       >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">

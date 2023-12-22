@@ -43,7 +43,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
         {
           id && <Link href={`/create/collection`}>
-            <div className="flex items-center justify-center rounded-xl border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft h-[192px]">
+            <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[192px]">
               <Button variant="primary">
                 Create a collections
               </Button>
@@ -52,7 +52,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
         }
         {Array.isArray(collections) && collections.map((c, index) => (
           <Link key={c.id} href={`/collection/${c.shortUrl}`}>
-            <div className="flex flex-col rounded-xl border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft">
+            <div className="flex flex-col rounded-xl border border-1 hover:border-hard/70 border-soft transition-all">
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
