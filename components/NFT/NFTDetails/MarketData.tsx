@@ -27,21 +27,23 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         </div>
 
         <Tooltip content={nft.name} placement="bottom">
-          <div className='desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden'>
+          <div className="desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden">
             <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
-              style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}
+                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}
             >
               {nft.name}
             </Text>
           </div>
         </Tooltip>
 
-        <Text className="text-secondary" variant="body-16">
-          Created by {' '}
-          <Link href={`/user/${nft.creator.id}`} className="text-primary underline">
-            {nft.creator.username}
-          </Link>
-        </Text>
+        {!!nft.creator && (
+          <Text className="text-secondary" variant="body-16">
+            Created by {' '}
+            <Link href={`/user/${nft.creator.id}`} className="text-primary underline">
+              {nft.creator.username}
+            </Link>
+          </Text>
+        )}
 
         {
           type === 'ERC721' && (

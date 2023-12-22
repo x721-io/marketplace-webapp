@@ -267,7 +267,7 @@ export namespace APIResponse {
       id: string
       publicKey: Address
       username: string
-    },
+    } | null,
     owners: {
       username: string
       avatar: string
