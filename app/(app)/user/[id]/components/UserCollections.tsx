@@ -33,7 +33,9 @@ export default function UserCollections() {
       <CollectionsList
         collections={collections?.data}
         paging={collections?.paging}
-        onChangePage={handleChangePage} />
+        onChangePage={handleChangePage}
+        id={id} />
     </div>
+
   )
 }

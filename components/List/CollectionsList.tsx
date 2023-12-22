@@ -9,6 +9,7 @@ import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
 import { formatDisplayedBalance } from '@/utils'
+import Button from '../Button'
 
 interface Paging {
   page?: number
@@ -17,13 +18,14 @@ interface Paging {
 }
 
 interface Props {
+  id?: string | string[]
   paging?: Paging
   collections?: APIResponse.Collection[]
   onChangePage: (page: number) => void
 }
 
-export default function CollectionsList({ collections, paging, onChangePage }: Props) {
-
+export default function CollectionsList({ collections, paging, onChangePage, id }: Props) {
+  console.log('id', id)
   if (!collections || !collections.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
@@ -40,6 +42,15 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
   return (
     <>
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
+        {
+          id && <Link href={`/create/collection`}>
+            <div className="flex items-center justify-center rounded-xl border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft h-[192px]">
+              <Button variant="primary">
+                Create a collections
+              </Button>
+            </div>
+          </Link>
+        }
         {Array.isArray(collections) && collections.map((c, index) => (
           <Link key={c.id} href={`/collection/${c.shortUrl}`}>
             <div className="flex flex-col rounded-xl border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft">
