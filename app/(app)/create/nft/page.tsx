@@ -23,6 +23,7 @@ import { useCreateNFT } from '@/hooks/useNFT'
 import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
+import { useRouter } from "next/navigation";
 
 interface NFTFormState {
   media: Blob[],
@@ -35,6 +36,7 @@ interface NFTFormState {
 }
 
 export default function CreateNftPage() {
+  const router = useRouter()
   const [type, setType] = useState<AssetType>()
   const [validating, setValidating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -173,6 +175,7 @@ export default function CreateNftPage() {
         autoClose: 1000
       })
       resetForm()
+      router.push('/explore/items')
     } catch (e: any) {
       console.error(e)
       toast.update(createNFTToast, {
