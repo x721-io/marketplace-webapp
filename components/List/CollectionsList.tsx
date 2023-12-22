@@ -42,7 +42,7 @@ export default function CollectionsList({ collections, paging, onChangePage }: P
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
         {Array.isArray(collections) && collections.map((c, index) => (
           <Link key={c.id} href={`/collection/${c.shortUrl}`}>
-            <div className="flex flex-col rounded-xl" style={{ border: '0.7px solid #E3E3E3' }}>
+            <div className="flex flex-col rounded-xl border border-1 border-gray-300 hover:border-primary hover:bg-surface-soft">
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"

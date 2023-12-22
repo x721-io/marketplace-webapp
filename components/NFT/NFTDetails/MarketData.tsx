@@ -9,13 +9,14 @@ import { formatUnits } from 'ethers'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 import { formatDisplayedBalance } from '@/utils'
+import { Tooltip } from 'flowbite-react'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const type = nft.collection.type
   const { isOnSale, saleData, isOwner } = useNFTMarketStatus(nft)
 
   return (
-    <div className="flex flex-col gap-10 justify-between">
+    <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
@@ -25,9 +26,15 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
           </Text>
         </div>
 
-        <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24">
-          {nft.name}
-        </Text>
+        <Tooltip content={nft.name} placement="bottom">
+          <div className='desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden'>
+            <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
+              style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}
+            >
+              {nft.name}
+            </Text>
+          </div>
+        </Tooltip>
 
         <Text className="text-secondary" variant="body-16">
           Created by {' '}
@@ -83,9 +90,9 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
               {isOnSale ? (
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
-                      <span className="text-primary font-semibold">
-                        {formatDisplayedBalance(formatUnits(saleData?.price || '0'), 2)}
-                      </span>&nbsp;
+                    <span className="text-primary font-semibold">
+                      {formatDisplayedBalance(formatUnits(saleData?.price || '0'), 2)}
+                    </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
                 </div>
