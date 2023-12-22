@@ -287,8 +287,8 @@ export default function CreateNftPage() {
                       type === 'ERC721' || type === 'ERC1155' ?
                         <Link href={`/create/collection`}>
                           <div className={classNames(
-                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border text-primary bg-white',
-                            'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
+                            'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border-2 text-primary bg-white',
+                            'hover:border-primary hover:bg-white hover:text-primary transition-all',
                           )}>
                             <PlusCircleIcon width={24} height={24} />
                             <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721' ? 'ERC721' : 'ERC1155'}</span></span>
@@ -303,8 +303,8 @@ export default function CreateNftPage() {
                           onClick={() => onChange(c.value)}
                           className={classNames(
                             'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 text-center',
-                            'hover:border-2 hover:border-primary hover:bg-white hover:text-primary',
-                            c.value === value ? 'border-2 border-primary bg-white text-primary' : ' border text-tertiary bg-surface-soft'
+                            'hover:border-primary hover:bg-white hover:text-primary border-2 transition-all',
+                            c.value === value ? 'border-primary bg-white text-primary' : 'text-tertiary bg-surface-soft'
                           )}>
                           <Tooltip content={c.label} placement="top">
                             <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">{c.label}</Text>

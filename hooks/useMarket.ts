@@ -42,12 +42,18 @@ export const useNFTMarketStatus = (nft: APIResponse.NFT) => {
     }
   }, [sellInfo])
 
+  const isSeller = useMemo(() => {
+    if (type === 'ERC721') return isOwner
+    return saleData?.from.toLowerCase() === wallet?.toLowerCase()
+  }, [type, isOwner])
+
   return {
     saleData,
     isOwner,
     isOnSale,
     hasBidder,
-    isBidder
+    isBidder,
+    isSeller
   }
 }
 

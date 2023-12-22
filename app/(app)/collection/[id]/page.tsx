@@ -36,12 +36,6 @@ export default function CollectionPage() {
     { refreshInterval: 10000 }
   )
 
-  const metadata = useMemo(() => {
-    if (!data?.collection.metadata) return {}
-    if (typeof data.collection.metadata !== 'string') return data.collection.metadata
-    return JSON.parse(data?.collection.metadata)
-  }, [data])
-
   if (isLoading) {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
