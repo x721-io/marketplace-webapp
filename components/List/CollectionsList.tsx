@@ -25,7 +25,6 @@ interface Props {
 }
 
 export default function CollectionsList({ collections, paging, onChangePage, id }: Props) {
-  console.log('id', id)
   if (!collections || !collections.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">

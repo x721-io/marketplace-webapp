@@ -114,11 +114,11 @@ export default function NFTDetails() {
           />
         </div>
 
-        <div className="desktop:w-[35%] w-full">
+        <div className="desktop:w-1/3 w-full">
           {renderMedia()}
           <NFTData nft={item} metaData={metaData} />
         </div>
-        <NFTMarketData nft={item} />
+        <NFTMarketData nft={item}/>
       </div>
     </div>
   )
