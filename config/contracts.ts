@@ -5,6 +5,7 @@ import erc721ABI from '@/abi/ERC721Rarible.json'
 import erc1155MarketABI from '@/abi/ERC1155Marketplace.json'
 import erc1155FactoryABI from '@/abi/ERC1155Factory.json'
 import erc1155ABI from '@/abi/ERC1155.json'
+import * as process from 'process'
 
 export type Contract = {
   address: Address,
@@ -12,13 +13,13 @@ export type Contract = {
 }
 
 export const contracts: Record<string, Contract> = {
-  erc721Market: { address: '0x375336Ef53fA8Bd9F26Ff9DDd16d488D3Ce49EA5', abi: erc721MarketABI },
-  erc721Factory: { address: '0x346d828a9CD9f72ed967c18538196Ca64468805d', abi: erc721Factory },
-  erc721Proxy: { address: '0x73039bafa89e6f17f9a6b0b953a01af5ecabacd2', abi: erc721ABI },
-  erc721: { address: '0x3cD13281Ae21ff33A9a6f397b73dC2FC4fe794Ce', abi: erc721ABI },
-  erc1155Market: { address: '0x03CC9b4d1Be469a5C3a91A5bE28d5306ED2e9325', abi: erc1155MarketABI },
-  erc1155Factory: { address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c', abi: erc1155FactoryABI },
-  erc1155Proxy: { address: '0x4b1AAC431446D84e238784F8Ad4e31712A7Aeb1B', abi: erc1155ABI },
-  erc1155: { address: '0xc2587c1b945b1a7be4be5423c24f1bbf54495daa', abi: erc1155ABI },
+  erc721Market: { address: process.env.NEXT_PUBLIC_ERC721_MARKET_CONTRACT as Address, abi: erc721MarketABI },
+  erc721Factory: { address: process.env.NEXT_PUBLIC_ERC721_FACTORY_CONTRACT as Address, abi: erc721Factory },
+  erc721Proxy: { address: process.env.NEXT_PUBLIC_ERC721_PROXY_CONTRACT as Address, abi: erc721ABI },
+  erc721: { address: process.env.NEXT_PUBLIC_ERC721_U2U_BASE_CONTRACT as Address, abi: erc721ABI },
+  erc1155Market: { address: process.env.NEXT_PUBLIC_ERC1155_MARKET_CONTRACT as Address, abi: erc1155MarketABI },
+  erc1155Factory: { address: process.env.NEXT_PUBLIC_ERC1155_FACTORY_CONTRACT as Address, abi: erc1155FactoryABI },
+  erc1155Proxy: { address: process.env.NEXT_PUBLIC_ERC1155_PROXY_CONTRACT as Address, abi: erc1155ABI },
+  erc1155: { address: process.env.NEXT_PUBLIC_ERC1155_U2U_BASE_CONTRACT as Address, abi: erc1155ABI },
   exchange: { address: '0x', abi: [] }
 }

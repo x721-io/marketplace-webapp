@@ -199,6 +199,7 @@ export namespace APIResponse {
     name: string | null
     symbol: string
     address: Address
+    isU2U: boolean
     description?: string | null
     categoryId: number | null
     createdAt: string
