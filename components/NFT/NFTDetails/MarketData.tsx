@@ -29,8 +29,7 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
         <Tooltip content={nft.name} placement="bottom">
           <div className="desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden">
             <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}
-            >
+                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
               {nft.name}
             </Text>
           </div>
