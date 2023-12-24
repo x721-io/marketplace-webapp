@@ -13,7 +13,7 @@ import { Tooltip } from 'flowbite-react'
 
 export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
   const type = nft.collection.type
-  const { isOnSale, saleData, isOwner } = useNFTMarketStatus(nft)
+  const { isOnSale, saleData } = useNFTMarketStatus(nft)
 
   return (
     <div className="flex flex-col gap-10 justify-between desktop:w-1/3 w-full">
@@ -21,9 +21,9 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
           <Icon name="verified" width={16} height={16} />
-          <Text className="text-secondary">
+          <Link href={`/collection/${nft.collection.id}`} className="text-secondary underline">
             {nft.collection.name}
-          </Text>
+          </Link>
         </div>
 
         <Tooltip content={nft.name} placement="bottom">
