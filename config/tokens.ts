@@ -1,11 +1,12 @@
 import { URC20Token } from '@/types'
+import { Address } from 'wagmi'
 
 export const tokens: Record<string, URC20Token> = {
   wu2u: {
     name: 'Unicorn Ultra Token',
     symbol: 'U2U',
     decimal: 18,
-    address: '0x59541A6A47C410270BF419aCabe40963d75Fce5D'
+    address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address
   }
 }
 
