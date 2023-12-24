@@ -93,8 +93,8 @@ export default function CreateNftPage() {
     },
     royalties: {
       required: 'Royalties is required',
-      min: { value: 0, message: 'Royalties should be within range of 0% - 50%' },
-      max: { value: 50, message: 'Royalties should be within range of 0% - 50%' }
+      min: { value: 1, message: 'Royalties should be within range of 1% - 50%' },
+      max: { value: 50, message: 'Royalties should be within range of 1% - 50%' }
     },
     amount: {
       validate: (value: number) => {

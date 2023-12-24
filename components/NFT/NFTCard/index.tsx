@@ -12,7 +12,7 @@ import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from "flowbite-react";
 import { classNames } from '@/utils/string'
 
-export default function NFTCard({ name, id, price, collection, image, animationUrl }: APIResponse.NFT) {
+export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: APIResponse.NFT) {
   const displayMedia = image || animationUrl
   const fileExtension = displayMedia.split('.').pop()
 
@@ -72,7 +72,7 @@ export default function NFTCard({ name, id, price, collection, image, animationU
       key={id}
       href={`/item/${collection.address}/${id}`}
       className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:border-hard/70 border-soft transition-all'}
-      >
+    >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
@@ -83,8 +83,18 @@ export default function NFTCard({ name, id, price, collection, image, animationU
       <Tooltip content={collection.name} placement="bottom">
         <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[200px] w-[150px]">{collection.name}</Text>
       </Tooltip>
-      <Text className="text-body-12 px-1 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-        {!!price && `${formatDisplayedBalance(formatEther(price), 2)} U2U`}
+
+      <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+        {sellStatus === 'Bid' &&
+          <>Current bid:{' '}
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+          </>
+        }
+        {sellStatus === 'AskNew' &&
+          <>On sale for:{' '}
+            <span className="text-primary font-semibold">${formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
+          </>
+        }
       </Text>
     </Link>
   )

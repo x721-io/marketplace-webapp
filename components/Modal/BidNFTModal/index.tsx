@@ -36,7 +36,7 @@ export default function BidNFTModal({ nft, show, onClose }: Props) {
             <Text className="text-secondary">
               You have successfully placed a bid on {nft.collection.name} - {nft.name}!
             </Text>
-            <Button className="w-full" variant="secondary" onClick={onClose}>
+            <Button className="w-full" variant="secondary" onClick={handleReset}>
               Close and continue
             </Button>
           </>

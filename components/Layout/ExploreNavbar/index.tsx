@@ -3,7 +3,7 @@
 import { Dropdown, Tabs, TabsRef } from 'flowbite-react'
 import Button from '@/components/Button'
 import { usePathname, useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Input from '@/components/Form/Input'
 import SliderIcon from '@/components/Icon/Sliders'
 import CommandIcon from '@/components/Icon/Command'
@@ -27,6 +27,22 @@ export default function ExploreSectionNavbar() {
   const handleChangeTab = (activeTab: number) => {
     return router.push(tabs[activeTab].href)
   }
+
+  useEffect(() => {
+    if (tabsRef.current) {
+      switch (searchKey) {
+        case "nfts":
+          tabsRef.current.setActiveTab(0)
+          break
+        case "collections":
+          tabsRef.current.setActiveTab(1)
+          break
+        case "users":
+          tabsRef.current.setActiveTab(2)
+          break
+      }
+    }
+  }, [tabsRef, searchKey]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
@@ -68,27 +84,27 @@ export default function ExploreSectionNavbar() {
       </div>
 
       {/* {
-        routeKey !== 'profile' && (
-          <div className="order-4">
-            <Dropdown
-              label=""
-              dismissOnClick={false}
-              renderTrigger={() => (
-                <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
-                  Price: Ascending
-                  <div className="rounded-lg p-1 bg-surface-medium">
-                    <Icon name="chevronDown" width={14} height={14} />
-                  </div>
-                </div>
-              )}>
-              <Dropdown.Item>Price: Ascending</Dropdown.Item>
-              <Dropdown.Item>Price: Descending</Dropdown.Item>
-              <Dropdown.Item>Date: Ascending</Dropdown.Item>
-              <Dropdown.Item>Date: Descending</Dropdown.Item>
-            </Dropdown>
-          </div>
-        )
-      } */}
+       routeKey !== 'profile' && (
+       <div className="order-4">
+       <Dropdown
+       label=""
+       dismissOnClick={false}
+       renderTrigger={() => (
+       <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+       Price: Ascending
+       <div className="rounded-lg p-1 bg-surface-medium">
+       <Icon name="chevronDown" width={14} height={14} />
+       </div>
+       </div>
+       )}>
+       <Dropdown.Item>Price: Ascending</Dropdown.Item>
+       <Dropdown.Item>Price: Descending</Dropdown.Item>
+       <Dropdown.Item>Date: Ascending</Dropdown.Item>
+       <Dropdown.Item>Date: Descending</Dropdown.Item>
+       </Dropdown>
+       </div>
+       )
+       } */}
     </div>
   )
 }

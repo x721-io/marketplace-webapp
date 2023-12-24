@@ -24,7 +24,7 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
   if (!value) return '0'
 
   const lookup = [
-    { value: 1, symbol: "" },
+    { value: 0, symbol: "" },
     { value: 1e3, symbol: "k" },
     { value: 1e6, symbol: "M" },
     { value: 1e9, symbol: "G" },
@@ -37,7 +37,10 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
     return Number(value) >= item.value;
   });
 
-  return item ? (Number(value) / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+  if (item?.value === 0) {
+    return parseFloat(String(value)).toFixed(2)
+  }
+  return item ? (Number(value) / item.value).toFixed(digits).replace(rx, "1") + item.symbol : "0";
 }
 
 export const formatThousandDelimiter = (value: string | number) => {

@@ -27,15 +27,15 @@ export default function ProfileStep() {
   const { onUpdateProfile } = useAuth()
 
   const { handleSubmit, register, formState: { isDirty, errors } } = useForm<ProfileFormState>({
-    defaultValues: profile || {
-      bio: '',
-      shortLink: '',
-      username: '',
-      twitterLink: '',
-      webURL: '',
-      facebookLink: '',
-      telegram: '',
-      discord: ''
+    defaultValues: {
+      bio: profile?.bio,
+      shortLink: profile?.shortLink,
+      username: profile?.username,
+      twitterLink: profile?.twitterLink,
+      webURL: profile?.webURL,
+      facebookLink: profile?.facebookLink,
+      telegram: profile?.telegramLink,
+      discord: profile?.discordLink
     }
   })
 
