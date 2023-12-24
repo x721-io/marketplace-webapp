@@ -7,12 +7,12 @@ import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import SignConnectMessageModal from '@/components/Modal/SignConnectMessageModal'
 import SignupModal from '@/components/Modal/SignupModal'
-import { sleep } from '@/utils'
 import { useRouter } from 'next/navigation'
+import { connect } from '@wagmi/core'
 
 export default function ConnectPage() {
   const router = useRouter()
-  const { connect, connectors, pendingConnector, isLoading } = useConnect()
+  const { connectors, pendingConnector, isLoading } = useConnect()
   const { isConnected } = useAccount()
   const [showSignMessage, setShowSignMessage] = useState(false)
   const [showSignup, setShowSignup] = useState(false)
@@ -21,9 +21,8 @@ export default function ConnectPage() {
     if (!connector.ready) return
     try {
       if (!isConnected) {
-        connect({ connector })
+        await connect({ connector })
       }
-      await sleep(100)
       setShowSignMessage(true)
     } catch (e) {
       console.error('Error connecting wallet:', e)

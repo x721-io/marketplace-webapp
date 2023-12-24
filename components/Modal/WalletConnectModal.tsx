@@ -2,7 +2,6 @@ import { Modal, ModalProps, Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import { Connector, useAccount, useConnect } from 'wagmi'
-import { useAuth } from '@/hooks/useAuth'
 import { connect } from '@wagmi/core'
 
 interface Props extends ModalProps {
@@ -10,7 +9,6 @@ interface Props extends ModalProps {
 }
 
 export default function WalletConnectModal({ show, onClose, onSignMessage }: Props) {
-  const { onLogout } = useAuth()
   const { isConnected } = useAccount()
   const { connectors, pendingConnector } = useConnect()
 
