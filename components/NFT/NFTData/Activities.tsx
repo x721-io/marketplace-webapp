@@ -53,7 +53,7 @@ export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
               const token = findTokenByAddress(row.quoteToken)
 
               return (
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row key={row.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {format(Number(row.timestamp) * 1000, 'yyyy-MM-dd HH:mm:ss')}
                   </Table.Cell>

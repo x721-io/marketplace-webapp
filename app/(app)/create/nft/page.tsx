@@ -38,6 +38,7 @@ interface NFTFormState {
 export default function CreateNftPage() {
   const router = useRouter()
   const [type, setType] = useState<AssetType>()
+  const [loading, setLoading] = useState(false)
   const [validating, setValidating] = useState(false)
   const [uploading, setUploading] = useState(false)
   const api = useMarketplaceApi()
@@ -151,6 +152,7 @@ export default function CreateNftPage() {
   const onSubmit = async ({ media, traits, ...rest }: NFTFormState) => {
     if (!type) return
 
+    setLoading(true)
     const _traits = !!traits ? traits.filter(trait => !!trait.trait_type && trait.value) : []
     const createNFTToast = toast.loading('Uploading Media...', { type: 'info' })
 
@@ -184,6 +186,8 @@ export default function CreateNftPage() {
         isLoading: false,
         autoClose: 1000
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -401,6 +405,8 @@ export default function CreateNftPage() {
 
             <ConnectWalletButton>
               <Button
+                loading={loading}
+                loadingText="Creating NFT ..."
                 disabled={uploading || validating}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">

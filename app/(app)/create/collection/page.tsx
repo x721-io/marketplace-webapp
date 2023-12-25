@@ -36,6 +36,7 @@ interface CollectionFormState {
 
 export default function CreateNFTCollectionPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const [validating, setValidating] = useState(false)
   const [uploading, setUploading] = useState(false)
   const api = useMarketplaceApi()
@@ -109,7 +110,7 @@ export default function CreateNFTCollectionPage() {
   const onSubmit = async (data: CollectionFormState) => {
     if (!type || !creator) return
     const toastId = toast.loading('Preparing data...', { type: 'info' })
-
+    setLoading(true)
     try {
       const salt = randomWord()
       const fullShortUrl = BASE_API_URL + '/collection/' + data.shortUrl
@@ -145,6 +146,8 @@ export default function CreateNFTCollectionPage() {
         autoClose: 5000
       })
       console.error(e)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -256,6 +259,8 @@ export default function CreateNFTCollectionPage() {
             {/* Button finish */}
             <ConnectWalletButton>
               <Button
+                loading={loading}
+                loadingText="Creating collection ..."
                 disabled={validating || uploading}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
