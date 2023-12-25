@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'flowbite-react';
 import AccountStep from './component/AccountStep';
 import ProfileStep from './component/ProfileStep';
@@ -13,9 +13,9 @@ import { redirect } from 'next/navigation'
 export default function ProfilePage() {
   const { isLoggedIn } = useAuth()
 
-  if (!isLoggedIn) {
-    return redirect('/connect')
-  }
+  useEffect(() => {
+    if (!isLoggedIn) return redirect('/')
+  }, [isLoggedIn]);
 
   return (
     <div className="w-full relative flex flex-col items-center desktop:py-10 tablet:p-10 py-16 px-4">

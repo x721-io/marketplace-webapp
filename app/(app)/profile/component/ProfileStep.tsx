@@ -22,7 +22,7 @@ interface ProfileFormState {
   discord: string
 }
 
-export default function ProfileStep() {
+export default function   ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
 
