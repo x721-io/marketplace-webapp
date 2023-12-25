@@ -45,8 +45,8 @@ export default function CreateNftPage() {
   const { onCreateNFT } = useCreateNFT(type || 'ERC721')
   const userId = useAuthStore(state => state.credentials?.userId)
   const { data, error, isLoading } = useSWR(
-    !!userId ? 'my-collections' : null,
-    () => api.fetchCollectionsByUser(userId as string, { page: 1, limit: 10 }, true),
+    !!userId ? userId : null,
+    (userId) => api.fetchCollectionsByUser(userId as string, { page: 1, limit: 1000 }, true),
     { refreshInterval: 3600 * 1000 }
   )
   const {
