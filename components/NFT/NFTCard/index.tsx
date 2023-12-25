@@ -92,7 +92,7 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
         }
         {sellStatus === 'AskNew' &&
           <>On sale for:{' '}
-            <span className="text-primary font-semibold">${formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
           </>
         }
       </Text>
