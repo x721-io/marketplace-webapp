@@ -325,6 +325,7 @@ export namespace APIResponse {
 
   export type SearchNFTs = {
     id: string,
+    u2uId: string,
     name: string,
     ipfsHash: string,
     image: string,

@@ -39,7 +39,7 @@ export default function CollectionPage() {
   if (error) {
     return (
       <div className="w-full h-96 flex justify-center items-center">
-        <Text variant="heading-xs">
+        <Text variant="heading-xs" className="text-center">
           Network Error!
           <br />
           Please try again later

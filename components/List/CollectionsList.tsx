@@ -43,7 +43,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
   if (error) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
-        <Text variant="heading-xs">
+        <Text variant="heading-xs" className="text-center">
           Network Error!
           <br />
           Please try again later

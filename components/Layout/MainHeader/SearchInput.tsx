@@ -2,7 +2,7 @@
 import Icon from '@/components/Icon'
 import InputDropdown from '@/components/Form/InputDropdown'
 import Button from '@/components/Button'
-import { useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Tabs, TabsRef } from 'flowbite-react'
 import useSWR from 'swr'
 import SearchUserTab from './UserTab'
@@ -11,10 +11,17 @@ import SearchNFTTab from './NFTTab'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { Modal } from 'flowbite-react'
 import Input from '@/components/Form/Input'
+import { isMobile } from 'react-device-detect'
+import { tabbable } from 'tabbable'
 
 export default function SearchInput() {
   const api = useMarketplaceApi()
-  const [text, setText] = useState('')
+  const [openModal, setOpenModal] = useState(false);
+  const [text, setText] = useState({
+    collection: '',
+    nft: '',
+    user: ''
+  })
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0)
 
@@ -26,44 +33,45 @@ export default function SearchInput() {
         return 'NFT'
       case 2:
         return 'USER'
-      default:
-        return 'NFT'
     }
   }, [activeTab])
 
   const { data: collectionSearchData, isLoading: searchingCollection } = useSWR(
-    (!!text && mode === 'COLLECTION') ? text : null,
+    (mode === 'COLLECTION') ? text.collection : null,
     (text) => api.searchCollections(text),
     { revalidateOnFocus: false }
   )
   const { data: nftSearchData, isLoading: searchingNFT } = useSWR(
-    (!!text && mode === 'NFT') ? text : null,
+    (mode === 'NFT') ? text.nft : null,
     (text) => api.searchNFTs(text),
     { revalidateOnFocus: false }
   )
   const { data: userSearchData, isLoading: searchingUser } = useSWR(
-    (!!text && mode === 'USER') ? text : null,
+    (mode === 'USER') ? text.user : null,
     (text) => api.searchUsers(text),
     { revalidateOnFocus: false }
   )
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 767);
-    };
-
-    if (typeof window !== 'undefined') {
-      handleResize();
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
+  const searchKey = useMemo(() => {
+    switch (activeTab) {
+      case 0:
+        return 'collection'
+      case 1:
+        return 'nft'
+      case 2:
+        return 'user'
     }
-  }, []);
+  }, [activeTab])
+
+  const searchString = useMemo(() => searchKey ? text[searchKey] : '', [searchKey, text])
+
+  const handleTextInput = (value: string) => {
+    if (!searchKey) return
+    setText({
+      ...text,
+      [searchKey]: value
+    })
+  }
 
   return (
     <>
@@ -76,7 +84,7 @@ export default function SearchInput() {
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Search</Modal.Header>
               <Modal.Body>
-                <Input placeholder='Type for collections, NFTs etc' />
+                <Input placeholder="Type for collections, NFTs etc" />
               </Modal.Body>
             </Modal>
           </>
@@ -86,9 +94,9 @@ export default function SearchInput() {
             className=""
             containerClass="desktop:w-[420px] tablet:w-[280px]"
             scale="sm"
-            value={text}
+            value={searchString}
             placeholder="Type for collections, NFTs etc"
-            onChange={event => setText(event.target.value)}
+            onChange={event => handleTextInput(event.target.value)}
             renderDropdown={onclose => (
               <Tabs.Group style="underline" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
                 <Tabs.Item title="Collections">

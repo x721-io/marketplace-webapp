@@ -1,10 +1,10 @@
 import { Spinner } from 'flowbite-react'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
-import React, { useMemo } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import { ALLOWED_VIDEO_TYPES } from '@/config/constants'
 
 interface Props {
   loading?: boolean
@@ -13,48 +13,47 @@ interface Props {
 }
 
 export default function SearchNFTTab({ loading, data, onClose }: Props) {
-
   if (loading) return (
-    <div className="w-full flex justify-center items-center mt-7">
+    <div className="w-full flex justify-center items-center mt-4">
       <Spinner size="xl" />
     </div>
   )
 
-  if (!data) {
+  if (!data || !data.length) {
     return (
-      <div className="w-full flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed mt-7">
+      <div className="w-full flex justify-center items-center p-4 rounded-2xl border border-disabled border-dashed mt-4">
         <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
       </div>
     )
   }
 
   return (
-    <div className="py-7 flex flex-col gap-3">
+    <div className="py-4 flex flex-col gap-3">
       {data.slice(0, 100).map(nft => {
           const displayMedia = nft.animationUrl || nft.image
-          const fileExtension = displayMedia.split('.').pop()
+          const fileExtension = displayMedia ? displayMedia.split('.').pop() : ''
           return (
             <Link
               onClick={onClose}
               href={`/item/${nft.collection?.address}/${nft.id}`}
-              key={nft.id}
+              key={nft.u2uId}
               className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1  opacity-60 hover:opacity-100 transition-opacity">
               <div className="flex flex-1 items-center gap-2">
                 {(() => {
                   if (!fileExtension) {
-                    return <div className="w-12 h-12" />
+                    return <div className="w-10 h-10" />
                   }
                   switch (true) {
                     case ALLOWED_VIDEO_TYPES.includes(fileExtension):
                       return (
-                        <video className="w-12 h-12 rounded-2xl" controls>
+                        <video className="w-10 h-10 rounded-2xl" controls>
                           <source src={displayMedia} type={`video/${fileExtension}`} />
                           Your browser does not support the video tag.
                         </video>
                       )
                     default:
                       return <Image
-                        className="w-12 h-12 rounded-xl object-cover"
+                        className="w-10 h-10 rounded-xl object-cover"
                         width={40}
                         height={40}
                         src={nft.image || nft.animationUrl}
@@ -63,9 +62,14 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
                 })()
                 }
 
-                <Text className="font-semibold text-primary" variant="body-12">
-                  {nft.name}
-                </Text>
+                <div>
+                  <Text className="font-semibold text-primary" variant="body-12">
+                    {nft.name}
+                  </Text>
+                  <Text className="font-semibold text-secondary" variant="body-12">
+                    {nft?.collection?.name}
+                  </Text>
+                </div>
               </div>
             </Link>
           )
