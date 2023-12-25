@@ -21,7 +21,7 @@ export default function CollectionPage() {
   const [showFilters, setShowFilters] = useState(false)
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
 
-  const { data, isLoading } = useSWR(
+  const { data, isLoading, error } = useSWR(
     !!id ? id : null,
     (id: string) => api.fetchCollectionById(id),
     { refreshInterval: 30000 }
@@ -35,6 +35,18 @@ export default function CollectionPage() {
     }) as APIParams.FetchNFTs),
     { refreshInterval: 10000 }
   )
+
+  if (error) {
+    return (
+      <div className="w-full h-96 flex justify-center items-center">
+        <Text variant="heading-xs">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (

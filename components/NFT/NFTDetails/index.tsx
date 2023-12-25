@@ -93,6 +93,18 @@ export default function NFTDetails() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="w-full h-96 flex justify-center items-center">
+        <Text variant="heading-xs">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
+      </div>
+    )
+  }
+
   if (!item) {
     return (
       <div className="w-full h-96 flex justify-center items-center">
@@ -118,7 +130,7 @@ export default function NFTDetails() {
           {renderMedia()}
           <NFTData nft={item} metaData={metaData} />
         </div>
-        <NFTMarketData nft={item}/>
+        <NFTMarketData nft={item} />
       </div>
     </div>
   )

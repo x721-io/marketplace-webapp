@@ -1,4 +1,4 @@
-import { Pagination, Table, Tooltip } from 'flowbite-react'
+import { Pagination, Spinner, Table, Tooltip } from 'flowbite-react'
 import { APIResponse } from '@/services/api/types'
 import { formatEther } from 'ethers'
 import Link from 'next/link'
@@ -19,12 +19,39 @@ interface Paging {
 
 interface Props {
   id?: string | string[]
+  loading?: boolean
+  error?: boolean
   paging?: Paging
   collections?: APIResponse.Collection[]
   onChangePage: (page: number) => void
 }
 
-export default function CollectionsList({ collections, paging, onChangePage, id }: Props) {
+export default function CollectionsList({ collections, paging, onChangePage, id, loading, error }: Props) {
+  const totalPage = useMemo(() => {
+    if (!paging?.total) return 0
+    return Math.ceil(paging.total / paging.limit)
+  }, [paging])
+
+  if (loading) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center">
+        <Spinner size="xl"/>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+        <Text variant="heading-xs">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
+      </div>
+    )
+  }
+
   if (!collections || !collections.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
@@ -32,11 +59,6 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
       </div>
     )
   }
-
-  const totalPage = useMemo(() => {
-    if (!paging?.total) return 0
-    return Math.ceil(paging.total / paging.limit)
-  }, [paging])
 
   return (
     <>
@@ -62,7 +84,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
                   style={{ width: '100%', height: '100px' }}
                 />
                 <div className="absolute rounded-full"
-                  style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
+                     style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-cover"
                     src={c.avatar || defaultAvatar}
@@ -75,7 +97,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id 
               <div className="pt-6 px-3 pb-4 flex justify-between">
                 <div className="flex gap-2 w-full justify-between">
                   <div className="flex gap-2 flex-col">
-                    <div className='flex gap-1 items-center'>
+                    <div className="flex gap-1 items-center">
                       <Tooltip content={c.name} placement="bottom">
                         <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
                       </Tooltip>

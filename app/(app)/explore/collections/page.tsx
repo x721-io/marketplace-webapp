@@ -32,6 +32,7 @@ export default function ExploreCollectionsPage() {
 
       <div className="flex-1">
         <CollectionsList
+          loading={isLoading}
           collections={collections?.data}
           paging={collections?.paging}
           onChangePage={handleChangePage}

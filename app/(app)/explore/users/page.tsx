@@ -12,7 +12,7 @@ import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '@/components/Icon/Verify'
 import React, { useMemo, useState } from 'react'
 import { APIParams } from '@/services/api/types'
-import { Pagination } from 'flowbite-react'
+import { Pagination, Spinner } from 'flowbite-react'
 
 export default function ExploreUsersPage() {
   const api = useMarketplaceApi()
@@ -24,7 +24,7 @@ export default function ExploreUsersPage() {
     limit: 20
   })
 
-  const { data: users, isLoading } = useSWR(
+  const { data: users, isLoading, error } = useSWR(
     { ...activePagination, search: queryString[searchKey] },
     params => api.fetchUsers(params),
     { refreshInterval: 10000 }
@@ -40,6 +40,26 @@ export default function ExploreUsersPage() {
       ...activePagination,
       page
     })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center">
+        <Spinner size="xl"/>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+        <Text variant="heading-xs">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
+      </div>
+    )
   }
 
   if (!users?.data || !users?.data.length) {

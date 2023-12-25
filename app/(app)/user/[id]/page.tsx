@@ -16,7 +16,7 @@ import Text from '@/components/Text'
 export default function ProfilePage() {
   const api = useMarketplaceApi()
   const { id } = useParams()
-  const { data: user, isLoading } = useSWR(
+  const { data: user, isLoading, error } = useSWR(
     [id],
     (userId) => api.viewProfile(userId.toString()),
     { refreshInterval: 600000 }
@@ -26,6 +26,18 @@ export default function ProfilePage() {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
         <Spinner size="xl" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-96 flex justify-center items-center">
+        <Text variant="heading-xs">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
       </div>
     )
   }
