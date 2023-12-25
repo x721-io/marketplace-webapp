@@ -3,7 +3,6 @@ import SliderIcon from '@/components/Icon/Sliders'
 import Button from '@/components/Button'
 import { classNames } from '@/utils/string'
 import NFTsList from '@/components/List/NFTsList'
-import useAuthStore from '@/store/auth/store'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { useNFTFilters } from '@/hooks/useFilters'
 import useSWR from 'swr'
@@ -27,8 +26,8 @@ export default function OnSaleNFTs({ wallet }: { wallet: Address }) {
   })
 
   const { data, isLoading } = useSWR(
-    ['user-onSale-nfts', activeFilters],
-    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.FetchNFTs),
+    activeFilters,
+    (filters) => api.fetchNFTs(sanitizeObject(filters) as APIParams.FetchNFTs),
     { refreshInterval: 300000 }
   )
 

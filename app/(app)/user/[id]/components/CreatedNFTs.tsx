@@ -8,11 +8,9 @@ import { APIParams } from '@/services/api/types'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { useNFTFilters } from '@/hooks/useFilters'
-import { useParams } from 'next/navigation'
 import { Address } from 'wagmi'
 
 export default function CreatedNFTs({ wallet }: { wallet: Address }) {
-  const { id } = useParams()
   const [showFilters, setShowFilters] = useState(false)
   const api = useMarketplaceApi()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters({
@@ -27,8 +25,8 @@ export default function CreatedNFTs({ wallet }: { wallet: Address }) {
   })
 
   const { data, isLoading } = useSWR(
-    ['user-created-nfts', activeFilters],
-    () => api.fetchNFTs(sanitizeObject(activeFilters) as APIParams.FetchNFTs),
+    activeFilters,
+    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
     { refreshInterval: 300000 }
   )
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import Profile from "./components/Profile";
 import { Spinner, Tabs } from 'flowbite-react'
 import OwnedNFTs from './components/OwnedNFTs'
@@ -12,8 +12,10 @@ import { useParams } from 'next/navigation'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import Text from '@/components/Text'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function ProfilePage() {
+  const ownNFTCount = useRef(0)
   const api = useMarketplaceApi()
   const { id } = useParams()
   const { data: user, isLoading, error } = useSWR(
@@ -58,17 +60,17 @@ export default function ProfilePage() {
 
       <div className="desktop:px-20 tablet:px-20 px-4">
         <Tabs.Group style="underline">
-          <Tabs.Item title={"Owned"}>
+          <Tabs.Item title={`Owned (${formatDisplayedBalance(ownNFTCount.current, 0)})`}>
             <OwnedNFTs wallet={user.publicKey} />
           </Tabs.Item>
           <Tabs.Item title={"On Sale"}>
             <OnSaleNFTs wallet={user.publicKey} />
           </Tabs.Item>
-          <Tabs.Item title={"Collections"}>
-            <UserCollections />
-          </Tabs.Item>
           <Tabs.Item title={"Created"}>
             <CreatedNFTs wallet={user.publicKey} />
+          </Tabs.Item>
+          <Tabs.Item title={"Collections"}>
+            <UserCollections />
           </Tabs.Item>
           <Tabs.Item title={"Activities"}>
             <Activities wallet={user.publicKey} />

@@ -12,12 +12,12 @@ export default function UserCollections() {
 
   const [activePagination, setActivePagination] = useState<APIParams.FetchCollectionById>({
     page: 1,
-    limit: 10
+    limit: 1000
   })
 
   const { data: collections } = useSWR(
-    ['user-collections', activePagination],
-    () => api.fetchCollectionsByUser(id as string, sanitizeObject(activePagination) as APIParams.FetchCollectionById, false),
+    [id, activePagination],
+    ([id, params]) => api.fetchCollectionsByUser(id as string, sanitizeObject(params) as APIParams.FetchCollectionById, false),
     { refreshInterval: 30000 }
   )
 
@@ -36,6 +36,5 @@ export default function UserCollections() {
         onChangePage={handleChangePage}
         id={id} />
     </div>
-
   )
 }

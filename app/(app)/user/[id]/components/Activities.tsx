@@ -13,7 +13,7 @@ import { formatDisplayedBalance } from '@/utils'
 export default function Activities({ wallet }: { wallet: Address }) {
   const api = useMarketplaceApi()
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(20)
+  const [limit, setLimit] = useState(100)
 
   const { data, isLoading } = useSWR(
     !!wallet ? { wallet, page, limit } : null,
@@ -30,7 +30,10 @@ export default function Activities({ wallet }: { wallet: Address }) {
   }
 
   return (
-    <div className="w-full py-7 overflow-x-auto">
+    <div className="w-full py-4 overflow-x-auto">
+      <Text variant="body-14" className="text-secondary italic font-semibold mb-3">
+        Showing latest 100 records
+      </Text>
       <Table striped hoverable className="overflow-x-auto">
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
@@ -70,9 +73,6 @@ export default function Activities({ wallet }: { wallet: Address }) {
           }
         </Table.Body>
       </Table>
-
-      <div className="flex justify-end">
-      </div>
     </div>
   )
 }
