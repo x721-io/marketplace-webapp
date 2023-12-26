@@ -5,7 +5,6 @@ import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useMemo } from 'react'
 import useAuthStore from '@/store/auth/store'
-import { tree } from 'next/dist/build/templates/app-page'
 
 interface Props extends ModalProps {
   nft: APIResponse.NFT,
@@ -18,13 +17,17 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
     return nft.sellInfo?.find(item => item.from === wallet?.toLowerCase())
   }, [nft.sellInfo, wallet])
 
-  const handleCancelBid = () => {
+  const handleCancelSell = () => {
     if (!mySale) return
     try {
       onCancelSell(mySale.operationId)
     } catch (e) {
       console.error(e)
     }
+  }
+
+  const handleReset = () => {
+
   }
 
   return (
@@ -86,7 +89,7 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
                         <Button variant="secondary" onClick={onClose}>
                           No
                         </Button>
-                        <Button onClick={handleCancelBid} loading={isLoading}>
+                        <Button onClick={handleCancelSell} loading={isLoading}>
                           Yes
                         </Button>
                       </div>
