@@ -66,6 +66,31 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
     }
   }
 
+  const renderNFTData = () => {
+    switch (sellStatus) {
+      case 'Bid':
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            Current bid:{' '}
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+          </Text>
+        )
+      case 'AskNew':
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            On sale for:{' '}
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+          </Text>
+        )
+      default:
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            No bid yet
+          </Text>
+        )
+    }
+  }
+
   return (
     <Link
       key={id}
@@ -82,19 +107,7 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
         </Tooltip>
       </div>
 
-      <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-        {sellStatus === 'Bid' &&
-          <>Current bid:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
-          </>
-        }
-        {sellStatus === 'AskNew' &&
-          <>On sale for:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
-          </>
-        }
-        {!price && 'No bid yet'}
-      </Text>
+      {renderNFTData()}
     </Link>
   )
 }
