@@ -14,7 +14,7 @@ interface FormState {
 }
 
 export default function AccountStep() {
-  const { onUpdateProfile } = useAuth()
+  const { onUpdateProfile, onResendEmail } = useAuth()
   const email = useAuthStore(state => state.profile?.email)
   const { register, handleSubmit, reset, formState: { isDirty, errors } } = useForm<FormState>({
     defaultValues: {
@@ -38,6 +38,25 @@ export default function AccountStep() {
     }
   }
 
+  const onResend = async ( email : string | undefined ) => {
+    console.log('email', email)
+    const toastId = toast.loading('Uploading send email...', { type: 'info' })
+    try {
+      await onResendEmail ({email})
+      toast.update(toastId, {
+        render: 'Send email successfully',
+        type: 'success',
+        isLoading: false,
+        autoClose: 1000
+      })
+    } catch (e) {
+      console.error('Error:', e)
+    } finally {
+      
+    }
+  }
+
+
   return (
     <div className="flex gap-8 mb-8 flex-col">
       <div className="desktop:mt-5 mt-7 flex gap-8 w-full flex-col">
@@ -56,9 +75,11 @@ export default function AccountStep() {
             <Text className="text-tertiary" variant="body-12">
               Please check email and verify your email address.
             </Text>
-            {/* <Text className="text-tertiary flex items-center" variant="body-12">
-              Still no email? <span className="text-primary ml-1 text-body-12">Resend</span>
-            </Text> */}
+            <Text className="text-tertiary flex items-center" variant="body-12">
+              Still no email? 
+              <Button type='button' onClick={ () => onResend(email)}>Resend</Button>
+              {/* <span className="text-primary ml-1 text-body-12" onClick={() => onResend}>Resend</span> */}
+            </Text>
           </div>
           <FormValidationMessages errors={errors}/>
           <Button type="submit" disabled={!isDirty}>

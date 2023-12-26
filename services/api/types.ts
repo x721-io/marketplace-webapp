@@ -53,6 +53,10 @@ export namespace APIParams {
     shortLink?: string
   }
 
+  export interface ResendVerifyMail {
+    email: string | undefined
+  }
+
   export interface UpdateCollection {
     coverImage: string
     id: string
@@ -182,6 +186,10 @@ export namespace APIResponse {
     webURL?: string
     coverImage?: string
     shortLink?: string
+  }
+
+  export interface ResendEmail {
+    status: boolean
   }
 
   export interface UploadImage {

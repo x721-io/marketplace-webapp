@@ -14,4 +14,5 @@ export const API_ENDPOINTS = {
   GET_METADATA: '/common/ipfs-serve',
   SEARCH: '/common/search-all',
   VALIDATE_INPUT: '/validator',
+  SEND_VERIFY_EMAIL: '/user/send-verify-email'
 }

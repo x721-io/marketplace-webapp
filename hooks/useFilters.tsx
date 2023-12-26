@@ -104,6 +104,7 @@ export const useCollectionFilters = (defaultState?: APIParams.FetchCollections) 
       ...activeFilters,
       page
     })
+    window.scrollTo(0, 0)
   }
 
   const handleApplyFilters = (params: APIParams.FetchCollections) => {
