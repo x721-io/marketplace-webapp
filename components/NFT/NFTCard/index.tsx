@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from "flowbite-react";
-import { classNames } from '@/utils/string'
 
 export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: APIResponse.NFT) {
   const displayMedia = image || animationUrl

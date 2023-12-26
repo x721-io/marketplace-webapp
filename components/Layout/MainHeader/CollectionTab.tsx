@@ -29,7 +29,7 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
 
   return (
     <div className="py-4 flex flex-col gap-3">
-      {data.slice(0, 100).map(collection => {
+      {data.map(collection => {
         return (
           <Link
             onClick={onClose}

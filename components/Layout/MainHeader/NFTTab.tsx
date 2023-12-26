@@ -30,14 +30,14 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
 
   return (
     <div className="py-4 flex flex-col gap-3">
-      {data.slice(0, 100).map(nft => {
+      {data.map(nft => {
           const displayMedia = nft.animationUrl || nft.image
           const fileExtension = displayMedia ? displayMedia.split('.').pop() : ''
           return (
             <Link
               onClick={onClose}
               href={`/item/${nft.collection?.address}/${nft.id}`}
-              key={nft.u2uId}
+              key={nft.collection?.address + '-' + nft.u2uId}
               className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1  opacity-60 hover:opacity-100 transition-opacity">
               <div className="flex flex-1 items-center gap-2">
                 {(() => {
