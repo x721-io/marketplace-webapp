@@ -40,6 +40,7 @@ export default function ExploreUsersPage() {
       ...activePagination,
       page
     })
+    window.scrollTo(0, 0)
   }
 
   if (isLoading) {
