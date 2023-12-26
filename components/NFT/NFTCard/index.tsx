@@ -77,12 +77,11 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
         <Tooltip content={name} placement="top">
-          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">{name}</Text>
+          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">
+            {name}
+          </Text>
         </Tooltip>
       </div>
-      <Tooltip content={collection.name} placement="bottom">
-        <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[200px] w-[150px]">{collection.name}</Text>
-      </Tooltip>
 
       <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
         {sellStatus === 'Bid' &&
@@ -95,6 +94,7 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
             <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
           </>
         }
+        {!price && 'No bid yet'}
       </Text>
     </Link>
   )

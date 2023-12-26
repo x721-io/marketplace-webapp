@@ -4,6 +4,7 @@ import Text from '@/components/Text'
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import placeholderImage from '@/assets/images/placeholder-image.svg'
 
 interface Props {
   loading?: boolean
@@ -29,33 +30,32 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
   return (
     <div className="py-4 flex flex-col gap-3">
       {data.slice(0, 100).map(collection => {
-          return (
-            <Link
-              onClick={onClose}
-              href={`/collection/${collection.id}`}
-              key={collection.id}
-              className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="flex flex-1 items-center gap-2">
-                <Image
-                  className="w-10 h-10 rounded-xl object-cover"
-                  width={40}
-                  height={40}
-                  src={collection.avatar || ''}
-                  alt="Image" />
-                <div>
-                  <Text className="font-semibold text-primary mb-1" variant="body-12">
-                    {collection.name}
-                  </Text>
-                  <Text className="font-semibold text-secondary mb-1" variant="body-12">
-                    {collection.symbol}
-                  </Text>
-                </div>
-
+        return (
+          <Link
+            onClick={onClose}
+            href={`/collection/${collection.id}`}
+            key={collection.id}
+            className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1 opacity-60 hover:opacity-100 transition-opacity">
+            <div className="flex flex-1 items-center gap-2">
+              <Image
+                className="w-10 h-10 rounded-xl object-cover"
+                width={40}
+                height={40}
+                src={collection.avatar || placeholderImage}
+                alt="Image" />
+              <div>
+                <Text className="font-semibold text-primary mb-1" variant="body-12">
+                  {collection.name}
+                </Text>
+                <Text className="font-semibold text-secondary mb-1" variant="body-12">
+                  {collection.symbol}
+                </Text>
               </div>
-            </Link>
-          )
-        }
-      )}
+
+            </div>
+          </Link>
+        )
+      })}
     </div>
   )
 }

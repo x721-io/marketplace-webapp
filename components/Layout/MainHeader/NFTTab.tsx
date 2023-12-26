@@ -5,6 +5,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import placeholderImage from '@/assets/images/placeholder-image.svg'
 
 interface Props {
   loading?: boolean
@@ -56,7 +57,7 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
                         className="w-10 h-10 rounded-xl object-cover"
                         width={40}
                         height={40}
-                        src={nft.image || nft.animationUrl}
+                        src={nft.image || nft.animationUrl || placeholderImage}
                         alt="NFT Image" />
                   }
                 })()

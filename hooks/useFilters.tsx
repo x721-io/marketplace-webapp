@@ -8,7 +8,7 @@ import { sanitizeObject } from '@/utils'
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname()
-  const { showFilters, toggleFilter } = useUIStore(state => state)
+  const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(state => state)
 
   const routeKey: FilterKey = useMemo(() => {
     switch (true) {
@@ -24,6 +24,8 @@ export const useExploreSectionFilters = () => {
 
   const searchKey: SearchKey = useMemo(() => {
     switch (true) {
+      case pathname.includes('collection'):
+        return 'collection'
       case pathname.includes('collections'):
         return 'collections'
       case pathname.includes('users'):
@@ -44,7 +46,9 @@ export const useExploreSectionFilters = () => {
     toggleFilter(routeKey)
   }
 
-  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey }
+  const query = useMemo(() => queryString[searchKey], [queryString, searchKey])
+
+  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey, query, setQueryString }
 }
 
 export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {

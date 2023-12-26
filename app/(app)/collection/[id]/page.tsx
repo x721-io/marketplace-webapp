@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
-import { useNFTFilters } from '@/hooks/useFilters'
+import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
@@ -19,6 +19,7 @@ export default function CollectionPage() {
   const { id } = useParams()
   const api = useMarketplaceApi()
   const [showFilters, setShowFilters] = useState(false)
+  const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
 
   const { data, isLoading, error } = useSWR(
@@ -28,7 +29,7 @@ export default function CollectionPage() {
   )
 
   const { data: items, isLoading: isFetchingItems } = useSWR(
-    data?.collection.address ? [data?.collection.address, activeFilters] : null,
+    data?.collection.address ? [data?.collection.address, { ...activeFilters, name: query }] : null,
     ([address, filters]) => api.fetchNFTs(sanitizeObject({
       ...filters,
       collectionAddress: address
@@ -38,11 +39,12 @@ export default function CollectionPage() {
 
   if (error) {
     return (
-      <div className="w-full h-96 flex justify-center items-center">
-        <Text variant="heading-xs" className="text-center">
-          Network Error!
-          <br />
-          Please try again later
+      <div className="w-full h-96 flex flex-col gap-4 justify-center items-center">
+        <Text variant="heading-xs" className="text-center font-semibold">
+          Service Error
+        </Text>
+        <Text variant="body-16" className="text-center font-medium">
+          Please try again later!
         </Text>
       </div>
     )
