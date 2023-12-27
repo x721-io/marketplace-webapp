@@ -40,7 +40,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
     )
   }
 
-  if (error) {
+  if (error && !collections) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text variant="heading-xs" className="text-center">

@@ -32,7 +32,7 @@ export default function ProfilePage() {
     )
   }
 
-  if (error) {
+  if (error && !user) {
     return (
       <div className="w-full h-96 flex justify-center items-center">
         <Text variant="heading-xs" className="text-center">
