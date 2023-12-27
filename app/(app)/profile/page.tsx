@@ -15,12 +15,24 @@ import Button from '@/components/Button';
 import VerifyAccountModal from '@/components/Modal/VerifyAccountModal';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import useAuthStore from '@/store/auth/store';
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi()
   const profile = useAuthStore(state => state.profile)
   const { isLoggedIn } = useAuth()
   const [showPopup, setShowPopup] = useState(false);
+  const router = useRouter()
+
+  const [listVerify, setListVerify] =  useState({
+    email: false,
+    username: false,
+    shortLink: false,
+    avatar: false,
+    bio: false,
+    twitterLink: false,
+    ownerOrCreater : false
+  })
 
 
   useEffect(() => {
@@ -28,16 +40,20 @@ export default function ProfilePage() {
   }, [isLoggedIn]);
 
   const handleGetVerify = async (email: string, username: string, shortLink: string, bio: string, twitterLink: string, avatar: string) => {
-    // try {
-    //   const valueInput = await api.verifyAccount({ email, username, shortLink, bio, twitterLink, avatar })
-    //   if (valueInput )
 
-    // } catch (e: any) {
+    try {
+      let reponse = await api.verifyAccount({ email, username, shortLink, bio, twitterLink, avatar })
+       if (typeof reponse === 'object' && Object.keys(reponse).length > 0) {
+        setShowPopup(true)
+        // setListVerify(reponse)
+        setListVerify(reponse as typeof listVerify)
+       }else {
+        setShowPopup(false)
+       }
 
-    // } finally {
-
-    // }
-
+    } catch (e: any) {
+      console.log('e', e)
+    } 
 
   }
 
@@ -84,6 +100,7 @@ export default function ProfilePage() {
 
       <VerifyAccountModal
         show={showPopup}
+        listVerify= {listVerify}
         onClose={() => setShowPopup(false)}
       />
     </div>
