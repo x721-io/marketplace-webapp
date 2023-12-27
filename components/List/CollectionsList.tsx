@@ -67,7 +67,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
           id && <Link href={`/create/collection`}>
             <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[192px]">
               <Button variant="primary">
-                Create a collections
+                Create a collection
               </Button>
             </div>
           </Link>
