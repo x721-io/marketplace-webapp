@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { APIResponse } from '@/services/api/types'
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
 import { formatEther } from 'ethers'
@@ -10,8 +9,9 @@ import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from "flowbite-react";
+import { NFT } from '@/types'
 
-export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: APIResponse.NFT) {
+export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: NFT) {
   const displayMedia = image || animationUrl
   const fileExtension = displayMedia.split('.').pop()
 

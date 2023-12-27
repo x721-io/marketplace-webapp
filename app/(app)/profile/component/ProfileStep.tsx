@@ -11,23 +11,13 @@ import { useAuth } from '@/hooks/useAuth'
 import { urlRegex } from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import VerifyAccountModal from '@/components/Modal/VerifyAccountModal';
+import { FormState } from '@/types'
 
-interface ProfileFormState {
-  bio: string
-  username: string
-  shortLink: string
-  twitterLink: string
-  webURL: string
-  facebookLink: string
-  telegram: string
-  discord: string
-}
-
-export default function   ProfileStep() {
+export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
 
-  const { handleSubmit, register, formState: { isDirty, errors } } = useForm<ProfileFormState>({
+  const { handleSubmit, register, formState: { isDirty, errors } } = useForm<FormState.UpdateProfile>({
     defaultValues: {
       bio: profile?.bio,
       shortLink: profile?.shortLink,
@@ -40,7 +30,7 @@ export default function   ProfileStep() {
     }
   })
 
-  const onSubmitProfile = async (params: ProfileFormState) => {
+  const onSubmitProfile = async (params: FormState.UpdateProfile) => {
     const toastId = toast.loading('Uploading Profile...', { type: 'info' })
 
     try {
@@ -138,6 +128,15 @@ export default function   ProfileStep() {
           </Button>
         </div>
       </div>
-    </form >
+      <FormValidationMessages errors={errors} />
+      <div className="w-full tablet:w-auto desktop:w-auto">
+        <Button
+          type="submit"
+          disabled={!isDirty}
+          className="w-full tablet:w-auto desktop:w-auto">
+          Save settings
+        </Button>
+      </div>
+    </form>
   )
 }

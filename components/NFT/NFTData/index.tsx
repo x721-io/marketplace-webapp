@@ -5,10 +5,11 @@ import BidsTab from '@/components/NFT/NFTData/Bids'
 import ActivitiesTab from '@/components/NFT/NFTData/Activities'
 import PropertiesTab from '@/components/NFT/NFTData/Properties'
 import OwnersTab from '@/components/NFT/NFTData/Owners'
+import { NFT, NFTMetadata } from '@/types'
 
 interface Props {
-  nft: APIResponse.NFT
-  metaData?: APIResponse.NFTMetaData
+  nft: NFT
+  metaData?: NFTMetadata
 }
 
 export default function NFTData({ nft, metaData }: Props) {

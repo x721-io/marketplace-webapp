@@ -1,5 +1,4 @@
 import { Table } from 'flowbite-react'
-import { APIResponse, MarketEvent } from '@/services/api/types'
 import React, { useMemo, useState } from 'react'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
@@ -9,8 +8,9 @@ import Button from '@/components/Button'
 import AcceptBidNFTModal from '@/components/Modal/AcceptBidNFTModal'
 import Text from '@/components/Text'
 import { formatThousandDelimiter } from '@/utils'
+import { NFT, MarketEvent } from '@/types'
 
-export default function BidsTab({ nft }: { nft: APIResponse.NFT }) {
+export default function BidsTab({ nft }: { nft: NFT }) {
   const { isOwner } = useNFTMarketStatus(nft)
   const type = nft.collection.type
   const bids = useMemo(() => nft.bidInfo, [nft.bidInfo])

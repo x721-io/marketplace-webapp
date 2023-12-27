@@ -1,8 +1,9 @@
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
+import { NFTMetadata } from '@/types'
 
-export default function PropertiesTab({ metaData }: { metaData?: APIResponse.NFTMetaData }) {
+export default function PropertiesTab({ metaData }: { metaData?: NFTMetadata }) {
   return (
     <div className="flex flex-col gap-4 py-7">
       {
