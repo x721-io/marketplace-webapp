@@ -1,12 +1,58 @@
 import { Address } from 'wagmi'
-import { Trait } from '@/types/index'
+import { Trait } from '@/types/entitites'
 
-export interface CreateNFTForm {
-  image?: Blob,
-  name?: string,
-  description?: string,
-  collection?: Address,
-  royalties?: number
-  amount?: number
-  traits?: Trait[]
+export namespace FormState {
+  export interface SignUp {
+    username: string
+    email: string
+  }
+
+  export interface UpdateProfile {
+    bio: string
+    username: string
+    shortLink: string
+    twitterLink: string
+    webURL: string
+    facebookLink: string
+    telegram: string
+    discord: string
+  }
+
+  export interface CreateCollection {
+    avatar: string
+    name: string,
+    symbol: string,
+    description: string,
+    shortUrl: string
+  }
+
+  export interface CreateNFT {
+    media: Blob[],
+    name: string,
+    description: string,
+    collection: Address,
+    royalties: number
+    amount: number
+    traits: Trait[]
+  }
+
+  export interface SellNFT {
+    price: number
+    quantity: number
+    quoteToken: Address
+  }
+
+  export interface BuyNFT {
+    quantity: number
+  }
+
+  export interface BidNFT {
+    price: string
+    quantity: string
+  }
+
+  export interface AcceptBidNFT {
+    quantity: number
+  }
 }
+

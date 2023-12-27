@@ -1,16 +1,15 @@
 import Text from '@/components/Text'
 import { Spinner } from 'flowbite-react'
-import { useMarketTokenApproval, useNFTMarketStatus } from '@/hooks/useMarket'
-import { APIResponse, MarketEvent } from '@/services/api/types'
+import { useMarketTokenApproval } from '@/hooks/useMarket'
 import { useEffect, useMemo } from 'react'
-import { Address } from 'wagmi'
 import Button from '@/components/Button'
 import { tokens } from '@/config/tokens'
+import { NFT } from '@/types'
 
 interface Props {
   onNext: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
+  nft: NFT
 }
 
 export default function ApprovalStep({ nft, onNext, onError }: Props) {

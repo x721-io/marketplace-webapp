@@ -9,19 +9,15 @@ import { useForm } from 'react-hook-form'
 import { emailRegex } from '@/utils/regex'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { toast } from 'react-toastify'
+import { FormState } from '@/types'
 
 interface Props extends ModalProps {
   onSignupSuccess?: () => void
 }
 
-interface FormState {
-  username: string
-  email: string
-}
-
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const { onUpdateProfile } = useAuth()
-  const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+  const { register, handleSubmit, formState: { errors } } = useForm<FormState.SignUp>()
   const formRules = {
     username: {
       required: 'Please input username',
@@ -36,7 +32,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [isSigningUp, setIsSigningUp] = useState(false)
 
-  const onSignup = async (data: FormState) => {
+  const onSignup = async (data: FormState.SignUp) => {
     if (!acceptedTerms) return
     try {
       setIsSigningUp(true)

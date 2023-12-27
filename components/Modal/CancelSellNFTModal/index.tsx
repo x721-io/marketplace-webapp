@@ -1,19 +1,20 @@
 import { Modal, ModalProps, Tooltip } from 'flowbite-react'
-import { APIResponse } from '@/services/api/types'
 import { useCancelSellNFT, useNFTMarketStatus } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useEffect, useMemo, useState } from 'react'
 import useAuthStore from '@/store/auth/store'
+import { NFT } from '@/types/entitites'
 
 interface Props extends ModalProps {
-  nft: APIResponse.NFT,
+  nft: NFT,
 }
 
 export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
   const [step, setStep] = useState(1)
   const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft)
-  const wallet = useAuthStore(state => state.profile?.publicKey)
+  const wallet = useAuthStore(state => state.
+    profile?.publicKey)
   const mySale = useMemo(() => {
     return nft.sellInfo?.find(item => item.from === wallet?.toLowerCase())
   }, [nft.sellInfo, wallet])

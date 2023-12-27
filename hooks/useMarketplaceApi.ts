@@ -18,7 +18,7 @@ export const useMarketplaceApi = () => {
     return {
       connect: (params: APIParams.Connect): Promise<APIResponse.Connect> => marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
 
-      updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.Profile> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
+      updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
       uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
@@ -79,24 +79,24 @@ export const useMarketplaceApi = () => {
 
       fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
-      fetchCollectionsByUser: async (userId: string, {
-        limit,
-        page
-      }: APIParams.FetchCollectionById, hasBase: boolean): Promise<APIResponse.CollectionsData> => {
-        return marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}?limit=${limit}&page=${page}&hasBase=${hasBase}`)
+      fetchCollectionsByUser: async ({
+        userId,
+        ...rest
+      }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
+        return marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest))
       },
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
 
-      fetchNFTById: (collectionAddress: string, id: string, bidListPage: number = 1, bidListLimit: number = 100): Promise<APIResponse.NFT> => {
+      fetchNFTById: (collectionAddress: string, id: string, bidListPage: number = 1, bidListLimit: number = 100): Promise<APIResponse.NFTDetails> => {
         return marketplaceApi.get(API_ENDPOINTS.NFT + `?collectionAddress=${collectionAddress}&id=${id}&bidListPage=${bidListPage}&bidListLimit=${bidListLimit}`)
       },
 
-      getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.NFTMetaData> => {
+      getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.FetchNFTMetadata> => {
         return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)
       },
 
-      viewProfile: (id: Address | string): Promise<APIResponse.Profile> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
+      viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
       fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
     }

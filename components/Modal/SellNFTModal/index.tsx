@@ -3,11 +3,11 @@ import { useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from '@/components/Modal/SellNFTModal/ApprovalStep'
-import { APIResponse } from '@/services/api/types'
 import ListingStep from "@/components/Modal/SellNFTModal/ListingStep";
+import { NFT } from '@/types'
 
 interface Props extends ModalProps {
-  nft: APIResponse.NFT,
+  nft: NFT,
 }
 
 export default function SellNFTModal({ nft, show, onClose }: Props) {

@@ -1,4 +1,3 @@
-import { APIResponse } from '@/services/api/types'
 import { useBidUsingNative } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
@@ -9,16 +8,12 @@ import { tokens } from '@/config/tokens'
 import { useAccount, useBalance } from 'wagmi'
 import { formatUnits, parseEther } from 'ethers'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { FormState, NFT } from '@/types'
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
-}
-
-interface FormState {
-  price: string
-  quantity: string
+  nft: NFT
 }
 
 export default function BidStep({ onSuccess, onError, nft }: Props) {
@@ -35,7 +30,7 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
     watch,
     register,
     formState: { errors }
-  } = useForm<FormState>()
+  } = useForm<FormState.BidNFT>()
   const formRules = {
     price: {
       required: 'Please input bid price',
@@ -65,7 +60,7 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
   }
   const [price, quantity] = watch(['price', 'quantity'])
 
-  const onSubmit = async ({ price, quantity }: FormState) => {
+  const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
       await onBidUsingNative(price, quantity)
     } catch (e: any) {

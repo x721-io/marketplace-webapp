@@ -1,27 +1,19 @@
-import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import { useEffect, useMemo } from "react";
 import { useSellNFT } from "@/hooks/useMarket";
 import Button from "@/components/Button";
-import { Address } from 'wagmi'
 import Select from '@/components/Form/Select'
 import { tokenOptions } from '@/config/tokens'
 import { useForm } from 'react-hook-form'
 import useAuthStore from '@/store/auth/store'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
-import { formatUnits } from 'ethers'
+import { FormState, NFT } from '@/types'
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
-}
-
-interface FormState {
-  price: number
-  quantity: number
-  quoteToken: Address
+  nft: NFT
 }
 
 export default function ListingStep({ nft, onSuccess, onError }: Props) {
@@ -31,7 +23,7 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
     if (!wallet) return undefined
     return nft.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
-  const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+  const { register, handleSubmit, formState: { errors } } = useForm<FormState.SellNFT>()
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
 
   const formRules = {
@@ -57,7 +49,7 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
     }
   }
 
-  const onSubmit = async ({ price, quoteToken, quantity }: FormState) => {
+  const onSubmit = async ({ price, quoteToken, quantity }: FormState.SellNFT) => {
     try {
       onSellNFT(price, quoteToken, quantity)
     } catch (e) {

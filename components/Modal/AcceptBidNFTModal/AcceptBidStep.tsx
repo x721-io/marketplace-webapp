@@ -1,36 +1,30 @@
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import { ModalProps } from 'flowbite-react'
-import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useAcceptBidNFT } from '@/hooks/useMarket'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Input from '@/components/Form/Input'
-import { errors } from 'web3'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { NFT, MarketEvent, FormState } from '@/types'
 
 interface Props {
-  nft: APIResponse.NFT,
+  nft: NFT,
   bid?: MarketEvent
   onSuccess: () => void
   onError: (error: Error) => void
   onClose?: () => void
 }
 
-interface FormState {
-  quantity: number
-}
-
 export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }: Props) {
   const { onAcceptERC721Bid, onAcceptERC1155Bid, isLoading, error, isSuccess } = useAcceptBidNFT(nft)
-  const { handleSubmit, register, formState: { errors } } = useForm<FormState>({
+  const { handleSubmit, register, formState: { errors } } = useForm<FormState.AcceptBidNFT>({
     defaultValues: {
       quantity: bid?.amounts ? Number(bid.amounts) : 0
     }
   })
   const type = nft.collection.type
 
-  const onSubmit = ({ quantity }: FormState) => {
+  const onSubmit = ({ quantity }: FormState.AcceptBidNFT) => {
     if (!bid) return
     try {
       if (type === 'ERC721') {

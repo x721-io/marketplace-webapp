@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
-import { APIResponse } from '@/services/api/types'
+import { Collection } from '@/types'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  collection: APIResponse.Collection
+  collection: Collection
 }
 
 export default function CollectionCard({ collection, ...rest }: Props) {

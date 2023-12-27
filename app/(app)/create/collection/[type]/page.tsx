@@ -16,7 +16,7 @@ import useAuthStore from '@/store/auth/store'
 import { BASE_API_URL } from '@/config/api'
 import Icon from '@/components/Icon'
 import { toast } from 'react-toastify'
-import { AssetType } from '@/types'
+import { AssetType, FormState } from '@/types'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
@@ -24,14 +24,6 @@ import { noSpecialCharacterRegex } from '@/utils/regex'
 import { parseImageUrl } from '@/utils/nft'
 import { waitForTransaction } from '@wagmi/core'
 import { redirect, useParams, useRouter } from 'next/navigation'
-
-interface CollectionFormState {
-  avatar: string
-  name: string,
-  symbol: string,
-  description: string,
-  shortUrl: string
-}
 
 export default function CreateNFTCollectionPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -53,7 +45,7 @@ export default function CreateNFTCollectionPage() {
     control,
     setValue,
     formState: { errors }
-  } = useForm<CollectionFormState>({ reValidateMode: 'onChange' })
+  } = useForm<FormState.CreateCollection>({ reValidateMode: 'onChange' })
 
   const formRules = {
     name: {
@@ -106,7 +98,7 @@ export default function CreateNFTCollectionPage() {
     router.push('/create/collection')
   }
 
-  const onSubmit = async (data: CollectionFormState) => {
+  const onSubmit = async (data: FormState.CreateCollection) => {
     if (!type || !creator) return
     const toastId = toast.loading('Preparing data...', { type: 'info' })
     setLoading(true)
@@ -125,7 +117,7 @@ export default function CreateNFTCollectionPage() {
           ...data,
           type,
           txCreationHash: tx.hash,
-          creators: creator
+          creator
         })
       ])
 

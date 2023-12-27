@@ -1,9 +1,9 @@
-import { APIResponse } from '@/services/api/types'
+import { Collection } from '@/types'
 
 export interface AppStoreState {
-  collections: Record<string, APIResponse.Collection[]>
+  collections: Record<string, Collection[]>
 }
 
 export interface AppStoreAction {
-  setCollection: (userId: string, collections: APIResponse.Collection[]) => void
+  setCollection: (userId: string, collections: Collection[]) => void
 }

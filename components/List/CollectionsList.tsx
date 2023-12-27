@@ -1,15 +1,15 @@
-import { Pagination, Spinner, Table, Tooltip } from 'flowbite-react'
-import { APIResponse } from '@/services/api/types'
+import { Pagination, Spinner, Tooltip } from 'flowbite-react'
 import { formatEther } from 'ethers'
 import Link from 'next/link'
 import Text from '@/components/Text'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import Image from 'next/image'
 import defaultImg from '@/assets/images/default-cover-photo.png'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '../Button'
+import { Collection } from '@/types'
 
 interface Paging {
   page?: number
@@ -22,7 +22,7 @@ interface Props {
   loading?: boolean
   error?: boolean
   paging?: Paging
-  collections?: APIResponse.Collection[]
+  collections?: Collection[]
   onChangePage: (page: number) => void
 }
 
@@ -35,7 +35,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
   if (loading) {
     return (
       <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl"/>
+        <Spinner size="xl" />
       </div>
     )
   }

@@ -7,6 +7,7 @@ import React, { useCallback, useMemo } from 'react'
 import Text from '@/components/Text'
 import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
 import { isMobile } from 'react-device-detect'
+import { NFT } from '@/types'
 
 interface Paging {
   page?: number
@@ -15,7 +16,7 @@ interface Paging {
 }
 
 interface Props {
-  items?: APIResponse.NFT[]
+  items?: NFT[]
   showFilters: boolean
   filters?: FilterType[]
   onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void

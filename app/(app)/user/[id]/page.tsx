@@ -15,7 +15,6 @@ import Text from '@/components/Text'
 import { formatDisplayedBalance } from '@/utils'
 
 export default function ProfilePage() {
-  const ownNFTCount = useRef(0)
   const api = useMarketplaceApi()
   const { id } = useParams()
   const { data: user, isLoading, error } = useSWR(
@@ -60,7 +59,7 @@ export default function ProfilePage() {
 
       <div className="desktop:px-20 tablet:px-20 px-4">
         <Tabs.Group style="underline">
-          <Tabs.Item title={`Owned (${formatDisplayedBalance(ownNFTCount.current, 0)})`}>
+          <Tabs.Item title={`Owned`}>
             <OwnedNFTs wallet={user.publicKey} />
           </Tabs.Item>
           <Tabs.Item title={"On Sale"}>
