@@ -26,6 +26,7 @@ export default function UserCollections() {
       ...activePagination,
       page
     })
+    window.scrollTo(0, 0)
   }
 
   return (

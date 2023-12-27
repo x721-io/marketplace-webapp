@@ -24,6 +24,7 @@ export default function ExploreNFTsPage() {
 
   return (
     <NFTsList
+      loading={isLoading}
       onApplyFilters={handleApplyFilters}
       onChangePage={handleChangePage}
       showFilters={isFiltersVisible}

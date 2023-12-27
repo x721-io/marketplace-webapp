@@ -93,7 +93,7 @@ export default function NFTDetails() {
     )
   }
 
-  if (error) {
+  if (error && !item) {
     return (
       <div className="w-full h-96 flex justify-center items-center">
         <Text variant="heading-xs" className="text-center">
