@@ -147,6 +147,15 @@ export namespace APIParams {
     value: string
     collectionId?: string
   }
+
+  export interface VerifyAcc {
+    email: string
+    username: string
+    shortLink: string
+    bio: string
+    twitterLink: string
+    avatar: string
+  }
 }
 
 /** API Response types **/

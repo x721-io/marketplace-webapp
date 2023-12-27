@@ -26,7 +26,6 @@ interface ProfileFormState {
 export default function   ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
-  const [showPopup, setShowPopup] = useState(false);
 
   const { handleSubmit, register, formState: { isDirty, errors } } = useForm<ProfileFormState>({
     defaultValues: {
@@ -60,108 +59,85 @@ export default function   ProfileStep() {
   }
 
   return (
-    <div className='flex w-full'>
-      <form className='w-2/3' onSubmit={handleSubmit(onSubmitProfile)}>
-        <div className="flex gap-8 mb-8 flex-col">
-          <div className="desktop:mt-5 tablet:mt-5 mt-7 flex gap-8 w-full flex-col">
-            <div>
-              <label className="block mb-2 font-semibold text-primary">Username</label>
-              <Input
-                type="text"
-                register={register('username')}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Short link</label>
-              <Input
-                prependIcon="@"
-                placeholder="shorlink"
-                register={register('shortLink')}
-              />
-              <Text className="text-tertiary mt-1" variant="body-12">
-                Your profile will be available on https://marketplace.uniultra.xyz/user/[shortLink]
-              </Text>
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Bio</label>
-              <Textarea
-                className="h-[160px] resize-none"
-                register={register('bio')}
-              />
-            </div>
-            <div>
-              <Text className="text-body-24 tablet:text-body-32 desktop:text-body font-semibold ">
-                Social links
-              </Text>
-              <Text className="text-tertiary" variant="body-16">
-                Add your existing social links to build a stronger reputation
-              </Text>
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
-              <Input
-                placeholder="https://"
-                error={!!errors.webURL}
-                register={register('webURL', {
-                  pattern: { value: urlRegex, message: 'Wrong web url format' }
-                })}
-                className="console.error"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">X (Twitter)</label>
-              <Input
-                prependIcon={<Icon name="circle" />}
-                placeholder="https://twitter.com/[your-twitter-username]"
-                error={!!errors.twitterLink}
-                register={register('twitterLink', {
-                  pattern: { value: urlRegex, message: 'Wrong twitter url format' }
-                })}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Facebook</label>
-              <Input
-                placeholder="https://www.facebook.com/[your-facebook-username]"
-                error={!!errors.facebookLink}
-                register={register('facebookLink', {
-                  pattern: { value: urlRegex, message: 'Wrong facebook url format' }
-                })}
-              />
-            </div>
+    <form className='w-full' onSubmit={handleSubmit(onSubmitProfile)}>
+      <div className="flex gap-8 mb-8 flex-col">
+        <div className="desktop:mt-5 tablet:mt-5 mt-7 flex gap-8 w-full flex-col">
+          <div>
+            <label className="block mb-2 font-semibold text-primary">Username</label>
+            <Input
+              type="text"
+              register={register('username')}
+            />
           </div>
-          <FormValidationMessages errors={errors} />
-          <div className="w-full tablet:w-auto desktop:w-auto">
-            <Button
-              type="submit"
-              disabled={!isDirty}
-              className="w-full tablet:w-auto desktop:w-auto">
-              Save settings
-            </Button>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Short link</label>
+            <Input
+              prependIcon="@"
+              placeholder="shorlink"
+              register={register('shortLink')}
+            />
+            <Text className="text-tertiary mt-1" variant="body-12">
+              Your profile will be available on https://marketplace.uniultra.xyz/user/[shortLink]
+            </Text>
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Bio</label>
+            <Textarea
+              className="h-[160px] resize-none"
+              register={register('bio')}
+            />
+          </div>
+          <div>
+            <Text className="text-body-24 tablet:text-body-32 desktop:text-body font-semibold ">
+              Social links
+            </Text>
+            <Text className="text-tertiary" variant="body-16">
+              Add your existing social links to build a stronger reputation
+            </Text>
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
+            <Input
+              placeholder="https://"
+              error={!!errors.webURL}
+              register={register('webURL', {
+                pattern: { value: urlRegex, message: 'Wrong web url format' }
+              })}
+              className="console.error"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">X (Twitter)</label>
+            <Input
+              prependIcon={<Icon name="circle" />}
+              placeholder="https://twitter.com/[your-twitter-username]"
+              error={!!errors.twitterLink}
+              register={register('twitterLink', {
+                pattern: { value: urlRegex, message: 'Wrong twitter url format' }
+              })}
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Facebook</label>
+            <Input
+              placeholder="https://www.facebook.com/[your-facebook-username]"
+              error={!!errors.facebookLink}
+              register={register('facebookLink', {
+                pattern: { value: urlRegex, message: 'Wrong facebook url format' }
+              })}
+            />
           </div>
         </div>
-      </form >
-      <div className='w-1/3'>
-        <div className=' w-[244px] rounded-2xl flex justify-center items-center p-4 gap-2 flex-col text-center mt-10 ml-20'
-          style={{ boxShadow: 'rgba(27, 32, 50, 0.12) 0px 10px 40px' }}
-        >
-          <div>
-            <Icon name="verified" width={72} height={72} />
-          </div>
-          <Text className="font-semibold  text-body-24">Verify your account</Text>
-          <Text className="text-secondary text-body-16">Proceed with verification process to get more visibility and gain trust on U2NFT</Text>
+        <FormValidationMessages errors={errors} />
+        <div className="w-full tablet:w-auto desktop:w-auto">
           <Button
-            onClick={() => setShowPopup(true)}
-            variant="secondary" scale="sm"
+            type="submit"
+            disabled={!isDirty}
             className="w-full tablet:w-auto desktop:w-auto">
-            Get Verified
+            Save settings
           </Button>
         </div>
       </div>
-      <VerifyAccountModal
-        show={showPopup}
-        onClose={() => setShowPopup(false)}
-      />
-    </div >
+    </form >
   )
 }
