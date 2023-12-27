@@ -38,7 +38,8 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
     price: {
       required: 'Please input price',
       validate: {
-        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number'
+        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
+        max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number'
       }
     },
     quantity: {

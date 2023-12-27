@@ -9,6 +9,7 @@ const DEFAULT_STATE: UIState = {
     profile: false
   },
   queryString: {
+    collection: '',
     collections: '',
     nfts: '',
     users: ''
