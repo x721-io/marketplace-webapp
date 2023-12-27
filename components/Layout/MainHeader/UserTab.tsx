@@ -29,7 +29,7 @@ export default function SearchUserTab({ loading, data, onClose }: Props) {
 
   return (
     <div className="py-4 flex flex-col gap-3">
-      {data.slice(0, 100).map(user => (
+      {data.map(user => (
         <Link
           onClick={onClose}
           href={`/user/${user.id}`}

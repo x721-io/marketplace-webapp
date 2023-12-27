@@ -80,7 +80,7 @@ export default function NFTsList({
             isMobile ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
           )}>
           {items.map(item => (
-            <div className="h-full" key={item.u2uId}>
+            <div className="h-full" key={item.collection.address + '-' + item.u2uId}>
               <NFTCard {...item} />
             </div>
           ))}

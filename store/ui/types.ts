@@ -1,5 +1,5 @@
 export type FilterKey = 'collections' | 'nfts' | 'profile'
-export type SearchKey = 'collections' | 'nfts' | 'users'
+export type SearchKey = 'collections' | 'collection' | 'nfts' | 'users'
 
 export interface UIState {
   showFilters: Record<FilterKey, boolean>

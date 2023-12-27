@@ -5,6 +5,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import placeholderImage from '@/assets/images/placeholder-image.svg'
 
 interface Props {
   loading?: boolean
@@ -29,14 +30,14 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
 
   return (
     <div className="py-4 flex flex-col gap-3">
-      {data.slice(0, 100).map(nft => {
+      {data.map(nft => {
           const displayMedia = nft.animationUrl || nft.image
           const fileExtension = displayMedia ? displayMedia.split('.').pop() : ''
           return (
             <Link
               onClick={onClose}
               href={`/item/${nft.collection?.address}/${nft.id}`}
-              key={nft.u2uId}
+              key={nft.collection?.address + '-' + nft.u2uId}
               className="flex items-center justify-between gap-4 border border-tertiary rounded-2xl px-2 py-1  opacity-60 hover:opacity-100 transition-opacity">
               <div className="flex flex-1 items-center gap-2">
                 {(() => {
@@ -56,7 +57,7 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
                         className="w-10 h-10 rounded-xl object-cover"
                         width={40}
                         height={40}
-                        src={nft.image || nft.animationUrl}
+                        src={nft.image || nft.animationUrl || placeholderImage}
                         alt="NFT Image" />
                   }
                 })()
