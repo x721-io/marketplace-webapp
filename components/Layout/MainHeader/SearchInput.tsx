@@ -37,21 +37,22 @@ export default function SearchInput() {
   const searchString = useMemo(() => searchKey ? text[searchKey] : '', [searchKey, text])
 
   const { trigger: searchCollection, data: collectionSearchData, isMutating: searchingCollection } = useSWRMutation(
-    text.collection,
+    text.collection || null,
     (text) => api.searchCollections(text)
   )
 
   const { trigger: searchNFTs, data: nftSearchData, isMutating: searchingNFT } = useSWRMutation(
-    text.nft,
+    text.nft || null,
     (text) => api.searchNFTs(text)
   )
 
   const { trigger: searchUsers, data: userSearchData, isMutating: searchingUser } = useSWRMutation(
-    text.user,
+    text.user || null,
     (text) => api.searchUsers(text)
   )
 
   const handleSearch = () => {
+    if (!searchKey || !text[searchKey]) return
     switch (searchKey) {
       case 'collection':
         return searchCollection()

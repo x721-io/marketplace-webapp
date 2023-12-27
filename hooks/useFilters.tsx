@@ -65,12 +65,13 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
   })
 
   const handleApplyFilters = (params: APIParams.FetchNFTs) => {
-    const _activeFilters = sanitizeObject({
+    const _activeFilters = {
       ...activeFilters,
       ...params,
       page: 1,
       limit: 20
-    })
+    }
+
     if (params.priceMax && !isNaN(Number(params.priceMax))) {
       _activeFilters.priceMax = parseEther(params.priceMax.toString()).toString()
     }
@@ -78,7 +79,9 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
       _activeFilters.priceMin = parseEther(params.priceMin.toString()).toString()
     }
 
-    setActiveFilters(_activeFilters)
+    _activeFilters.sellStatus = (Number(params.priceMin) || Number(params.priceMax)) ? 'AskNew' : params.sellStatus
+
+    setActiveFilters(sanitizeObject(_activeFilters))
   }
 
   const handleChangePage = (page: number) => {
