@@ -46,12 +46,12 @@ export default function ExploreUsersPage() {
   if (isLoading) {
     return (
       <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl"/>
+        <Spinner size="xl" />
       </div>
     )
   }
 
-  if (error) {
+  if (error && !users) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text variant="heading-xs" className="text-center">

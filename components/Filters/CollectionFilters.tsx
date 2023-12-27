@@ -18,7 +18,7 @@ export default function CollectionFilters({ onApplyFilters, visible }: Props) {
     max: ''
   })
   const handleChange = (key: keyof typeof activeFilters, value: any) => {
-    if (value === '' || (!isNaN(value) && parseFloat(value) >= 0)) {
+    if (value === '' || (!isNaN(value) && Number(value) >= 0)) {
       const _filters = { ...activeFilters };
       _filters[key] = value;
       setActiveFilters(_filters);
