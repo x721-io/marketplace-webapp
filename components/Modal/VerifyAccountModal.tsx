@@ -3,7 +3,11 @@ import Text from '../Text'
 import Button from '../Button'
 import VerifyIcon from '../Icon/Verify'
 
-export default function VerifyAccountModal({ show, onClose }: ModalProps) {
+interface FromState  extends ModalProps {
+  listVerify?: Object
+}
+
+export default function VerifyAccountModal({ show, onClose, listVerify }: FromState) {
 
   const handleVerifyAccount = () => {
     onClose?.()
