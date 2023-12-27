@@ -10,14 +10,14 @@ export default function UserCollections() {
   const { id } = useParams()
   const api = useMarketplaceApi()
 
-  const [activePagination, setActivePagination] = useState<APIParams.FetchCollectionById>({
+  const [activePagination, setActivePagination] = useState({
     page: 1,
     limit: 1000
   })
 
   const { data: collections } = useSWR(
-    [id, activePagination],
-    ([id, params]) => api.fetchCollectionsByUser(id as string, sanitizeObject(params) as APIParams.FetchCollectionById, false),
+    !!id ? { ...activePagination, userId: String(id), hasBase: false } : null,
+    (params) => api.fetchCollectionsByUser(params),
     { refreshInterval: 30000 }
   )
 

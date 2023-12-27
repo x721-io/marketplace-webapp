@@ -166,31 +166,29 @@ export default function NFTFilters({
         {
           !!traitsFilter?.length && (
             <Collapsible header="Properties">
-              {
-                traitsFilter.map(item => (
-                  <Collapsible key={item.key} header={<Text variant="body-16">{item.key}&nbsp;({item.count})</Text>}>
-                    {
-                      item.traits.map(trait => (
-                        <div key={trait.value} className="flex items-center gap-2 py-2">
-                          <Checkbox
-                            id={`trait-${trait.value}`}
-                            checked={isTraitSelected(item.key, trait.value)}
-                            onChange={() => handleSelectTrait(item.key, trait.value)}
-                          />
-                          <Label
-                            htmlFor={`trait-${trait.value}`}
-                            className="flex-1 text-body-16 text-secondary font-semibold">
-                            {trait.value}
-                          </Label>
-                          <Text>
-                            {trait.count}
-                          </Text>
-                        </div>
-                      ))
-                    }
-                  </Collapsible>
-                ))
-              }
+              {traitsFilter.map(item => (
+                <Collapsible key={item.key} header={<Text variant="body-16">{item.key}&nbsp;({item.count})</Text>}>
+                  {
+                    item.traits.map(trait => (
+                      <div key={trait.value} className="flex items-center gap-2 py-2">
+                        <Checkbox
+                          id={`trait-${trait.value}`}
+                          checked={isTraitSelected(item.key, trait.value)}
+                          onChange={() => handleSelectTrait(item.key, trait.value)}
+                        />
+                        <Label
+                          htmlFor={`trait-${trait.value}`}
+                          className="flex-1 text-body-16 text-secondary font-semibold">
+                          {trait.value}
+                        </Label>
+                        <Text>
+                          {trait.count}
+                        </Text>
+                      </div>
+                    ))
+                  }
+                </Collapsible>
+              ))}
             </Collapsible>
           )
         }

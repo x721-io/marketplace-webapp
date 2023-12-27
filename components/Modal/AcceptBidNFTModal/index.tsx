@@ -1,14 +1,13 @@
 import { Modal, ModalProps, Tooltip } from 'flowbite-react'
-import { APIResponse, MarketEvent } from '@/services/api/types'
-import { useAcceptBidNFT } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from './ApprovalStep'
 import { useState } from 'react'
 import AcceptBidStep from '@/components/Modal/AcceptBidNFTModal/AcceptBidStep'
+import { NFT, MarketEvent } from '@/types'
 
 interface Props extends ModalProps {
-  nft: APIResponse.NFT,
+  nft: NFT,
   bid?: MarketEvent
 }
 

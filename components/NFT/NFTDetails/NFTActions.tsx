@@ -1,6 +1,5 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { APIResponse } from '@/services/api/types'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { useMemo, useState } from 'react'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
@@ -10,8 +9,9 @@ import BidNFTModal from '@/components/Modal/BidNFTModal'
 import CancelSellNFTModal from '@/components/Modal/CancelSellNFTModal'
 import CancelBidNFTModal from '@/components/Modal/CancelBidNFTModal'
 import useAuthStore from '@/store/auth/store'
+import { NFT } from '@/types'
 
-export default function NFTActions(nft: APIResponse.NFT) {
+export default function NFTActions(nft: NFT) {
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(nft)
   const myBid = useMemo(() => {

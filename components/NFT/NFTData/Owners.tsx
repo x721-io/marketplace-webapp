@@ -1,4 +1,3 @@
-import { APIResponse } from '@/services/api/types'
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import defaultAvatar from "@/assets/images/default-avatar.png";
@@ -8,8 +7,9 @@ import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
 import BuyNFTModal from '@/components/Modal/BuyNFTModal'
 import { formatDisplayedBalance } from '@/utils'
+import { NFT } from '@/types'
 
-export default function OwnersTab({ nft }: { nft: APIResponse.NFT }) {
+export default function OwnersTab({ nft }: { nft: NFT }) {
   const [modals, setModals] = useState<Record<string, any>>({})
   const userWallet = useAuthStore(state => state.profile?.publicKey)
   const owners = useMemo(() => {

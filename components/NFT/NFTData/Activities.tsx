@@ -2,15 +2,15 @@ import { Table } from 'flowbite-react'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import React, { useState } from 'react'
 import useSWR from 'swr'
-import { APIResponse } from '@/services/api/types'
 import { format } from 'date-fns'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
 import Text from '@/components/Text'
 import { formatDisplayedBalance } from '@/utils'
+import { NFT } from '@/types'
 
-export default function ActivitiesTab({ nft }: { nft: APIResponse.NFT }) {
+export default function ActivitiesTab({ nft }: { nft: NFT }) {
   const api = useMarketplaceApi()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(20)

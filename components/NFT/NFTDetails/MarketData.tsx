@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Icon from '@/components/Icon'
-import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
@@ -10,8 +9,9 @@ import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from 'flowbite-react'
+import { NFT } from '@/types'
 
-export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
+export default function NFTMarketData({ nft }: { nft: NFT }) {
   const type = nft.collection.type
   const { isOnSale, saleData } = useNFTMarketStatus(nft)
 

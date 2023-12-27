@@ -7,14 +7,13 @@ import Text from "@/components/Text";
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Icon from '@/components/Icon'
-import { AssetType, Trait } from '@/types'
+import { AssetType, FormState, Trait } from '@/types'
 import { classNames } from '@/utils/string'
 import useAuthStore from '@/store/auth/store'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { Accordion, Tooltip } from 'flowbite-react'
 import Link from 'next/link'
-import { Address } from 'wagmi'
 import { toast } from 'react-toastify'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
@@ -23,16 +22,6 @@ import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
-
-interface NFTFormState {
-  media: Blob[],
-  name: string,
-  description: string,
-  collection: Address,
-  royalties: number
-  amount: number
-  traits: Trait[]
-}
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -43,9 +32,9 @@ export default function CreateNftPage() {
   const api = useMarketplaceApi()
   const { onCreateNFT } = useCreateNFT(type || 'ERC721')
   const userId = useAuthStore(state => state.credentials?.userId)
-  const { data, error, isLoading } = useSWR(
-    !!userId ? userId : null,
-    (userId) => api.fetchCollectionsByUser(userId as string, { page: 1, limit: 1000 }, true),
+  const { data } = useSWR(
+    userId || null,
+    (userId) => api.fetchCollectionsByUser({ page: 1, limit: 1000, userId, hasBase: true }),
     { refreshInterval: 3600 * 1000 }
   )
   const {
@@ -59,7 +48,7 @@ export default function CreateNftPage() {
     setValue,
     watch,
     formState: { errors }
-  } = useForm<NFTFormState>({
+  } = useForm<FormState.CreateNFT>({
     defaultValues: { traits: [{ trait_type: '', value: '' }] }
   })
 
@@ -80,7 +69,7 @@ export default function CreateNftPage() {
           if (firstFileType && firstFileType !== 'audio') return true
           return !!values[1] || 'Cover photo is required'
         }
-      },
+      }
     },
     name: {
       required: 'Collection name is required!'
@@ -148,7 +137,7 @@ export default function CreateNftPage() {
     setValue('traits', _traits as Trait[])
   }
 
-  const onSubmit = async ({ media, traits, ...rest }: NFTFormState) => {
+  const onSubmit = async ({ media, traits, ...rest }: FormState.CreateNFT) => {
     if (!type) return
 
     setLoading(true)
@@ -291,7 +280,7 @@ export default function CreateNftPage() {
                         <Link href={`/create/collection`}>
                           <div className={classNames(
                             'w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border-2 text-primary bg-white',
-                            'hover:border-primary hover:bg-white hover:text-primary transition-all',
+                            'hover:border-primary hover:bg-white hover:text-primary transition-all'
                           )}>
                             <PlusCircleIcon width={24} height={24} />
                             <span className="font-bold">Create <span className="text-tertiary font-normal"> {type === 'ERC721' ? 'ERC721' : 'ERC1155'}</span></span>
