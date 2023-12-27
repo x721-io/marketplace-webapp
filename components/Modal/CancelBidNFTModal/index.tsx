@@ -22,6 +22,8 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
     }
   }
 
+  if (!bid) return null
+
   return (
     <Modal
       dismissible
