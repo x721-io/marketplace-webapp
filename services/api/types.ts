@@ -94,6 +94,16 @@ export namespace APIParams {
     value: string
     collectionId?: string
   }
+
+  export interface FetchNFTDetails {
+    collectionAddress: string,
+    id: string
+  }
+
+  export interface FetchNFTMarketData extends FetchNFTDetails {
+    bidListPage: number
+    bidListLimit: number
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -168,6 +178,13 @@ export namespace APIResponse {
   }
 
   export type NFTEvents = MarketEvent[]
+
+  export interface NFTMarketData {
+    sellInfo: MarketEvent[]
+    bidInfo: MarketEvent[],
+    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id'> & { quantity: number })[],
+    totalSupply: string
+  }
 
   export type FetchNFTMetadata = NFTMetadata
 

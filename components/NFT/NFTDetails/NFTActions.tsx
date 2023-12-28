@@ -10,13 +10,16 @@ import CancelSellNFTModal from '@/components/Modal/CancelSellNFTModal'
 import CancelBidNFTModal from '@/components/Modal/CancelBidNFTModal'
 import useAuthStore from '@/store/auth/store'
 import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
 
-export default function NFTActions(nft: NFT) {
+export default function NFTActions({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
   const wallet = useAuthStore(state => state.profile?.publicKey)
-  const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(nft)
+  const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(nft.collection.type, marketData)
   const myBid = useMemo(() => {
-    return nft.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
-  }, [nft.bidInfo])
+    if (!marketData) return
+    return marketData.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
+  }, [marketData])
+
   const [showSellModal, setShowSellModal] = useState(false)
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showBidModal, setShowBidModal] = useState(false)

@@ -88,9 +88,11 @@ export const useMarketplaceApi = () => {
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
 
-      fetchNFTById: (collectionAddress: string, id: string, bidListPage: number = 1, bidListLimit: number = 100): Promise<APIResponse.NFTDetails> => {
-        return marketplaceApi.get(API_ENDPOINTS.NFT + `?collectionAddress=${collectionAddress}&id=${id}&bidListPage=${bidListPage}&bidListLimit=${bidListLimit}`)
+      fetchNFTById: (params: APIParams.FetchNFTDetails): Promise<APIResponse.NFTDetails> => {
+        return marketplaceApi.get(API_ENDPOINTS.NFT + parseQueries(params))
       },
+
+      fetchMarketDataByNFT: (params: APIParams.FetchNFTMarketData): Promise<APIResponse.NFTMarketData> => marketplaceApi.get(API_ENDPOINTS.NFT_TRANSACTIONS + parseQueries(params)),
 
       getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.FetchNFTMetadata> => {
         return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)

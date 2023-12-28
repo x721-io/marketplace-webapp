@@ -8,10 +8,12 @@ import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { BigNumberish, MaxInt256, parseEther } from 'ethers'
 import { FINGERPRINT } from '@/config/constants'
 
-export const useNFTMarketStatus = (nft: NFT) => {
-  const type = nft.collection.type
-
-  const { owners, sellInfo, bidInfo } = useMemo(() => nft, [nft])
+export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFTMarketData) => {
+  const { owners, sellInfo, bidInfo } = useMemo(() => marketData || {
+    owners: [],
+    sellInfo: [],
+    bidInfo: []
+  }, [marketData])
   const userId = useAuthStore(state => state.profile?.id)
   const wallet = useAuthStore(state => state.profile?.publicKey)
 

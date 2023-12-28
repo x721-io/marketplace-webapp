@@ -1,5 +1,6 @@
 import { Address } from 'wagmi'
 import { BigNumberish } from 'ethers'
+import { User } from '@/types/entitites'
 
 export type MarketEventType = 'AskNew' | 'AskCancel' | 'Trade' | 'AcceptBid' | 'Bid' | 'CancelBid'
 
