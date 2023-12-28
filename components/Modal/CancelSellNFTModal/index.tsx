@@ -72,11 +72,11 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
       case 1:
       default:
         return (
-          <>
-            <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
+          <div className='flex flex-col items-center justify-center gap-4'>
+            <Text className="font-semibold text-primary text-center" variant="heading-xs">
               {nft.collection.name} - {nft.name}
             </Text>
-            <Text className="text-secondary text-center mb-7" variant="body-18">
+            <Text className="text-secondary text-center" variant="body-18">
               Are you sure to cancel listing?
             </Text>
 
@@ -88,7 +88,7 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
                 Yes
               </Button>
             </div>
-          </>
+          </div>
         )
     }
   }

@@ -91,7 +91,7 @@ export default function MainFooter() {
             Terms of Service
           </Link>
           <Link href="#" className="text-body-12 text-tertiary">
-            Privacy policy
+            Privacy Policy
           </Link>
           <Link href="#" className="text-body-12 text-tertiary">
             Cookies

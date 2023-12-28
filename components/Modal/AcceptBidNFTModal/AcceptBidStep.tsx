@@ -51,7 +51,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
       </Text>
       {
         type === 'ERC721' ? (
-          <Text className="text-secondary text-center mb-7" variant="body-18">
+          <Text className="text-secondary text-center mb-4" variant="body-18">
             Are you sure to accept this bid?
           </Text>
         ) : (
