@@ -4,10 +4,11 @@ import Button from '../Button'
 import VerifyIcon from '../Icon/Verify'
 
 interface FromState  extends ModalProps {
-  listVerify?: Object
+  listVerify?: Object | undefined
 }
 
 export default function VerifyAccountModal({ show, onClose, listVerify }: FromState) {
+  console.log('listVerify', listVerify)
 
   const handleVerifyAccount = () => {
     onClose?.()
@@ -20,7 +21,14 @@ export default function VerifyAccountModal({ show, onClose, listVerify }: FromSt
           <Text className='text-body-24 font-bold'>Oops</Text>
           <Text className='text-body-16 font-medium'>To begin your verification process you must add following data</Text>
           <div>
-            <div className='flex gap-2 items-center'>
+            {/* {listVerify.map (row => ( */}
+              <div className='flex gap-2 items-center'>
+              <VerifyIcon width={16} height={16} />
+              <Text></Text>
+            </div>
+
+            {/* )) } */}
+            {/* <div className='flex gap-2 items-center'>
               <VerifyIcon width={16} height={16} />
               <Text>Bio is required</Text>
             </div>
@@ -31,7 +39,7 @@ export default function VerifyAccountModal({ show, onClose, listVerify }: FromSt
             <div className='flex gap-2 items-start'>
               <VerifyIcon width={16} height={16} />
               <Text>At least one created or owned NFT in your profile</Text>
-            </div>
+            </div> */}
           </div>
           <Button onClick={handleVerifyAccount}>Continue</Button>
         </div>

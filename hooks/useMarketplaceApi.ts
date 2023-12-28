@@ -102,7 +102,7 @@ export const useMarketplaceApi = () => {
 
       fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params)),
 
-      verifyAccount: (params: APIParams.VerifyAcc): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, params)
+      verifyAccount: () => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, authHeader)
     }
   }, [authHeader])
 }
