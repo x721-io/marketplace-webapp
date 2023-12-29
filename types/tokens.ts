@@ -5,4 +5,5 @@ export interface URC20Token {
   symbol: string
   decimal: number
   address: Address
+  logo: string
 }

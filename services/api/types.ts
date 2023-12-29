@@ -61,27 +61,8 @@ export namespace APIParams {
   }
 
   export interface NFTEvents extends PaginationParams {
-    and?: {
-      nftId_?: {
-        tokenId: string
-        contract_contains: Address
-      }
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType
-    }[]
-    or?: {
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType,
-      contract_contains?: Address
-    }[]
+    tokenId: string
+    collectionAddress: Address
   }
 
   export interface Search {

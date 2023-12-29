@@ -17,7 +17,9 @@ export default function OwnersTab({ nft, marketData }: { nft: NFT, marketData?: 
   const owners = useMemo(() => {
     if (!marketData) return []
     return marketData.owners.map(owner => {
-      const sellInfo = marketData.sellInfo.find(item => item.from.toLowerCase() === owner.publicKey.toLowerCase())
+      const sellInfo = marketData.sellInfo.find(item => {
+        return item.from?.signer?.toLowerCase() === owner.publicKey?.toLowerCase()
+      })
       return {
         ...owner,
         sellInfo

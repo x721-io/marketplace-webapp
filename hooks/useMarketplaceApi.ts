@@ -20,6 +20,23 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
+      search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
+
+      searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'NFT',
+        text
+      }),
+
+      searchCollections: (text: string): Promise<APIResponse.SearchCollections> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'COLLECTION',
+        text
+      }),
+
+      searchUsers: (text: string): Promise<APIResponse.SearchUsers> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'USER',
+        text
+      }),
+
       uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
         if (Array.isArray(files)) {
@@ -54,23 +71,6 @@ export const useMarketplaceApi = () => {
       fetchNFTs: (params: APIParams.FetchNFTs): Promise<APIResponse.FetchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
 
       fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
-
-      search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
-
-      searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'NFT',
-        text
-      }),
-
-      searchCollections: (text: string): Promise<APIResponse.SearchCollections> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'COLLECTION',
-        text
-      }),
-
-      searchUsers: (text: string): Promise<APIResponse.SearchUsers> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'USER',
-        text
-      }),
 
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 

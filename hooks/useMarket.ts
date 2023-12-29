@@ -3,7 +3,7 @@ import { Address, erc20ABI, useContractRead, useContractWrite } from 'wagmi'
 import { useMemo } from 'react'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
-import { AssetType, NFT } from '@/types'
+import { AssetType, MarketEvent, NFT } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { BigNumberish, MaxInt256, parseEther } from 'ethers'
 import { FINGERPRINT } from '@/config/constants'
@@ -29,7 +29,7 @@ export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFT
   const hasBidder = useMemo(() => !!bidInfo?.length, [bidInfo])
 
   const isBidder = useMemo(
-    () => bidInfo?.some(bid => bid.to === wallet?.toLowerCase()),
+    () => bidInfo?.some(bid => bid.to?.address?.toLowerCase() === wallet?.toLowerCase()),
     [bidInfo]
   )
   const saleData = useMemo(() => {
@@ -46,7 +46,7 @@ export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFT
 
   const isSeller = useMemo(() => {
     if (type === 'ERC721') return isOwner
-    return sellInfo.some(item => item.from.toLowerCase() === wallet?.toLowerCase())
+    return sellInfo.some(item => item.from?.address?.toLowerCase() === wallet?.toLowerCase())
   }, [type, isOwner, sellInfo])
 
   return {

@@ -1,5 +1,5 @@
 import { Table } from 'flowbite-react'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { findTokenByAddress } from '@/utils/token'
 import { formatUnits } from 'ethers'
 import { format } from 'date-fns'
@@ -43,26 +43,26 @@ export default function BidsTab({ nft, marketData }: { nft: NFT, marketData?: AP
           </Table.Head>
 
           <Table.Body className="divide-y">
-            {
-              Array.isArray(marketData.bidInfo) && (
-                marketData.bidInfo.map(row => {
-                  const token = findTokenByAddress(row.quoteToken)
-                  return (
-                    <Table.Row key={row.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {row.to}
-                      </Table.Cell>
-                      <Table.Cell>{formatThousandDelimiter(formatUnits(row.price, token?.decimal))}</Table.Cell>
-                      {type === 'ERC1155' && (<Table.Cell>{row.amounts}</Table.Cell>)}
-                      <Table.Cell>{format(Number(row.timestamp) * 1000, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>
-                      <Table.Cell>
-                        {isOwner ? <Button onClick={() => handleAcceptBid(row)} variant="text">Accept</Button> : '-'}
-                      </Table.Cell>
-                    </Table.Row>
-                  )
-                })
-              )
-            }
+            {/*{*/}
+            {/*  Array.isArray(marketData.bidInfo) && (*/}
+            {/*    marketData.bidInfo.map(row => {*/}
+            {/*      const token = findTokenByAddress(row.quoteToken)*/}
+            {/*      return (*/}
+            {/*        <Table.Row key={row.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">*/}
+            {/*          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">*/}
+            {/*            {row.to}*/}
+            {/*          </Table.Cell>*/}
+            {/*          <Table.Cell>{formatThousandDelimiter(formatUnits(row.price, token?.decimal))}</Table.Cell>*/}
+            {/*          {type === 'ERC1155' && (<Table.Cell>{row.amounts}</Table.Cell>)}*/}
+            {/*          <Table.Cell>{format(Number(row.timestamp) * 1000, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>*/}
+            {/*          <Table.Cell>*/}
+            {/*            {isOwner ? <Button onClick={() => handleAcceptBid(row)} variant="text">Accept</Button> : '-'}*/}
+            {/*          </Table.Cell>*/}
+            {/*        </Table.Row>*/}
+            {/*      )*/}
+            {/*    })*/}
+            {/*  )*/}
+            {/*}*/}
           </Table.Body>
         </Table>
       )}
