@@ -12,7 +12,6 @@ import { useParams } from 'next/navigation'
 import useSWR from 'swr'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import Text from '@/components/Text'
-import { formatDisplayedBalance } from '@/utils'
 
 export default function ProfilePage() {
   const api = useMarketplaceApi()

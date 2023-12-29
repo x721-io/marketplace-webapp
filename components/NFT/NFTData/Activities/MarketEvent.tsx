@@ -1,6 +1,6 @@
 import defaultAvatar from "@/assets/images/default-avatar.png";
 import { MarketEvent } from '@/types'
-import { getUserLink, shortenAddress } from '@/utils/string'
+import { getDisplayedUserName, getUserLink } from '@/utils/string'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -34,7 +34,7 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
       <div className="flex flex-col">
         <div className="flex items-center gap-1 text-body-14">
           <Link href={getUserLink(maker)} className="font-semibold hover:underline">
-            {maker?.username || shortenAddress(maker?.signer)}
+            {getDisplayedUserName(maker)}
           </Link>
           <div className="text-secondary">
             {children}
@@ -84,7 +84,9 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 {event.NFT?.name}
               </span>
               to
-              <Link className="text-primary hover:underline" href={getUserLink(event.to)}>{event.to?.username}</Link>
+              <Link className="text-primary hover:underline" href={getUserLink(event.to)}>
+                {getDisplayedUserName(event.to)}
+              </Link>
               for
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
@@ -119,7 +121,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
             <div className="flex items-center gap-1">
               Accepted bid from
               <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
-                {event.to?.username}
+                {getDisplayedUserName(event.to)}
               </Link>
               {event.collection?.type === 'ERC1155' ? `For ${event.quantity} edition(s)` : 'For'}
               <span className="font-semibold text-primary">
@@ -148,8 +150,9 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
               Transferred {event.collection?.type === 'ERC1155' && `${event.quantity} edition(s)`} to
-              <Link className="font-semibold text-primary hover:underline"
-                    href={getUserLink(event.to)}>{event.to?.username}</Link>
+              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
+                {getDisplayedUserName(event.to)}
+              </Link>
             </div>
           </Row>
         )

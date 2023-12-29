@@ -5,8 +5,8 @@ import { formatDisplayedBalance } from '@/utils'
 import { formatUnits } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getUserLink } from '@/utils/string'
-import defaultAvatar from '@/assets/images/default-avatar.png'
+import { getUserLink, getDisplayedUserName } from '@/utils/string'
+import placeholderImage from '@/assets/images/placeholder-image.svg'
 import { format } from 'date-fns'
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,21 +29,19 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
     <div className="flex items-center gap-3">
       <Link href={`/item/${collection?.address}/${nft?.id}`} className="flex items-center gap-2">
         <Image
-          className="w-10 h-10 rounded-full"
-          src={nft?.image || defaultAvatar}
+          className="w-10 h-10 rounded-lg"
+          src={nft?.image || placeholderImage}
           alt="user"
           width={40}
           height={40} />
       </Link>
 
-      <div className="flex flex-col">
-        <div className="flex items-center gap-1 text-body-14">
-          <Link href={`/item/${collection?.address}/${nft?.id}`} className="font-semibold hover:underline">
-            {nft?.name}
-          </Link>
-          <div className="text-secondary">
-            {children}
-          </div>
+      <div className="flex flex-col gap-0.5 text-body-14">
+        <Link href={`/item/${collection?.address}/${nft?.id}`} className="font-semibold hover:underline">
+          {nft?.name}
+        </Link>
+        <div className="text-secondary">
+          {children}
         </div>
         <p className="font-semibold text-secondary text-body-12">
           {format((timestamp || 0) * 1000, 'yyyy/dd/mm - hh:mm a')}
@@ -66,7 +64,9 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              <Link className="text-primary hover:underline" href={getUserLink(event.from)}>{event.from?.username}</Link>
+              <Link className="text-primary hover:underline" href={getUserLink(event.from)}>
+                {getDisplayedUserName(event.from)}
+              </Link>
               Listed {event.collection?.type === 'ERC1155' && ` ${event.quantity} editions`} for
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
@@ -79,7 +79,9 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
       case 'AskCancel':
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
-            <Link className="text-primary hover:underline" href={getUserLink(event.from)}>{event.from?.username}</Link>
+            <Link className="text-primary hover:underline" href={getUserLink(event.from)}>
+              {getDisplayedUserName(event.from)}
+            </Link>
             {' '}Cancel Listing
           </Row>
         )
@@ -87,14 +89,18 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              <Link className="text-primary hover:underline" href={getUserLink(event.from)}>{event.from?.username}</Link>
+              <Link className="text-primary hover:underline" href={getUserLink(event.from)}>
+                {getDisplayedUserName(event.from)}
+              </Link>
               Sold
               {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
               <span className="font-semibold text-primary">
                 {event.NFT?.name}
               </span>
               to
-              <Link className="text-primary hover:underline" href={getUserLink(event.to)}>{event.to?.username}</Link>
+              <Link className="text-primary hover:underline" href={getUserLink(event.to)}>
+                {getDisplayedUserName(event.to)}
+              </Link>
               for
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
@@ -110,7 +116,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
             <div className="flex items-center gap-1">
               <p className="text-secondary">
                 <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
-                  {event.to?.username}
+                  {getDisplayedUserName(event.to)}
                 </Link>
                 Bid{' '}
                 {event.collection?.type === 'ERC1155' ? `${event.quantity} edition(s) for` : 'for'}
@@ -131,11 +137,11 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
               <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.from)}>
-                {event.from?.username}
+                {getDisplayedUserName(event.from)}
               </Link>
               Accepted bid from
               <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
-                {event.to?.username}
+                {getDisplayedUserName(event.to)}
               </Link>
               {event.collection?.type === 'ERC1155' ? `For ${event.quantity} edition(s)` : 'For'}
               <span className="font-semibold text-primary">
@@ -151,7 +157,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
-              {event.to?.username}
+              {getDisplayedUserName(event.to)}
             </Link>
             {' '}Cancelled bidding
           </Row>
@@ -160,7 +166,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
-              {event.to?.username}
+              {getDisplayedUserName(event.to)}
             </Link>
             {' '}Minted {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s)`}
           </Row>
@@ -169,11 +175,13 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
         return (
           <Row nft={event.NFT} collection={event.collection} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              <Link className="font-semibold text-primary hover:underline"
-                    href={getUserLink(event.from)}>{event.from?.username}</Link>
+              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.from)}>
+                {getDisplayedUserName(event.from)}
+              </Link>
               Transferred {event.collection?.type === 'ERC1155' && `${event.quantity} edition(s)`} to
-              <Link className="font-semibold text-primary hover:underline"
-                    href={getUserLink(event.to)}>{event.to?.username}</Link>
+              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
+                {getDisplayedUserName(event.to)}
+              </Link>
             </div>
           </Row>
         )
