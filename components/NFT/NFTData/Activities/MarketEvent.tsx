@@ -1,6 +1,6 @@
 import defaultAvatar from "@/assets/images/default-avatar.png";
 import { MarketEvent } from '@/types'
-import { getDisplayedUserName, getUserLink } from '@/utils/string'
+import { getDisplayedUserName, getUserLink, shortenAddress } from '@/utils/string'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -41,7 +41,7 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
           </div>
         </div>
         <p className="font-semibold text-secondary text-body-12">
-          {format((timestamp || 0) * 1000, 'yyyy/dd/mm - hh:mm a')}
+          {format((timestamp || 0) * 1000, 'yyyy/dd/M - hh:mm a')}
         </p>
       </div>
     </div>
@@ -81,7 +81,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               Sold
               {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
               <span className="font-semibold text-primary">
-                {event.NFT?.name}
+                {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
               </span>
               to
               <Link className="text-primary hover:underline" href={getUserLink(event.to)}>

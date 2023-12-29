@@ -18,7 +18,7 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
     <div className="pb-7">
       <Tabs.Group style="underline">
         {nft.collection.type === 'ERC1155' && (
-          <Tabs.Item active title="Owners">
+          <Tabs.Item active title={`Owners (${marketData?.owners.length || 0})`}>
             <OwnersTab nft={nft} marketData={marketData} />
           </Tabs.Item>
         )}
@@ -28,7 +28,7 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
         <Tabs.Item title="Properties">
           <PropertiesTab metaData={metaData}/>
         </Tabs.Item>
-        <Tabs.Item title="Bids">
+        <Tabs.Item title={`Bids (${marketData?.bidInfo.length || 0})`}>
           <BidsTab marketData={marketData} nft={nft} />
         </Tabs.Item>
         <Tabs.Item title="Activities">

@@ -7,14 +7,6 @@ export type MarketEventType = 'AskNew' | 'AskCancel' | 'Trade' | 'AcceptBid' | '
 export interface MarketEvent {
   id: string,
   event: MarketEventType
-  nftId?: {
-    id: string
-    tokenId: string
-    contract: {
-      id: Address
-      name: string
-    }
-  },
 
   NFT?: {
     animationUrl: string

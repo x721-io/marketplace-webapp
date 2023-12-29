@@ -38,7 +38,7 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
   });
 
   if (item?.value === 0) {
-    return parseFloat(String(value)).toFixed(2)
+    return parseFloat(String(value)).toFixed(digits)
   }
   return item ? (Number(value) / item.value).toFixed(digits).replace(rx, "1") + item.symbol : "0";
 }

@@ -64,7 +64,7 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
             </p>
           </div>
           <p className="font-semibold text-secondary text-body-12">
-            {format((event.timestamp || 0) * 1000, 'yyyy/dd/mm - hh:mm a')}
+            {format((event.timestamp || 0) * 1000, 'yyyy/dd/M - hh:mm a')}
           </p>
         </div>
       </div>

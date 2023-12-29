@@ -5,7 +5,7 @@ import { formatDisplayedBalance } from '@/utils'
 import { formatUnits } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getUserLink, getDisplayedUserName } from '@/utils/string'
+import { getUserLink, getDisplayedUserName, shortenAddress } from '@/utils/string'
 import placeholderImage from '@/assets/images/placeholder-image.svg'
 import { format } from 'date-fns'
 
@@ -29,22 +29,22 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
     <div className="flex items-center gap-3">
       <Link href={`/item/${collection?.address}/${nft?.id}`} className="flex items-center gap-2">
         <Image
-          className="w-10 h-10 rounded-lg"
+          className="w-12 h-12 rounded-lg"
           src={nft?.image || placeholderImage}
           alt="user"
-          width={40}
-          height={40} />
+          width={56}
+          height={56} />
       </Link>
 
       <div className="flex flex-col gap-0.5 text-body-14">
         <Link href={`/item/${collection?.address}/${nft?.id}`} className="font-semibold hover:underline">
-          {nft?.name}
+          {nft?.name || shortenAddress(`${collection?.address} - ${nft?.id}`, 6 , 10)}
         </Link>
         <div className="text-secondary">
           {children}
         </div>
         <p className="font-semibold text-secondary text-body-12">
-          {format((timestamp || 0) * 1000, 'yyyy/dd/mm - hh:mm a')}
+          {format((timestamp || 0) * 1000, 'yyyy/dd/M - hh:mm a')}
         </p>
       </div>
     </div>

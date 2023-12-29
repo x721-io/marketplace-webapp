@@ -2,9 +2,11 @@ import CollectionsList from '@/components/List/CollectionsList'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function UserCollections() {
+export default function UserCollections({ onUpdateAmount }: {
+  onUpdateAmount: (n: number) => void
+}) {
   const { id } = useParams()
   const api = useMarketplaceApi()
 
@@ -13,10 +15,10 @@ export default function UserCollections() {
     limit: 1000
   })
 
-  const { data: collections } = useSWR(
+  const { data: collections, isLoading } = useSWR(
     !!id ? { ...activePagination, userId: String(id), hasBase: false } : null,
     (params) => api.fetchCollectionsByUser(params),
-    { refreshInterval: 30000 }
+    { refreshInterval: 300000 }
   )
 
   const handleChangePage = (page: number) => {
@@ -27,9 +29,16 @@ export default function UserCollections() {
     window.scrollTo(0, 0)
   }
 
+  useEffect(() => {
+    if (collections?.paging.total) {
+      onUpdateAmount(collections?.paging.total)
+    }
+  }, [collections]);
+
   return (
     <div className="w-full py-7 overflow-x-auto">
       <CollectionsList
+        loading={isLoading}
         collections={collections?.data}
         paging={collections?.paging}
         onChangePage={handleChangePage}

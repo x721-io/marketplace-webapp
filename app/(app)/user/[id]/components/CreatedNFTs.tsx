@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SliderIcon from '@/components/Icon/Sliders'
 import Button from '@/components/Button'
 import { classNames } from '@/utils/string'
@@ -10,7 +10,10 @@ import { sanitizeObject } from '@/utils'
 import { useNFTFilters } from '@/hooks/useFilters'
 import { Address } from 'wagmi'
 
-export default function CreatedNFTs({ wallet }: { wallet: Address }) {
+export default function CreatedNFTs({ wallet, onUpdateAmount }: {
+  wallet: Address,
+  onUpdateAmount: (n: number) => void
+}) {
   const [showFilters, setShowFilters] = useState(false)
   const api = useMarketplaceApi()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters({
@@ -30,6 +33,12 @@ export default function CreatedNFTs({ wallet }: { wallet: Address }) {
     { refreshInterval: 300000 }
   )
 
+  useEffect(() => {
+    if (data?.paging.total) {
+      onUpdateAmount(data?.paging.total)
+    }
+  }, [data]);
+
   return (
     <div className="w-full py-7">
       <Button
@@ -44,6 +53,7 @@ export default function CreatedNFTs({ wallet }: { wallet: Address }) {
       </Button>
 
       <NFTsList
+        loading={isLoading}
         onApplyFilters={handleApplyFilters}
         onChangePage={handleChangePage}
         filters={['type', 'price']}
