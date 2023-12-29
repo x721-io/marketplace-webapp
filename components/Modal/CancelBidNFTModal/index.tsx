@@ -3,7 +3,7 @@ import { useCancelBidNFT } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { NFT, MarketEvent } from '@/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props extends ModalProps {
   nft: NFT,
@@ -87,6 +87,18 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
         )
     }
   }
+
+  useEffect(() => {
+    if (error) {
+      setStep(3)
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setStep(2)
+    }
+  }, [isSuccess]);
 
   if (!bid) return null
 

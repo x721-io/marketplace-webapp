@@ -7,6 +7,7 @@ import { format } from 'date-fns'
 import { formatUnits } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import { findTokenByAddress } from '@/utils/token'
+import React from 'react'
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent
@@ -58,7 +59,7 @@ export default function NFTMarketEvent({ event, className, ...rest }: MarketEven
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              Listed for
+              Listed {event.collection?.type === 'ERC1155' && ` ${event.amounts} editions`} for
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
@@ -78,6 +79,7 @@ export default function NFTMarketEvent({ event, className, ...rest }: MarketEven
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
               Sell
+              {event.collection?.type === 'ERC1155' && `${event.amounts} edition(s) `}
               <span className="font-semibold text-primary">
                 {event.NFT?.name}
               </span>
@@ -96,12 +98,18 @@ export default function NFTMarketEvent({ event, className, ...rest }: MarketEven
         return (
           <Row maker={event.to} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              Placed a bid For
-              <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+              <p className="text-secondary">
+                Bid&nbsp;
+                {event.collection?.type === 'ERC1155' ? `${event.amounts} edition(s) for` : 'for'}
+                <span className="font-semibold text-primary">
+                &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
-              {token?.symbol}
+              </p>
+              <Image width={24} height={24} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <p className="text-secondary">
+                {token?.symbol}
+                {event.collection?.type === 'ERC1155' && ` each`}
+              </p>
             </div>
           </Row>
         )
@@ -113,12 +121,13 @@ export default function NFTMarketEvent({ event, className, ...rest }: MarketEven
               <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
                 {event.to?.username}
               </Link>
-              For
+              {event.collection?.type === 'ERC1155' ? `For ${event.amounts} edition(s)` : 'For'}
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
               <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
               {token?.symbol}
+              {event.collection?.type === 'ERC1155' && `Each`}
             </div>
           </Row>
         )
@@ -131,15 +140,16 @@ export default function NFTMarketEvent({ event, className, ...rest }: MarketEven
       case 'Mint':
         return (
           <Row maker={event.to} timestamp={event.timestamp}>
-            Minted
+            Minted {event.collection?.type === 'ERC1155' && `${event.amounts} edition(s)`}
           </Row>
         )
       case 'Transfer':
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              Transferred to
-              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>{event.to?.username}</Link>
+              Transferred {event.collection?.type === 'ERC1155' && `${event.amounts} edition(s)`} to
+              <Link className="font-semibold text-primary hover:underline"
+                    href={getUserLink(event.to)}>{event.to?.username}</Link>
             </div>
           </Row>
         )

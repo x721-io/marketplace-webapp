@@ -2,7 +2,7 @@ import { Modal, ModalProps, Tooltip } from 'flowbite-react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from './ApprovalStep'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AcceptBidStep from '@/components/Modal/AcceptBidNFTModal/AcceptBidStep'
 import { NFT, MarketEvent } from '@/types'
 

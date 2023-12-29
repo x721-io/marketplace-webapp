@@ -46,7 +46,7 @@ export default function NFTActions({ nft, marketData }: { nft: NFT, marketData?:
               </Button>
             )
           }
-          <SellNFTModal nft={nft} show={showSellModal} onClose={() => setShowSellModal(false)} />
+          <SellNFTModal marketData={marketData} nft={nft} show={showSellModal} onClose={() => setShowSellModal(false)} />
           <CancelSellNFTModal nft={nft} show={showCancelSellModal} onClose={() => setShowCancelSellModal(false)} />
         </ConnectWalletButton>
       </div>
