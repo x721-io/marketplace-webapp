@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import useSWR from 'swr'
 import Text from '@/components/Text'
 import { NFT } from '@/types'
-import MarketEvent from './MarketEvent'
+import NFTMarketEvent from './MarketEvent'
 
 export default function ActivitiesTab({ nft }: { nft: NFT }) {
   const api = useMarketplaceApi()
@@ -24,8 +24,8 @@ export default function ActivitiesTab({ nft }: { nft: NFT }) {
   return (
     <div className="py-7 overflow-x-auto">
       {!!data?.length ? (
-        <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed">
-          {data.map(event => <MarketEvent key={event.id} event={event}/>)}
+        <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal">
+          {data.map(event => <NFTMarketEvent key={event.id} event={event}/>)}
         </div>
       ) : (
         <div className="p-7 rounded-2xl border border-disabled border-dashed">

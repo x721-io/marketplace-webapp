@@ -25,8 +25,8 @@ export interface MarketEvent {
 
   collection?: Pick<Collection, 'address' | 'id' | 'isU2U' | 'name' | 'shortUrl' | 'status' | 'txCreationHash' | 'type'>
   price: BigNumberish
-  to: Partial<Pick<User, 'id' | 'email' | 'shortLink' | 'username' | 'signer' | 'avatar'>> | null
-  from: Partial<Pick<User, 'id' | 'email' | 'shortLink' | 'username' | 'signer' | 'avatar'>> | null
+  to: Partial<User> | null
+  from: Partial<User> | null
   quoteToken: Address
   operationId: string
   amounts: string

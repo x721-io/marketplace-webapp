@@ -23,23 +23,23 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
     <div className="flex items-center gap-3">
       <Link href={getUserLink(maker)} className="flex items-center gap-2">
         <Image
-          className="w-8 h-8 rounded-full"
+          className="w-10 h-10 rounded-full"
           src={maker?.avatar || defaultAvatar}
           alt="user"
-          width={32}
-          height={32} />
+          width={40}
+          height={40} />
       </Link>
 
       <div className="flex flex-col">
-        <div className="flex items-center gap-1">
-          <Link href={getUserLink(maker)} className="text-body-16 font-semibold hover:underline">
+        <div className="flex items-center gap-1 text-body-14">
+          <Link href={getUserLink(maker)} className="font-semibold hover:underline">
             {maker?.username || shortenAddress(maker?.signer)}
           </Link>
           <div className="text-secondary">
             {children}
           </div>
         </div>
-        <p className="font-semibold text-secondary text-body-14">
+        <p className="font-semibold text-secondary text-body-12">
           {format((timestamp || 0) * 1000, 'yyyy/dd/mm - hh:mm a')}
         </p>
       </div>
@@ -47,7 +47,7 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
   )
 }
 
-export default function MarketEvent({ event, className, ...rest }: MarketEventProps) {
+export default function NFTMarketEvent({ event, className, ...rest }: MarketEventProps) {
   const renderEvent = () => {
     if (!event) {
       return null

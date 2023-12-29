@@ -29,9 +29,13 @@ export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFT
   const hasBidder = useMemo(() => !!bidInfo?.length, [bidInfo])
 
   const isBidder = useMemo(
-    () => bidInfo?.some(bid => bid.to?.address?.toLowerCase() === wallet?.toLowerCase()),
+    () => {
+      if (!bidInfo || !wallet) return false
+      return bidInfo?.some(bid => bid.to?.signer?.toLowerCase() === wallet?.toLowerCase())
+    },
     [bidInfo]
   )
+
   const saleData = useMemo(() => {
     if (!sellInfo?.length) return undefined
     if (type === 'ERC721') {
@@ -46,8 +50,11 @@ export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFT
 
   const isSeller = useMemo(() => {
     if (type === 'ERC721') return isOwner
-    return sellInfo.some(item => item.from?.address?.toLowerCase() === wallet?.toLowerCase())
-  }, [type, isOwner, sellInfo])
+    return sellInfo.some(item => {
+      if (!wallet || !item.from?.signer) return false
+      return item.from.signer.toLowerCase() === wallet.toLowerCase()
+    })
+  }, [type, isOwner, sellInfo, wallet])
 
   return {
     saleData,

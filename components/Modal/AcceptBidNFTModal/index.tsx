@@ -7,7 +7,7 @@ import AcceptBidStep from '@/components/Modal/AcceptBidNFTModal/AcceptBidStep'
 import { NFT, MarketEvent } from '@/types'
 
 interface Props extends ModalProps {
-  nft: NFT,
+  nft?: NFT,
   bid?: MarketEvent
 }
 
@@ -22,6 +22,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   }
 
   const renderContent = () => {
+    if (!nft) return null
     switch (step) {
       case 1:
         return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
@@ -35,7 +36,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       case 3:
         return (
           <>
-            <Text className="font-semibold text-error text-center text-heading-sm">
+            <Text className="font-semibold text-success text-center text-heading-sm">
               Success
             </Text>
             <Tooltip content="Your item has been sold!" placement="bottom">

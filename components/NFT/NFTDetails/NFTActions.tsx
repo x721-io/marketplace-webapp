@@ -17,7 +17,9 @@ export default function NFTActions({ nft, marketData }: { nft: NFT, marketData?:
   const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(nft.collection.type, marketData)
   const myBid = useMemo(() => {
     if (!marketData) return
-    return marketData.bidInfo?.find(bid => bid.to === wallet?.toLowerCase())
+    return marketData.bidInfo?.find(bid => {
+      return (!!bid.to?.publicKey && !!wallet) && bid.to?.publicKey?.toLowerCase() === wallet?.toLowerCase()
+    })
   }, [marketData])
 
   const [showSellModal, setShowSellModal] = useState(false)
