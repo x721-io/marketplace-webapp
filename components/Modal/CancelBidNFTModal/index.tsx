@@ -68,10 +68,10 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
       default:
         return (
           <>
-            <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
+            <Text className="font-semibold text-primary text-center" variant="heading-xs">
               {nft.collection.name} - {nft.name}
             </Text>
-            <Text className="text-secondary text-center mb-7" variant="body-18">
+            <Text className="text-secondary text-center" variant="body-18">
               Are you sure to cancel bidding?
             </Text>
 
