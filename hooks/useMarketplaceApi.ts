@@ -20,6 +20,23 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
+      search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
+
+      searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'NFT',
+        text
+      }),
+
+      searchCollections: (text: string): Promise<APIResponse.SearchCollections> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'COLLECTION',
+        text
+      }),
+
+      searchUsers: (text: string): Promise<APIResponse.SearchUsers> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+        mode: 'USER',
+        text
+      }),
+
       uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
         if (Array.isArray(files)) {
@@ -55,22 +72,7 @@ export const useMarketplaceApi = () => {
 
       fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
-      search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
-
-      searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'NFT',
-        text
-      }),
-
-      searchCollections: (text: string): Promise<APIResponse.SearchCollections> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'COLLECTION',
-        text
-      }),
-
-      searchUsers: (text: string): Promise<APIResponse.SearchUsers> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-        mode: 'USER',
-        text
-      }),
+      fetchUserActivities: (params: APIParams.UserActivities): Promise<APIResponse.UserActivities> => marketplaceApi.post(API_ENDPOINTS.USER_ACTIVITIES, params),
 
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
@@ -88,9 +90,11 @@ export const useMarketplaceApi = () => {
 
       generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
 
-      fetchNFTById: (collectionAddress: string, id: string, bidListPage: number = 1, bidListLimit: number = 100): Promise<APIResponse.NFTDetails> => {
-        return marketplaceApi.get(API_ENDPOINTS.NFT + `?collectionAddress=${collectionAddress}&id=${id}&bidListPage=${bidListPage}&bidListLimit=${bidListLimit}`)
+      fetchNFTById: (params: APIParams.FetchNFTDetails): Promise<APIResponse.NFTDetails> => {
+        return marketplaceApi.get(API_ENDPOINTS.NFT + parseQueries(params))
       },
+
+      fetchMarketDataByNFT: (params: APIParams.FetchNFTMarketData): Promise<APIResponse.NFTMarketData> => marketplaceApi.get(API_ENDPOINTS.NFT_TRANSACTIONS + parseQueries(params)),
 
       getNFTMetaData: (ifpsUrl: string): Promise<APIResponse.FetchNFTMetadata> => {
         return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)

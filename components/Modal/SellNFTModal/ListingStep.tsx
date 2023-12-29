@@ -9,19 +9,22 @@ import { useForm } from 'react-hook-form'
 import useAuthStore from '@/store/auth/store'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { FormState, NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: NFT
+  marketData?: NFTMarketData
 }
 
-export default function ListingStep({ nft, onSuccess, onError }: Props) {
+export default function ListingStep({ nft, onSuccess, onError, marketData }: Props) {
   const type = nft.collection.type
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const ownerData = useMemo(() => {
-    if (!wallet) return undefined
-    return nft.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
+    if (!wallet || !marketData) return undefined
+    return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
   const { register, handleSubmit, formState: { errors } } = useForm<FormState.SellNFT>()
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)

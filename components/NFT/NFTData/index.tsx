@@ -9,16 +9,17 @@ import { NFT, NFTMetadata } from '@/types'
 
 interface Props {
   nft: NFT
-  metaData?: NFTMetadata
+  metaData?: NFTMetadata,
+  marketData?: APIResponse.NFTMarketData
 }
 
-export default function NFTData({ nft, metaData }: Props) {
+export default function NFTData({ nft, metaData, marketData }: Props) {
   return (
     <div className="pb-7">
       <Tabs.Group style="underline">
         {nft.collection.type === 'ERC1155' && (
-          <Tabs.Item active title="Owners">
-            <OwnersTab nft={nft} />
+          <Tabs.Item active title={`Owners (${marketData?.owners.length || 0})`}>
+            <OwnersTab nft={nft} marketData={marketData} />
           </Tabs.Item>
         )}
         <Tabs.Item active title="Overview">
@@ -27,8 +28,8 @@ export default function NFTData({ nft, metaData }: Props) {
         <Tabs.Item title="Properties">
           <PropertiesTab metaData={metaData}/>
         </Tabs.Item>
-        <Tabs.Item title="Bids">
-          <BidsTab nft={nft} />
+        <Tabs.Item title={`Bids (${marketData?.bidInfo.length || 0})`}>
+          <BidsTab marketData={marketData} nft={nft} />
         </Tabs.Item>
         <Tabs.Item title="Activities">
           <ActivitiesTab nft={nft} />
