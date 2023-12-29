@@ -5,19 +5,22 @@ import Button from '@/components/Button'
 import { useEffect, useMemo, useState } from 'react'
 import useAuthStore from '@/store/auth/store'
 import { NFT } from '@/types/entitites'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props extends ModalProps {
   nft: NFT,
+  marketData?: NFTMarketData
 }
 
-export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
+export default function CancelSellNFTModal({ nft, show, onClose, marketData }: Props) {
   const [step, setStep] = useState(1)
   const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft)
   const wallet = useAuthStore(state => state.
     profile?.publicKey)
   const mySale = useMemo(() => {
-    return nft.sellInfo?.find(item => item.from === wallet?.toLowerCase())
-  }, [nft.sellInfo, wallet])
+    return marketData?.sellInfo?.find(item => item.from === wallet?.toLowerCase())
+  }, [marketData, wallet])
 
   const handleCancelSell = () => {
     if (!mySale) return
@@ -102,7 +105,7 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
     }
   }, [error, isSuccess])
 
-  const { isOnSale } = useNFTMarketStatus(nft)
+  const { isOnSale } = useNFTMarketStatus(nft.collection.type, marketData)
 
   if (!isOnSale) return null
 
