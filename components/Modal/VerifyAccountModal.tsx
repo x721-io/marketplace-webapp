@@ -2,17 +2,31 @@ import { Modal, ModalProps } from 'flowbite-react'
 import Text from '../Text'
 import Button from '../Button'
 import VerifyIcon from '../Icon/Verify'
+import { useRouter } from 'next/navigation'
 
-interface FromState  extends ModalProps {
-  listVerify?: Object | undefined
+interface FromState extends ModalProps {
+  listVerify?: Record<string, any>;
 }
 
 export default function VerifyAccountModal({ show, onClose, listVerify }: FromState) {
-  console.log('listVerify', listVerify)
+  const router = useRouter()
 
   const handleVerifyAccount = () => {
-    onClose?.()
-  }
+    Object.keys(listVerify || {}).forEach(key => {
+      if (listVerify && listVerify[key] === false) {
+        switch (key) {
+          case 'ownerOrCreater':
+            router.push('/create/nft')
+            break;
+          case 'email':
+            break;
+          default:
+            onClose?.();
+            break;
+        }
+      }
+    })
+  };
 
   return (
     <Modal dismissible onClose={onClose} position="center" show={show} size="sm">
@@ -21,25 +35,12 @@ export default function VerifyAccountModal({ show, onClose, listVerify }: FromSt
           <Text className='text-body-24 font-bold'>Oops</Text>
           <Text className='text-body-16 font-medium'>To begin your verification process you must add following data</Text>
           <div>
-            {/* {listVerify.map (row => ( */}
-              <div className='flex gap-2 items-center'>
-              <VerifyIcon width={16} height={16} />
-              <Text></Text>
-            </div>
-
-            {/* )) } */}
-            {/* <div className='flex gap-2 items-center'>
-              <VerifyIcon width={16} height={16} />
-              <Text>Bio is required</Text>
-            </div>
-            <div className='flex gap-2 items-center'>
-              <VerifyIcon width={16} height={16} />
-              <Text>Twitter is required</Text>
-            </div>
-            <div className='flex gap-2 items-start'>
-              <VerifyIcon width={16} height={16} />
-              <Text>At least one created or owned NFT in your profile</Text>
-            </div> */}
+            {listVerify && Object.entries(listVerify).map(([key, value]) => (
+              <li key={key} className='flex gap-2 items-center'>
+                <VerifyIcon width={16} height={16} />
+                <Text>{`${key} is required`}</Text>
+              </li>
+            ))}
           </div>
           <Button onClick={handleVerifyAccount}>Continue</Button>
         </div>

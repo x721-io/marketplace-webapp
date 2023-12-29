@@ -3,7 +3,7 @@ import Input from '@/components/Form/Input';
 import Textarea from '@/components/Form/Textarea';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuthStore from '@/store/auth/store'
 import { toast } from 'react-toastify'
@@ -12,6 +12,7 @@ import { urlRegex } from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import VerifyAccountModal from '@/components/Modal/VerifyAccountModal';
 import { FormState } from '@/types'
+
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
@@ -31,7 +32,7 @@ export default function ProfileStep() {
     }
   })
 
-  const [listVerify, setListVerify] = useState({
+  const [listVerify, setListVerify] = useState<FormState.VerifyAccount>({
     email: false,
     username: false,
     shortLink: false,
@@ -62,13 +63,13 @@ export default function ProfileStep() {
   const handleGetVerify = async () => {
     try {
       let reponse = await onVerifyAccount()
-      console.log('reponse', reponse)
-      if (typeof reponse === 'object' && Object.keys(reponse).length > 0) {
-        setShowPopup(true)
+      if (reponse !== undefined) {
         setListVerify(reponse)
-      } else {
+        setShowPopup(true)
+      }else {
         setShowPopup(false)
       }
+
     } catch (e: any) {
       console.log('e', e)
     }
@@ -176,7 +177,7 @@ export default function ProfileStep() {
           <Text className="font-semibold  text-body-24">Verify your account</Text>
           <Text className="text-secondary text-body-16">Proceed with verification process to get more visibility and gain trust on U2NFT</Text>
           <Button
-            onClick={() => handleGetVerify}
+            onClick={() => handleGetVerify()}
             variant="secondary" scale="sm"
             className="w-full tablet:w-auto desktop:w-auto">
             Get Verified
