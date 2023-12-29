@@ -2,9 +2,7 @@ import CollectionsList from '@/components/List/CollectionsList'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
 import { useParams } from 'next/navigation'
-import { sanitizeObject } from '@/utils'
 import { useState } from 'react'
-import { APIParams } from '@/services/api/types'
 
 export default function UserCollections() {
   const { id } = useParams()

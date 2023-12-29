@@ -10,9 +10,10 @@ export const API_ENDPOINTS = {
   NFT: '/nft',
   NFT_TRANSACTIONS: '/nft/nftTransactionInfo',
   SEARCH_NFT: '/nft/search',
-  USER: '/user/all',
   NFT_EVENTS: '/nft/activity',
   GET_METADATA: '/common/ipfs-serve',
+  USER: '/user/all',
+  USER_ACTIVITIES: '/user/activity',
   SEARCH: '/common/search-all',
   VALIDATE_INPUT: '/validator',
 }

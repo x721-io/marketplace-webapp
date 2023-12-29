@@ -65,6 +65,10 @@ export namespace APIParams {
     collectionAddress: Address
   }
 
+  export interface UserActivities extends PaginationParams {
+    user: Address
+  }
+
   export interface Search {
     text: string
     mode: string
@@ -159,6 +163,8 @@ export namespace APIResponse {
   }
 
   export type NFTEvents = MarketEvent[]
+
+  export type UserActivities = MarketEvent[]
 
   export interface NFTMarketData {
     sellInfo: MarketEvent[]

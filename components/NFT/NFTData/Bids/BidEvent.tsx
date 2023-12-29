@@ -51,8 +51,8 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
               {event.to?.username || shortenAddress(event.to?.signer ?? event.to?.publicKey)}
             </Link>
             <p className="text-secondary">
-              Bid&nbsp;
-              {nft.collection.type === 'ERC1155' ? `${event.amounts} edition(s) for` : 'for'}
+              Bid
+              {nft.collection.type === 'ERC1155' ? ` ${event.quantity} edition(s) for` : ' for'}
               <span className="font-semibold text-primary">
                 &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>

@@ -113,7 +113,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                     Quantity
                   </Text>
                   <Text className="text-right" variant="heading-md">
-                    {saleData?.amounts}
+                    {saleData?.quantity}
                   </Text>
                 </div>
               )

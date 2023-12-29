@@ -33,7 +33,7 @@ export default function PropertiesTab({ metaData }: { metaData?: NFTMetadata }) 
           </>
         ) : (
           <div className="p-7 rounded-2xl border border-disabled border-dashed">
-            <Text className="text-secondary text-center text-body-18">Nothing to show</Text>
+            <Text className="text-secondary text-center text-body-14">Nothing to show</Text>
           </div>
         )
       }

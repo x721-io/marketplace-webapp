@@ -11,7 +11,10 @@ import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 
-export default function OwnersTab({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
+export default function OwnersTab({ nft, marketData }: {
+  nft: NFT,
+  marketData?: APIResponse.NFTMarketData
+}) {
   const [modals, setModals] = useState<Record<string, any>>({})
   const userWallet = useAuthStore(state => state.profile?.publicKey)
   const owners = useMemo(() => {
@@ -31,11 +34,9 @@ export default function OwnersTab({ nft, marketData }: { nft: NFT, marketData?: 
 
   return (
     <div className="w-full py-7">
-      <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed">
+      <div className="w-full p-7 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed">
         {(!marketData || !owners.length) ? (
-          <div className="w-full flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
-            <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
-          </div>
+          <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
         ) : owners.map((owner) => {
           return (
             <div className="flex items-center justify-between" key={owner.id}>
@@ -52,7 +53,7 @@ export default function OwnersTab({ nft, marketData }: { nft: NFT, marketData?: 
                   </p>
                   {!!owner.sellInfo ? (
                     <p className="text-secondary text-body-14 font-semibold">
-                      {owner.sellInfo.amounts} / {owner.quantity} item(s) on sale for
+                      {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
                       <span className="text-primary">
                         {" "}{formatDisplayedBalance(formatEther(owner.sellInfo.price), 2)} U2U
                       </span>

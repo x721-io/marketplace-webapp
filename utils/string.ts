@@ -1,4 +1,4 @@
-import { User } from '@/types'
+import { NFT, User } from '@/types'
 
 export const classNames = (...classes: (string | undefined | null | boolean)[]) => {
   return classes.filter(Boolean).join(' ')
@@ -10,7 +10,13 @@ export const shortenAddress = (str: string = '', head: number = 6, tail: number 
 }
 
 export const getUserLink = (user?: Partial<Pick<User, 'shortLink' | 'id' | 'publicKey' | 'signer'>> | null) => {
-  if (!user) return '/'
+  if (!user) return '#'
   const queryString = user.shortLink ?? user.id ?? user.publicKey ?? user.signer
   return `/user/${queryString}`
+}
+
+export const getNFTLink = (nft?: NFT | null) => {
+  if (!nft) return '#'
+
+  return `/item/${nft.collection.address}/${nft.id}`
 }

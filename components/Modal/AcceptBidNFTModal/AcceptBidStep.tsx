@@ -19,7 +19,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
   const { onAcceptERC721Bid, onAcceptERC1155Bid, isLoading, error, isSuccess } = useAcceptBidNFT(nft)
   const { handleSubmit, register, formState: { errors } } = useForm<FormState.AcceptBidNFT>({
     defaultValues: {
-      quantity: bid?.amounts ? Number(bid.amounts) : 0
+      quantity: bid?.quantity ? Number(bid.quantity) : 0
     }
   })
   const type = nft.collection.type
@@ -62,7 +62,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
               type="number"
               appendIcon={
                 <Text>
-                  Available: {bid?.amounts}
+                  Available: {bid?.quantity}
                 </Text>
               }
               register={
@@ -71,7 +71,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
                   {
                     validate: {
                       required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
-                      amount: v => (v <= Number(bid?.amounts)) || 'Quantity cannot exceed bid amount'
+                      amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
                     }
                   }
                 )}

@@ -15,6 +15,7 @@ export interface MarketEvent {
       name: string
     }
   },
+
   NFT?: {
     animationUrl: string
     id: string
@@ -29,6 +30,6 @@ export interface MarketEvent {
   from: Partial<User> | null
   quoteToken: Address
   operationId: string
-  amounts: string
+  quantity: string
   timestamp: number
 }

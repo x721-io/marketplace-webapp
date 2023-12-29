@@ -16,7 +16,7 @@ const DEFAULT_STATE: UIState = {
   }
 }
 
-export const useUIStore = create(devtools(persist<UIState & UIAction>(
+export const useUIStore = create(devtools<UIState & UIAction>(
   (set, get) => ({
     ...DEFAULT_STATE,
     toggleFilter: (key, bool) => set((state) => {
@@ -35,4 +35,4 @@ export const useUIStore = create(devtools(persist<UIState & UIAction>(
     }))
   }),
   { name: 'ui-storage' }
-)))
+))

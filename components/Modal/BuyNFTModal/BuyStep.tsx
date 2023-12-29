@@ -68,7 +68,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           value={formatUnits(saleData?.price || '0', 18)}
           appendIcon={
             <Text>
-              Quantity: {saleData?.amounts}
+              Quantity: {saleData?.quantity}
             </Text>
           } />
       </div>
@@ -96,7 +96,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
                 register={register('quantity', {
                   validate: {
                     required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
-                    max: v => v <= Number(saleData?.amounts) || 'Quantity exceeds sale amount',
+                    max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
                     balance: v => {
                       if (!tokenBalance?.value) return 'Not enough balance'
                       const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)

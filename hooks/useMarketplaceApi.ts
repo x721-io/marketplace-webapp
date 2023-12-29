@@ -72,6 +72,8 @@ export const useMarketplaceApi = () => {
 
       fetchNFTEvents: (params: APIParams.NFTEvents): Promise<APIResponse.NFTEvents> => marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
+      fetchUserActivities: (params: APIParams.UserActivities): Promise<APIResponse.UserActivities> => marketplaceApi.post(API_ENDPOINTS.USER_ACTIVITIES, params),
+
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
       /** GET **/
