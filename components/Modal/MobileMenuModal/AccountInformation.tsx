@@ -4,75 +4,138 @@ import Image from 'next/image'
 import defaultAvatar from '@/assets/images/default-avatar.png'
 import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
-import { useAuth } from '@/hooks/useAuth'
+import {useAuth} from '@/hooks/useAuth'
+import {truncate} from "@/utils/string";
+import {useAccount} from "wagmi";
+import {useState} from "react";
+import TokenBalances from "@/components/Modal/MobileMenuModal/TokenBalances";
 
 interface Props {
-  onBack: () => void,
-  balance: string,
   onClose?: () => void
+  balance: string
 }
 
-export default function MobileMenuAccountInformation({ onBack, balance, onClose }: Props) {
+export default function MobileMenuAccountInformation({onClose}: Props) {
+
   const userId = useAuthStore(state => state.profile?.id)
   const username = useAuthStore(state => state.profile?.username)
-  const { onLogout } = useAuth()
+  const {onLogout} = useAuth()
+  const {address, connector} = useAccount()
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(address || "")
+       .then(() => {
+         console.log('Address copied to clipboard');
+         setIsCopied(true)
+         setTimeout(() => {
+           setIsCopied(false);
+         }, 1500);
+       })
+       .catch((err) => {
+         console.error('Unable to copy address to clipboard', err);
+       });
+  };
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      <div className="flex items-center justify-between" onClick={onBack}>
-        <div className="flex items-center gap-4">
-          <div className="rounded-lg p-1 bg-surface-medium text-secondary">
-            <Icon name="arrowLeft" width={16} height={16} />
-          </div>
-          <Text className="text-secondary font-semibold" variant="body-18">
-            Account
-          </Text>
-        </div>
+     <div className=" flex flex-col h-full justify-between">
+       <div className="w-full flex flex-col gap-4 ">
+         <div className="flex items-center gap-4">
+           <div className="flex gap-3 items-center">
+             <Image
+                src={defaultAvatar}
+                alt="Avatar"
+                width={48}
+                height={48}
+             />
+             <Link href={`/user/${userId}`} className="flex flex-col">
+               <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
+               <Text className="text-secondary">View profile</Text>
+             </Link>
+           </div>
+         </div>
 
-        <Text className="font-semibold text-secondary">
-          <span className="text-primary">
-            {balance}
-          </span> U2U
-        </Text>
-      </div>
+         <Link className="text-secondary hover:text-primary" href={"/explore/items"} onClick={onClose}>
+           Explore
+         </Link>
+         <Link className="text-secondary hover:text-primary" href={"/create/collection"} onClick={onClose}>
+           Create Collection
+         </Link>
+         <Link className="text-secondary hover:text-primary" href={"/create/nft"} onClick={onClose}>
+           Create NFT
+         </Link>
+         <div className="border-b"/>
+         <Link className="text-secondary hover:text-primary" href={"/profile"} onClick={onClose}>
+           Settings
+         </Link>
+       </div>
+       <div className=" flex flex-col gap-4">
+         <div className="flex items-center justify-between px-3">
+           <Text className="text-secondary font-semibold" variant="body-18">
+             Connected Wallet
+           </Text>
+           <Text className="text-secondary font-semibold hidden" variant="body-18">
+             Manage Wallet
+           </Text>
+         </div>
+         <div className=" flex flex-col gap-5 border rounded-2xl p-4">
+           <div className="flex justify-between">
+             <div className=" flex items-center gap-2">
+               <div className="rounded-lg p-1  text-secondary">
+                 <Icon name={connector.name} width={33} height={33}/>
+               </div>
+               <div className="">
+                 <Text>
+                   U2U
+                 </Text>
+                 <Text>
+                   {truncate({
+                     str: address || ""
+                   })}
+                 </Text>
+               </div>
+             </div>
+             <div className=" flex items-center gap-3">
+               <button className="rounded-xl p-3 hover:bg-surface-medium bg-surface-soft text-secondary" onClick={handleCopyClick}>
+                 <Icon name="copy" width={15} height={15}/>
+               </button>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex gap-3 items-center">
-            <Image
-              src={defaultAvatar}
-              alt="Avatar"
-              width={48}
-              height={48}
-            />
-            <Link href={`/user/${userId}`} className="flex flex-col">
-              <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
-              <Text className="text-secondary">View profile</Text>
-            </Link>
-          </div>
-        </div>
-      </div>
 
-      <Link className="text-secondary hover:text-primary" href={"/explore/items"} onClick={onClose}>
-        Explore
-      </Link>
-      <Link className="text-secondary hover:text-primary" href={"/create/collection"} onClick={onClose}>
-        Create Collection
-      </Link>
-      <Link className="text-secondary hover:text-primary" href={"/create/nft"} onClick={onClose}>
-        Create NFT
-      </Link>
-      <div className="border-b" />
-      <Link className="text-secondary hover:text-primary" href={"/profile"} onClick={onClose}>
-        Settings
-      </Link>
-      <Link href="#" onClick={() => {
-        onLogout()
-        onClose?.()
-        onBack()
-      }}>
-        Logout
-      </Link>
-    </div>
+               <button className="rounded-xl p-3 bg-surface-soft text-secondary" onClick={() => {
+                 onLogout()
+                 onClose?.()
+               }}>
+                 <Icon name="logout" width={15} height={15}/>
+               </button>
+               {isCopied ? <span className="absolute pt-16 ">Copied!</span> : ""}
+             </div>
+
+           </div>
+
+           {/*<div className="border rounded-2xl p-3">*/}
+           {/*  {*/}
+           {/*    Object.values(tokens).map(token => {*/}
+           {/*      const {displayedBalance } = useBalance(token.address);*/}
+           {/*      return (*/}
+           {/*         <div className="flex gap-2 items-center" key={token.symbol}>*/}
+           {/*           <Icon name={token.logo} width={24} height={24}/>*/}
+           {/*           {displayedBalance}*/}
+           {/*           {token.symbol}*/}
+           {/*         </div>*/}
+           {/*      )*/}
+           {/*    })*/}
+           {/*  }*/}
+           {/*</div>*/}
+           <TokenBalances />
+         </div>
+
+         {/*<Text className="font-semibold text-secondary">*/}
+         {/* <span className="text-primary">*/}
+         {/*   {balance}*/}
+         {/* </span> U2U*/}
+         {/*</Text>*/}
+       </div>
+     </div>
+
   )
 }

@@ -2,17 +2,14 @@
 import Icon from '@/components/Icon'
 import InputDropdown from '@/components/Form/InputDropdown'
 import Button from '@/components/Button'
-import { useMemo, useRef, useState } from 'react'
-import { Tabs, TabsRef } from 'flowbite-react'
+import {useMemo, useRef, useState} from 'react'
+import {Modal, Tabs, TabsRef} from 'flowbite-react'
 import useSWR from 'swr'
 import SearchUserTab from './UserTab'
 import SearchCollectionTab from './CollectionTab'
 import SearchNFTTab from './NFTTab'
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { Modal } from 'flowbite-react'
-import Input from '@/components/Form/Input'
-import { isMobile } from 'react-device-detect'
-import { tabbable } from 'tabbable'
+import {useMarketplaceApi} from '@/hooks/useMarketplaceApi'
+import {isMobile} from 'react-device-detect'
 
 export default function SearchInput() {
   const api = useMarketplaceApi()
@@ -84,7 +81,28 @@ export default function SearchInput() {
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Search</Modal.Header>
               <Modal.Body>
-                <Input placeholder="Type for collections, NFTs etc" />
+                <InputDropdown
+                   closeOnClick
+                   className=""
+                   containerClass="desktop:w-[420px] tablet:w-[280px]"
+                   scale="sm"
+                   value={searchString}
+                   placeholder="Type for collections, NFTs etc"
+                   onChange={event => handleTextInput(event.target.value)}
+                   renderDropdown={onclose => (
+                      <Tabs.Group style="underline" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
+                        <Tabs.Item title="Collections">
+                          <SearchCollectionTab loading={searchingCollection} data={collectionSearchData} onClose={() => setOpenModal(false)} />
+                        </Tabs.Item>
+                        <Tabs.Item title="NFTs">
+                          <SearchNFTTab loading={searchingNFT} data={nftSearchData} onClose={() => setOpenModal(false)} />
+                        </Tabs.Item>
+                        <Tabs.Item title="Users">
+                          <SearchUserTab loading={searchingUser} data={userSearchData} onClose={() => setOpenModal(false)} />
+                        </Tabs.Item>
+                      </Tabs.Group>
+                   )}
+                />
               </Modal.Body>
             </Modal>
           </>

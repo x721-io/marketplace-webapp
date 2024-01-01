@@ -1,4 +1,4 @@
-import { Address } from 'wagmi'
+import {Address} from 'wagmi'
 
 export type AssetType = 'ERC721' | 'ERC1155'
 
@@ -7,6 +7,7 @@ export interface URC20Token {
   symbol: string
   decimal: number
   address: Address
+  logo: string
 }
 
 export interface Trait {
