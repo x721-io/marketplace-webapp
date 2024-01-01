@@ -48,7 +48,7 @@ export default function MobileMenuAccountInformation({onClose}: Props) {
                 width={48}
                 height={48}
              />
-             <Link href={`/user/${userId}`} className="flex flex-col">
+             <Link href={`/user/${userId}`} className="flex flex-col " onClick={onClose}>
                <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
                <Text className="text-secondary">View profile</Text>
              </Link>
@@ -78,11 +78,11 @@ export default function MobileMenuAccountInformation({onClose}: Props) {
              Manage Wallet
            </Text>
          </div>
-         <div className=" flex flex-col gap-5 border rounded-2xl p-4">
+         <div className=" flex flex-col gap-3 border rounded-2xl p-4">
            <div className="flex justify-between">
              <div className=" flex items-center gap-2">
                <div className="rounded-lg p-1  text-secondary">
-                 <Icon name={connector.name} width={33} height={33}/>
+                 <Icon name={connector ? connector.name : ''} width={33} height={33}/>
                </div>
                <div className="">
                  <Text>
@@ -96,11 +96,10 @@ export default function MobileMenuAccountInformation({onClose}: Props) {
                </div>
              </div>
              <div className=" flex items-center gap-3">
-               <button className="rounded-xl p-3 hover:bg-surface-medium bg-surface-soft text-secondary" onClick={handleCopyClick}>
+               <button className="rounded-xl p-3 hover:bg-surface-medium bg-surface-soft text-secondary"
+                       onClick={handleCopyClick}>
                  <Icon name="copy" width={15} height={15}/>
                </button>
-
-
                <button className="rounded-xl p-3 bg-surface-soft text-secondary" onClick={() => {
                  onLogout()
                  onClose?.()
@@ -109,31 +108,9 @@ export default function MobileMenuAccountInformation({onClose}: Props) {
                </button>
                {isCopied ? <span className="absolute pt-16 ">Copied!</span> : ""}
              </div>
-
            </div>
-
-           {/*<div className="border rounded-2xl p-3">*/}
-           {/*  {*/}
-           {/*    Object.values(tokens).map(token => {*/}
-           {/*      const {displayedBalance } = useBalance(token.address);*/}
-           {/*      return (*/}
-           {/*         <div className="flex gap-2 items-center" key={token.symbol}>*/}
-           {/*           <Icon name={token.logo} width={24} height={24}/>*/}
-           {/*           {displayedBalance}*/}
-           {/*           {token.symbol}*/}
-           {/*         </div>*/}
-           {/*      )*/}
-           {/*    })*/}
-           {/*  }*/}
-           {/*</div>*/}
-           <TokenBalances />
+           <TokenBalances/>
          </div>
-
-         {/*<Text className="font-semibold text-secondary">*/}
-         {/* <span className="text-primary">*/}
-         {/*   {balance}*/}
-         {/* </span> U2U*/}
-         {/*</Text>*/}
        </div>
      </div>
 

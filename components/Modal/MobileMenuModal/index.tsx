@@ -64,7 +64,7 @@ export default function MobileMenuModal({onClose, show}: ModalProps) {
            <div className="flex-1 flex flex-col gap-4">
              {isLoggedIn ? (
                 <MobileMenuAccountInformation
-                   balance={formatDisplayedBalance(balance?.formatted, 2)}
+                   balance={formatDisplayedBalance(balance?.formatted || '', 2)}
                    onClose={onClose}
                 />
              ) : (<>
