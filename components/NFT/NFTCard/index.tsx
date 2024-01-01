@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { APIResponse } from '@/services/api/types'
 import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
 import { formatEther } from 'ethers'
@@ -10,9 +9,9 @@ import Link from 'next/link'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from "flowbite-react";
-import { classNames } from '@/utils/string'
+import { NFT } from '@/types'
 
-export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: APIResponse.NFT) {
+export default function NFTCard({ name, id, price, sellStatus, collection, image, animationUrl }: NFT) {
   const displayMedia = image || animationUrl
   const fileExtension = displayMedia.split('.').pop()
 
@@ -67,6 +66,31 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
     }
   }
 
+  const renderNFTData = () => {
+    switch (sellStatus) {
+      case 'Bid':
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            Current bid:{' '}
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+          </Text>
+        )
+      case 'AskNew':
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            On sale for:{' '}
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+          </Text>
+        )
+      default:
+        return (
+          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+            No bid yet
+          </Text>
+        )
+    }
+  }
+
   return (
     <Link
       key={id}
@@ -77,25 +101,13 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
       <div className="flex gap-1 items-center px-1">
         <VerifyIcon width={16} height={16} />
         <Tooltip content={name} placement="top">
-          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">{name}</Text>
+          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">
+            {name}
+          </Text>
         </Tooltip>
       </div>
-      <Tooltip content={collection.name} placement="bottom">
-        <Text className="font-medium px-1 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[200px] w-[150px]">{collection.name}</Text>
-      </Tooltip>
 
-      <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-        {sellStatus === 'Bid' &&
-          <>Current bid:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
-          </>
-        }
-        {sellStatus === 'AskNew' &&
-          <>On sale for:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)} U2U</span>
-          </>
-        }
-      </Text>
+      {renderNFTData()}
     </Link>
   )
 }

@@ -1,40 +1,34 @@
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import { ModalProps } from 'flowbite-react'
-import { APIResponse, MarketEvent } from '@/services/api/types'
 import { useAcceptBidNFT } from '@/hooks/useMarket'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Input from '@/components/Form/Input'
-import { errors } from 'web3'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { NFT, MarketEvent, FormState } from '@/types'
 
 interface Props {
-  nft: APIResponse.NFT,
+  nft: NFT,
   bid?: MarketEvent
   onSuccess: () => void
   onError: (error: Error) => void
   onClose?: () => void
 }
 
-interface FormState {
-  quantity: number
-}
-
 export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }: Props) {
   const { onAcceptERC721Bid, onAcceptERC1155Bid, isLoading, error, isSuccess } = useAcceptBidNFT(nft)
-  const { handleSubmit, register, formState: { errors } } = useForm<FormState>({
+  const { handleSubmit, register, formState: { errors } } = useForm<FormState.AcceptBidNFT>({
     defaultValues: {
-      quantity: bid?.amounts ? Number(bid.amounts) : 0
+      quantity: bid?.quantity ? Number(bid.quantity) : 0
     }
   })
   const type = nft.collection.type
 
-  const onSubmit = ({ quantity }: FormState) => {
-    if (!bid) return
+  const onSubmit = ({ quantity }: FormState.AcceptBidNFT) => {
+    if (!bid || !bid.to?.signer) return
     try {
       if (type === 'ERC721') {
-        onAcceptERC721Bid(bid.to, bid.quoteToken, bid.price)
+        onAcceptERC721Bid(bid.to.signer, bid.quoteToken, bid.price)
       } else {
         onAcceptERC1155Bid(bid.operationId, quantity)
       }
@@ -51,44 +45,48 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
   }, [isSuccess])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
         {nft.collection.name} - {nft.name}
       </Text>
       {
         type === 'ERC721' ? (
-          <Text className="text-secondary text-center mb-7" variant="body-18">
+          <Text className="text-secondary text-center mb-4" variant="body-18">
             Are you sure to accept this bid?
           </Text>
         ) : (
-          <Input
-            error={!!errors.quantity}
-            type="number"
-            appendIcon={
-              <Text>
-                Available: {bid?.amounts}
-              </Text>
-            }
-            register={
-              register(
-                'quantity',
-                {
-                  validate: {
-                    required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
-                    amount: v => (v <= Number(bid?.amounts)) || 'Quantity cannot exceed bid amount'
+          <>
+            <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
+            <Input
+              error={!!errors.quantity}
+              type="number"
+              appendIcon={
+                <Text>
+                  Available: {bid?.quantity}
+                </Text>
+              }
+              register={
+                register(
+                  'quantity',
+                  {
+                    validate: {
+                      required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
+                      amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
+                    }
                   }
-                }
-              )}
-          />
+                )}
+            />
+          </>
+
         )
       }
       <FormValidationMessages errors={errors} />
 
-      <div className="flex gap-4">
-        <Button variant="secondary" onClick={onClose}>
+      <div className="flex gap-4 mt-7 w-full">
+        <Button className="flex-1" variant="secondary" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" loading={isLoading}>
+        <Button className="flex-1" type="submit" loading={isLoading}>
           Accept bid
         </Button>
       </div>

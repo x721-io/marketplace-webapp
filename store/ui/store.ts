@@ -9,13 +9,14 @@ const DEFAULT_STATE: UIState = {
     profile: false
   },
   queryString: {
+    collection: '',
     collections: '',
     nfts: '',
     users: ''
   }
 }
 
-export const useUIStore = create(devtools(persist<UIState & UIAction>(
+export const useUIStore = create(devtools<UIState & UIAction>(
   (set, get) => ({
     ...DEFAULT_STATE,
     toggleFilter: (key, bool) => set((state) => {
@@ -34,4 +35,4 @@ export const useUIStore = create(devtools(persist<UIState & UIAction>(
     }))
   }),
   { name: 'ui-storage' }
-)))
+))

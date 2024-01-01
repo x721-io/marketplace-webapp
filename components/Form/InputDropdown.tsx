@@ -32,19 +32,14 @@ export default function InputDropdown({ className, loading, closeOnClick, render
     <div className={classNames('relative', className)} ref={container}>
       <Input {...rest} onFocus={() => !!renderDropdown && setShowDropdown(true)} />
 
-      {
-        !!renderDropdown &&
-        <div
-          className={classNames(
-            'w-full  absolute z-50 desktop:rounded-2xl tablet:rounded-2xl desktop:border-[0.5px] desktop:p-6 tablet:p-6 desktop:border-[0.5px] tablet:border-0 shadow-sm mt-3 transition-all bg-white desktop:max-h-96 tablet:max-h-auto max-h-auto overflow-auto',
-            showDropdown ? 'block' : 'hidden')
-          }
-        >
-          {
-            loading ? <div className="flex flex-col justify-center items-center">
-              <Spinner size="xl" />
-            </div> : renderDropdown(handleClose)
-          }
+      {!!renderDropdown &&
+        <div className={classNames(
+          'w-full desktop:p-6 tablet:p-6 desktop:rounded-2xl tablet:rounded-2xl absolute z-50 desktop:border-[0.5px] tablet:border-0 shadow-sm mt-3 transition-all bg-white desktop:max-h-96 tablet:max-h-auto max-h-auto overflow-auto',
+          showDropdown ? 'block' : 'hidden')
+        }>
+          {loading ? <div className="flex flex-col justify-center items-center">
+            <Spinner size="xl" />
+          </div> : renderDropdown(handleClose)}
         </div>
       }
     </div>

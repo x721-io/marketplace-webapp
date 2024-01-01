@@ -1,30 +1,8 @@
-import { AssetType, Trait } from '@/types'
+import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/entitites'
 import { Address } from 'wagmi'
-import { BigNumberish } from 'ethers'
+import { MarketEvent, MarketEventType } from '@/types/market'
 
-type Status = 'PENDING' | 'SUCCESS' | 'FAILED'
-type MarketEventType = 'AskNew' | 'AskCancel' | 'Trade' | 'AcceptBid' | 'Bid' | 'CancelBid'
-
-export interface MarketEvent {
-  id: string,
-  event: MarketEventType
-  nftId: {
-    id: string
-    tokenId: string
-    contract: {
-      id: Address
-      name: string
-    }
-  },
-  price: BigNumberish
-  to: Address
-  from: Address
-  quoteToken: Address
-  operationId: string
-  amounts: string
-  timestamp: number
-}
-
+/********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
   interface PaginationParams {
     page?: number
@@ -38,50 +16,22 @@ export namespace APIParams {
     signer: string
   }
 
-  export interface UpdateProfile {
-    acceptedTerms?: boolean
-    email?: string
-    username?: string
-    bio?: string
-    facebookLink?: string
-    twitterLink?: string
-    telegramLink?: string
-    discordLink?: string
-    webURL?: string
-    coverImage?: string
-    avatar?: string
-    shortLink?: string
-  }
+  export type UpdateProfile = Partial<Pick<
+    User,
+    'acceptedTerms' | 'email' | 'username' | 'bio' | 'facebookLink' | 'twitterLink' | 'telegramLink' | 'discordLink' | 'webURL' | 'coverImage' | 'avatar' | 'shortLink'
+  >>
 
-  export interface UpdateCollection {
-    coverImage: string
-    id: string
-  }
+  export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
 
-  export interface CreateCollection {
-    txCreationHash: Address
-    name: string,
-    symbol: string,
-    description: string,
-    type: AssetType,
-    categoryId?: number,
-    shortUrl: string,
-    metadata?: any,
-    creators: string,
-    avatar?: string,
-  }
+  export type CreateCollection = Partial<Pick<
+    Collection,
+    'txCreationHash' | 'name' | 'symbol' | 'description' | 'type' | 'categoryId' | 'shortUrl' | 'metadata' | 'avatar'
+  >> & { creator: string }
 
-  export interface CreateNFT {
-    id: string
-    u2uId: string
-    name: string,
-    image: string,
-    tokenUri: string,
-    collectionId: string,
-    txCreationHash: string,
-    creatorId: string,
-    traits?: string
-  }
+  export type CreateNFT = Partial<Pick<
+    NFT,
+    'id' | 'u2uId' | 'name' | 'image' | 'tokenUri' | 'collectionId' | 'txCreationHash' | 'creatorId' | 'traits'
+  >>
 
   export interface FetchUsers extends PaginationParams {
     search?: string
@@ -95,11 +45,12 @@ export namespace APIParams {
   }
 
   export interface FetchCollectionById extends PaginationParams {
-
+    userId: string
+    hasBase: boolean
   }
 
   export interface FetchNFTs extends PaginationParams {
-    traits?: { trait_type: string, value: any }[]
+    traits?: Pick<Trait, 'trait_type' | 'value'>[]
     type?: AssetType
     collectionAddress?: Address,
     creatorAddress?: Address,
@@ -110,27 +61,12 @@ export namespace APIParams {
   }
 
   export interface NFTEvents extends PaginationParams {
-    and?: {
-      nftId_?: {
-        tokenId: string
-        contract_contains: Address
-      }
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType
-    }[]
-    or?: {
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType,
-      contract_contains?: Address
-    }[]
+    tokenId: string
+    collectionAddress: Address
+  }
+
+  export interface UserActivities extends PaginationParams {
+    user: Address
   }
 
   export interface Search {
@@ -143,9 +79,19 @@ export namespace APIParams {
     value: string
     collectionId?: string
   }
+
+  export interface FetchNFTDetails {
+    collectionAddress: string,
+    id: string
+  }
+
+  export interface FetchNFTMarketData extends FetchNFTDetails {
+    bidListPage: number
+    bidListLimit: number
+  }
 }
 
-/** API Response types **/
+/********** =========== API Response types ========== ***********/
 export namespace APIResponse {
   interface Pagination {
     page: number
@@ -161,28 +107,7 @@ export namespace APIResponse {
     userId: string
   }
 
-  export interface Profile {
-    id: string
-    publicKey: Address
-    signDate: string
-    signature: Address
-    signer: Address
-    signedMessage: string
-    acceptedTerms: boolean
-    avatar?: string
-    createdAt?: string
-    email?: string
-    updatedAt?: string
-    username?: string
-    bio?: string
-    facebookLink?: string
-    twitterLink?: string
-    telegramLink?: string
-    discordLink?: string
-    webURL?: string
-    coverImage?: string
-    shortLink?: string
-  }
+  export type ProfileDetails = User
 
   export interface UploadImage {
     fileHashes: string[],
@@ -191,30 +116,6 @@ export namespace APIResponse {
 
   export interface UploadMetadata {
     metadataHash: string
-  }
-
-  export interface Collection {
-    id: string
-    txCreationHash: string
-    name: string | null
-    symbol: string
-    address: Address
-    isU2U: boolean
-    description?: string | null
-    categoryId: number | null
-    createdAt: string
-    updatedAt: string
-    metadata: Record<string, any> | string
-    shortUrl: string | null
-    status: Status
-    type: AssetType
-    creators: { userId: string, user: User }[]
-    coverImage: string | null
-    avatar: string | null
-    volumn: string
-    totalOwner: number
-    totalNft: number
-    floorPrice: string
   }
 
   export interface CollectionDetails {
@@ -249,64 +150,11 @@ export namespace APIResponse {
     tokenId: string
   }
 
-  export interface NFT {
-    id: string
-    u2uId: string
-    name: string
-    ipfsHash: string
-    createdAt: string
-    updatedAt: string
-    status: Status,
-    tokenUri: string,
-    txCreationHash: string,
-    creatorId: string,
-    collectionId: string,
-    totalSupply?: string
-    creator: {
-      avatar: null | string
-      email: string | null
-      id: string
-      publicKey: Address
-      username: string
-    } | null,
-    owners: {
-      username: string
-      avatar: string
-      email: string
-      publicKey: Address
-      quantity: string
-      id: string
-    }[],
-    collection: Collection,
-    traits: Trait[]
-    sellInfo: MarketEvent[]
-    bidInfo: MarketEvent[]
-    image: string
-    animationUrl: string
-    price?: BigNumberish
-    sellStatus?: MarketEventType
-  }
+  export type NFTDetails = NFT
 
   export interface FetchNFTs {
     data: NFT[]
     paging: Pagination
-  }
-
-  export interface User {
-    id: string
-    email: string
-    avatar?: string | null
-    username: string | null
-    signature: Address
-    signedMessage: string
-    signer: Address
-    publicKey: string
-    signDate: string
-    acceptedTerms: boolean
-    createdAt: string
-    updatedAt?: string | null
-    bio?: string | null
-    coverImage?: string | null
   }
 
   export interface UsersData {
@@ -316,52 +164,26 @@ export namespace APIResponse {
 
   export type NFTEvents = MarketEvent[]
 
-  export interface NFTMetaData extends Record<string, any> {
-    description?: string
-    traits?: Trait[]
-    fileHashes?: string[]
-    type: string
+  export type UserActivities = MarketEvent[]
+
+  export interface NFTMarketData {
+    sellInfo: MarketEvent[]
+    bidInfo: MarketEvent[],
+    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id'> & { quantity: number })[],
+    totalSupply: string
   }
 
-  export type SearchNFTs = {
-    id: string,
-    u2uId: string,
-    name: string,
-    ipfsHash: string,
-    image: string,
-    animationUrl: string
-    createdAt: string,
-    updatedAt: string,
-    status: Status,
-    tokenUri: string,
-    txCreationHash: string,
-    creatorId: string,
-    collectionId: string
-    collection: Collection
-  }[]
+  export type FetchNFTMetadata = NFTMetadata
 
-  export type SearchCollections = {
-    id: string,
-    txCreationHash: string,
-    name: string,
-    symbol: string,
-    description: string,
-    address: Address,
-    shortUrl: string,
-    metadata: string,
-    status: Status,
-    type: AssetType,
-    categoryId?: string,
-    createdAt: string,
-    updatedAt: string,
-    coverImage?: string,
-    avatar?: string
-  }[]
+  export type SearchNFTs = Pick<
+    NFT,
+    'id' | 'u2uId' | 'name' | 'image' | 'animationUrl' | 'createdAt' | 'updatedAt' | 'status' | 'tokenUri' | 'txCreationHash' | 'creatorId' | 'collectionId' | 'collection'
+  >[]
 
-  export type SearchUsers = {
-    id: string
-    signer: Address
-    username: string
-    avatar?: string
-  }[]
+  export type SearchCollections = Pick<
+    Collection,
+    'id' | 'txCreationHash' | 'name' | 'symbol' | 'description' | 'address' | 'shortUrl' | 'metadata' | 'status' | 'type' | 'categoryId' | 'createdAt' | 'updatedAt' | 'coverImage' | 'avatar'
+  >[]
+
+  export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
 }

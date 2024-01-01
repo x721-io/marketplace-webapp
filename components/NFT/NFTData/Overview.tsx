@@ -1,8 +1,8 @@
 import Text from '@/components/Text'
 import React from 'react'
-import { APIResponse } from '@/services/api/types'
+import { NFTMetadata } from '@/types'
 
-export default function OverviewTab({ metaData }: { metaData?: APIResponse.NFTMetaData }) {
+export default function OverviewTab({ metaData }: { metaData?: NFTMetadata }) {
 
   return (
     <div className="py-7">

@@ -1,44 +1,40 @@
-import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import { useEffect, useMemo } from "react";
 import { useSellNFT } from "@/hooks/useMarket";
 import Button from "@/components/Button";
-import { Address } from 'wagmi'
 import Select from '@/components/Form/Select'
 import { tokenOptions } from '@/config/tokens'
 import { useForm } from 'react-hook-form'
 import useAuthStore from '@/store/auth/store'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
-import { formatUnits } from 'ethers'
+import { FormState, NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
+  nft: NFT
+  marketData?: NFTMarketData
 }
 
-interface FormState {
-  price: number
-  quantity: number
-  quoteToken: Address
-}
-
-export default function ListingStep({ nft, onSuccess, onError }: Props) {
+export default function ListingStep({ nft, onSuccess, onError, marketData }: Props) {
   const type = nft.collection.type
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const ownerData = useMemo(() => {
-    if (!wallet) return undefined
-    return nft.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
+    if (!wallet || !marketData) return undefined
+    return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
-  const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+  const { register, handleSubmit, formState: { errors } } = useForm<FormState.SellNFT>()
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
 
   const formRules = {
     price: {
       required: 'Please input price',
       validate: {
-        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number'
+        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
+        max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number'
       }
     },
     quantity: {
@@ -56,7 +52,7 @@ export default function ListingStep({ nft, onSuccess, onError }: Props) {
     }
   }
 
-  const onSubmit = async ({ price, quoteToken, quantity }: FormState) => {
+  const onSubmit = async ({ price, quoteToken, quantity }: FormState.SellNFT) => {
     try {
       onSellNFT(price, quoteToken, quantity)
     } catch (e) {

@@ -1,5 +1,4 @@
-import { APIResponse, MarketEvent } from '@/services/api/types'
-import { useBuyUsingNative, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useBuyUsingNative } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
@@ -9,16 +8,13 @@ import { findTokenByAddress } from '@/utils/token'
 import { useEffect, useMemo } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { NFT, MarketEvent, FormState } from '@/types'
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
+  nft: NFT
   saleData?: MarketEvent
-}
-
-interface FormState {
-  quantity: number
 }
 
 export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
@@ -29,7 +25,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   })
   // const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
-  const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState>()
+  const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState.BuyNFT>()
   const quantity = watch('quantity')
   const token = useMemo(() => findTokenByAddress(saleData?.quoteToken), [saleData])
 
@@ -38,7 +34,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     return BigInt(saleData?.price || '0') * BigInt(quantity)
   }, [quantity])
 
-  const onSubmit = async ({ quantity }: FormState) => {
+  const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
     if (!saleData) return
     try {
       if (nft.collection.type === 'ERC721') {
@@ -72,7 +68,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           value={formatUnits(saleData?.price || '0', 18)}
           appendIcon={
             <Text>
-              Quantity: {saleData?.amounts}
+              Quantity: {saleData?.quantity}
             </Text>
           } />
       </div>
@@ -100,7 +96,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
                 register={register('quantity', {
                   validate: {
                     required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
-                    max: v => v <= Number(saleData?.amounts) || 'Quantity exceeds sale amount',
+                    max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
                     balance: v => {
                       if (!tokenBalance?.value) return 'Not enough balance'
                       const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)

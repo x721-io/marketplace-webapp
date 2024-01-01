@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Icon from '@/components/Icon'
-import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
@@ -10,10 +9,17 @@ import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from 'flowbite-react'
+import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
 
-export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
+export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
   const type = nft.collection.type
-  const { isOnSale, saleData } = useNFTMarketStatus(nft)
+
+  if (!marketData) {
+    return null
+  }
+
+  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData)
 
   return (
     <div className="flex flex-col gap-10 justify-between desktop:w-1/3 w-full">
@@ -52,14 +58,14 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
               </Text>
               <Link
                 className="hover:underline flex items-center gap-1"
-                href={`/user/${nft.owners[0].id}`}>
+                href={`/user/${marketData.owners[0].id}`}>
                 <Image
                   width={56}
                   height={56}
                   className="w-6 h-6 rounded-full"
-                  src={nft.owners[0].avatar || defaultAvatar}
+                  src={marketData.owners[0].avatar || defaultAvatar}
                   alt="avatar" />
-                {nft.owners[0].username}
+                {marketData.owners[0].username}
               </Link>
             </div>
           )
@@ -107,7 +113,7 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
                     Quantity
                   </Text>
                   <Text className="text-right" variant="heading-md">
-                    {saleData?.amounts}
+                    {saleData?.quantity}
                   </Text>
                 </div>
               )
@@ -116,7 +122,7 @@ export default function NFTMarketData({ nft }: { nft: APIResponse.NFT }) {
 
         </div>
 
-        <NFTActions {...nft} />
+        <NFTActions nft={nft} marketData={marketData} />
       </div>
     </div>
   )

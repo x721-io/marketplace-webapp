@@ -7,15 +7,8 @@ export const tokens: Record<string, URC20Token> = {
     symbol: 'U2U',
     decimal: 18,
     address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address,
-    logo: 'u2u-token'
-  },
-  u2u: {
-    name: 'Unicorn Ultra Token',
-    symbol: 'U2U',
-    decimal: 18,
-    address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address,
-    logo: 'u2u-token'
+    logo: 'https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI'
   }
 }
 
-export const tokenOptions = Object.values(tokens).map(token => ({ label: token.symbol, value: token.address , logo: token.logo}))
+export const tokenOptions = Object.values(tokens).map(token => ({ label: token.symbol, value: token.address }))

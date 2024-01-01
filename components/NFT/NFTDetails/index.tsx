@@ -11,18 +11,29 @@ import Icon from '@/components/Icon'
 import { Spinner } from 'flowbite-react'
 import React, { useMemo } from 'react'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import useSWRImmutable from 'swr/immutable'
 
 export default function NFTDetails() {
   const router = useRouter()
   const { id, collectionAddress } = useParams()
   const api = useMarketplaceApi()
-  const { data: item, isLoading, error } = useSWR(
-    [collectionAddress, id],
-    ([collectionAddress, id]) => api.fetchNFTById(collectionAddress as string, id as string),
+
+  const { data: item, isLoading, error } = useSWRImmutable(
+    ['nft-details', { collectionAddress: String(collectionAddress), id: String(id) }],
+    ([_, params]) => api.fetchNFTById(params)
+  )
+
+  const { data: marketData } = useSWR(
+    ['nft-market-data', { collectionAddress: String(collectionAddress), id: String(id) }],
+    ([_, params]) => api.fetchMarketDataByNFT({
+      ...params,
+      bidListPage: 1,
+      bidListLimit: 100
+    }),
     { refreshInterval: 10000 }
   )
 
-  const { data: metaData } = useSWR(
+  const { data: metaData } = useSWRImmutable(
     !!item?.tokenUri ? item.tokenUri : null,
     (uri) => api.getNFTMetaData(uri),
     { refreshInterval: 600000 }
@@ -93,7 +104,7 @@ export default function NFTDetails() {
     )
   }
 
-  if (error) {
+  if (error && !item) {
     return (
       <div className="w-full h-96 flex justify-center items-center">
         <Text variant="heading-xs" className="text-center">
@@ -128,9 +139,9 @@ export default function NFTDetails() {
 
         <div className="desktop:w-1/3 w-full">
           {renderMedia()}
-          <NFTData nft={item} metaData={metaData} />
+          <NFTData marketData={marketData} nft={item} metaData={metaData} />
         </div>
-        <NFTMarketData nft={item} />
+        <NFTMarketData nft={item} marketData={marketData} />
       </div>
     </div>
   )

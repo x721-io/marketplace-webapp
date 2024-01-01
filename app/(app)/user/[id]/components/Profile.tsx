@@ -2,14 +2,14 @@ import React from "react";
 import Image from "next/image";
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
-import { APIResponse } from '@/services/api/types'
 import useAuthStore from '@/store/auth/store'
 import Button from '@/components/Button'
 import Link from 'next/link'
 import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
+import { User } from '@/types'
 
-export default function Profile({ id, username, bio, avatar, coverImage }: APIResponse.Profile) {
+export default function Profile({ id, username, bio, avatar, coverImage }: User) {
   const myId = useAuthStore(state => state.profile?.id)
   return (
     <div className="">

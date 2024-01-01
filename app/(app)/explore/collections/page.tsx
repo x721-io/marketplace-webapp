@@ -4,7 +4,6 @@ import { useCollectionFilters, useExploreSectionFilters } from '@/hooks/useFilte
 import CollectionFilters from '@/components/Filters/CollectionFilters'
 import CollectionsList from '@/components/List/CollectionsList'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import { useState } from 'react'
 import { useUIStore } from '@/store/ui/store'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'

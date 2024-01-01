@@ -1,8 +1,8 @@
-import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
+import { NFTMetadata } from '@/types'
 
-export default function PropertiesTab({ metaData }: { metaData?: APIResponse.NFTMetaData }) {
+export default function PropertiesTab({ metaData }: { metaData?: NFTMetadata }) {
   return (
     <div className="flex flex-col gap-4 py-7">
       {
@@ -33,11 +33,10 @@ export default function PropertiesTab({ metaData }: { metaData?: APIResponse.NFT
           </>
         ) : (
           <div className="p-7 rounded-2xl border border-disabled border-dashed">
-            <Text className="text-secondary text-center text-sm">Nothing to show</Text>
+            <Text className="text-secondary text-center text-body-14">Nothing to show</Text>
           </div>
         )
       }
-
     </div>
   )
 }

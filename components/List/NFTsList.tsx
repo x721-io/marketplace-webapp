@@ -7,6 +7,7 @@ import React, { useCallback, useMemo } from 'react'
 import Text from '@/components/Text'
 import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
 import { isMobile } from 'react-device-detect'
+import { NFT } from '@/types'
 
 interface Paging {
   page?: number
@@ -15,7 +16,7 @@ interface Paging {
 }
 
 interface Props {
-  items?: APIResponse.NFT[]
+  items?: NFT[]
   showFilters: boolean
   filters?: FilterType[]
   onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void
@@ -53,7 +54,7 @@ export default function NFTsList({
       )
     }
 
-    if (error) {
+    if (error && !items) {
       return (
         <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
           <Text variant="heading-xs" className="text-center">
@@ -80,7 +81,7 @@ export default function NFTsList({
             isMobile ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
           )}>
           {items.map(item => (
-            <div className="h-full" key={item.u2uId}>
+            <div className="h-full" key={item.collection.address + '-' + item.u2uId}>
               <NFTCard {...item} />
             </div>
           ))}

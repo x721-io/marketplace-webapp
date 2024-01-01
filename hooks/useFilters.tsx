@@ -8,7 +8,7 @@ import { sanitizeObject } from '@/utils'
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname()
-  const { showFilters, toggleFilter } = useUIStore(state => state)
+  const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(state => state)
 
   const routeKey: FilterKey = useMemo(() => {
     switch (true) {
@@ -24,6 +24,8 @@ export const useExploreSectionFilters = () => {
 
   const searchKey: SearchKey = useMemo(() => {
     switch (true) {
+      case pathname.includes('collection'):
+        return 'collection'
       case pathname.includes('collections'):
         return 'collections'
       case pathname.includes('users'):
@@ -44,7 +46,9 @@ export const useExploreSectionFilters = () => {
     toggleFilter(routeKey)
   }
 
-  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey }
+  const query = useMemo(() => queryString[searchKey], [queryString, searchKey])
+
+  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey, query, setQueryString }
 }
 
 export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
@@ -61,12 +65,13 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
   })
 
   const handleApplyFilters = (params: APIParams.FetchNFTs) => {
-    const _activeFilters = sanitizeObject({
+    const _activeFilters = {
       ...activeFilters,
       ...params,
       page: 1,
       limit: 20
-    })
+    }
+
     if (params.priceMax && !isNaN(Number(params.priceMax))) {
       _activeFilters.priceMax = parseEther(params.priceMax.toString()).toString()
     }
@@ -74,7 +79,9 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
       _activeFilters.priceMin = parseEther(params.priceMin.toString()).toString()
     }
 
-    setActiveFilters(_activeFilters)
+    _activeFilters.sellStatus = (Number(params.priceMin) || Number(params.priceMax)) ? 'AskNew' : params.sellStatus
+
+    setActiveFilters(sanitizeObject(_activeFilters))
   }
 
   const handleChangePage = (page: number) => {
@@ -82,6 +89,7 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
       ...activeFilters,
       page
     })
+    window.scrollTo(0, 0)
   }
 
   return {
@@ -104,6 +112,7 @@ export const useCollectionFilters = (defaultState?: APIParams.FetchCollections) 
       ...activeFilters,
       page
     })
+    window.scrollTo(0, 0)
   }
 
   const handleApplyFilters = (params: APIParams.FetchCollections) => {

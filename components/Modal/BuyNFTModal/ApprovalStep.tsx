@@ -1,20 +1,22 @@
 import Text from '@/components/Text'
 import { Spinner } from 'flowbite-react'
 import { useMarketTokenApproval, useNFTMarketStatus } from '@/hooks/useMarket'
-import { APIResponse } from '@/services/api/types'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'wagmi'
 import Button from '@/components/Button'
-import { parseEther } from 'ethers'
+import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props {
   onNext: () => void
   onError: (error: Error) => void
-  nft: APIResponse.NFT
+  nft: NFT
+  marketData: NFTMarketData
 }
 
-export default function ApprovalStep({ nft, onNext, onError }: Props) {
-  const { saleData } = useNFTMarketStatus(nft)
+export default function ApprovalStep({ nft, onNext, onError, marketData }: Props) {
+  const { saleData } = useNFTMarketStatus(nft.collection.type, marketData)
 
   const {
     isTokenApproved,

@@ -3,14 +3,17 @@ import { useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from '@/components/Modal/SellNFTModal/ApprovalStep'
-import { APIResponse } from '@/services/api/types'
 import ListingStep from "@/components/Modal/SellNFTModal/ListingStep";
+import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props extends ModalProps {
-  nft: APIResponse.NFT,
+  nft: NFT,
+  marketData?: NFTMarketData
 }
 
-export default function SellNFTModal({ nft, show, onClose }: Props) {
+export default function SellNFTModal({ nft, show, marketData, onClose }: Props) {
   const [error, setError] = useState<Error>()
   const [step, setStep] = useState(1)
 
@@ -25,7 +28,7 @@ export default function SellNFTModal({ nft, show, onClose }: Props) {
       case 1:
         return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
       case 2:
-        return <ListingStep nft={nft} onError={setError} onSuccess={() => setStep(3)} />
+        return <ListingStep marketData={marketData} nft={nft} onError={setError} onSuccess={() => setStep(3)} />
       case 3:
         return (
           <>

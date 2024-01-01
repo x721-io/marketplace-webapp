@@ -2,14 +2,16 @@
 import Icon from '@/components/Icon'
 import InputDropdown from '@/components/Form/InputDropdown'
 import Button from '@/components/Button'
-import {useMemo, useRef, useState} from 'react'
-import {Modal, Tabs, TabsRef} from 'flowbite-react'
-import useSWR from 'swr'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Tabs, TabsRef } from 'flowbite-react'
 import SearchUserTab from './UserTab'
 import SearchCollectionTab from './CollectionTab'
 import SearchNFTTab from './NFTTab'
-import {useMarketplaceApi} from '@/hooks/useMarketplaceApi'
-import {isMobile} from 'react-device-detect'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { Modal } from 'flowbite-react'
+import Input from '@/components/Form/Input'
+import { isMobile } from 'react-device-detect'
+import useSWRMutation from 'swr/mutation'
 
 export default function SearchInput() {
   const api = useMarketplaceApi()
@@ -21,34 +23,6 @@ export default function SearchInput() {
   })
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0)
-
-  const mode = useMemo(() => {
-    switch (activeTab) {
-      case 0:
-        return 'COLLECTION'
-      case 1:
-        return 'NFT'
-      case 2:
-        return 'USER'
-    }
-  }, [activeTab])
-
-  const { data: collectionSearchData, isLoading: searchingCollection } = useSWR(
-    (mode === 'COLLECTION') ? text.collection : null,
-    (text) => api.searchCollections(text),
-    { revalidateOnFocus: false }
-  )
-  const { data: nftSearchData, isLoading: searchingNFT } = useSWR(
-    (mode === 'NFT') ? text.nft : null,
-    (text) => api.searchNFTs(text),
-    { revalidateOnFocus: false }
-  )
-  const { data: userSearchData, isLoading: searchingUser } = useSWR(
-    (mode === 'USER') ? text.user : null,
-    (text) => api.searchUsers(text),
-    { revalidateOnFocus: false }
-  )
-
   const searchKey = useMemo(() => {
     switch (activeTab) {
       case 0:
@@ -62,13 +36,46 @@ export default function SearchInput() {
 
   const searchString = useMemo(() => searchKey ? text[searchKey] : '', [searchKey, text])
 
-  const handleTextInput = (value: string) => {
+  const { trigger: searchCollection, data: collectionSearchData, isMutating: searchingCollection } = useSWRMutation(
+    text.collection || null,
+    (text) => api.searchCollections(text)
+  )
+
+  const { trigger: searchNFTs, data: nftSearchData, isMutating: searchingNFT } = useSWRMutation(
+    text.nft || null,
+    (text) => api.searchNFTs(text)
+  )
+
+  const { trigger: searchUsers, data: userSearchData, isMutating: searchingUser } = useSWRMutation(
+    text.user || null,
+    (text) => api.searchUsers(text)
+  )
+
+  const handleSearch = () => {
+    if (!searchKey || !text[searchKey]) return
+    switch (searchKey) {
+      case 'collection':
+        return searchCollection()
+      case "nft":
+        return searchNFTs()
+      case 'user':
+        return searchUsers()
+    }
+  }
+
+  const handleTextInput = async (value: string) => {
     if (!searchKey) return
     setText({
       ...text,
       [searchKey]: value
     })
   }
+
+  useEffect(() => {
+    // Lazy search
+    const timeOutId = setTimeout(handleSearch, 200);
+    return () => clearTimeout(timeOutId);
+  }, [searchString]);
 
   return (
     <>
