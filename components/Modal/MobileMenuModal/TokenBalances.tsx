@@ -9,10 +9,10 @@ export default function TokenBalances() {
 
   return (
      <div className="flex flex-col h-full justify-between">
-       <div className="border rounded-2xl p-1">
+       <div className="border rounded-xl p-2">
          {Object.values(tokens).map(token => (
-            <div className="flex gap-2 items-center p-2" key={token.address}>
-              <Image src={token.logo} alt="" width={24} height={24}/>
+            <div className="flex gap-2 items-center p-1" key={token.address}>
+              <Image src={token.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full"/>
               {formatDisplayedBalance(balance?.formatted || '', 2)}
               <span>{token.symbol}</span>
             </div>

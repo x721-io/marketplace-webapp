@@ -78,7 +78,7 @@ export default function MobileMenuAccountInformation({onClose}: Props) {
              Manage Wallet
            </Text>
          </div>
-         <div className=" flex flex-col gap-3 border rounded-2xl p-4">
+         <div className=" flex flex-col gap-3 border rounded-xl p-4">
            <div className="flex justify-between">
              <div className=" flex items-center gap-2">
                <div className="rounded-lg p-1  text-secondary">
