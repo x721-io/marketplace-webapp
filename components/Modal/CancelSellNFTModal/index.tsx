@@ -1,5 +1,5 @@
 import { Modal, ModalProps, Tooltip } from 'flowbite-react'
-import { useCancelSellNFT, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useCancelSellNFT } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useEffect, useMemo, useState } from 'react'
@@ -19,13 +19,12 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
   const wallet = useAuthStore(state => state.
     profile?.publicKey)
   const mySale = useMemo(() => {
-    return marketData?.sellInfo?.find(item => item.from === wallet?.toLowerCase())
+    return marketData?.sellInfo?.find(item => item.from?.signer?.toLowerCase() === wallet?.toLowerCase())
   }, [marketData, wallet])
 
   const handleCancelSell = () => {
-    if (!mySale) return
     try {
-      onCancelSell(mySale.operationId)
+      onCancelSell(mySale?.operationId)
     } catch (e) {
       console.error(e)
     }
@@ -104,10 +103,6 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
       setStep(2)
     }
   }, [error, isSuccess])
-
-  const { isOnSale } = useNFTMarketStatus(nft.collection.type, marketData)
-
-  if (!isOnSale) return null
 
   return (
     <Modal
