@@ -55,7 +55,7 @@ const accordion: CustomFlowbiteTheme['accordion'] = {
 
 const modal: CustomFlowbiteTheme['modal'] = {
   content: {
-    inner: "relative rounded-lg bg-white shadow flex flex-col h-full max-h-[90vh]",
+    inner: "relative rounded-lg bg-white shadow flex flex-col max-h-[90vh]",
     base: "relative h-full w-full p-4",
   }
 }
