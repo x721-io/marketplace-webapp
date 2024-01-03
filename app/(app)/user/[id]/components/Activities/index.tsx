@@ -27,7 +27,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
   return (
     <div className="w-full py-4 overflow-x-auto">
       {!!data?.length ? (
-        <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal">
+        <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal h-auto max-h-[400px] overflow-auto">
           {data.map(event => <UserMarketEvent key={event.id} event={event}/>)}
         </div>
       ) : (
