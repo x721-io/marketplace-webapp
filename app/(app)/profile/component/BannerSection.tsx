@@ -28,14 +28,16 @@ export default function BannerSection() {
         render: 'Avatar updated successfully',
         type: 'success',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error report: ${e.message || e}`,
         type: 'error',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } finally {
       if (avatarRef && avatarRef.current) {
@@ -57,14 +59,16 @@ export default function BannerSection() {
         render: 'Cover image updated successfully',
         type: 'success',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error report: ${e.message || e}`,
         type: 'error',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } finally {
       if (coverImageRef && coverImageRef.current) {

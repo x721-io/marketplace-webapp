@@ -125,7 +125,8 @@ export default function CreateNFTCollectionPage() {
         render: 'Collection created successfully',
         type: 'success',
         isLoading: false,
-        autoClose: 5000
+        autoClose: 5000,
+        closeButton: true
       })
       resetForm()
       router.push('/explore/collections')
@@ -134,7 +135,8 @@ export default function CreateNFTCollectionPage() {
         render: `Error creating collection: ${e.message ?? e}`,
         type: 'error',
         isLoading: false,
-        autoClose: 5000
+        autoClose: 5000,
+        closeButton: true
       })
       console.error(e)
     } finally {

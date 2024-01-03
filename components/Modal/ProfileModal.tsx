@@ -50,7 +50,7 @@ export default function ProfileModal({ show, onClose }: ModalProps) {
 
   useEffect(() => {
     if (txStatus.isSuccess) {
-      toast.success('Token balance has been successfully withdraw to your wallet', { autoClose: 5000 })
+      toast.success('Token balance has been successfully withdraw to your wallet', { autoClose: 5000, closeButton: true })
     }
   }, [txStatus.isSuccess]);
 
