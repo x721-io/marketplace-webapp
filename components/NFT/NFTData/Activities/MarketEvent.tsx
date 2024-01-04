@@ -77,14 +77,14 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
       case 'Trade':
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 w-full">
               Sold
               {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
               <span className="font-semibold text-primary">
                 {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
               </span>
               to
-              <Link className="text-primary hover:underline" href={getUserLink(event.to)}>
+              <Link className="text-primary font-semibold hover:underline" href={getUserLink(event.to)}>
                 {getDisplayedUserName(event.to)}
               </Link>
               for
