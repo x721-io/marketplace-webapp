@@ -35,9 +35,9 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       validate: {
         isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
         max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number',
-        twoDecimalPlaces: (v: number) => {
+        decimals: (v: number) => {
           const decimalPart = (v.toString().split('.')[1] || '').length;
-          return decimalPart <= 2 || 'Please input only 2 decimal places';
+          return decimalPart <= 18 || 'Price decimal length cannot exceed token decimals';
         }
       }
     },
