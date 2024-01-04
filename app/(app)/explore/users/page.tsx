@@ -123,7 +123,7 @@ export default function ExploreUsersPage() {
         ))}
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end">Ï
         <Pagination currentPage={users.paging?.page ?? 1} totalPages={totalPage} onPageChange={handleChangePage} />
       </div>
     </>
