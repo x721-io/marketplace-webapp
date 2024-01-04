@@ -38,7 +38,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
       setIsSigningUp(true)
       await onUpdateProfile({ ...data, acceptedTerms })
       await sleep(500)
-      toast.success('Signed up successfully', { autoClose: 1000 })
+      toast.success('Signed up successfully', { autoClose: 1000, closeButton: true })
       onSignupSuccess && onSignupSuccess()
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`)
