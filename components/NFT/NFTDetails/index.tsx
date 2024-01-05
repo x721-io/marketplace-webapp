@@ -62,7 +62,7 @@ export default function NFTDetails() {
     switch (fileType) {
       case "audio":
         return (
-          <div className="relative desktop:w-[512px] desktop:h-[512px] tablet:h-auto w-full h-[280px] p-2 rounded-2xl mb-10">
+          <div className="relative desktop:h-[512px] tablet:h-auto w-full h-[280px] p-2 rounded-2xl mb-10">
             <Image
               src={item?.image || ''}
               alt=""
