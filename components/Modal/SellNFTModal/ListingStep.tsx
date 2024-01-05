@@ -37,7 +37,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
         max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number',
         decimals: (v: number) => {
           const decimalPart = (v.toString().split('.')[1] || '').length;
-          return decimalPart <= 18 || 'Price decimal length cannot exceed token decimals';
+          return decimalPart <= 18 || 'The decimal length of the price cannot exceed 18 decimal digits of the token';
         }
       }
     },
