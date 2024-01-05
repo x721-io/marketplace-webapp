@@ -36,14 +36,40 @@ export default function NFTFilters({
     traits: []
   })
 
+  const [error, setError] = useState<boolean>(false)
+
   const handleChange = (key: keyof typeof activeFilters, value: any) => {
     const _filters = { ...activeFilters }
     _filters[key] = value
     setActiveFilters(_filters)
-    if (key !== 'priceMax' && key !== 'priceMin' && !isMobile) {
-      onApplyFilters?.(_filters)
-    }
   }
+
+  const handleChangePrice = (key: keyof typeof activeFilters, value: any) => {
+    if (
+      (key === 'priceMin' && (value === '' || (!isNaN(value) && Number(value) >= 0))) ||
+      (key === 'priceMax' && (!isNaN(value) && Number(value) >= 0))
+    ) {
+      const _filters = { ...activeFilters };
+      _filters[key] = value;
+
+      const min = _filters.priceMin !== '' ? Number(_filters.priceMin) : null;
+      const max = _filters.priceMax !== '' ? Number(_filters.priceMax) : null;
+
+      if (
+        (min !== null && max !== null && min > max) ||
+        (min === null && max === 0) ||
+        (min === 0 && max === 0)
+      ) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+
+      setActiveFilters(_filters);
+    } else {
+      setError(true);
+    }
+  };
 
   const isTraitSelected = useCallback((key: string, value: string) => {
     const traits = activeFilters.traits
@@ -70,8 +96,12 @@ export default function NFTFilters({
   }
 
   const handleApplyFilters = () => {
-    onApplyFilters?.(activeFilters)
-    onCloseModal?.()
+    if (error) {
+      return
+    }else {
+      onApplyFilters?.(activeFilters)
+      onCloseModal?.()
+    }
   }
 
   return (
@@ -138,7 +168,8 @@ export default function NFTFilters({
                 scale="sm"
                 placeholder="Min"
                 value={activeFilters.priceMin as string}
-                onChange={e => handleChange('priceMin', e.target.value)} />
+                onChange={e => handleChangePrice('priceMin', e.target.value)} 
+                error={error}/>
               <Text className="text-primary">
                 to
               </Text>
@@ -147,7 +178,8 @@ export default function NFTFilters({
                 scale="sm"
                 placeholder="Max"
                 value={activeFilters.priceMax as string}
-                onChange={e => handleChange('priceMax', e.target.value)} />
+                onChange={e => handleChangePrice('priceMax', e.target.value)} 
+                error={error}/>
             </div>
             <BrowserView>
               <Button className="w-full" variant="secondary" onClick={handleApplyFilters}>
