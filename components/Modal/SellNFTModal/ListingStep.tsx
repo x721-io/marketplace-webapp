@@ -16,7 +16,7 @@ interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: NFT
-  marketData?: NFTMarketData | undefined
+  marketData?: NFTMarketData
 }
 
 export default function ListingStep({ nft, onSuccess, onError, marketData }: Props) {
@@ -33,11 +33,12 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
     price: {
       required: 'Please input price',
       validate: {
-        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
+        isNumber: (v: number) => isNaN(v) || 'Please input a valid price number',
+        min: (v: number) => Number(v) > 0 || 'Price must be greater than 0',
         max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number',
         decimals: (v: number) => {
           const decimalPart = (v.toString().split('.')[1] || '').length;
-          return decimalPart <= 18 || 'Price decimal length cannot exceed token decimals';
+          return decimalPart <= 18 || 'The decimal length of the price cannot exceed 18 decimal digits of the token';
         }
       }
     },
