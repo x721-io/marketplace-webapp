@@ -8,6 +8,7 @@ import { formatUnits } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import { findTokenByAddress } from '@/utils/token'
 import React from 'react'
+import { Tooltip } from "flowbite-react";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent
@@ -80,17 +81,23 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
             <div className="flex items-center gap-1 w-full">
               Sold
               {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
-              <span className="font-semibold text-primary">
-                {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
-              </span>
+              <Tooltip content={event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)} placement="bottom">
+                <span className="font-semibold text-primary text-ellipsis whitespace-nowrap w-auto max-w-[80px] overflow-hidden break-words flex">
+                  {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
+                </span>
+              </Tooltip>
               to
-              <Link className="text-primary font-semibold hover:underline" href={getUserLink(event.to)}>
-                {getDisplayedUserName(event.to)}
-              </Link>
+              <Tooltip content={getDisplayedUserName(event.to)} placement="bottom">
+                <Link className="text-primary font-semibold hover:underline text-ellipsis whitespace-nowrap w-auto max-w-[80px] overflow-hidden break-words flex" href={getUserLink(event.to)}>
+                  {getDisplayedUserName(event.to)}
+                </Link>
+              </Tooltip>
               for
-              <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
-              </span>
+              <Tooltip content={formatDisplayedBalance(formatUnits(event.price, 18))} placement="bottom">
+                <span className="font-semibold text-primary text-ellipsis whitespace-nowrap w-auto max-w-[40px] overflow-hidden break-words flex">
+                  {formatDisplayedBalance(formatUnits(event.price, 18))}
+                </span>
+              </Tooltip>
               <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
               {token?.symbol}
             </div>
@@ -104,8 +111,8 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 Bid&nbsp;
                 {event.collection?.type === 'ERC1155' ? `${event.quantity} edition(s) for` : 'for'}
                 <span className="font-semibold text-primary">
-                &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
-              </span>
+                  &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
+                </span>
               </p>
               <Image width={24} height={24} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
               <p className="text-secondary">
