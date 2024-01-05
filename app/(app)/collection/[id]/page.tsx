@@ -16,6 +16,7 @@ import { Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Link from 'next/link'
 import Button from '@/components/Button'
+import useAuthStore from '@/store/auth/store'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -23,6 +24,7 @@ export default function CollectionPage() {
   const [showFilters, setShowFilters] = useState(false)
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
+  const myId = useAuthStore(state => state.profile?.id)
 
   const { data, isLoading, error } = useSWR(
     !!id ? id : null,
@@ -82,14 +84,16 @@ export default function CollectionPage() {
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
         <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />
-        <div className='flex gap-4'>
-          <Link href={data.collection.type === 'ERC721' ? `/create/nft/ERC721` : data.collection.type === 'ERC1155' ? `/create/nft/ERC1155` : ''}>
-            <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[295px] w-[250px]">
-              <Button variant="primary">
-                Create a nft
-              </Button>
-            </div>
-          </Link>
+        <div className='flex gap-4 desktop:flex-row flex-col'>
+          { myId === data?.collection.creators[0].userId &&
+            <Link href={data.collection.type === 'ERC721' ? `/create/nft/ERC721` : data.collection.type === 'ERC1155' ? `/create/nft/ERC1155` : ''}>
+              <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
+                <Button variant="primary">
+                  Create a Nft
+                </Button>
+              </div>
+            </Link>
+          }
           <NFTsList
             filters={['status', 'price']}
             onApplyFilters={handleApplyFilters}
