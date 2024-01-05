@@ -68,7 +68,7 @@ export default function NFTsList({
 
     if (!items?.length) {
       return (
-        <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+        <div className="w-full h-[295px] flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
           <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
         </div>
       )
