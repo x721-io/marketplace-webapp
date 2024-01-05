@@ -9,14 +9,17 @@ import { useAccount, useBalance } from 'wagmi'
 import { formatUnits, parseEther } from 'ethers'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { FormState, NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: NFT
+  marketData?: NFTMarketData
 }
 
-export default function BidStep({ onSuccess, onError, nft }: Props) {
+export default function BidStep({ onSuccess, onError, nft, marketData }: Props) {
   const { address } = useAccount()
   const { data: tokenBalance } = useBalance({
     address: address,
@@ -46,15 +49,19 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
           }
           const priceBN = parseEther(String(v))
           return priceBN < tokenBalance.value || 'Not enough balance'
-        },
+        }
       }
     },
     quantity: {
       validate: {
         required: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
-          return (!!v && !isNaN(v) && Number(v) > 0) || 'Please input the number of quantity'
-        }
+          return (!!v && !isNaN(v) && Number(v) > 0) || 'Please input a valid number of quantity'
+        },
+        quantity: (v: any) => {
+          if (nft.collection.type === 'ERC721') return true
+          return Number(v) <= Number(marketData?.totalSupply || 0) || 'Cannot bid more than total supply'
+        },
       }
     }
   }
@@ -105,30 +112,25 @@ export default function BidStep({ onSuccess, onError, nft }: Props) {
         />
       </div>
 
-      {
-        nft.collection.type === 'ERC1155' && (
-          <>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-              <Input
-                type="number"
-                register={register('quantity', formRules.quantity)}
-              />
-            </div>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
-              <Input
-                readOnly
-                value={Number(price) * Number(quantity)}
-                appendIcon={
-                  <Text>
-                    U2U
-                  </Text>
-                } />
-            </div>
-          </>
-        )
-      }
+      {nft.collection.type === 'ERC1155' && (
+        <>
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+            <Input
+              type="number"
+              register={register('quantity', formRules.quantity)}
+              appendIcon={<Text>Max: {marketData?.totalSupply || 0}</Text>}
+            />
+          </div>
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
+            <Input
+              readOnly
+              value={Number(price) * Number(quantity) || 0}
+              appendIcon={<Text>U2U</Text>} />
+          </div>
+        </>
+      )}
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Place bid
