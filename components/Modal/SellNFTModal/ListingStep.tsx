@@ -33,7 +33,15 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
     price: {
       required: 'Please input price',
       validate: {
-        isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
+        isNumber: (v: number) => {
+          if (isNaN(v)) {
+            return 'Please input a valid price number';
+          }
+          if (v < 0) {
+            return 'Please input a non-negative price';
+          }
+          return true;
+        },
         max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number',
         decimals: (v: number) => {
           const decimalPart = (v.toString().split('.')[1] || '').length;
