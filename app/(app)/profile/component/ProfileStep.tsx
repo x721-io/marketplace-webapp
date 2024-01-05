@@ -3,7 +3,7 @@ import Input from '@/components/Form/Input';
 import Textarea from '@/components/Form/Textarea';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import useAuthStore from '@/store/auth/store'
 import { toast } from 'react-toastify'
@@ -75,6 +75,7 @@ export default function ProfileStep() {
             <Textarea
               className="h-[160px] resize-none"
               register={register('bio')}
+              placeholder="Limit 1200 character"
             />
           </div>
           <div>
