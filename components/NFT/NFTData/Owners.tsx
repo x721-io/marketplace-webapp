@@ -52,7 +52,7 @@ export default function OwnersTab({ nft, marketData }: {
                     {owner.username}
                   </p>
                   {!!owner.sellInfo ? (
-                    <p className="text-secondary text-body-14 font-semibold">
+                    <p className="text-secondary text-body-14 font-semibold break-all">
                       {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
                       <span className="text-primary">
                         {" "}{formatDisplayedBalance(formatEther(owner.sellInfo.price), 2)} U2U
@@ -60,7 +60,7 @@ export default function OwnersTab({ nft, marketData }: {
                       {" "}each
                     </p>
                   ) : (
-                    <p className="text-secondary font-semibold text-body-14">
+                    <p className="text-secondary font-semibold text-body-14  break-all">
                       {owner.quantity} edition(s) - <span className="font-bold">Not for sale</span>
                     </p>
                   )}
