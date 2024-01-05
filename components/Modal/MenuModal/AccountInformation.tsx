@@ -5,7 +5,7 @@ import defaultAvatar from '@/assets/images/default-avatar.png'
 import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
 import { useAuth } from '@/hooks/useAuth'
-import { truncate } from "@/utils/string";
+import { getUserLink, truncate } from "@/utils/string";
 import { useAccount } from "wagmi";
 import TokenBalances from "./TokenBalances";
 import { toast } from 'react-toastify'
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function MenuAccountInformation({ onClose }: Props) {
-  const userId = useAuthStore(state => state.profile?.id)
+  const profile = useAuthStore(state => state.profile)
   const username = useAuthStore(state => state.profile?.username)
   const { onLogout } = useAuth()
   const { address, connector } = useAccount()
@@ -42,7 +42,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
               width={48}
               height={48}
             />
-            <Link href={`/user/${userId}`} className="flex flex-col " onClick={onClose}>
+            <Link href={getUserLink(profile)} className="flex flex-col " onClick={onClose}>
               <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
               <Text className="text-secondary">View profile</Text>
             </Link>
