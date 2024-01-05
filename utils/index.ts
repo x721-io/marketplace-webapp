@@ -41,7 +41,7 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
     return parseFloat(String(value)).toFixed(digits)
   }
 
-  if ( item?.value && item?.value < 10000) {
+  if ( item?.value && item?.value < 1000) {
     return (Number(value) / item?.value)
   }
 
