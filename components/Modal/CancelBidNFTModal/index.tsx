@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 
 interface Props extends ModalProps {
   nft: NFT,
-  bid?: MarketEvent
+  bid?: MarketEvent | undefined
 }
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
@@ -105,11 +105,11 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   return (
     <Modal
       dismissible
-      size="md"
+      size="sm"
       show={show}
       onClose={onClose}>
       <Modal.Body>
-        <div className="flex flex-col justify-center items-center gap-4">
+        <div className="flex flex-col justify-center items-center gap-4 ">
           {renderContent()}
         </div>
       </Modal.Body>

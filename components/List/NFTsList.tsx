@@ -116,10 +116,10 @@ export default function NFTsList({
 
         {renderList()}
       </div>
+      {items?.length ? <div className="flex justify-end">
+          <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
+      </div> : ""}
 
-      <div className="flex justify-end">
-        <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
-      </div>
     </div>
   )
 }

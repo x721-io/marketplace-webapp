@@ -1,6 +1,6 @@
-import { colors } from '@/config/theme'
+import {colors} from '@/config/theme'
 import defaultColors from 'tailwindcss/colors'
-import { useMemo } from 'react'
+import {useMemo} from 'react'
 
 import U2ULogo from './U2ULogo'
 import BurgerIcon from './Burger'
@@ -25,6 +25,9 @@ import ShoppingBagIcon from './ShoppingBag'
 import SearchIcon from "./Search";
 import U2NftMobileIcon from "./U2NftMobile";
 import CloseIcon from '@/components/Icon/Close'
+import CopyIcon from "@/components/Icon/Copy";
+import LogoutIcon from "@/components/Icon/Logout";
+import U2UTokenIcon from "@/components/Icon/U2UToken";
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -35,7 +38,7 @@ export interface IconProps {
   color?: Color | string
 }
 
-export default function Icon({ name, width, height, ...rest }: IconProps & {
+export default function Icon({name, width, height, ...rest}: IconProps & {
   name: string
 }) {
   const iconW = useMemo(() => width || 20, [width])
@@ -44,7 +47,7 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
   const renderIcon = () => {
     switch (name) {
       case 'u2u-logo':
-        return <U2ULogo width={iconW} height={iconH} />
+        return <U2ULogo width={iconW} height={iconH}/>
       case 'burger':
         return <BurgerIcon width={iconW} height={iconH} {...rest} />
       case 'chevronDown':
@@ -58,6 +61,7 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
       case 'circle':
         return <CircleIcon width={iconW} height={iconH} {...rest} />
       case 'metaMask':
+      case 'Injected (MetaMask)':
       case 'injected':
         return <MetamaskIcon width={iconW} height={iconH} {...rest} />
       case 'walletConnect':
@@ -67,7 +71,7 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
       case 'slider':
         return <SliderIcon width={iconW} height={iconH} {...rest} />
       case 'verified':
-        return <VerifiedIcon width={iconW} height={iconH} />
+        return <VerifiedIcon width={iconW} height={iconH}/>
       case 'box':
         return <BoxIcon width={iconW} height={iconH} {...rest} />
       case 'dollarSign':
@@ -90,6 +94,12 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <U2NftMobileIcon width={iconW} height={iconH} {...rest} />
       case 'close':
         return <CloseIcon width={iconW} height={iconH} {...rest} />
+      case 'copy':
+        return <CopyIcon width={iconW} height={iconH} {...rest} />
+      case 'logout':
+        return <LogoutIcon width={iconW} height={iconH} {...rest} />
+      case 'u2u-token':
+        return <U2UTokenIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }
