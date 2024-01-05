@@ -84,12 +84,12 @@ export default function CollectionPage() {
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
         <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />
-        <div className='flex gap-4 desktop:flex-row flex-col'>
-          { myId === data?.collection.creators[0].userId &&
-            <Link href={data.collection.type === 'ERC721' ? `/create/nft/ERC721` : data.collection.type === 'ERC1155' ? `/create/nft/ERC1155` : ''}>
+        <div className="flex gap-4 desktop:flex-row flex-col">
+          {myId === data?.collection.creators[0].userId &&
+            <Link href={`/create/nft/${data.collection.type}`}>
               <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
                 <Button variant="primary">
-                  Create a Nft
+                  Create an NFT
                 </Button>
               </div>
             </Link>
