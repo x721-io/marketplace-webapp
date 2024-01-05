@@ -257,7 +257,7 @@ export const useBidUsingNative = (nft: NFT) => {
       nft.collection.address,
       nft.u2uId ?? nft.id,
       quantity,
-      parseEther(price)
+      // parseEther(price)
     ]
 
     const { hash } = await writeAsync?.({

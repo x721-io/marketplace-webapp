@@ -39,11 +39,12 @@ export default function ProfileStep() {
         render: 'Profile updated successfully',
         type: 'success',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } catch (e) {
       console.error('Error:', e)
-      toast.update(toastId, { render: `Profile updating: ${e}`, type: 'error', isLoading: false, autoClose: 1000 })
+      toast.update(toastId, { render: `Profile updating: ${e}`, type: 'error', isLoading: false, autoClose: 1000, closeButton: true })
     }
   }
 

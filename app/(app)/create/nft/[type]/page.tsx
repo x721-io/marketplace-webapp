@@ -63,11 +63,14 @@ export default function CreateNftPage() {
   const formRules = {
     media: {
       validate: {
-        required: (v: Blob[]) => v.length > 0 || 'Collection image is required!',
+        required: (v: Blob[]) =>  (v && v.length > 0)|| 'Collection image is required!',
         audio: (values: Blob[]) => {
-          const firstFileType = values[0].type.split('/')[0]
-          if (firstFileType && firstFileType !== 'audio') return true
-          return !!values[1] || 'Cover photo is required'
+          if (values && values.length > 0) {
+            const firstFileType = values[0].type.split('/')[0];
+            if (firstFileType && firstFileType !== 'audio') return true;
+            return !!values[1] || 'Cover photo is required';
+          }
+          return 'Cover photo is required';
         }
       }
     },
