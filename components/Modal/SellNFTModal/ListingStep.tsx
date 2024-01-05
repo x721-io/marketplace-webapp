@@ -16,7 +16,7 @@ interface Props {
   onSuccess: () => void
   onError: (error: Error) => void
   nft: NFT
-  marketData?: NFTMarketData | undefined
+  marketData?: NFTMarketData
 }
 
 export default function ListingStep({ nft, onSuccess, onError, marketData }: Props) {
