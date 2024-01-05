@@ -1,0 +1,93 @@
+import { tokens } from "@/config/tokens";
+import { Address, erc20ABI, useAccount, useBalance, useContractReads, useContractWrite } from "wagmi";
+import Image from "next/image";
+import { BigNumberish, formatUnits } from 'ethers'
+import { formatDisplayedBalance } from '@/utils'
+import Button from '@/components/Button'
+import WETH_ABI from '@/abi/WETH.json'
+import { useMemo, useState } from 'react'
+import { waitForTransaction } from '@wagmi/core'
+import { toast } from 'react-toastify'
+
+export default function TokenBalances() {
+  const [claiming, setClaiming] = useState(false)
+  const { address } = useAccount()
+
+  const { data: tokenBalances } = useContractReads({
+    contracts: Object.values(tokens).map((token) => {
+      return {
+        address: token.address,
+        abi: erc20ABI,
+        functionName: 'balanceOf',
+        args: [address as Address]
+      }
+    }),
+    enabled: !!address,
+    watch: true
+  })
+
+  const wu2uBalance = useMemo(() => {
+    if (!tokenBalances) return BigInt(0)
+    return tokenBalances[0].result
+  }, [tokenBalances])
+
+  const { data: u2uBalance } = useBalance({
+    address,
+    formatUnits: 'ether',
+    watch: true
+  })
+
+  const { writeAsync } = useContractWrite({
+    ...tokens.wu2u,
+    abi: WETH_ABI,
+    functionName: 'withdraw'
+  })
+
+  const handleClaimToken = async () => {
+    try {
+      setClaiming(true)
+      const { hash } = await writeAsync({ args: [wu2uBalance] })
+      await waitForTransaction({ hash })
+    } catch (e: any) {
+      toast.error(`Error report: ${e.message || e}`, { autoClose: 1000, closeButton: true })
+      console.error(e)
+    } finally {
+      setClaiming(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col h-full justify-between">
+      <div className="border rounded-xl p-2">
+        <div className="flex gap-2 items-center p-1">
+          <Image src={tokens.wu2u.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
+          {formatDisplayedBalance(u2uBalance?.formatted || '0')}
+          <span>U2U</span>
+        </div>
+
+        {Object.values(tokens).map((token, index) => {
+          const balance = tokenBalances ? formatUnits(tokenBalances[index].result as BigNumberish, 18) : 0
+          return (
+            <div className="flex gap-2 items-center p-1 justify-between" key={token.address}>
+              <div className="flex gap-2 items-center">
+                <Image src={token.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
+                <span className="font-semibold">{balance}</span>
+                <span className="text-secondary">{token.symbol}</span>
+              </div>
+              {token.address === tokens.wu2u.address && (
+                <Button
+                  scale="sm"
+                  className="text-body-12"
+                  loading={claiming}
+                  disabled={Number(balance) === 0}
+                  onClick={handleClaimToken}>
+                  Convert to U2U
+                </Button>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
