@@ -82,19 +82,19 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               Sold
               {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
               <Tooltip content={event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)} placement="bottom">
-                <span className="font-semibold text-primary text-ellipsis whitespace-nowrap w-auto max-w-[80px] overflow-hidden break-words flex">
+                <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
                 </span>
               </Tooltip>
               to
               <Tooltip content={getDisplayedUserName(event.to)} placement="bottom">
-                <Link className="text-primary font-semibold hover:underline text-ellipsis whitespace-nowrap w-auto max-w-[80px] overflow-hidden break-words flex" href={getUserLink(event.to)}>
+                <Link className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis" href={getUserLink(event.to)}>
                   {getDisplayedUserName(event.to)}
                 </Link>
               </Tooltip>
               for
               <Tooltip content={formatDisplayedBalance(formatUnits(event.price, 18))} placement="bottom">
-                <span className="font-semibold text-primary text-ellipsis whitespace-nowrap w-auto max-w-[40px] overflow-hidden break-words flex">
+                <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {formatDisplayedBalance(formatUnits(event.price, 18))}
                 </span>
               </Tooltip>
