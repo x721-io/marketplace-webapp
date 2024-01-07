@@ -75,6 +75,7 @@ export default function ProfileStep() {
             <Textarea
               className="h-[160px] resize-none"
               register={register('bio')}
+              maxLength={1200}
               placeholder="Limit 1200 character"
             />
           </div>
