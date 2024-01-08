@@ -36,7 +36,7 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
     return Number(value) >= item.value;
   });
 
-  if (value < '1000') {
+  if (Number(value) < 1000) {
     return value
   }
 
