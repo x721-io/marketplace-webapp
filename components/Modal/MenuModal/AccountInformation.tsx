@@ -19,6 +19,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
   const username = useAuthStore(state => state.profile?.username)
   const { onLogout } = useAuth()
   const { address, connector } = useAccount()
+  const avatar = useAuthStore(state => state.profile?.avatar)
 
   const handleCopyClick = () => {
     navigator.clipboard.writeText(address || "")
@@ -37,7 +38,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
         <div className="flex items-center gap-4">
           <div className="flex gap-3 items-center">
             <Image
-              src={defaultAvatar}
+              src={avatar || defaultAvatar}
               alt="Avatar"
               width={48}
               height={48}
