@@ -8,6 +8,7 @@ import WETH_ABI from '@/abi/WETH.json'
 import { useMemo, useState } from 'react'
 import { waitForTransaction } from '@wagmi/core'
 import { toast } from 'react-toastify'
+import { Tooltip } from "flowbite-react";
 
 export default function TokenBalances() {
   const [claiming, setClaiming] = useState(false)
@@ -71,7 +72,11 @@ export default function TokenBalances() {
             <div className="flex gap-2 items-center p-1 justify-between" key={token.address}>
               <div className="flex gap-2 items-center">
                 <Image src={token.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
-                <span className="font-semibold">{balance}</span>
+                <Tooltip content={balance} placement="bottom">
+                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block max-w-[60px] text-ellipsis ">
+                    {balance}
+                  </p>
+                </Tooltip>
                 <span className="text-secondary">{token.symbol}</span>
               </div>
               {token.address === tokens.wu2u.address && (
