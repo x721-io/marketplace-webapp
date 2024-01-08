@@ -24,7 +24,7 @@ export const getUserCoverImage =(user?: Partial<Pick<User, 'username' | 'coverIm
 }
 
 export const getCollectionAvatarImage = (collection?: Partial<Pick<Collection, 'name' | 'avatar'>>) => {
-  return collection?.avatar || `https://avatar.vercel.sh/${collection?.name || 'default'}`
+  return collection?.avatar || `https://avatar.vercel.sh/${collection?.name}`
 }
 
 export const getCollectionBannerImage = (collection?: Partial<Pick<Collection, 'name' | 'coverImage'>>) => {
