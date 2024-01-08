@@ -25,7 +25,7 @@ export default function InformationSectionCollection({ data }: Props) {
             <Text className="font-semibold text-primary desktop:text-body-32 tablet:text-body-32 text-body-24">
               {data.collection.name}
             </Text>
-            <Icon name="verified" width={24} height={24} />
+            {/* <Icon name="verified" width={24} height={24} /> */}
           </div>
           <Link
             href={`/user/${creator?.id}`}

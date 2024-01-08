@@ -60,7 +60,7 @@ export default function MainFooter() {
         </div>
       </div>
 
-      <div className="border-y border-gray-200 flex justify-between flex-col tablet:flex-row desktop:flex-row gap-10 py-6 tablet:py-10 desktop:py-10">
+      {/* <div className="border-y border-gray-200 flex justify-between flex-col tablet:flex-row desktop:flex-row gap-10 py-6 tablet:py-10 desktop:py-10">
         <div>
           <Text className="text-primary font-medium mb-3" variant="body-18">
             Join our newsletter
@@ -77,7 +77,7 @@ export default function MainFooter() {
             <Icon name="arrowRight" width={12} height={12} />
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex flex-col tablet:flex-row desktop:flex-row justify-center tablet:justify-between desktop:justify-between items-center gap-4 tablet:gap-0 desktop:gap-0">
         <div className="flex-1">
