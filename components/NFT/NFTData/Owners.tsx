@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import Image from 'next/image'
-import defaultAvatar from "@/assets/images/default-avatar.png";
 import Button from '@/components/Button'
 import { formatEther } from 'ethers'
 import Link from 'next/link'
@@ -11,6 +10,7 @@ import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import {Tooltip} from "flowbite-react";
+import { getUserAvatarImage } from '@/utils/string';
 
 export default function OwnersTab({ nft, marketData }: {
   nft: NFT,
@@ -46,7 +46,7 @@ export default function OwnersTab({ nft, marketData }: {
                   className="w-12 h-12 rounded-2xl"
                   width={80}
                   height={80}
-                  src={owner.avatar || defaultAvatar}
+                  src={getUserAvatarImage(owner)}
                   alt="avatar" />
                 <div>
                   <p className="font-medium">

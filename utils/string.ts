@@ -1,4 +1,4 @@
-import { NFT, User } from '@/types'
+import { Collection, NFT, User } from '@/types'
 
 export const classNames = (...classes: (string | undefined | null | boolean)[]) => {
   return classes.filter(Boolean).join(' ')
@@ -13,6 +13,22 @@ export const shortenAddress = (str: string = '', head: number = 6, tail: number 
   } else {
     return str;
   }
+}
+
+export const getUserAvatarImage = (user?: Partial<Pick<User, 'username'| 'avatar'>> | null) => {
+  return user?.avatar || `https://avatar.vercel.sh/${user?.username}`
+}
+
+export const getUserCoverImage =(user?: Partial<Pick<User, 'username' | 'coverImage'>> | null) => {
+  return user?.coverImage || `https://avatar.vercel.sh/origin`
+}
+
+export const getCollectionAvatarImage = (collection?: Partial<Pick<Collection, 'name' | 'avatar'>>) => {
+  return collection?.avatar || `https://avatar.vercel.sh/${collection?.name || 'default'}`
+}
+
+export const getCollectionBannerImage = (collection?: Partial<Pick<Collection, 'name' | 'coverImage'>>) => {
+  return collection?.coverImage || `https://avatar.vercel.sh/origin`
 }
 
 export const getDisplayedUserName = (user?: Partial<Pick<User, 'username' | 'publicKey' | 'signer'>> | null) => {

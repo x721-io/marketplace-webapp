@@ -4,13 +4,13 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Icon from '@/components/Icon'
 import Dropdown from '@/components/Dropdown'
-import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
 import SearchInput from '@/components/Layout/MainHeader/SearchInput'
 import Text from '@/components/Text'
 import MenuModal from '@/components/Modal/MenuModal'
+import { getUserAvatarImage } from '@/utils/string'
 
 export const HEADER_HEIGHT = 88
 
@@ -76,7 +76,7 @@ export default function MainHeader() {
               <Image
                 onClick={() => setShowMenu(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
-                src={avatar || defaultAvatar}
+                src={getUserAvatarImage()}
                 alt="Avatar"
                 width={35}
                 height={35}

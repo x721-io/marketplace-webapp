@@ -1,12 +1,12 @@
 import React, { useMemo, useRef } from 'react';
 import Image from 'next/image'
 import UploadIcon from '@/components/Icon/Upload';
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'react-toastify'
 import useAuthStore from '@/store/auth/store'
 import { parseImageUrl } from '@/utils/nft'
+import { getUserAvatarImage, getUserCoverImage } from '@/utils/string';
 
 export default function BannerSection() {
   const { onUpdateProfile } = useAuth()
@@ -78,9 +78,12 @@ export default function BannerSection() {
   }
 
   return (
-    <div
-      className="bg-cover relative w-full h-[180px] rounded-2xl"
-      style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
+    <div className="w-full relative">
+      <Image
+        src={getUserCoverImage()}
+        width={1200} height={220}
+        alt="user-info-cover"
+        className="w-full desktop:h-[220px] tablet:h-[220px] h-[160px] object-cover rounded-2xl" />
       <div className="absolute ml-6 block w-[120px] h-[120px] bottom-[-46px]">
         <input
           className="absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer"
@@ -90,7 +93,7 @@ export default function BannerSection() {
         />
         <Image
           className="rounded-2xl w-full h-auto object-cover"
-          src={avatar || defaultAvatar}
+          src={getUserAvatarImage()}
           alt="Avatar"
           width={256}
           height={256}
