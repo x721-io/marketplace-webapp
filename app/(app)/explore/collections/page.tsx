@@ -35,6 +35,7 @@ export default function ExploreCollectionsPage() {
           collections={collections?.data}
           paging={collections?.paging}
           onChangePage={handleChangePage}
+          showFilter={isFiltersVisible}
         />
       </div>
     </div>
