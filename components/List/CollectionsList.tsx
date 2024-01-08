@@ -70,7 +70,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
     )}>
       {
           id && <Link href={`/create/collection`}>
-            <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[192px]">
+            <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px]">
               <Button variant="primary">
                 Create a collection
               </Button>
@@ -79,7 +79,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
         }
         {Array.isArray(collections) && collections.map((c, index) => (
           <Link key={c.id} href={`/collection/${c.shortUrl}`}>
-            <div className="flex flex-col rounded-xl border border-1 hover:border-hard/70 border-soft transition-all">
+            <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"

@@ -87,7 +87,7 @@ export default function CollectionPage() {
         <div className="flex gap-4 desktop:flex-row flex-col">
           {myId === data?.collection.creators[0].userId &&
             <Link href={`/create/nft/${data.collection.type}`}>
-              <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
+              <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
                 <Button variant="primary">
                   Create an NFT
                 </Button>
