@@ -10,6 +10,7 @@ import { formatDisplayedBalance } from '@/utils'
 import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
+import {Tooltip} from "flowbite-react";
 
 export default function OwnersTab({ nft, marketData }: {
   nft: NFT,
@@ -60,9 +61,12 @@ export default function OwnersTab({ nft, marketData }: {
                       {" "}each
                     </p>
                   ) : (
-                    <p className="text-secondary font-semibold text-body-14  break-all">
-                      {owner.quantity} edition(s) - <span className="font-bold">Not for sale</span>
-                    </p>
+                     <p className="flex items-center gap-1">
+                         <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
+                           {formatDisplayedBalance(formatEther(owner.quantity), 0)}
+                         </p>
+                       <p className="text-secondary font-semibold text-body-14"> edition(s) -</p>  <span className="font-bold"> Not for sale</span>
+                     </p>
                   )}
                 </div>
               </Link>
