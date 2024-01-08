@@ -100,7 +100,7 @@ export default function ExploreUsersPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2 items-center">
                     <Text className="font-medium">{user.username}</Text>
-                    <VerifyIcon width={16} height={16} />
+                    {/* <VerifyIcon width={16} height={16} /> */}
                   </div>
                   {/*<div className="flex gap-3">*/}
                   {/*  <div className="flex gap-2">*/}

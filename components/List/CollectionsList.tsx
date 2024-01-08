@@ -106,7 +106,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
                       <Tooltip content={c.name} placement="bottom">
                         <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
                       </Tooltip>
-                      <VerifyIcon width={16} height={16} />
+                      {/* <VerifyIcon width={16} height={16} /> */}
                     </div>
                     <div className="flex gap-2">
                       <Text className="text-body-12 font-medium">{c.totalOwner}</Text>
