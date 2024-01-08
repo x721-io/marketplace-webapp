@@ -23,11 +23,11 @@ export const getUserCoverImage =(user?: Partial<Pick<User, 'username' | 'coverIm
   return user?.coverImage || `https://avatar.vercel.sh/origin`
 }
 
-export const getCollectionAvatarImage = (collection?: Partial<Pick<Collection, 'name' | 'avatar'>>) => {
+export const getCollectionAvatarImage = (collection?: Partial<Pick<Collection, 'name' | 'avatar'>> | null) => {
   return collection?.avatar || `https://avatar.vercel.sh/${collection?.name}`
 }
 
-export const getCollectionBannerImage = (collection?: Partial<Pick<Collection, 'name' | 'coverImage'>>) => {
+export const getCollectionBannerImage = (collection?: Partial<Pick<Collection, 'name' | 'coverImage'>> | null) => {
   return collection?.coverImage || `https://avatar.vercel.sh/origin`
 }
 
