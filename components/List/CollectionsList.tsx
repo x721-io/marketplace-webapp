@@ -10,6 +10,7 @@ import VerifyIcon from '../Icon/Verify'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '../Button'
 import { Collection } from '@/types'
+import { classNames } from '@/utils/string'
 
 interface Paging {
   page?: number
@@ -24,9 +25,10 @@ interface Props {
   paging?: Paging
   collections?: Collection[]
   onChangePage: (page: number) => void
+  showFilter?: boolean
 }
 
-export default function CollectionsList({ collections, paging, onChangePage, id, loading, error }: Props) {
+export default function CollectionsList({ collections, paging, onChangePage, id, loading, error, showFilter }: Props) {
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
@@ -62,8 +64,11 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
 
   return (
     <>
-      <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
-        {
+    <div className={classNames(
+      'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3',
+      showFilter ? 'desktop:grid-cols-3' : 'desktop:grid-cols-4'
+    )}>
+      {
           id && <Link href={`/create/collection`}>
             <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[192px]">
               <Button variant="primary">

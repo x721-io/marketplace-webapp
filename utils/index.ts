@@ -22,7 +22,6 @@ export const parseQueries = (queries: Record<string, any>) => {
 
 export const formatDisplayedBalance = (value: string | number, digits = 2) => {
   if (!value) return '0'
-
   const lookup = [
     { value: 0, symbol: "" },
     { value: 1e3, symbol: "k" },
@@ -37,12 +36,12 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
     return Number(value) >= item.value;
   });
 
-  if (item?.value === 0) {
-    return parseFloat(String(value)).toFixed(digits)
+  if (Number(value) < 1000) {
+    return value
   }
 
-  if ( item?.value && item?.value < 1000) {
-    return (Number(value) / item?.value)
+  if (item?.value === 0) {
+    return parseFloat(String(value)).toFixed(digits)
   }
 
   return item ? (Number(value) / item.value).toFixed(digits).replace(rx, "1") + item.symbol : "0";

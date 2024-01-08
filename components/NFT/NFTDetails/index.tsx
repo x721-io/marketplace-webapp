@@ -127,23 +127,25 @@ export default function NFTDetails() {
   }
 
   return (
-      <div className='flex w-full flex-col justify-center items-center gap-4 px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10'>
-        <div className='flex justify-between desktop:flex-row flex-col'>
-          <div className='flex gap-4 desktop:flex-row tablet:flex-row flex-col'>
-            <div className="p-2" onClick={router.back}>
-              <Icon
-                className="cursor-pointer" name="arrowLeft"
-                width={24}
-                height={24}
-              />
-            </div>
-            {renderMedia()}
+    <div className='flex w-full flex-col justify-center items-center gap-4 px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10'>
+      <div className='flex justify-center items-center desktop:flex-row tablet:flex-row flex-col w-full desktop:gap-10 tablet:gap-10'>
+        <div className='flex gap-4 desktop:flex-row tablet:flex-row flex-col w-full desktop:w-auto tablet:w-auto'>
+          <div className="p-2" onClick={router.back}>
+            <Icon
+              className="cursor-pointer" name="arrowLeft"
+              width={24}
+              height={24}
+            />
           </div>
+          {renderMedia()}
+        </div>
+        <div className='w-full desktop:w-auto tablet:w-auto'>
           <NFTMarketData nft={item} marketData={marketData} />
         </div>
-        <div className='w-full'>
-          <NFTData marketData={marketData} nft={item} metaData={metaData} />
-        </div>
       </div>
+      <div className='w-full'>
+        <NFTData marketData={marketData} nft={item} metaData={metaData} />
+      </div>
+    </div>
   )
 }

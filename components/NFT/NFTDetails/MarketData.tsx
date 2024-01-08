@@ -22,7 +22,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData)
 
   return (
-    <div className="flex flex-col gap-10 justify-between desktop:w-1/3 w-full">
+    <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
