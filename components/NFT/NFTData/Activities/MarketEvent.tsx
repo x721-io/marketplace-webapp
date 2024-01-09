@@ -1,6 +1,5 @@
-import defaultAvatar from "@/assets/images/default-avatar.png";
 import { MarketEvent } from '@/types'
-import { getDisplayedUserName, getUserLink, shortenAddress } from '@/utils/string'
+import { getDisplayedUserName, getUserAvatarImage, getUserLink, shortenAddress } from '@/utils/string'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -26,7 +25,7 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
       <Link href={getUserLink(maker)} className="flex items-center gap-2">
         <Image
           className="w-10 h-10 rounded-full"
-          src={maker?.avatar || defaultAvatar}
+          src={getUserAvatarImage(maker)}
           alt="user"
           width={40}
           height={40} />

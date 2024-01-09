@@ -4,13 +4,11 @@ import Link from 'next/link'
 import Text from '@/components/Text'
 import React, { useMemo } from 'react'
 import Image from 'next/image'
-import defaultImg from '@/assets/images/default-cover-photo.png'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '../Button'
 import { Collection } from '@/types'
-import { classNames } from '@/utils/string'
+import { classNames, getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
 
 interface Paging {
   page?: number
@@ -83,7 +81,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                  src={c.coverImage || defaultImg}
+                  src={getCollectionBannerImage(c)}
                   alt="Cover"
                   width={1200} height={256}
                   style={{ width: '100%', height: '100px' }}
@@ -92,7 +90,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
                      style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-cover"
-                    src={c.avatar || defaultAvatar}
+                    src={getCollectionAvatarImage(c)}
                     alt="Avatar"
                     width={60} height={60}
                     style={{ width: '100%', height: '100%' }}

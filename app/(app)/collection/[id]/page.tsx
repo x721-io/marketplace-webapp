@@ -7,8 +7,6 @@ import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
-import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
 import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
@@ -17,6 +15,7 @@ import Text from '@/components/Text'
 import Link from 'next/link'
 import Button from '@/components/Button'
 import useAuthStore from '@/store/auth/store'
+import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -77,8 +76,8 @@ export default function CollectionPage() {
       <BannerSectionCollection
         collectionId={data.collection.id}
         creators={data?.collection?.creators}
-        cover={data?.collection.coverImage || defaultCoverPhoto}
-        avatar={data?.collection.avatar || defaultAvatar} />
+        cover={getCollectionBannerImage(data?.collection)}
+        avatar={getCollectionAvatarImage(data?.collection)} />
 
       <InformationSectionCollection data={data} />
 

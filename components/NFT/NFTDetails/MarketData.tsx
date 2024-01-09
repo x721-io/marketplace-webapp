@@ -5,12 +5,12 @@ import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
 import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from 'flowbite-react'
 import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
+import { getUserAvatarImage } from '@/utils/string'
 
 export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
   const type = nft.collection.type
@@ -63,7 +63,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                   width={56}
                   height={56}
                   className="w-6 h-6 rounded-full"
-                  src={marketData.owners[0].avatar || defaultAvatar}
+                  src={marketData.owners[0].avatar || getUserAvatarImage(marketData.owners[0])}
                   alt="avatar" />
                 {marketData.owners[0].username}
               </Link>

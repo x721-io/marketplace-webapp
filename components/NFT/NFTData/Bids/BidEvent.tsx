@@ -1,8 +1,7 @@
 import { MarketEvent, NFT } from '@/types'
-import { getUserLink, shortenAddress } from '@/utils/string'
+import { getUserAvatarImage, getUserLink, shortenAddress } from '@/utils/string'
 import Link from 'next/link'
 import Image from 'next/image'
-import defaultAvatar from '@/assets/images/default-avatar.png'
 import { format } from 'date-fns'
 import { formatDisplayedBalance } from '@/utils'
 import { formatUnits } from 'ethers'
@@ -39,7 +38,7 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
         <Link href={getUserLink(event.to)}>
           <Image
             className="w-10 h-10 rounded-full"
-            src={event.to?.avatar || defaultAvatar}
+            src={getUserAvatarImage(event.to)}
             alt="user"
             width={40}
             height={40} />

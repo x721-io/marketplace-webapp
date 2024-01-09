@@ -1,11 +1,10 @@
 import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import Image from 'next/image'
-import defaultAvatar from '@/assets/images/default-avatar.png'
 import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
 import { useAuth } from '@/hooks/useAuth'
-import { getUserLink, truncate } from "@/utils/string";
+import { getUserAvatarImage, getUserLink, truncate } from "@/utils/string";
 import { useAccount } from "wagmi";
 import TokenBalances from "./TokenBalances";
 import { toast } from 'react-toastify'
@@ -38,10 +37,11 @@ export default function MenuAccountInformation({ onClose }: Props) {
         <div className="flex items-center gap-4">
           <div className="flex gap-3 items-center">
             <Image
-              src={avatar || defaultAvatar}
+              src={ avatar || getUserAvatarImage()}
               alt="Avatar"
               width={48}
               height={48}
+              className='rounded-full'
             />
             <Link href={getUserLink(profile)} className="flex flex-col " onClick={onClose}>
               <Text className="text-primary font-semibold" variant="body-18">{username}</Text>
