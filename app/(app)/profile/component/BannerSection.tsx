@@ -79,13 +79,7 @@ export default function BannerSection() {
 
   return (
     <div
-      className="bg-cover relative w-full h-[180px] rounded-2xl"
-      style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
-      {/* <Image
-        src={getUserCoverImage()}
-        width={1200} height={220}
-        alt="user-info-cover"
-        className="w-full desktop:h-[220px] tablet:h-[220px] h-[160px] object-cover rounded-2xl" /> */}
+      className="bg-cover relative w-full h-[180px] rounded-2xl">
       <div className="absolute ml-6 block w-[120px] h-[120px] bottom-[-46px]">
         <input
           className="absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer"
@@ -113,18 +107,13 @@ export default function BannerSection() {
           onChange={(e) => handleUploadCoverImage(e.target.files)}
         />
       </div>
-
-      {
-        !!coverImage && (
-          <Image
-            className="rounded-2xl w-full h-[180px] object-cover"
-            src={coverImage || getUserCoverImage()}
-            alt="Cover"
-            width={1200}
-            height={256}
-          />
-        )
-      }
+      <Image
+        className="rounded-2xl w-full h-[180px] object-cover"
+        src={coverImage || getUserCoverImage()}
+        alt="Cover"
+        width={1200}
+        height={256}
+      />
     </div>
   )
 }
