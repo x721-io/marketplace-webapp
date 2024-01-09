@@ -37,7 +37,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
         <div className="flex items-center gap-4">
           <div className="flex gap-3 items-center">
             <Image
-              src={getUserAvatarImage()}
+              src={ avatar || getUserAvatarImage()}
               alt="Avatar"
               width={48}
               height={48}

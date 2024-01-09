@@ -76,7 +76,7 @@ export default function MainHeader() {
               <Image
                 onClick={() => setShowMenu(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
-                src={getUserAvatarImage()}
+                src={avatar || getUserAvatarImage()}
                 alt="Avatar"
                 width={35}
                 height={35}
