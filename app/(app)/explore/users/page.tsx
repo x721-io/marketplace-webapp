@@ -88,7 +88,7 @@ export default function ExploreUsersPage() {
                      style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-fill"
-                    src={getUserAvatarImage(user)}
+                    src={user.avatar || getUserAvatarImage(user)}
                     alt="Avatar"
                     width={60} height={60}
                     style={{ width: '100%', height: '100%' }}
@@ -122,7 +122,7 @@ export default function ExploreUsersPage() {
         ))}
       </div>
 
-      <div className="flex justify-end">Ï
+      <div className="flex justify-end">
         <Pagination currentPage={users.paging?.page ?? 1} totalPages={totalPage} onPageChange={handleChangePage} />
       </div>
     </>

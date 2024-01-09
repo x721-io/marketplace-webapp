@@ -63,7 +63,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                   width={56}
                   height={56}
                   className="w-6 h-6 rounded-full"
-                  src={getUserAvatarImage(marketData.owners[0])}
+                  src={marketData.owners[0].avatar || getUserAvatarImage(marketData.owners[0])}
                   alt="avatar" />
                 {marketData.owners[0].username}
               </Link>
