@@ -12,7 +12,8 @@ export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFT
   const { owners, sellInfo, bidInfo } = useMemo(() => marketData || {
     owners: [],
     sellInfo: [],
-    bidInfo: []
+    bidInfo: [],
+    totalSupply: 0
   }, [marketData])
   const userId = useAuthStore(state => state.profile?.id)
   const wallet = useAuthStore(state => state.profile?.publicKey)
@@ -73,7 +74,7 @@ export const useMarketApproval = (nft: NFT) => {
 
   const { data: isMarketContractApproved } = useContractRead({
     address: nft.collection.address,
-    abi: type === 'ERC721' ? contracts.erc721.abi : contracts.erc1155.abi,
+    abi: type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi,
     functionName: 'isApprovedForAll',
     args: [wallet, marketContract.address],
     enabled: !!wallet
@@ -85,7 +86,7 @@ export const useMarketApproval = (nft: NFT) => {
     error: contractCallError
   } = useContractWrite({
     address: nft.collection.address,
-    abi: type === 'ERC721' ? contracts.erc721.abi : contracts.erc1155.abi,
+    abi: type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi,
     functionName: 'setApprovalForAll',
     args: [marketContract.address, true]
   })

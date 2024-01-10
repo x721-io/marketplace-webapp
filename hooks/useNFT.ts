@@ -30,7 +30,6 @@ export const useCreateNFT = (type: AssetType) => {
       external_url: MARKETPLACE_URL + `/item/${collection}/${id}`,
       creatorId: userId,
       attributes: traits,
-      royalties: [{ account: address, value: royalties }]
     }
 
     const { metadataHash } = await api.uploadMetadata(metadata)
