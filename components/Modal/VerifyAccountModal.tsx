@@ -18,14 +18,12 @@ export default function VerifyAccountModal({ show, onClose, listVerify }: FromSt
           case 'ownerOrCreater':
             router.push('/create/nft')
             break;
-          case 'email':
-            break;
           default:
-            onClose?.();
             break;
         }
       }
     })
+    onClose?.();
   };
 
   return (
