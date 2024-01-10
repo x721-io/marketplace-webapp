@@ -66,27 +66,12 @@ export namespace APIParams {
   }
 
   export interface NFTEvents extends PaginationParams {
-    and?: {
-      nftId_?: {
-        tokenId: string
-        contract_contains: Address
-      }
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType
-    }[]
-    or?: {
-      tokenId?: string,
-      type?: AssetType,
-      from?: string,
-      to?: string,
-      quoteToken?: Address,
-      event?: MarketEventType,
-      contract_contains?: Address
-    }[]
+    tokenId: string
+    collectionAddress: Address
+  }
+
+  export interface UserActivities extends PaginationParams {
+    user: Address
   }
 
   export interface Search {
@@ -107,6 +92,15 @@ export namespace APIParams {
     bio: string
     twitterLink: string
     avatar: string
+  }
+  export interface FetchNFTDetails {
+    collectionAddress: string,
+    id: string
+  }
+
+  export interface FetchNFTMarketData extends FetchNFTDetails {
+    bidListPage: number
+    bidListLimit: number
   }
 }
 
@@ -186,6 +180,15 @@ export namespace APIResponse {
   }
 
   export type NFTEvents = MarketEvent[]
+
+  export type UserActivities = MarketEvent[]
+
+  export interface NFTMarketData {
+    sellInfo: MarketEvent[]
+    bidInfo: MarketEvent[],
+    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id'> & { quantity: number })[],
+    totalSupply: string
+  }
 
   export type FetchNFTMetadata = NFTMetadata
 

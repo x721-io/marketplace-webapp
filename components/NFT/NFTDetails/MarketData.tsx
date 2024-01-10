@@ -5,22 +5,27 @@ import Button from '@/components/Button'
 import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import Link from 'next/link'
-import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from 'flowbite-react'
 import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import { getUserAvatarImage } from '@/utils/string'
 
-export default function NFTMarketData({ nft }: { nft: NFT }) {
+export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
   const type = nft.collection.type
-  const { isOnSale, saleData } = useNFTMarketStatus(nft)
+
+  if (!marketData) {
+    return null
+  }
+
+  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData)
 
   return (
-    <div className="flex flex-col gap-10 justify-between desktop:w-1/3 w-full">
+    <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
-          <Icon name="verified" width={16} height={16} />
+          {/* <Icon name="verified" width={16} height={16} /> */}
           <Link href={`/collection/${nft.collection.id}`} className="text-secondary underline">
             {nft.collection.name}
           </Link>
@@ -52,14 +57,14 @@ export default function NFTMarketData({ nft }: { nft: NFT }) {
               </Text>
               <Link
                 className="hover:underline flex items-center gap-1"
-                href={`/user/${nft.owners[0].id}`}>
+                href={`/user/${marketData.owners[0].id}`}>
                 <Image
                   width={56}
                   height={56}
                   className="w-6 h-6 rounded-full"
-                  src={nft.owners[0].avatar || defaultAvatar}
+                  src={marketData.owners[0].avatar || getUserAvatarImage(marketData.owners[0])}
                   alt="avatar" />
-                {nft.owners[0].username}
+                {marketData.owners[0].username}
               </Link>
             </div>
           )
@@ -92,7 +97,7 @@ export default function NFTMarketData({ nft }: { nft: NFT }) {
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(formatUnits(saleData?.price || '0'), 2)}
+                      {Number(formatUnits(saleData?.price || 0)).toLocaleString('en-US')}
                     </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
@@ -107,7 +112,7 @@ export default function NFTMarketData({ nft }: { nft: NFT }) {
                     Quantity
                   </Text>
                   <Text className="text-right" variant="heading-md">
-                    {saleData?.amounts}
+                    {saleData?.quantity}
                   </Text>
                 </div>
               )
@@ -116,7 +121,7 @@ export default function NFTMarketData({ nft }: { nft: NFT }) {
 
         </div>
 
-        <NFTActions {...nft} />
+        <NFTActions nft={nft} marketData={marketData} />
       </div>
     </div>
   )

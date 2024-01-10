@@ -79,7 +79,7 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
         return (
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string).toString(), 2)}</span> U2U
           </Text>
         )
       default:
@@ -95,11 +95,11 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
     <Link
       key={id}
       href={`/item/${collection.address}/${id}`}
-      className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:border-hard/70 border-soft transition-all'}
+      className={'h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md border-soft transition-all'}
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        <VerifyIcon width={16} height={16} />
+        {/* <VerifyIcon width={16} height={16} /> */}
         <Tooltip content={name} placement="top">
           <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:w-[235px] tablet:w-[150px] w-[100px]">
             {name}

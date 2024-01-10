@@ -1,4 +1,3 @@
-import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
 import { NFTMetadata } from '@/types'
@@ -20,12 +19,12 @@ export default function PropertiesTab({ metaData }: { metaData?: NFTMetadata }) 
             {
               Array.isArray(metaData?.attributes) && metaData?.attributes.map(trait => (
                 <div key={trait.trait_type} className="flex items-center p-3 rounded-2xl border border-tertiary">
-                  <div className="flex-1">
-                    <Text className="text-secondary font-bold mb-1">{trait.trait_type}</Text>
+                  <div className="flex-1 w-1/2">
+                    <Text className="text-secondary break-all font-bold mb-1">{trait.trait_type}</Text>
                     {/*<Text className="text-body-16 font-bold">{trait.value}</Text>*/}
                   </div>
-                  <div className="flex-1">
-                    <Text className="text-body-16 font-bold">{trait.value}</Text>
+                  <div className="flex-1 w-1/2">
+                    <Text className="text-body-16 break-all font-bold">{trait.value}</Text>
                     {/*<Text className="text-body-16 font-bold">5%</Text>*/}
                   </div>
                 </div>
@@ -34,11 +33,10 @@ export default function PropertiesTab({ metaData }: { metaData?: NFTMetadata }) 
           </>
         ) : (
           <div className="p-7 rounded-2xl border border-disabled border-dashed">
-            <Text className="text-secondary text-center text-sm">Nothing to show</Text>
+            <Text className="text-secondary text-center text-body-14">Nothing to show</Text>
           </div>
         )
       }
-
     </div>
   )
 }

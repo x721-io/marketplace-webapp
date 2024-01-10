@@ -3,15 +3,17 @@ import { Address, erc20ABI, useContractRead, useContractWrite } from 'wagmi'
 import { useMemo } from 'react'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
-import { AssetType, NFT } from '@/types'
+import { AssetType, MarketEvent, NFT } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { BigNumberish, MaxInt256, parseEther } from 'ethers'
 import { FINGERPRINT } from '@/config/constants'
 
-export const useNFTMarketStatus = (nft: NFT) => {
-  const type = nft.collection.type
-
-  const { owners, sellInfo, bidInfo } = useMemo(() => nft, [nft])
+export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFTMarketData) => {
+  const { owners, sellInfo, bidInfo } = useMemo(() => marketData || {
+    owners: [],
+    sellInfo: [],
+    bidInfo: []
+  }, [marketData])
   const userId = useAuthStore(state => state.profile?.id)
   const wallet = useAuthStore(state => state.profile?.publicKey)
 
@@ -27,9 +29,13 @@ export const useNFTMarketStatus = (nft: NFT) => {
   const hasBidder = useMemo(() => !!bidInfo?.length, [bidInfo])
 
   const isBidder = useMemo(
-    () => bidInfo?.some(bid => bid.to === wallet?.toLowerCase()),
+    () => {
+      if (!bidInfo || !wallet) return false
+      return bidInfo?.some(bid => bid.to?.signer?.toLowerCase() === wallet?.toLowerCase())
+    },
     [bidInfo]
   )
+
   const saleData = useMemo(() => {
     if (!sellInfo?.length) return undefined
     if (type === 'ERC721') {
@@ -44,8 +50,11 @@ export const useNFTMarketStatus = (nft: NFT) => {
 
   const isSeller = useMemo(() => {
     if (type === 'ERC721') return isOwner
-    return sellInfo.some(item => item.from.toLowerCase() === wallet?.toLowerCase())
-  }, [type, isOwner, sellInfo])
+    return sellInfo.some(item => {
+      if (!wallet || !item.from?.signer) return false
+      return item.from.signer.toLowerCase() === wallet.toLowerCase()
+    })
+  }, [type, isOwner, sellInfo, wallet])
 
   return {
     saleData,
@@ -248,7 +257,7 @@ export const useBidUsingNative = (nft: NFT) => {
       nft.collection.address,
       nft.u2uId ?? nft.id,
       quantity,
-      parseEther(price)
+      // parseEther(price)
     ]
 
     const { hash } = await writeAsync?.({

@@ -38,7 +38,7 @@ export default function AssetTypeSelection({ title, mode }: Props) {
             'border-2 hover:border-primary hover:bg-white hover:text-primary text-tertiary bg-surface-soft'
           )}>
             <MultiSelectIcon width={32} height={32} />
-          <Text className="desktop:text-heading-sm tablet:text-heading-sm text-body-24 font-bold text-primary text-center">Multiple Edition</Text>
+          <Text className="desktop:text-heading-sm tablet:text-heading-sm text-body-24 font-bold text-primary text-center">Multiple Editions</Text>
           <Text className="text-body-12 font-bold text-secondary text-center">If you want to share your NFT with a large
             number of community members</Text>
         </Link>

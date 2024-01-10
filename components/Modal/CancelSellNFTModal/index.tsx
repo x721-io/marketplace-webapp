@@ -1,28 +1,30 @@
 import { Modal, ModalProps, Tooltip } from 'flowbite-react'
-import { useCancelSellNFT, useNFTMarketStatus } from '@/hooks/useMarket'
+import { useCancelSellNFT } from '@/hooks/useMarket'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useEffect, useMemo, useState } from 'react'
 import useAuthStore from '@/store/auth/store'
 import { NFT } from '@/types/entitites'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props extends ModalProps {
   nft: NFT,
+  marketData?: NFTMarketData
 }
 
-export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
+export default function CancelSellNFTModal({ nft, show, onClose, marketData }: Props) {
   const [step, setStep] = useState(1)
   const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft)
   const wallet = useAuthStore(state => state.
     profile?.publicKey)
   const mySale = useMemo(() => {
-    return nft.sellInfo?.find(item => item.from === wallet?.toLowerCase())
-  }, [nft.sellInfo, wallet])
+    return marketData?.sellInfo?.find(item => item.from?.signer?.toLowerCase() === wallet?.toLowerCase())
+  }, [marketData, wallet])
 
   const handleCancelSell = () => {
-    if (!mySale) return
     try {
-      onCancelSell(mySale.operationId)
+      onCancelSell(mySale?.operationId)
     } catch (e) {
       console.error(e)
     }
@@ -72,11 +74,11 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
       case 1:
       default:
         return (
-          <>
-            <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
+          <div className='flex flex-col items-center justify-center gap-4'>
+            <Text className="font-semibold text-primary text-center" variant="heading-xs">
               {nft.collection.name} - {nft.name}
             </Text>
-            <Text className="text-secondary text-center mb-7" variant="body-18">
+            <Text className="text-secondary text-center" variant="body-18">
               Are you sure to cancel listing?
             </Text>
 
@@ -88,7 +90,7 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
                 Yes
               </Button>
             </div>
-          </>
+          </div>
         )
     }
   }
@@ -101,10 +103,6 @@ export default function CancelSellNFTModal({ nft, show, onClose }: Props) {
       setStep(2)
     }
   }, [error, isSuccess])
-
-  const { isOnSale } = useNFTMarketStatus(nft)
-
-  if (!isOnSale) return null
 
   return (
     <Modal

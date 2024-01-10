@@ -4,21 +4,19 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Icon from '@/components/Icon'
 import Dropdown from '@/components/Dropdown'
-import ProfileModal from "@/components/Modal/ProfileModal";
-import defaultAvatar from '@/assets/images/default-avatar.png'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
-import MobileMenuModal from '@/components/Modal/MobileMenuModal'
 import SearchInput from '@/components/Layout/MainHeader/SearchInput'
 import Text from '@/components/Text'
+import MenuModal from '@/components/Modal/MenuModal'
+import { getUserAvatarImage } from '@/utils/string'
 
 export const HEADER_HEIGHT = 88
 
 export default function MainHeader() {
   const avatar = useAuthStore(state => state.profile?.avatar)
-  const [showProfile, setShowProfile] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
 
   return (
     <nav className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 px-4 tablet:px-7`}>
@@ -76,9 +74,9 @@ export default function MainHeader() {
           <div className="hidden tablet:block">
             <ConnectWalletButton mode="link">
               <Image
-                onClick={() => setShowProfile(true)}
+                onClick={() => setShowMenu(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
-                src={avatar || defaultAvatar}
+                src={avatar || getUserAvatarImage()}
                 alt="Avatar"
                 width={35}
                 height={35}
@@ -86,19 +84,16 @@ export default function MainHeader() {
             </ConnectWalletButton>
           </div>
 
-          <button className="block tablet:hidden !p-0" onClick={() => setShowMobileMenu(true)}>
+          <button className="block tablet:hidden !p-0" onClick={() => setShowMenu(true)}>
             <Icon color="secondary" name="burger" width={20} height={20} />
           </button>
         </div>
       </div>
 
-      <MobileMenuModal
-        show={showMobileMenu}
-        onClose={() => setShowMobileMenu(false)}
+      <MenuModal
+        show={showMenu}
+        onClose={() => setShowMenu(false)}
       />
-      <ProfileModal
-        show={showProfile}
-        onClose={() => setShowProfile(false)} />
     </nav>
   )
 }

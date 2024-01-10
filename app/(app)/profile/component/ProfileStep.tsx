@@ -3,7 +3,7 @@ import Input from '@/components/Form/Input';
 import Textarea from '@/components/Form/Textarea';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuthStore from '@/store/auth/store'
 import { toast } from 'react-toastify'
@@ -52,11 +52,12 @@ export default function ProfileStep() {
         render: 'Profile updated successfully',
         type: 'success',
         isLoading: false,
-        autoClose: 1000
+        autoClose: 1000,
+        closeButton: true
       })
     } catch (e) {
       console.error('Error:', e)
-      toast.update(toastId, { render: `Profile updating: ${e}`, type: 'error', isLoading: false, autoClose: 1000 })
+      toast.update(toastId, { render: `Profile updating: ${e}`, type: 'error', isLoading: false, autoClose: 1000, closeButton: true })
     }
   }
 
@@ -66,7 +67,7 @@ export default function ProfileStep() {
       if (reponse !== undefined) {
         setListVerify(reponse)
         setShowPopup(true)
-      }else {
+      } else {
         setShowPopup(false)
       }
 
@@ -105,55 +106,46 @@ export default function ProfileStep() {
                 register={register('bio')}
               />
             </div>
-            <div>
-              <Text className="text-body-24 tablet:text-body-32 desktop:text-body font-semibold ">
-                Social links
-              </Text>
-              <Text className="text-tertiary" variant="body-16">
-                Add your existing social links to build a stronger reputation
-              </Text>
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
-              <Input
-                placeholder="https://"
-                error={!!errors.webURL}
-                register={register('webURL', {
-                  pattern: { value: urlRegex, message: 'Wrong web url format' }
-                })}
-                className="console.error"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">X (Twitter)</label>
-              <Input
-                prependIcon={<Icon name="circle" />}
-                placeholder="https://twitter.com/[your-twitter-username]"
-                error={!!errors.twitterLink}
-                register={register('twitterLink', {
-                  pattern: { value: urlRegex, message: 'Wrong twitter url format' }
-                })}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-base font-semibold text-primary">Facebook</label>
-              <Input
-                placeholder="https://www.facebook.com/[your-facebook-username]"
-                error={!!errors.facebookLink}
-                register={register('facebookLink', {
-                  pattern: { value: urlRegex, message: 'Wrong facebook url format' }
-                })}
-              />
-            </div>
           </div>
-          <FormValidationMessages errors={errors} />
-          <div className="w-full tablet:w-auto desktop:w-auto">
-            <Button
-              type="submit"
-              disabled={!isDirty}
-              className="w-full tablet:w-auto desktop:w-auto">
-              Save settings
-            </Button>
+          <div>
+            <Text className="text-body-24 tablet:text-body-32 desktop:text-body font-semibold ">
+              Social links
+            </Text>
+            <Text className="text-tertiary" variant="body-16">
+              Add your existing social links to build a stronger reputation
+            </Text>
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Website URL</label>
+            <Input
+              placeholder="https://"
+              error={!!errors.webURL}
+              register={register('webURL', {
+                pattern: { value: urlRegex, message: 'Wrong web url format' }
+              })}
+              className="console.error"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">X (Twitter)</label>
+            <Input
+              prependIcon={<Icon name="circle" />}
+              placeholder="https://twitter.com/[your-twitter-username]"
+              error={!!errors.twitterLink}
+              register={register('twitterLink', {
+                pattern: { value: urlRegex, message: 'Wrong twitter url format' }
+              })}
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-semibold text-primary">Facebook</label>
+            <Input
+              placeholder="https://www.facebook.com/[your-facebook-username]"
+              error={!!errors.facebookLink}
+              register={register('facebookLink', {
+                pattern: { value: urlRegex, message: 'Wrong facebook url format' }
+              })}
+            />
           </div>
         </div>
         <FormValidationMessages errors={errors} />

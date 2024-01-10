@@ -17,7 +17,7 @@ export default function CollectionCard({ collection, ...rest }: Props) {
             <Text className="text-primary font-semibold" variant="body-16">
               {collection.name}
             </Text>
-            <Icon name="verified" width={16} height={16} />
+            {/* <Icon name="verified" width={16} height={16} /> */}
           </div>
 
           <Text className="text-secondary font-semibold" variant="body-16">

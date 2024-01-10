@@ -3,8 +3,8 @@ import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import React from 'react'
 import Image from 'next/image'
-import defaultAvatar from '@/assets/images/default-avatar.png'
 import Link from 'next/link'
+import { getUserAvatarImage } from '@/utils/string'
 
 interface Props {
   loading?: boolean
@@ -40,7 +40,7 @@ export default function SearchUserTab({ loading, data, onClose }: Props) {
               className="w-10 h-10 rounded-xl object-cover"
               width={40}
               height={40}
-              src={user.avatar || defaultAvatar}
+              src={getUserAvatarImage(user)}
               alt="Avatar" />
             <Text className="font-semibold text-primary" variant="body-12">
               {user.username}

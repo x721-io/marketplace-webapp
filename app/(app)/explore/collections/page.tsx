@@ -26,7 +26,7 @@ export default function ExploreCollectionsPage() {
   const { isFiltersVisible } = useExploreSectionFilters()
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6 flex-col desktop:flex-row">
       <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
 
       <div className="flex-1">
@@ -35,6 +35,7 @@ export default function ExploreCollectionsPage() {
           collections={collections?.data}
           paging={collections?.paging}
           onChangePage={handleChangePage}
+          showFilter={isFiltersVisible}
         />
       </div>
     </div>

@@ -11,18 +11,29 @@ import Icon from '@/components/Icon'
 import { Spinner } from 'flowbite-react'
 import React, { useMemo } from 'react'
 import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/config/constants'
+import useSWRImmutable from 'swr/immutable'
 
 export default function NFTDetails() {
   const router = useRouter()
   const { id, collectionAddress } = useParams()
   const api = useMarketplaceApi()
-  const { data: item, isLoading, error } = useSWR(
-    [collectionAddress, id],
-    ([collectionAddress, id]) => api.fetchNFTById(collectionAddress as string, id as string),
+
+  const { data: item, isLoading, error } = useSWRImmutable(
+    ['nft-details', { collectionAddress: String(collectionAddress), id: String(id) }],
+    ([_, params]) => api.fetchNFTById(params)
+  )
+
+  const { data: marketData } = useSWR(
+    ['nft-market-data', { collectionAddress: String(collectionAddress), id: String(id) }],
+    ([_, params]) => api.fetchMarketDataByNFT({
+      ...params,
+      bidListPage: 1,
+      bidListLimit: 100
+    }),
     { refreshInterval: 10000 }
   )
 
-  const { data: metaData } = useSWR(
+  const { data: metaData } = useSWRImmutable(
     !!item?.tokenUri ? item.tokenUri : null,
     (uri) => api.getNFTMetaData(uri),
     { refreshInterval: 600000 }
@@ -51,7 +62,7 @@ export default function NFTDetails() {
     switch (fileType) {
       case "audio":
         return (
-          <div className="relative desktop:w-[512px] desktop:h-[512px] tablet:h-auto w-full h-[280px] p-2 rounded-2xl mb-10">
+          <div className="relative desktop:h-[512px] tablet:h-auto w-full h-[280px] p-2 rounded-2xl mb-10">
             <Image
               src={item?.image || ''}
               alt=""
@@ -116,21 +127,24 @@ export default function NFTDetails() {
   }
 
   return (
-    <div className="w-full px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10">
-      <div className="flex items-start justify-center flex-col desktop:flex-row gap-8 desktop:gap-16 tablet:gap-16">
-        <div className="p-2" onClick={router.back}>
-          <Icon
-            className="cursor-pointer" name="arrowLeft"
-            width={24}
-            height={24}
-          />
-        </div>
-
-        <div className="desktop:w-1/3 w-full">
+    <div className='flex w-full flex-col justify-center items-center gap-4 px-4 tablet:px-10 desktop:px-20 py-4 tablet:py-8 desktop:py-10'>
+      <div className='flex justify-center items-center desktop:flex-row tablet:flex-row flex-col w-full desktop:gap-10 tablet:gap-10'>
+        <div className='flex gap-4 desktop:flex-row tablet:flex-row flex-col w-full desktop:w-auto tablet:w-auto'>
+          <div className="p-2" onClick={router.back}>
+            <Icon
+              className="cursor-pointer" name="arrowLeft"
+              width={24}
+              height={24}
+            />
+          </div>
           {renderMedia()}
-          <NFTData nft={item} metaData={metaData} />
         </div>
-        <NFTMarketData nft={item} />
+        <div className='w-full desktop:w-auto tablet:w-auto'>
+          <NFTMarketData nft={item} marketData={marketData} />
+        </div>
+      </div>
+      <div className='w-full'>
+        <NFTData marketData={marketData} nft={item} metaData={metaData} />
       </div>
     </div>
   )

@@ -7,13 +7,15 @@ import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
-import defaultCoverPhoto from '@/assets/images/default-cover-photo.png'
 import BannerSectionCollection from './component/BannerSection'
 import InformationSectionCollection from './component/InformationSection'
 import FiltersSectionCollection from './component/FiltersCollectionSection'
 import { Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
+import Link from 'next/link'
+import Button from '@/components/Button'
+import useAuthStore from '@/store/auth/store'
+import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -21,6 +23,7 @@ export default function CollectionPage() {
   const [showFilters, setShowFilters] = useState(false)
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
+  const myId = useAuthStore(state => state.profile?.id)
 
   const { data, isLoading, error } = useSWR(
     !!id ? id : null,
@@ -73,24 +76,34 @@ export default function CollectionPage() {
       <BannerSectionCollection
         collectionId={data.collection.id}
         creators={data?.collection?.creators}
-        cover={data?.collection.coverImage || defaultCoverPhoto}
-        avatar={data?.collection.avatar || defaultAvatar} />
+        cover={getCollectionBannerImage(data?.collection)}
+        avatar={getCollectionAvatarImage(data?.collection)} />
 
       <InformationSectionCollection data={data} />
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
         <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />
-
-        <NFTsList
-          filters={['status', 'price']}
-          onApplyFilters={handleApplyFilters}
-          onChangePage={handleChangePage}
-          showFilters={showFilters}
-          items={items?.data}
-          paging={items?.paging}
-          traitFilters={data?.traitAvailable}
-          onClose={() => setShowFilters(false)}
-        />
+        <div className="flex gap-4 desktop:flex-row flex-col">
+          {myId === data?.collection.creators[0].userId &&
+            <Link href={`/create/nft/${data.collection.type}`}>
+              <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
+                <Button variant="primary">
+                  Create an NFT
+                </Button>
+              </div>
+            </Link>
+          }
+          <NFTsList
+            filters={['status', 'price']}
+            onApplyFilters={handleApplyFilters}
+            onChangePage={handleChangePage}
+            showFilters={showFilters}
+            items={items?.data}
+            paging={items?.paging}
+            traitFilters={data?.traitAvailable}
+            onClose={() => setShowFilters(false)}
+          />
+        </div>
       </div>
     </div>
   )

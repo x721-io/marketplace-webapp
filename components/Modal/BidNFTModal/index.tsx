@@ -5,12 +5,15 @@ import Button from '@/components/Button'
 // import ApprovalStep from './ApprovalStep'
 import BidStep from "./BidStep";
 import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props extends ModalProps {
   nft: NFT,
+  marketData?: NFTMarketData
 }
 
-export default function BidNFTModal({ nft, show, onClose }: Props) {
+export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const [error, setError] = useState<Error>()
   const [step, setStep] = useState(2)
 
@@ -25,7 +28,7 @@ export default function BidNFTModal({ nft, show, onClose }: Props) {
       // case 1:
       //   return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
       case 2:
-        return <BidStep nft={nft} onError={setError} onSuccess={() => setStep(3)} />
+        return <BidStep marketData={marketData} nft={nft} onError={setError} onSuccess={() => setStep(3)} />
       case 3:
         return (
           <>

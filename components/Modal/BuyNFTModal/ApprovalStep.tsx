@@ -5,15 +5,18 @@ import { useEffect, useMemo } from 'react'
 import { Address } from 'wagmi'
 import Button from '@/components/Button'
 import { NFT } from '@/types'
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props {
   onNext: () => void
   onError: (error: Error) => void
   nft: NFT
+  marketData: NFTMarketData
 }
 
-export default function ApprovalStep({ nft, onNext, onError }: Props) {
-  const { saleData } = useNFTMarketStatus(nft)
+export default function ApprovalStep({ nft, onNext, onError, marketData }: Props) {
+  const { saleData } = useNFTMarketStatus(nft.collection.type, marketData)
 
   const {
     isTokenApproved,

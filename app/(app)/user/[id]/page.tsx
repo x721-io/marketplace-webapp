@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Profile from "./components/Profile";
 import { Spinner, Tabs } from 'flowbite-react'
 import OwnedNFTs from './components/OwnedNFTs'
@@ -22,6 +22,11 @@ export default function ProfilePage() {
     (userId) => api.viewProfile(userId.toString()),
     { refreshInterval: 600000 }
   )
+
+  const [ownedAmount, setOwnedAmount] = useState(0)
+  const [saleAmount, setSaleAmount] = useState(0)
+  const [createdAmount, setCreatedAmount] = useState(0)
+  const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0)
 
   if (isLoading) {
     return (
@@ -59,17 +64,17 @@ export default function ProfilePage() {
 
       <div className="desktop:px-20 tablet:px-20 px-4">
         <Tabs.Group style="underline">
-          <Tabs.Item title={`Owned`}>
-            <OwnedNFTs wallet={user.publicKey} />
+          <Tabs.Item title={`Owned (${formatDisplayedBalance(ownedAmount, 0)})`}>
+            <OwnedNFTs wallet={user.publicKey} onUpdateAmount={setOwnedAmount} />
           </Tabs.Item>
-          <Tabs.Item title={"On Sale"}>
-            <OnSaleNFTs wallet={user.publicKey} />
+          <Tabs.Item title={`On Sale (${formatDisplayedBalance(saleAmount, 0)})`}>
+            <OnSaleNFTs wallet={user.publicKey}  onUpdateAmount={setSaleAmount}/>
           </Tabs.Item>
-          <Tabs.Item title={"Created"}>
-            <CreatedNFTs wallet={user.publicKey} />
+          <Tabs.Item title={`Created (${formatDisplayedBalance(createdAmount, 0)})`}>
+            <CreatedNFTs wallet={user.publicKey} onUpdateAmount={setCreatedAmount}/>
           </Tabs.Item>
-          <Tabs.Item title={"Collections"}>
-            <UserCollections />
+          <Tabs.Item title={`Collections (${formatDisplayedBalance(createdCollectionAmount, 0)})`}>
+            <UserCollections onUpdateAmount={setCreatedCollectionAmount} />
           </Tabs.Item>
           <Tabs.Item title={"Activities"}>
             <Activities wallet={user.publicKey} />

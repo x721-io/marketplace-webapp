@@ -4,12 +4,11 @@ import Link from 'next/link'
 import Text from '@/components/Text'
 import React, { useMemo } from 'react'
 import Image from 'next/image'
-import defaultImg from '@/assets/images/default-cover-photo.png'
-import defaultAvatar from '@/assets/images/default-avatar-user.png'
 import VerifyIcon from '../Icon/Verify'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '../Button'
 import { Collection } from '@/types'
+import { classNames, getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
 
 interface Paging {
   page?: number
@@ -24,9 +23,10 @@ interface Props {
   paging?: Paging
   collections?: Collection[]
   onChangePage: (page: number) => void
+  showFilter?: boolean
 }
 
-export default function CollectionsList({ collections, paging, onChangePage, id, loading, error }: Props) {
+export default function CollectionsList({ collections, paging, onChangePage, id, loading, error, showFilter }: Props) {
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
@@ -62,23 +62,26 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
 
   return (
     <>
-      <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
-        {
+    <div className={classNames(
+      'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3',
+      showFilter ? 'desktop:grid-cols-3' : 'desktop:grid-cols-4'
+    )}>
+      {
           id && <Link href={`/create/collection`}>
-            <div className="flex items-center justify-center rounded-xl border border-1 hover:border-hard/70 border-soft transition-all h-[192px]">
+            <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px]">
               <Button variant="primary">
-                Create a collections
+                Create a collection
               </Button>
             </div>
           </Link>
         }
         {Array.isArray(collections) && collections.map((c, index) => (
           <Link key={c.id} href={`/collection/${c.shortUrl}`}>
-            <div className="flex flex-col rounded-xl border border-1 hover:border-hard/70 border-soft transition-all">
+            <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
               <div className="relative">
                 <Image
                   className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
-                  src={c.coverImage || defaultImg}
+                  src={getCollectionBannerImage(c)}
                   alt="Cover"
                   width={1200} height={256}
                   style={{ width: '100%', height: '100px' }}
@@ -87,7 +90,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
                      style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
                   <Image
                     className="cursor-pointer rounded-full object-cover"
-                    src={c.avatar || defaultAvatar}
+                    src={getCollectionAvatarImage(c)}
                     alt="Avatar"
                     width={60} height={60}
                     style={{ width: '100%', height: '100%' }}
@@ -101,7 +104,7 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
                       <Tooltip content={c.name} placement="bottom">
                         <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">{c.name}</Text>
                       </Tooltip>
-                      <VerifyIcon width={16} height={16} />
+                      {/* <VerifyIcon width={16} height={16} /> */}
                     </div>
                     <div className="flex gap-2">
                       <Text className="text-body-12 font-medium">{c.totalOwner}</Text>

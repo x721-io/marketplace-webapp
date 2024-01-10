@@ -21,11 +21,11 @@ export default function InformationSectionCollection({ data }: Props) {
     <>
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-6">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2">
             <Text className="font-semibold text-primary desktop:text-body-32 tablet:text-body-32 text-body-24">
               {data.collection.name}
             </Text>
-            <Icon name="verified" width={24} height={24} />
+            {/* <Icon name="verified" width={24} height={24} /> */}
           </div>
           <Link
             href={`/user/${creator?.id}`}

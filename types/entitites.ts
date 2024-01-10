@@ -65,21 +65,10 @@ export interface NFT {
     publicKey: Address
     username: string
   } | null,
-  owners: {
-    username: string
-    avatar: string
-    email: string
-    publicKey: Address
-    quantity: string
-    id: string
-  }[],
   collection: Collection,
   traits?: Trait[]
-  sellInfo: MarketEvent[]
-  bidInfo: MarketEvent[]
   price?: BigNumberish
   sellStatus?: MarketEventType
-  totalSupply?: string
 }
 
 export interface Collection {
