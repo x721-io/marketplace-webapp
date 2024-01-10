@@ -16,7 +16,7 @@ interface FormState {
 export default function AccountStep() {
   const { onUpdateProfile, onResendEmail } = useAuth()
   const email = useAuthStore(state => state.profile?.email)
-  const { register, handleSubmit, reset, formState: { isDirty, errors } } = useForm<FormState>({
+  const { register, handleSubmit, reset, formState: { isDirty, errors }, getValues } = useForm<FormState>({
     defaultValues: {
       email: email || ''
     }
@@ -38,11 +38,10 @@ export default function AccountStep() {
     }
   }
 
-  const onResend = async ( email : string | undefined ) => {
-    console.log('email', email)
+  const handleResend = async () => {
     const toastId = toast.loading('Uploading send email...', { type: 'info' })
     try {
-      await onResendEmail ({email})
+      await onResendEmail ({email: getValues('email')})
       toast.update(toastId, {
         render: 'Send email successfully',
         type: 'success',
@@ -77,7 +76,7 @@ export default function AccountStep() {
             </Text>
             <Text className="text-tertiary flex items-center" variant="body-12">
               Still no email? 
-              <Button type='button' onClick={ () => onResend(email)}>Resend</Button>
+              <Button type='button' onClick={handleResend}>Resend</Button>
               {/* <span className="text-primary ml-1 text-body-12" onClick={() => onResend}>Resend</span> */}
             </Text>
           </div>
