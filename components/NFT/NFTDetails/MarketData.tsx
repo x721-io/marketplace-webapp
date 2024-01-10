@@ -6,7 +6,6 @@ import NFTActions from '@/components/NFT/NFTDetails/NFTActions'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
 import { formatUnits } from 'ethers'
 import Link from 'next/link'
-import { formatDisplayedBalance } from '@/utils'
 import { Tooltip } from 'flowbite-react'
 import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
@@ -98,7 +97,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(formatUnits(saleData?.price || '0'), 2)}
+                      {Number(formatUnits(saleData?.price || 0)).toLocaleString('en-US')}
                     </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
