@@ -79,7 +79,7 @@ export default function NFTCard({ name, id, price, sellStatus, collection, image
         return (
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{' '}
-            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string), 2)}</span> U2U
+            <span className="text-primary font-semibold">{formatDisplayedBalance(formatEther(price as string).toString(), 2)}</span> U2U
           </Text>
         )
       default:
