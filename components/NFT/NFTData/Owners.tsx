@@ -63,7 +63,7 @@ export default function OwnersTab({ nft, marketData }: {
                   ) : (
                      <p className="flex items-center gap-1">
                          <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
-                           {formatDisplayedBalance(formatEther(owner.quantity), 0)}
+                           {formatDisplayedBalance(owner.quantity, 0)}
                          </p>
                        <p className="text-secondary font-semibold text-body-14"> edition(s) -</p>  <span className="font-bold"> Not for sale</span>
                      </p>
