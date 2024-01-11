@@ -11,6 +11,8 @@ import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
 import {Tooltip} from "flowbite-react";
 import { getUserAvatarImage } from '@/utils/string';
+import BidNFTModal from "@/components/Modal/BidNFTModal";
+import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
 
 export default function OwnersTab({ nft, marketData }: {
   nft: NFT,
@@ -18,6 +20,8 @@ export default function OwnersTab({ nft, marketData }: {
 }) {
   const [modals, setModals] = useState<Record<string, any>>({})
   const userWallet = useAuthStore(state => state.profile?.publicKey)
+  const [showBidModal, setShowBidModal] = useState(false)
+  const [showCancelBidModal, setShowCancelBidModal] = useState(false)
   const owners = useMemo(() => {
     if (!marketData) return []
     return marketData.owners.map(owner => {
@@ -30,6 +34,13 @@ export default function OwnersTab({ nft, marketData }: {
       }
     }).sort((a, b) => {
       return !!a.sellInfo ? -1 : 0
+    })
+  }, [marketData])
+
+  const myBid = useMemo(() => {
+    if (!marketData) return
+    return marketData.bidInfo?.find(bid => {
+      return (!!bid.to?.publicKey && !!userWallet) && bid.to?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
     })
   }, [marketData])
 
@@ -75,18 +86,25 @@ export default function OwnersTab({ nft, marketData }: {
                 <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[120px] text-center">
                   This is me
                 </div>
-              ) : (!!owner.sellInfo) && (
-                <>
-                  <BuyNFTModal
-                    saleData={owner.sellInfo}
-                    nft={nft}
-                    show={modals[owner.id]}
-                    onClose={() => setModals({ ...modals, [owner.id]: false })} />
-                  <Button scale="sm" onClick={() => setModals({ ...modals, [owner.id]: true })}>
-                    Buy now
-                  </Button>
-                </>
+              ) : (!!owner.sellInfo) ? (
+                 <Button scale="sm" onClick={() => setModals({...modals, [owner.id]: true})}>
+                   Buy now
+                 </Button>
+              ) : !!myBid ? (
+                 <Button scale="sm" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
+                   Cancel bidding
+                 </Button>
+              ) : (
+                 <Button scale="sm" onClick={() => setShowBidModal(true)}>
+                   Place a bid
+                 </Button>
               )}
+              <BuyNFTModal saleData={owner.sellInfo} nft={nft} show={modals[owner.id]}
+                           onClose={() => setModals({...modals, [owner.id]: false})}/>
+
+              <BidNFTModal marketData={marketData} nft={nft} show={showBidModal}
+                           onClose={() => setShowBidModal(false)}/>
+              <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
             </div>
           )
         })}
