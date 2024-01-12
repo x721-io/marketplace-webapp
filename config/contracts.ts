@@ -1,15 +1,15 @@
 import { Address } from 'wagmi'
-import erc721MarketABI from '@/abi/ERC721Marketplace.json'
-import erc721Factory from '@/abi/ERC721Factory.json'
-import erc721ABI from '@/abi/ERC721Rarible.json'
-import erc1155MarketABI from '@/abi/ERC1155Marketplace.json'
-import erc1155FactoryABI from '@/abi/ERC1155Factory.json'
-import erc1155ABI from '@/abi/ERC1155.json'
-import royaltiesRegistryABI from '@/abi/RoyaltiesRegistry.json'
+import erc721MarketABI from '@/abi/ERC721Marketplace'
+import erc721Factory from '@/abi/ERC721Factory'
+import erc721ABI from '@/abi/ERC721Rarible'
+import erc1155MarketABI from '@/abi/ERC1155Marketplace'
+import erc1155FactoryABI from '@/abi/ERC1155Factory'
+import erc1155ABI from '@/abi/ERC1155'
+import royaltiesRegistryABI from '@/abi/RoyaltiesRegistry'
 import * as process from 'process'
 import { Contract, ContractName } from '@/types'
 
-export const contracts: Record<ContractName, Contract> = {
+export const contracts = {
   erc721Market: { address: process.env.NEXT_PUBLIC_ERC721_MARKET_CONTRACT as Address, abi: erc721MarketABI },
   erc721Factory: { address: process.env.NEXT_PUBLIC_ERC721_FACTORY_CONTRACT as Address, abi: erc721Factory },
   erc721Proxy: { address: process.env.NEXT_PUBLIC_ERC721_PROXY_CONTRACT as Address, abi: erc721ABI },

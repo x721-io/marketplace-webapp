@@ -110,7 +110,7 @@ export default function CreateNftPage() {
 
   const handleSelectMedia = (file?: Blob) => {
     if (!file) {
-      setValue('media', [])
+      setValue('media', [],)
     } else {
       setValue('media', [file])
     }

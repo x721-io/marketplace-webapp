@@ -3,6 +3,7 @@ import { Address, useContractRead } from 'wagmi'
 import { waitForTransaction, writeContract } from '@wagmi/core'
 import { Royalties } from '@/types'
 import { toast } from 'react-toastify'
+import royaltiesRegistryABI from '@/abi/RoyaltiesRegistry'
 
 export const useReadCollectionRoyalties = (collectionAddress: Address) => {
   const royaltiesRegistryContract = contracts.royaltiesRegistry
@@ -12,7 +13,8 @@ export const useReadCollectionRoyalties = (collectionAddress: Address) => {
     functionName: 'getRoyaltiesByToken',
     args: [collectionAddress],
     enabled: !!collectionAddress,
-    watch: true
+    watch: true,
+    select: ([_, royalties]) => royalties
   })
 }
 
@@ -29,7 +31,7 @@ export const useUpdateCollectionRoyalties = () => {
       functionName: 'setRoyaltiesByToken',
       args: [
         collectionAddress,
-        royalties.map(r => ([r.address, r.value]))
+        royalties
       ]
     })
 
@@ -45,7 +47,7 @@ export const useReadNFTRoyalties = (collectionAddress: Address, tokenId: string)
   return useContractRead({
     ...royaltiesRegistryContract,
     functionName: 'getRoyalties',
-    args: [collectionAddress, tokenId],
+    args: [collectionAddress, BigInt(tokenId)],
     enabled: !!collectionAddress && !!tokenId,
     watch: true
   })

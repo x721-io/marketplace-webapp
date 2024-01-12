@@ -4,7 +4,7 @@ import Image from "next/image";
 import { BigNumberish, formatUnits } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '@/components/Button'
-import WETH_ABI from '@/abi/WETH.json'
+import WETH_ABI from '@/abi/WETH'
 import { useMemo, useState } from 'react'
 import { waitForTransaction } from '@wagmi/core'
 import { toast } from 'react-toastify'
