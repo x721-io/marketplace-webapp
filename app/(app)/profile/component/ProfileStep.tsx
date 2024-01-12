@@ -19,7 +19,7 @@ export default function ProfileStep() {
   const [showPopup, setShowPopup] = useState(false);
   const { onUpdateProfile, onVerifyAccount } = useAuth()
 
-  const { handleSubmit, register, formState: { isDirty, errors } } = useForm<FormState.UpdateProfile>({
+  const { handleSubmit, register, formState: { isDirty, errors } , setValue } = useForm<FormState.UpdateProfile>({
     defaultValues: {
       bio: profile?.bio,
       shortLink: profile?.shortLink,
@@ -60,7 +60,6 @@ export default function ProfileStep() {
       toast.update(toastId, { render: `Profile updating: ${e}`, type: 'error', isLoading: false, autoClose: 1000, closeButton: true })
     }
   }
-
   const handleGetVerify = async () => {
     try {
       let reponse = await onVerifyAccount()
@@ -75,6 +74,12 @@ export default function ProfileStep() {
       console.log('e', e)
     }
   }
+  const handleInputChange = (event: any) => {
+    const value = event.target.value;
+    const formattedValue = value.replace(/\s+/g, '-');
+    setValue('shortLink', formattedValue)
+  };
+
 
   return (
     <div className='flex gap-4 w-full desktop:flex-row tablet:flex-row flex-col-reverse'>
@@ -91,10 +96,13 @@ export default function ProfileStep() {
             <div>
               <label className="block mb-2 text-base font-semibold text-primary">Short link</label>
               <Input
-                prependIcon="@"
-                placeholder="shorlink"
-                register={register('shortLink')}
-              />
+              prependIcon="@"
+              placeholder="shorlink"
+              register={register('shortLink')}
+              onChange={(event) => {
+                handleInputChange(event);
+              }}
+            />
               <Text className="text-tertiary mt-1" variant="body-12">
                 Your profile will be available on https://marketplace.uniultra.xyz/user/[shortLink]
               </Text>
