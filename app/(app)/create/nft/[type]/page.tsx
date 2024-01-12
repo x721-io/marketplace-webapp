@@ -63,7 +63,7 @@ export default function CreateNftPage() {
   const formRules = {
     media: {
       validate: {
-        required: (v: Blob[]) =>  (v && v.length > 0)|| 'Collection image is required!',
+        required: (v: Blob[]) =>  (v && v.length > 0)|| 'NFT image is required',
         audio: (values: Blob[]) => {
           if (values && values.length > 0) {
             const firstFileType = values[0].type.split('/')[0];
@@ -75,7 +75,7 @@ export default function CreateNftPage() {
       }
     },
     name: {
-      required: 'Collection name is required!'
+      required: 'Display name is required'
     },
     collection: {
       required: 'Please choose a collection'
@@ -89,9 +89,10 @@ export default function CreateNftPage() {
       max: { value: 50, message: 'Royalties should be within range of 1% - 50%' }
     },
     amount: {
+      required: 'Number of copies is required',
       validate: (value: number) => {
         if (type === 'ERC721') return true
-        return value > 0 || 'Quantity must be greater than 1'
+        return value > 0 || 'Number of copies must be greater than 1'
       }
     }
   }
@@ -113,6 +114,7 @@ export default function CreateNftPage() {
       setValue('media', [])
     } else {
       setValue('media', [file])
+      clearErrors('media')
     }
   }
 
