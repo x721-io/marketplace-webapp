@@ -8,6 +8,7 @@ import { useUIStore } from '@/store/ui/store'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
+import { useEffect } from 'react'
 
 export default function ExploreCollectionsPage() {
   const api = useMarketplaceApi()
@@ -24,6 +25,10 @@ export default function ExploreCollectionsPage() {
   )
 
   const { isFiltersVisible } = useExploreSectionFilters()
+
+  useEffect(()=> {
+    queryString[searchKey] = ''
+  },[collections])
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">
