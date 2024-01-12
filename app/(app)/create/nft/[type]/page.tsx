@@ -407,7 +407,7 @@ export default function CreateNftPage() {
               <Button
                 loading={loading}
                 loadingText="Creating NFT ..."
-                disabled={uploading || validating}
+                disabled={uploading || validating || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create Item

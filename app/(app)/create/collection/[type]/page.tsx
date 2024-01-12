@@ -255,7 +255,7 @@ export default function CreateNFTCollectionPage() {
               <Button
                 loading={loading}
                 loadingText="Creating collection ..."
-                disabled={validating || uploading}
+                disabled={validating || uploading || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create collection
