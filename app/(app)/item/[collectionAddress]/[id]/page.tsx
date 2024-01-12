@@ -12,7 +12,7 @@ import { Spinner } from 'flowbite-react'
 import React from 'react'
 import useSWRImmutable from 'swr/immutable'
 
-export default function NFTDetails() {
+export default function NFTPage() {
   const router = useRouter()
   const { id, collectionAddress } = useParams()
   const api = useMarketplaceApi()
@@ -79,7 +79,7 @@ export default function NFTDetails() {
               height={24}
             />
           </div>
-          <NFTImage item={item}/>
+          <NFTImage item={item} />
         </div>
         <div className="w-full desktop:w-auto tablet:w-auto">
           <NFTMarketData nft={item} marketData={marketData} />

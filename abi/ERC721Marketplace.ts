@@ -1,21 +1,5 @@
 export default [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_feeDistributor",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_weth",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -192,25 +176,6 @@ export default [
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_nft",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_fingerprintProxy",
-        "type": "address"
-      }
-    ],
-    "name": "FingerprintProxyRegisted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -309,11 +274,6 @@ export default [
         "internalType": "address",
         "name": "_quoteToken",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_price",
-        "type": "uint256"
       }
     ],
     "name": "acceptBid",
@@ -386,9 +346,9 @@ export default [
         "type": "uint256"
       },
       {
-        "internalType": "bytes32",
-        "name": "fingerprint",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "feePaid",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -415,11 +375,6 @@ export default [
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_fingeprint",
-        "type": "bytes32"
       }
     ],
     "name": "buy",
@@ -438,11 +393,6 @@ export default [
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_fingerprint",
-        "type": "bytes32"
       }
     ],
     "name": "buyUsingEth",
@@ -535,11 +485,6 @@ export default [
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_fingerprint",
-        "type": "bytes32"
       }
     ],
     "name": "createBid",
@@ -560,9 +505,9 @@ export default [
         "type": "uint256"
       },
       {
-        "internalType": "bytes32",
-        "name": "_fingperprint",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
       }
     ],
     "name": "createBidUsingEth",
@@ -587,19 +532,18 @@ export default [
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_feeDistributor",
         "type": "address"
-      }
-    ],
-    "name": "fingerprintProxies",
-    "outputs": [
+      },
       {
         "internalType": "address",
-        "name": "",
+        "name": "_weth",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -647,24 +591,6 @@ export default [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_nft",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_fingerprintProxy",
-        "type": "address"
-      }
-    ],
-    "name": "registerFingerPrintProxy",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

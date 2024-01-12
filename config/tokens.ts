@@ -1,7 +1,6 @@
-import { URC20Token } from '@/types'
 import { Address } from 'wagmi'
 
-export const tokens: Record<string, URC20Token> = {
+export const tokens = {
   wu2u: {
     name: 'Wrapped U2U',
     symbol: 'WU2U',

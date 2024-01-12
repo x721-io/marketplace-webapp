@@ -65,6 +65,11 @@ export default [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -81,6 +86,11 @@ export default [
         "internalType": "address",
         "name": "quoteToken",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -102,6 +112,19 @@ export default [
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeRatioSellerBuyer",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -129,6 +152,11 @@ export default [
       {
         "internalType": "uint256",
         "name": "_feePercent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_feeRatioSellerBuyer",
         "type": "uint256"
       }
     ],
@@ -220,6 +248,19 @@ export default [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ratio",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFeeRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -37,7 +37,7 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
     control,
     handleSubmit,
     setValue,
-    reset,
+    clearErrors,
     formState: { errors }
   } = useForm<FormState>({
     defaultValues: { royalties: [newRoyalty] },
@@ -81,12 +81,12 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
   }
 
   const handleClose = () => {
-    reset()
+    clearErrors()
     onClose?.()
   }
 
   useEffect(() => {
-    if (royalties?.length) {
+    if (royalties) {
       const parsedRoyalties = royalties.map(item => {
         const valueInNumber = BigInt(item.value) / BigInt(100)
         return { ...item, value: valueInNumber.toString() }

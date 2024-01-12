@@ -1,21 +1,5 @@
 export default [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_feeDistributor",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_weth",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -451,11 +435,47 @@ export default [
         "internalType": "uint256",
         "name": "_quantity",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_pricePerUnit",
+        "type": "uint256"
       }
     ],
     "name": "createOfferUsingEth",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeDistributor",
+    "outputs": [
+      {
+        "internalType": "contract IFeeDistributor",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_feeDistributor",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -496,6 +516,11 @@ export default [
       {
         "internalType": "uint256",
         "name": "pricePerUnit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feePerUnit",
         "type": "uint256"
       }
     ],

@@ -3,7 +3,6 @@ import { Address, useContractRead } from 'wagmi'
 import { waitForTransaction, writeContract } from '@wagmi/core'
 import { Royalties } from '@/types'
 import { toast } from 'react-toastify'
-import royaltiesRegistryABI from '@/abi/RoyaltiesRegistry'
 
 export const useReadCollectionRoyalties = (collectionAddress: Address) => {
   const royaltiesRegistryContract = contracts.royaltiesRegistry

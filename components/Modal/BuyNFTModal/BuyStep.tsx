@@ -23,7 +23,6 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     address: address,
     enabled: !!address
   })
-  // const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
   const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState.BuyNFT>()
   const quantity = watch('quantity')
@@ -86,41 +85,39 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
         />
       </div>
 
-      {
-        nft.collection.type === 'ERC1155' && (
-          <>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-              <Input
-                error={!!errors.quantity}
-                register={register('quantity', {
-                  validate: {
-                    required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
-                    max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
-                    balance: v => {
-                      if (!tokenBalance?.value) return 'Not enough balance'
-                      const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)
-                      return totalPriceBN < tokenBalance.value || 'Not enough balance'
-                    }
+      {nft.collection.type === 'ERC1155' && (
+        <>
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+            <Input
+              error={!!errors.quantity}
+              register={register('quantity', {
+                validate: {
+                  required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
+                  max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
+                  balance: v => {
+                    if (!tokenBalance?.value) return 'Not enough balance'
+                    const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)
+                    return totalPriceBN < tokenBalance.value || 'Not enough balance'
                   }
-                })}
-                type="number" />
-            </div>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
-              <Input
-                readOnly
-                value={formatEther(totalPriceBN)}
-                type="number"
-                appendIcon={
-                  <Text>
-                    U2U
-                  </Text>
-                } />
-            </div>
-          </>
-        )
-      }
+                }
+              })}
+              type="number" />
+          </div>
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
+            <Input
+              readOnly
+              value={formatEther(totalPriceBN)}
+              type="number"
+              appendIcon={
+                <Text>
+                  U2U
+                </Text>
+              } />
+          </div>
+        </>
+      )}
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Purchase item
