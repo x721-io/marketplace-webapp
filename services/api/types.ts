@@ -102,6 +102,9 @@ export namespace APIParams {
     bidListPage: number
     bidListLimit: number
   }
+  export interface FetchEmailVerify {
+    token: string
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -172,6 +175,10 @@ export namespace APIResponse {
   export interface FetchNFTs {
     data: NFT[]
     paging: Pagination
+  }
+
+  export interface FetchEmailVerify {
+    token: string
   }
 
   export interface UsersData {
