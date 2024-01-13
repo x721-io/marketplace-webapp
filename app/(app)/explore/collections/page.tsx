@@ -15,7 +15,7 @@ export default function ExploreCollectionsPage() {
 
   const { activeFilters, handleApplyFilters, handleChangePage  } = useCollectionFilters()
 
-  const { queryString } = useUIStore(state => state)
+  const { queryString, clearInput } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
 
   const { data: collections, error, isLoading } = useSWR(
@@ -27,8 +27,8 @@ export default function ExploreCollectionsPage() {
   const { isFiltersVisible } = useExploreSectionFilters()
 
   useEffect(()=> {
-    queryString[searchKey] = ''
-  },[collections])
+    clearInput(searchKey)
+  },[])
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">

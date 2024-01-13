@@ -25,7 +25,7 @@ export default function CollectionPage() {
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
   const myId = useAuthStore(state => state.profile?.id)
-  const { queryString } = useUIStore(state => state)
+  const { clearInput } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
 
   const { data, isLoading, error } = useSWR(
@@ -44,8 +44,8 @@ export default function CollectionPage() {
   )
 
   useEffect(()=> {
-    queryString[searchKey] = ''
-  },[items])
+    clearInput(searchKey)
+  },[])
 
   if (error) {
     return (
