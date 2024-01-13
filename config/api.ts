@@ -18,5 +18,5 @@ export const API_ENDPOINTS = {
   VALIDATE_INPUT: '/validator',
   SEND_VERIFY_EMAIL: '/user/send-verify-email',
   LIST_VERIFY:'/user/list-verify',
-  EMAIL_VERIFICATION: '/email-verification'
+  VERIFY_EMAIL: '/user/verify-email'
 }

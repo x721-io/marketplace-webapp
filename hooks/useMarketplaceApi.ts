@@ -107,7 +107,7 @@ export const useMarketplaceApi = () => {
 
       verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {},authHeader),
 
-      fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.EMAIL_VERIFICATION, params),
+      fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader),
     }
   }, [authHeader])
 }
