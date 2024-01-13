@@ -91,8 +91,15 @@ export default function CreateNftPage() {
     amount: {
       required: 'Number of copies is required',
       validate: (value: number) => {
-        if (type === 'ERC721') return true
-        return value > 0 || 'Number of copies must be greater than 1'
+        if (type === 'ERC721') return true;
+        if (value < 1) {
+          return 'Number of copies must be greater than 1';
+        }
+        if (!/^\d+$/.test(value.toString())) {
+          return 'Number of copies must be an integer';
+        }
+
+        return true;
       }
     }
   }
@@ -400,7 +407,7 @@ export default function CreateNftPage() {
               <Button
                 loading={loading}
                 loadingText="Creating NFT ..."
-                disabled={uploading || validating}
+                disabled={uploading || validating || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create Item

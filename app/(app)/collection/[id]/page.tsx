@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import useSWR from 'swr'
@@ -16,6 +16,7 @@ import Link from 'next/link'
 import Button from '@/components/Button'
 import useAuthStore from '@/store/auth/store'
 import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
+import { useUIStore } from '@/store/ui/store'
 
 export default function CollectionPage() {
   const { id } = useParams()
@@ -24,6 +25,8 @@ export default function CollectionPage() {
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
   const myId = useAuthStore(state => state.profile?.id)
+  const { clearInput } = useUIStore(state => state)
+  const { searchKey } = useExploreSectionFilters()
 
   const { data, isLoading, error } = useSWR(
     !!id ? id : null,
@@ -39,6 +42,10 @@ export default function CollectionPage() {
     }) as APIParams.FetchNFTs),
     { refreshInterval: 10000 }
   )
+
+  useEffect(()=> {
+    clearInput(searchKey)
+  },[])
 
   if (error) {
     return (

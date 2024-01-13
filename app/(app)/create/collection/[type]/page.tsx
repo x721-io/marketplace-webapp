@@ -77,7 +77,7 @@ export default function CreateNFTCollectionPage() {
         pending: 'Uploading image...',
         success: {
           render: (data) => {
-            setValue('avatar', parseImageUrl(data.data?.fileHashes[0]) as string)
+            setValue('avatar', parseImageUrl(data?.data?.fileHashes[0]) as string)
             clearErrors('avatar');
             return 'Collection image uploaded successfully'
           }
@@ -255,7 +255,7 @@ export default function CreateNFTCollectionPage() {
               <Button
                 loading={loading}
                 loadingText="Creating collection ..."
-                disabled={validating || uploading}
+                disabled={validating || uploading || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create collection
