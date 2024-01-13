@@ -16,7 +16,7 @@ export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const { onUpdateProfile } = useAuth()
 
-  const { handleSubmit, register, formState: { isDirty, errors } } = useForm<FormState.UpdateProfile>({
+  const { handleSubmit, register, formState: { isDirty, errors } , setValue } = useForm<FormState.UpdateProfile>({
     defaultValues: {
       bio: profile?.bio,
       shortLink: profile?.shortLink,
@@ -48,6 +48,12 @@ export default function ProfileStep() {
     }
   }
 
+  const handleInputChange = (event: any) => {
+    const value = event.target.value;
+    const formattedValue = value.replace(/\s+/g, '-');
+    setValue('shortLink', formattedValue)
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmitProfile)}>
       <div className="flex gap-8 mb-8">
@@ -65,6 +71,9 @@ export default function ProfileStep() {
               prependIcon="@"
               placeholder="shorlink"
               register={register('shortLink')}
+              onChange={(event) => {
+                handleInputChange(event);
+              }}
             />
             <Text className="text-tertiary mt-1" variant="body-12">
               Your profile will be available on https://marketplace.uniultra.xyz/user/[shortLink]

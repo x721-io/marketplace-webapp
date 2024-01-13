@@ -75,8 +75,10 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
             </div>
           </Link>
         }
-        {Array.isArray(collections) && collections.map((c, index) => (
-          <Link key={c.id} href={`/collection/${c.shortUrl}`}>
+        {Array.isArray(collections) && collections.map((c, index) => {
+          let link = c.shortUrl || c.id || c.address || c.name
+          return(
+            <Link key={c.id} href={`/collection/${link}`}>
             <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
               <div className="relative">
                 <Image
@@ -127,7 +129,8 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
               </div>
             </div>
           </Link>
-        ))}
+          )
+        } )}
       </div>
       <div className="flex justify-end mt-20">
         <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
