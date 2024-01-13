@@ -42,9 +42,7 @@ export default function NFTFilters({
     const _filters = { ...activeFilters }
     _filters[key] = value
     setActiveFilters(_filters)
-    if (key !== 'priceMax' && key !== 'priceMin' && !isMobile) {
-      onApplyFilters?.(_filters)
-    }
+    onApplyFilters?.(_filters)
   }
 
   const handleChangePrice = (key: keyof typeof activeFilters, value: any) => {
