@@ -69,7 +69,7 @@ export default function AccountStep() {
   }
 
   const handleResend = async () => {
-    const toastId = toast.loading('Uploading send email...', { type: 'info' })
+    const toastId = toast.loading('Uploading send email...', { type: 'info', autoClose: 1000 },)
     try {
       await onResendEmail({ email: getValues('email') })
       toast.update(toastId, {
@@ -78,8 +78,14 @@ export default function AccountStep() {
         isLoading: false,
         autoClose: 1000
       })
-    } catch (e) {
+    } catch (e: any) {
       console.error('Error:', e)
+      toast.update(toastId, {
+        render: `Send email failed: ${e?.message}`,
+        type: 'error',
+        isLoading: false,
+        autoClose: 1000
+      })
     } finally {
 
     }
