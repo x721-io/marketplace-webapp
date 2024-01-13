@@ -42,6 +42,7 @@ export default function NFTFilters({
     const _filters = { ...activeFilters }
     _filters[key] = value
     setActiveFilters(_filters)
+    onApplyFilters?.(_filters)
   }
 
   const handleChangePrice = (key: keyof typeof activeFilters, value: any) => {
