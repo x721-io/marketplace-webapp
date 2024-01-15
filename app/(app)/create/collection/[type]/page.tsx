@@ -154,12 +154,6 @@ export default function CreateNFTCollectionPage() {
         else clearErrors('name')
       }
 
-      if (name === 'symbol' && !!value.symbol) {
-        const existed = await api.validateInput({ key: 'collectionSymbol', value: value.symbol })
-        if (existed) setError('symbol', { type: 'custom', message: 'Collection symbol already existed' })
-        else clearErrors('symbol')
-      }
-
       if (name === 'shortUrl' && !!value.shortUrl) {
         const existed = await api.validateInput({ key: 'collectionShortUrl', value: value.shortUrl })
         if (existed) setError('shortUrl', { type: 'custom', message: 'Short url already existed' })
