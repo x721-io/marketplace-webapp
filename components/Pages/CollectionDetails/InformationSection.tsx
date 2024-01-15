@@ -95,7 +95,7 @@ export default function InformationSectionCollection({ data }: Props) {
           </div>
           <div
             className="flex flex-1 flex-col items-center py-3 px-6 cursor-pointer rounded-lg hover:shadow-sm hover:bg-white"
-            onClick={() => setShowRoyaltiesModal(true)}>
+            onClick={() => isOwner && setShowRoyaltiesModal(true)}>
             <div className="flex items-center gap-1">
               <Text className="text-secondary">Royalties</Text>
               {isOwner && <Icon name="settings" width={12} height={12} />}

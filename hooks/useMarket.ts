@@ -275,12 +275,12 @@ export const useBidUsingNative = (nft: NFT) => {
     const args = type === 'ERC721' ? [
       nft.collection.address,
       nft.u2uId ?? nft.id,
-      price
+      totalPrice
     ] : [
       nft.collection.address,
       nft.u2uId ?? nft.id,
       quantity,
-      price
+      totalPrice
     ]
 
     const { hash } = await writeAsync?.({
@@ -317,9 +317,9 @@ export const useAcceptBidNFT = (nft: NFT) => {
     error: writeError
   } = useWriteMarketContract(type, type === 'ERC721' ? 'acceptBid' : 'acceptOffer')
 
-  const onAcceptERC721Bid = async (bidder: Address, quoteToken: Address, price: BigNumberish) => {
+  const onAcceptERC721Bid = async (bidder: Address, quoteToken: Address) => {
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.u2uId ?? nft.id, bidder, quoteToken, price]
+      args: [nft.collection.address, nft.u2uId ?? nft.id, bidder, quoteToken]
     })
     updateHash(hash)
   }
