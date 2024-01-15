@@ -275,12 +275,12 @@ export const useBidUsingNative = (nft: NFT) => {
     const args = type === 'ERC721' ? [
       nft.collection.address,
       nft.u2uId ?? nft.id,
-      price
+      totalPrice
     ] : [
       nft.collection.address,
       nft.u2uId ?? nft.id,
       quantity,
-      price
+      totalPrice
     ]
 
     const { hash } = await writeAsync?.({
