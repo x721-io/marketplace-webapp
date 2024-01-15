@@ -58,9 +58,10 @@ export default function MainHeader() {
                 ) : (
                   <li key={index}>
                     <Link
-                      href={nav.href ?? ''}
+                      href={nav.href ?? '#'}
                       className="font-semibold text-secondary hover:text-primary transition-colors text-body-16"
                       aria-current="page"
+                      target={nav.external ? '_blank' : undefined}
                     >
                       {nav.label}
                     </Link>

@@ -5,18 +5,18 @@ import { AssetType } from '@/types'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 
 export const useCreateCollection = () => {
-  const onCreateCollectionContract = async (type: AssetType, args: any[]) => {
+  const onCreateCollectionContract = async (type: AssetType, [name, symbol, baseURI, contractURI, operators, salt]: any[]) => {
     if (type === 'ERC721') {
       return writeContract({
         ...contracts.erc721Factory,
         functionName: 'createToken',
-        args
+        args: [name, symbol, baseURI, contractURI, operators, salt]
       })
     }
     return writeContract({
       ...contracts.erc1155Factory,
       functionName: 'createToken',
-      args
+      args: [name, symbol, baseURI, contractURI, operators, salt]
     })
   }
 

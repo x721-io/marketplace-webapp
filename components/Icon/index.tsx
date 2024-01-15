@@ -28,6 +28,7 @@ import CloseIcon from '@/components/Icon/Close'
 import CopyIcon from "@/components/Icon/Copy";
 import LogoutIcon from "@/components/Icon/Logout";
 import U2UTokenIcon from "@/components/Icon/U2UToken";
+import SettingsIcon from '@/components/Icon/Settings'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -100,6 +101,8 @@ export default function Icon({name, width, height, ...rest}: IconProps & {
         return <LogoutIcon width={iconW} height={iconH} {...rest} />
       case 'u2u-token':
         return <U2UTokenIcon width={iconW} height={iconH} {...rest} />
+      case 'settings':
+        return <SettingsIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

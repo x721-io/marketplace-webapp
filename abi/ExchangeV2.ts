@@ -1,4 +1,4 @@
-[
+export default [
   {
     "anonymous": false,
     "inputs": [
@@ -753,4 +753,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+] as const
