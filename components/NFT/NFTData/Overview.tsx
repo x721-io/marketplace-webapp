@@ -6,7 +6,7 @@ import { classNames, shortenAddress } from '@/utils/string'
 import Image from 'next/image'
 
 export default function OverviewTab({ metaData, nft }: { metaData?: NFTMetadata, nft: NFT }) {
-  const { data: royalties } = useReadNFTRoyalties(nft.collection.address, nft.u2uId)
+  const { data: royalties } = useReadNFTRoyalties(nft)
   const totalRoyalties = useMemo(() => {
     if (!royalties?.length) return 0
 

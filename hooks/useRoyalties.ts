@@ -1,7 +1,7 @@
 import { contracts } from '@/config/contracts'
 import { Address, useContractRead } from 'wagmi'
 import { waitForTransaction, writeContract } from '@wagmi/core'
-import { Royalties } from '@/types'
+import { NFT, Royalties } from '@/types'
 import { toast } from 'react-toastify'
 
 export const useReadCollectionRoyalties = (collectionAddress: Address) => {
@@ -34,20 +34,18 @@ export const useUpdateCollectionRoyalties = () => {
       ]
     })
 
-
-
     return waitForTransaction({ hash })
   }
 }
 
-export const useReadNFTRoyalties = (collectionAddress: Address, tokenId: string) => {
+export const useReadNFTRoyalties = (nft: NFT) => {
   const royaltiesRegistryContract = contracts.royaltiesRegistry
 
   return useContractRead({
     ...royaltiesRegistryContract,
     functionName: 'getRoyalties',
-    args: [collectionAddress, BigInt(tokenId)],
-    enabled: !!collectionAddress && !!tokenId,
+    args: [nft.collection.address, (nft.u2uId || nft.id) as any],
+    enabled: !!nft,
     watch: true
   })
 }

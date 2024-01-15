@@ -1,12 +1,13 @@
 import { APIResponse } from '@/services/api/types'
-import { Address, erc20ABI, useContractRead, useContractWrite } from 'wagmi'
+import { Address, erc20ABI, useContractRead, useContractReads, useContractWrite } from 'wagmi'
 import { useMemo } from 'react'
 import { contracts } from '@/config/contracts'
 import useAuthStore from '@/store/auth/store'
-import { AssetType, MarketEvent, NFT } from '@/types'
+import { AssetType, NFT } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { BigNumberish, MaxInt256, parseEther } from 'ethers'
 import { FINGERPRINT } from '@/config/constants'
+import { readContract } from '@wagmi/core'
 
 export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFTMarketData) => {
   const { owners, sellInfo, bidInfo } = useMemo(() => marketData || {
@@ -74,9 +75,9 @@ export const useMarketApproval = (nft: NFT) => {
 
   const { data: isMarketContractApproved } = useContractRead({
     address: nft.collection.address,
-    abi: type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi,
+    abi: (type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi) as any,
     functionName: 'isApprovedForAll',
-    args: [wallet, marketContract.address],
+    args: [wallet as Address, marketContract.address],
     enabled: !!wallet
   })
 
@@ -86,7 +87,7 @@ export const useMarketApproval = (nft: NFT) => {
     error: contractCallError
   } = useContractWrite({
     address: nft.collection.address,
-    abi: type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi,
+    abi: (type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi) as any,
     functionName: 'setApprovalForAll',
     args: [marketContract.address, true]
   })
@@ -136,6 +137,7 @@ const useWriteMarketContract = (type: AssetType, functionName: string) => {
 
   return useContractWrite({
     ...marketContract,
+    // @ts-ignore
     functionName
   })
 }
@@ -200,17 +202,30 @@ export const useBuyUsingNative = (nft: NFT) => {
   const { writeAsync, error: writeError } = useWriteMarketContract(nft.collection.type, 'buyUsingEth')
 
   const onBuyERC721 = async (price: BigNumberish) => {
+    const [_, buyerFee] = await readContract({
+      ...contracts.feeDistributorContract,
+      functionName: 'calculateFee',
+      args: [price as bigint, nft.collection.address, (nft.u2uId || nft.id) as any]
+    })
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.u2uId ?? nft.id, FINGERPRINT],
-      value: BigInt(price)
+      args: [nft.collection.address, nft.u2uId ?? nft.id],
+      value: BigInt(price) + buyerFee
     })
     updateHash(hash)
   }
 
   const onBuyERC1155 = async (operationId: string, price: BigNumberish, quantity: number) => {
+    const totalPrice = BigInt(price) * BigInt(quantity)
+
+    const [_, buyerFee] = await readContract({
+      ...contracts.feeDistributorContract,
+      functionName: 'calculateFee',
+      args: [totalPrice, nft.collection.address, (nft.u2uId || nft.id) as any]
+    })
+
     const { hash } = await writeAsync?.({
       args: [operationId, quantity],
-      value: BigInt(price) * BigInt(quantity)
+      value: totalPrice + buyerFee
     })
     updateHash(hash)
   }
@@ -257,7 +272,7 @@ export const useBidUsingNative = (nft: NFT) => {
     ] : [
       nft.collection.address,
       nft.u2uId ?? nft.id,
-      quantity,
+      quantity
       // parseEther(price)
     ]
 

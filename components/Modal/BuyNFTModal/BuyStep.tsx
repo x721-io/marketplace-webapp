@@ -9,6 +9,8 @@ import { useEffect, useMemo } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
+import FeeCalculator from '@/components/FeeCalculator'
+import { formatDisplayedBalance } from '@/utils'
 
 interface Props {
   onSuccess: () => void
@@ -56,16 +58,21 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-xs">
-        Purchasing {nft.collection.name} - {nft.name}
-      </Text>
+      <div className="font-bold">
+        <Text className="text-center mb-3" variant="heading-xs">
+          {nft.name}
+        </Text>
+        <Text className="text-center text-secondary" variant="body-16">
+          {nft.collection.name}
+        </Text>
+      </div>
 
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
           readOnly
           value={formatUnits(saleData?.price || '0', 18)}
-          appendIcon={
+          appendIcon={nft.collection.type === 'ERC1155' &&
             <Text>
               Quantity: {saleData?.quantity}
             </Text>
@@ -79,11 +86,15 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           value={token?.symbol}
           appendIcon={
             <Text>
-              Balance: {formatUnits(tokenBalance?.value || 0, 18)}
+              Balance: {formatDisplayedBalance(formatUnits(tokenBalance?.value || 0, 18))}
             </Text>
           }
         />
       </div>
+
+      {nft.collection.type === 'ERC721' && (
+        <FeeCalculator quoteToken={saleData?.quoteToken} mode="buyer" price={BigInt(saleData?.price || 0)} nft={nft} />
+      )}
 
       {nft.collection.type === 'ERC1155' && (
         <>
@@ -104,11 +115,12 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
               })}
               type="number" />
           </div>
+
           <div>
             <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
             <Input
               readOnly
-              value={formatEther(totalPriceBN)}
+              value={formatDisplayedBalance(formatEther(totalPriceBN))}
               type="number"
               appendIcon={
                 <Text>
@@ -116,8 +128,11 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
                 </Text>
               } />
           </div>
+
+          <FeeCalculator mode="buyer" price={totalPriceBN} nft={nft} />
         </>
       )}
+
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Purchase item
