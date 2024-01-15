@@ -105,10 +105,10 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   return (
     <Modal
       dismissible
-      size="sm"
+      size="md"
       show={show}
       onClose={onClose}>
-      <Modal.Body>
+      <Modal.Body className="p-10">
         <div className="flex flex-col justify-center items-center gap-4 ">
           {renderContent()}
         </div>
