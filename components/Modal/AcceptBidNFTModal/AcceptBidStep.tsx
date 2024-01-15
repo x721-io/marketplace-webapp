@@ -28,7 +28,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
     if (!bid || !bid.to?.signer) return
     try {
       if (type === 'ERC721') {
-        onAcceptERC721Bid(bid.to.signer, bid.quoteToken, bid.price)
+        onAcceptERC721Bid(bid.to.signer, bid.quoteToken)
       } else {
         onAcceptERC1155Bid(bid.operationId, quantity)
       }
@@ -47,7 +47,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <div className="font-bold">
-        <Text className="mb-3" variant="heading-xs">
+        <Text className="mb-3 text-center" variant="heading-xs">
           Accept Bid
         </Text>
         <Text className="text-secondary" variant="body-16">
