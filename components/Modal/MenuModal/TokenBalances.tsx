@@ -29,7 +29,7 @@ export default function TokenBalances() {
 
   const wu2uBalance = useMemo(() => {
     if (!tokenBalances) return BigInt(0)
-    return tokenBalances[0].result
+    return tokenBalances[0].result as bigint
   }, [tokenBalances])
 
   const { data: u2uBalance } = useBalance({

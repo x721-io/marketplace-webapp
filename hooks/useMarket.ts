@@ -182,7 +182,7 @@ export const useBuyNFT = (nft: NFT) => {
 
   const onBuyERC721 = async (quoteToken: Address, price: BigNumberish) => {
     const { hash } = await writeAsync?.({
-      args: [nft.collection.address, nft.u2uId ?? nft.id, quoteToken, price, FINGERPRINT]
+      args: [nft.collection.address, nft.u2uId ?? nft.id, quoteToken, price]
     })
     updateHash(hash)
   }
@@ -265,20 +265,27 @@ export const useBidUsingNative = (nft: NFT) => {
   } = useWriteMarketContract(type, type === 'ERC721' ? 'createBidUsingEth' : 'createOfferUsingEth')
 
   const onBidUsingNative = async (price: string, quantity?: string) => {
+    const totalPrice = type === 'ERC721' ? parseEther(price) : parseEther(price) * BigInt(quantity ?? 0)
+    const [_, buyerFee] = await readContract({
+      ...contracts.feeDistributorContract,
+      functionName: 'calculateFee',
+      args: [totalPrice, nft.collection.address, (nft.u2uId || nft.id) as any]
+    })
+
     const args = type === 'ERC721' ? [
       nft.collection.address,
       nft.u2uId ?? nft.id,
-      FINGERPRINT
+      price
     ] : [
       nft.collection.address,
       nft.u2uId ?? nft.id,
-      quantity
-      // parseEther(price)
+      quantity,
+      price
     ]
 
     const { hash } = await writeAsync?.({
       args,
-      value: type === 'ERC721' ? parseEther(price) : parseEther(price) * BigInt(quantity ?? 0)
+      value: totalPrice + buyerFee
     })
     updateHash(hash)
   }

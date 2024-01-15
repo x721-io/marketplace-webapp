@@ -59,11 +59,12 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="font-bold">
-        <Text className="text-center mb-3" variant="heading-xs">
-          {nft.name}
+        <Text className="mb-3" variant="heading-xs">
+          Purchase NFT
         </Text>
-        <Text className="text-center text-secondary" variant="body-16">
-          {nft.collection.name}
+        <Text className="text-secondary" variant="body-16">
+          Filling sell order
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
         </Text>
       </div>
 
@@ -129,7 +130,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
               } />
           </div>
 
-          <FeeCalculator mode="buyer" price={totalPriceBN} nft={nft} />
+          <FeeCalculator mode="buyer" price={totalPriceBN} nft={nft} quoteToken={token?.address} />
         </>
       )}
 

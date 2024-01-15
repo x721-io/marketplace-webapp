@@ -50,29 +50,27 @@ export default function SellNFTModal({ nft, show, marketData, onClose }: Props) 
   return (
     <Modal
       dismissible
-      size="md"
+      size="lg"
       show={show}
       onClose={handleReset}>
-      <Modal.Body>
+      <Modal.Body className="p-10">
         <div className="flex flex-col justify-center items-center gap-4">
-          {
-            !!error ? (
-              <>
-                <Text className="font-semibold text-error text-center text-heading-sm">
-                  Error report
+          {!!error ? (
+            <>
+              <Text className="font-semibold text-error text-center text-heading-sm">
+                Error report
+              </Text>
+              <Tooltip content={error?.message} placement="bottom">
+                <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                  {error?.message}
                 </Text>
-                <Tooltip content={error?.message} placement="bottom">
-                  <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
-                    {error?.message}
-                  </Text>
-                </Tooltip>
+              </Tooltip>
 
-                <Button className="w-full" variant="secondary" onClick={handleReset}>
-                  Close
-                </Button>
-              </>
-            ) : renderContent()
-          }
+              <Button className="w-full" variant="secondary" onClick={handleReset}>
+                Close
+              </Button>
+            </>
+          ) : renderContent()}
         </div>
       </Modal.Body>
     </Modal>

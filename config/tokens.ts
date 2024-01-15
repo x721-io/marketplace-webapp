@@ -10,4 +10,9 @@ export const tokens = {
   }
 }
 
-export const tokenOptions = Object.values(tokens).map(token => ({ label: token.symbol, value: token.address }))
+export const tokenOptions = Object.values(tokens).map(token => {
+  if (token.address === tokens.wu2u.address) {
+    return { label: 'U2U', value: tokens.wu2u.address }
+  }
+  return { label: token.symbol, value: token.address }
+})

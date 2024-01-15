@@ -61,7 +61,9 @@ export default function OverviewTab({ metaData, nft }: { metaData?: NFTMetadata,
                       <Text>{shortenAddress(royalty.account)}</Text>
                       <Text>{royaltyPercent.toFixed(2)}%</Text>
                     </div>
-                    <div className={`h-2 bg-surface-medium shadow-sm rounded`} style={{ width: `${royaltyPercent}%` }} />
+                    <div className="h-2 p-0.5 w-full bg-surface-medium shadow-sm rounded">
+                      <div className={`h-full bg-white shadow-sm rounded`} style={{ width: `${royaltyPercent}%` }} />
+                    </div>
                   </div>
                 </div>
               )

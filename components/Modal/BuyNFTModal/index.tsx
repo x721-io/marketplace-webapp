@@ -45,7 +45,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   return (
     <Modal
       dismissible
-      size="md"
+      size="lg"
       show={show}
       onClose={handleReset}>
       <Modal.Body className="p-10">

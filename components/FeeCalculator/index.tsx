@@ -18,6 +18,7 @@ interface Props {
 export default function FeeCalculator({ price = BigInt(0), nft, mode, quoteToken }: Props) {
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken])
   const feeDistributorContract = contracts.feeDistributorContract
+
   const { data } = useContractReads({
     contracts: [
       {
@@ -69,22 +70,24 @@ export default function FeeCalculator({ price = BigInt(0), nft, mode, quoteToken
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">Origin fee (Seller): {feeRatio.seller}%</p>
             <div className="flex items-center font-bold gap-1">
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
               <p>
                 {formatDisplayedBalance(formatUnits(sellerFee, 18))}
               </p>
               <p className="text-secondary">{token?.symbol}</p>
+              {!!token?.logo &&
+                <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />}
             </div>
           </div>
 
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">Royalties fee ({totalRoyalties}%):</p>
             <div className="flex items-center font-bold gap-1">
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
               <p>
                 {formatDisplayedBalance(formatUnits(royaltiesFee, 18))}
               </p>
               <p className="text-secondary">{token?.symbol}</p>
+              {!!token?.logo &&
+                <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />}
             </div>
           </div>
 
@@ -95,7 +98,8 @@ export default function FeeCalculator({ price = BigInt(0), nft, mode, quoteToken
                 {formatDisplayedBalance(formatUnits(netReceived, token?.decimal))}
               </p>
               <p className="text-secondary">{token?.symbol}</p>
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
+              {!!token?.logo &&
+                <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />}
             </div>
           </div>
         </>
@@ -104,33 +108,24 @@ export default function FeeCalculator({ price = BigInt(0), nft, mode, quoteToken
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">Origin fee (Buyer): {feeRatio.buyer}%</p>
             <div className="flex items-center font-bold gap-1">
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
               <p>
                 {formatDisplayedBalance(formatUnits(buyerFee, 18))}
               </p>
               <p className="text-secondary">{token?.symbol}</p>
-            </div>
-          </div>
-
-          <div className="w-full flex items-center justify-between">
-            <p className="text-secondary">Royalties fee ({totalRoyalties}%):</p>
-            <div className="flex items-center font-bold gap-1">
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
-              <p>
-                {formatDisplayedBalance(formatUnits(royaltiesFee, 18))}
-              </p>
-              <p className="text-secondary">{token?.symbol}</p>
+              {!!token?.logo &&
+                <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />}
             </div>
           </div>
 
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary font-bold">You will pay:</p>
             <div className="flex items-center font-bold gap-1">
-              <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />
               <p>
                 {formatDisplayedBalance(formatUnits(price + buyerFee, 18))}
               </p>
               <p className="text-secondary">{token?.symbol}</p>
+              {!!token?.logo &&
+                <Image className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="" width={40} height={40} />}
             </div>
           </div>
         </>

@@ -51,10 +51,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   return (
     <Modal
       dismissible
-      size="md"
+      size="lg"
       show={show}
       onClose={handleReset}>
-      <Modal.Body>
+      <Modal.Body className="p-10">
         <div className="flex flex-col justify-center items-center gap-4">
           {
             !!error ? (
