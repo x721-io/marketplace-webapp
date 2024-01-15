@@ -25,3 +25,7 @@ export interface MarketEvent {
   quantity: string
   timestamp: number
 }
+
+export type Royalty = { account: Address, value: bigint }
+
+export type Royalties = Royalty[]

@@ -2,10 +2,11 @@
 
 import React, { useEffect } from 'react';
 import { Tabs } from 'flowbite-react';
-import AccountStep from './component/AccountStep';
-import ProfileStep from './component/ProfileStep';
-import WalletStep from './component/WalletStep';
-import BannerSection from './component/BannerSection';
+import AccountStep from '@/components/Pages/ProfileSettings/AccountStep';
+import ProfileStep from '@/components/Pages/ProfileSettings/ProfileStep';
+import WalletStep from '@/components/Pages/ProfileSettings/WalletStep';
+import NotificationStep from '@/components/Pages/ProfileSettings/NotificationStep';
+import BannerSection from '@/components/Pages/ProfileSettings/BannerSection';
 import { useAuth } from '@/hooks/useAuth'
 import { redirect } from 'next/navigation'
 
