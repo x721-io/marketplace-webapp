@@ -56,10 +56,10 @@ export default function BuyNFTModal({nft, saleData, show, onClose}: Props) {
      <Modal
         theme={modalTheme}
         dismissible
-        size="md"
+        size="lg"
         show={show}
         onClose={handleReset}>
-       <Modal.Body>
+       <Modal.Body className="p-10">
          <div className="flex flex-col justify-center items-center gap-4">
            {
              !!error ? (

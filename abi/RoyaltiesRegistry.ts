@@ -1,4 +1,4 @@
-[
+export default [
   {
     "anonymous": false,
     "inputs": [
@@ -77,6 +77,42 @@
     ],
     "name": "getRoyalties",
     "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "account",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "value",
+            "type": "uint96"
+          }
+        ],
+        "internalType": "struct LibStructsMarketplace.Part[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getRoyaltiesByToken",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
       {
         "components": [
           {
@@ -232,4 +268,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+] as const

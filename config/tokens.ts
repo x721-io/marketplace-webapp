@@ -1,7 +1,6 @@
-import { URC20Token } from '@/types'
 import { Address } from 'wagmi'
 
-export const tokens: Record<string, URC20Token> = {
+export const tokens = {
   wu2u: {
     name: 'Wrapped U2U',
     symbol: 'WU2U',
@@ -11,4 +10,9 @@ export const tokens: Record<string, URC20Token> = {
   }
 }
 
-export const tokenOptions = Object.values(tokens).map(token => ({ label: token.symbol, value: token.address }))
+export const tokenOptions = Object.values(tokens).map(token => {
+  if (token.address === tokens.wu2u.address) {
+    return { label: 'U2U', value: tokens.wu2u.address }
+  }
+  return { label: token.symbol, value: token.address }
+})

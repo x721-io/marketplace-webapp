@@ -116,7 +116,7 @@ export default function CancelBidNFTModal({nft, show, onClose, bid}: Props) {
      <Modal
         theme={modalTheme}
         dismissible
-        size="sm"
+        size="md"
         show={show}
         onClose={onClose}>
        <Modal.Body>

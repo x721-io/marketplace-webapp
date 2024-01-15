@@ -1,4 +1,4 @@
-[
+export default [
   {
     "inputs": [
       {
@@ -269,4 +269,4 @@
     "type": "function",
     "constant": true
   }
-]
+] as const

@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import useAuthStore from '@/store/auth/store'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { signMessage } from '@wagmi/core'
 
 interface Props extends ModalProps {
   onSignup: () => void
@@ -42,7 +43,7 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
     try {
       setIsAuthenticating(true)
-      const signature = await signMessageAsync({ message: SIGN_MESSAGE.CONNECT(date) })
+      const signature = await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
       await onAuth(date, signature)
       const profile = await api.viewProfile(address)
 
@@ -122,6 +123,7 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
   useEffect(() => {
     if (show) {
+      console.log('-----')
       handleSignMessage()
     } else {
       setAuthError('')

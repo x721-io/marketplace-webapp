@@ -46,9 +46,15 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
-        {nft.collection.name} - {nft.name}
-      </Text>
+      <div className="font-bold">
+        <Text className="mb-3" variant="heading-xs">
+          Accept Bid
+        </Text>
+        <Text className="text-secondary" variant="body-16">
+          Filling bid order
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+        </Text>
+      </div>
       {
         type === 'ERC721' ? (
           <Text className="text-secondary text-center mb-4" variant="body-18">

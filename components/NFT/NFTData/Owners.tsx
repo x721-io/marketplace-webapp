@@ -9,7 +9,6 @@ import { formatDisplayedBalance } from '@/utils'
 import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import Text from '@/components/Text'
-import {Tooltip} from "flowbite-react";
 import { getUserAvatarImage } from '@/utils/string';
 
 export default function OwnersTab({ nft, marketData }: {

@@ -3,7 +3,6 @@ import SliderIcon from '@/components/Icon/Sliders'
 import Button from '@/components/Button'
 import CommandIcon from '@/components/Icon/Command'
 import Input from '@/components/Form/Input'
-import { useUIStore } from '@/store/ui/store'
 import { useExploreSectionFilters } from '@/hooks/useFilters'
 
 interface Props {

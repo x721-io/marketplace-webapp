@@ -120,7 +120,7 @@ export default function CancelSellNFTModal({nft, show, onClose, marketData}: Pro
         size="md"
         show={show}
         onClose={onClose}>
-       <Modal.Body>
+       <Modal.Body className="p-10">
          <div className="flex flex-col justify-center gap-4 items-center">
            {renderContent()}
          </div>
