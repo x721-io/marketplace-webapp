@@ -10,9 +10,10 @@ import { sanitizeObject } from '@/utils'
 import { useNFTFilters } from '@/hooks/useFilters'
 import { Address } from 'wagmi'
 
-export default function CreatedNFTs({ wallet, onUpdateAmount }: {
+export default function CreatedNFTs({ wallet, onUpdateAmount, userId }: {
   wallet: Address,
   onUpdateAmount: (n: number) => void
+  userId: string
 }) {
   const [showFilters, setShowFilters] = useState(false)
   const api = useMarketplaceApi()
@@ -59,7 +60,9 @@ export default function CreatedNFTs({ wallet, onUpdateAmount }: {
         filters={['type', 'price']}
         showFilters={showFilters}
         items={data?.data}
-        paging={data?.paging} />
+        paging={data?.paging} 
+        userId= {userId}
+        showCreateNFT = {true}/>
     </div>
   )
 }

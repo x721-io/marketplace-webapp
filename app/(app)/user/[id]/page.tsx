@@ -71,10 +71,10 @@ export default function ProfilePage() {
             <OnSaleNFTs wallet={user.publicKey}  onUpdateAmount={setSaleAmount}/>
           </Tabs.Item>
           <Tabs.Item title={`Created (${formatDisplayedBalance(createdAmount, 0)})`}>
-            <CreatedNFTs wallet={user.publicKey} onUpdateAmount={setCreatedAmount}/>
+            <CreatedNFTs userId={user.id} wallet={user.publicKey} onUpdateAmount={setCreatedAmount}/>
           </Tabs.Item>
           <Tabs.Item title={`Collections (${formatDisplayedBalance(createdCollectionAmount, 0)})`}>
-            <UserCollections onUpdateAmount={setCreatedCollectionAmount} />
+            <UserCollections userId={user.id} onUpdateAmount={setCreatedCollectionAmount} />
           </Tabs.Item>
           <Tabs.Item title={"Activities"}>
             <Activities wallet={user.publicKey} />
