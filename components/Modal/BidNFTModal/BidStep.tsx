@@ -6,11 +6,14 @@ import { useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import { tokens } from '@/config/tokens'
 import { useAccount, useBalance } from 'wagmi'
-import { formatUnits, parseEther } from 'ethers'
+import { formatUnits, parseEther, parseUnits } from 'ethers'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { FormState, NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import NFTMarketData = APIResponse.NFTMarketData
+import { formatDisplayedBalance } from '@/utils'
+import FeeCalculator from '@/components/FeeCalculator'
+import { findTokenByAddress } from '@/utils/token'
 
 interface Props {
   onSuccess: () => void
@@ -25,7 +28,7 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
     address: address,
     enabled: !!address
   })
-  const token = tokens.wu2u
+  const token = findTokenByAddress(tokens.wu2u.address)
 
   const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft)
   const {
@@ -61,7 +64,7 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
         quantity: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
           return Number(v) <= Number(marketData?.totalSupply || 0) || 'Cannot bid more than total supply'
-        },
+        }
       }
     }
   }
@@ -85,9 +88,15 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-xs">
-        Bidding {nft.collection.name} - {nft.name}
-      </Text>
+      <div className="font-bold">
+        <Text className="mb-3" variant="heading-xs">
+          Place a bid
+        </Text>
+        <Text className="text-secondary" variant="body-16">
+          Creating bid
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+        </Text>
+      </div>
 
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">
@@ -106,20 +115,23 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
           value={token?.symbol}
           appendIcon={
             <Text>
-              Balance: {formatUnits(tokenBalance?.value || 0, 18)}
+              Balance: {formatDisplayedBalance(formatUnits(tokenBalance?.value || 0, 18))}
             </Text>
           }
         />
       </div>
 
-      {nft.collection.type === 'ERC1155' && (
+      {nft.collection.type === 'ERC1155' ? (
         <>
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
               type="number"
               register={register('quantity', formRules.quantity)}
-              appendIcon={<Text>Max: {marketData?.totalSupply || 0}</Text>}
+              appendIcon={
+                <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
+                  Max: {formatDisplayedBalance(marketData?.totalSupply || 0, 0)}
+                </Text>}
             />
           </div>
           <div>
@@ -129,8 +141,20 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
               value={Number(price) * Number(quantity) || 0}
               appendIcon={<Text>U2U</Text>} />
           </div>
+          <FeeCalculator
+            mode="buyer"
+            nft={nft}
+            price={parseUnits(String(Number(price) * Number(quantity) || 0), token?.decimal)}
+            quoteToken={token?.address} />
         </>
+      ) : (
+        <FeeCalculator
+          mode="buyer"
+          nft={nft}
+          price={parseUnits(price || '0', token?.decimal)}
+          quoteToken={token?.address} />
       )}
+
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Place bid

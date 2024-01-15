@@ -1,27 +1,72 @@
-[
+export default [
   {
+    "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
         "internalType": "address",
-        "name": "_feeDistributor",
+        "name": "_seller",
         "type": "address"
       },
       {
+        "indexed": true,
         "internalType": "address",
-        "name": "_weth",
+        "name": "bidder",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_netPrice",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "AcceptBid",
+    "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
-        "name": "askId",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
@@ -32,45 +77,33 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "askId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "seller",
+        "name": "_seller",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "nft",
+        "name": "_nft",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "quantity",
+        "name": "_tokenId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "quoteToken",
+        "name": "_quoteToken",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "pricePerUnit",
+        "name": "_price",
         "type": "uint256"
       }
     ],
@@ -81,136 +114,62 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "askId",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "buyer",
+        "name": "_nft",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "_tokenId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "netPrice",
+        "name": "_price",
         "type": "uint256"
       }
     ],
-    "name": "Buy",
+    "name": "Bid",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "offerId",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "seller",
+        "name": "_nft",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "netPrice",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
-    "name": "OfferAccept",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "offerId",
-        "type": "uint256"
-      }
-    ],
-    "name": "OfferCancel",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "offerId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "nft",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "quoteToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "pricePerUnit",
-        "type": "uint256"
-      }
-    ],
-    "name": "OfferNew",
+    "name": "CancelBid",
     "type": "event"
   },
   {
@@ -233,6 +192,55 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_netPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "Trade",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "WETH",
     "outputs": [
@@ -248,23 +256,38 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "offerId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "_tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
       }
     ],
-    "name": "acceptOffer",
+    "name": "acceptBid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "",
@@ -280,27 +303,12 @@
       },
       {
         "internalType": "address",
-        "name": "nft",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
         "name": "quoteToken",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "pricePerUnit",
+        "name": "price",
         "type": "uint256"
       }
     ],
@@ -310,13 +318,62 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "askId",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "bids",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "quoteToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "feePaid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
         "type": "uint256"
       }
     ],
@@ -328,13 +385,13 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "askId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
@@ -346,8 +403,13 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "askId",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
@@ -359,12 +421,17 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "offerId",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
-    "name": "cancelOffer",
+    "name": "cancelBid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -382,18 +449,13 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_quantity",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_quoteToken",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_pricePerUnit",
+        "name": "_price",
         "type": "uint256"
       }
     ],
@@ -415,22 +477,17 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_quantity",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_quoteToken",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_pricePerUnit",
+        "name": "_price",
         "type": "uint256"
       }
     ],
-    "name": "createOffer",
+    "name": "createBid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -449,54 +506,23 @@
       },
       {
         "internalType": "uint256",
-        "name": "_quantity",
+        "name": "_price",
         "type": "uint256"
       }
     ],
-    "name": "createOfferUsingEth",
+    "name": "createBidUsingEth",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "offers",
+    "inputs": [],
+    "name": "feeDistributor",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "buyer",
+        "internalType": "contract IFeeDistributor",
+        "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "nft",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "quoteToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "pricePerUnit",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -506,38 +532,17 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_feeDistributor",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "_weth",
         "type": "address"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
       }
     ],
-    "name": "onERC1155BatchReceived",
-    "outputs": [
-      {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
-      }
-    ],
+    "name": "initialize",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -559,17 +564,12 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
         "internalType": "bytes",
         "name": "",
         "type": "bytes"
       }
     ],
-    "name": "onERC1155Received",
+    "name": "onERC721Received",
     "outputs": [
       {
         "internalType": "bytes4",
@@ -616,25 +616,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes4",
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
-    ],
-    "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -645,4 +626,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+] as const

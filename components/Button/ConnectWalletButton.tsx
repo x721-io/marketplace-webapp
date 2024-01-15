@@ -1,5 +1,3 @@
-"use client"
-
 import Button, { ButtonProps } from './index'
 import { useMemo, useState } from 'react'
 import SignupModal from '@/components/Modal/SignupModal'
@@ -40,30 +38,34 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
     }
   }
 
-  if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired && isCorrectWallet) {
-    return children
-  }
+  // if ((isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired && isCorrectWallet) {
+  //   return children
+  // }
 
   return (
     <>
-      <Button type="button" onClick={handleConnectWallet} className={className} {...rest}>
-        Connect Wallet
-      </Button>
+      {(isConnected || mode === 'link') && acceptedTerms && !!accessToken && !isExpired && isCorrectWallet ? children : (
+        <>
+          <Button type="button" onClick={handleConnectWallet} className={className} {...rest}>
+            Connect Wallet
+          </Button>
 
-      <WalletConnectModal
-        show={showWalletConnect}
-        onSignMessage={() => setShowSignMessage(true)}
-        onClose={() => setShowWalletConnect(false)} />
+          <WalletConnectModal
+            show={showWalletConnect}
+            onSignMessage={() => setShowSignMessage(true)}
+            onClose={() => setShowWalletConnect(false)} />
 
-      <SignConnectMessageModal
-        mode={mode}
-        show={showSignMessage}
-        onSignup={() => setShowSignup(true)}
-        onClose={() => setShowSignMessage(false)} />
+          <SignConnectMessageModal
+            mode={mode}
+            show={showSignMessage}
+            onSignup={() => setShowSignup(true)}
+            onClose={() => setShowSignMessage(false)} />
 
-      <SignupModal
-        show={showSignup}
-        onClose={() => setShowSignup(false)} />
+          <SignupModal
+            show={showSignup}
+            onClose={() => setShowSignup(false)} />
+        </>
+      )}
     </>
   )
 }

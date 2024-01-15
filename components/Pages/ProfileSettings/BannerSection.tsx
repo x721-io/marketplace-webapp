@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image'
 import UploadIcon from '@/components/Icon/Upload';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'

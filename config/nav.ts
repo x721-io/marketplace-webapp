@@ -1,7 +1,10 @@
+import * as process from 'process'
+
 interface NavItem {
   label: string
   href: string
   items?: NavItem[]
+  external?: boolean
 }
 
 export const navs: NavItem[] = [
@@ -22,5 +25,5 @@ export const navs: NavItem[] = [
       { href: '/create/nft', label: 'NFT' }
     ]
   },
-  // { label: 'Sell', href: '#' }
+  { label: 'Launchpad', href: process.env.NEXT_PUBLIC_LAUNCHPAD_URL as string, external: true }
 ]

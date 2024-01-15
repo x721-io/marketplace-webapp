@@ -1,4 +1,4 @@
-[
+export default [
   {
     "anonymous": false,
     "inputs": [
@@ -65,6 +65,11 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -81,6 +86,11 @@
         "internalType": "address",
         "name": "quoteToken",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -102,6 +112,19 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeRatioSellerBuyer",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -129,6 +152,11 @@
       {
         "internalType": "uint256",
         "name": "_feePercent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_feeRatioSellerBuyer",
         "type": "uint256"
       }
     ],
@@ -225,6 +253,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "ratio",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFeeRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newMarketplace",
         "type": "address"
@@ -292,4 +333,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+] as const
