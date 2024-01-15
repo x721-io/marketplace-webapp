@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import Input from '@/components/Form/Input'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
+import FeeCalculator from '@/components/FeeCalculator'
 
 interface Props {
   nft: NFT,
@@ -55,37 +56,38 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
           for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
         </Text>
       </div>
-      {
-        type === 'ERC721' ? (
-          <Text className="text-secondary text-center mb-4" variant="body-18">
-            Are you sure to accept this bid?
-          </Text>
-        ) : (
-          <>
-            <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
-            <Input
-              error={!!errors.quantity}
-              type="number"
-              appendIcon={
-                <Text>
-                  Available: {bid?.quantity}
-                </Text>
-              }
-              register={
-                register(
-                  'quantity',
-                  {
-                    validate: {
-                      required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
-                      amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
-                    }
-                  }
-                )}
-            />
-          </>
 
-        )
-      }
+      {type === 'ERC721' ? (
+        <FeeCalculator mode="seller" nft={nft} quoteToken={bid?.quoteToken} price={BigInt(bid?.price || 0)} />
+      ) : (
+        <>
+          <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
+          <Input
+            error={!!errors.quantity}
+            type="number"
+            appendIcon={
+              <Text>
+                Available: {bid?.quantity}
+              </Text>
+            }
+            register={
+              register(
+                'quantity',
+                {
+                  validate: {
+                    required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
+                    amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
+                  }
+                }
+              )}
+          />
+          <FeeCalculator
+            mode="seller"
+            nft={nft}
+            quoteToken={bid?.quoteToken}
+            price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)} />
+        </>
+      )}
       <FormValidationMessages errors={errors} />
 
       <div className="flex gap-4 mt-7 w-full">
