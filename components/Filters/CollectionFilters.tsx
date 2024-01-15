@@ -1,20 +1,20 @@
 'use client'
 
-import { Accordion } from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
-import { APIParams } from '@/services/api/types'
-import { useState } from 'react'
+import {APIParams} from '@/services/api/types'
+import React, {useState} from 'react'
 import Collapsible from '../Collapsible'
-import { BrowserView } from 'react-device-detect'
+import {BrowserView, MobileView} from 'react-device-detect'
 
 interface Props {
   visible: boolean
   onApplyFilters?: (filters: APIParams.FetchCollections) => void
+  onCloseModal?: () => void
 }
 
-export default function CollectionFilters({ onApplyFilters, visible }: Props) {
+export default function CollectionFilters({ onApplyFilters, visible ,onCloseModal}: Props) {
   const [activeFilters, setActiveFilters] = useState<APIParams.FetchCollections>({
     min: '',
     max: ''
@@ -87,6 +87,14 @@ export default function CollectionFilters({ onApplyFilters, visible }: Props) {
             Apply
           </Button>
         </BrowserView>
+        <MobileView>
+          <Button className="w-full mt-6" variant="secondary" onClick={handleApplyFilters}>
+            Apply
+          </Button>
+          <Button className="w-full mt-3" variant="text" onClick={onCloseModal}>
+            Cancel
+          </Button>
+        </MobileView>
       </Collapsible>
     </div>
   )

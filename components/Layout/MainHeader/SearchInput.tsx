@@ -3,7 +3,7 @@ import Icon from '@/components/Icon'
 import InputDropdown from '@/components/Form/InputDropdown'
 import Button from '@/components/Button'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Tabs, TabsRef } from 'flowbite-react'
+import {CustomFlowbiteTheme, Tabs, TabsRef} from 'flowbite-react'
 import SearchUserTab from './UserTab'
 import SearchCollectionTab from './CollectionTab'
 import SearchNFTTab from './NFTTab'
@@ -12,6 +12,16 @@ import { Modal } from 'flowbite-react'
 import Input from '@/components/Form/Input'
 import { isMobile } from 'react-device-detect'
 import useSWRMutation from 'swr/mutation'
+
+const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col tablet:h-full h-full desktop:h-auto ",
+    base: "relative w-full p-4 desktop:p-10 tablet:p-10 desktop:h-auto h-full tablet:h-full max-h-[90vh]",
+  },
+  body: {
+    base: "p-0 flex-1 overflow-auto"
+  }
+}
 
 export default function SearchInput() {
   const api = useMarketplaceApi()
@@ -85,7 +95,7 @@ export default function SearchInput() {
             <Button onClick={() => setOpenModal(true)} variant="icon">
               <Icon className="text-secondary" name="search" width={24} height={24} />
             </Button>
-            <Modal show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal theme={modalTheme} show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Search</Modal.Header>
               <Modal.Body>
                 <InputDropdown

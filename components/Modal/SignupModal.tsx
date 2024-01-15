@@ -1,4 +1,4 @@
-import { Checkbox, Label, Modal, ModalProps } from 'flowbite-react'
+import {Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps} from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import { useState } from 'react'
@@ -13,6 +13,25 @@ import { FormState } from '@/types'
 
 interface Props extends ModalProps {
   onSignupSuccess?: () => void
+}
+
+
+const modalTheme: CustomFlowbiteTheme['modal'] = {
+  // root: {
+  //   sizes: {
+  //     "7xl": "max-w-8 !p-0",
+  //     'sm': 'max-w-sm !p-0'
+  //   }
+  // },
+  content: {
+    // inner: "relative h-full w-full  h-auto",
+    // base: "relative rounded-lg bg-white shadow flex flex-col max-h-[90vh]",
+    inner: "relative rounded-lg bg-white shadow flex flex-col tablet:h-auto h-auto desktop:h-auto ",
+    base: "relative w-full p-10 desktop:h-auto tablet:h-auto max-h-[90vh]",
+  },
+  body: {
+    base: "p-0 flex-1 overflow-auto"
+  }
 }
 
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
@@ -49,7 +68,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   }
 
   return (
-    <Modal dismissible show={show} onClose={onClose} size="lg">
+    <Modal theme={modalTheme} dismissible show={show} onClose={onClose} size="lg">
       <Modal.Body>
         <form onSubmit={handleSubmit(onSignup)}>
           <div className="max-w-[400px] mx-auto flex flex-col gap-4 py-8">
