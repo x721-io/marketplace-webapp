@@ -34,12 +34,12 @@ export default function OwnersTab({ nft, marketData }: {
 
   return (
     <div className="w-full py-7">
-      <div className="w-full p-7 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed">
+      <div className="w-full p-7 flex flex-col desktop:gap-4 tablet:gap-4 gap-6 rounded-2xl border border-disabled border-dashed">
         {(!marketData || !owners.length) ? (
           <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
         ) : owners.map((owner) => {
           return (
-            <div className="flex items-center justify-between" key={owner.id}>
+            <div className="flex desktop:items-center tablet:items-center items-start justify-between flex-col desktop:flex-row tablet:flex-row" key={owner.id}>
               <Link href={`/user/${owner.id}`} className="flex items-center gap-4">
                 <Image
                   className="w-12 h-12 rounded-2xl"
@@ -81,7 +81,7 @@ export default function OwnersTab({ nft, marketData }: {
                     nft={nft}
                     show={modals[owner.id]}
                     onClose={() => setModals({ ...modals, [owner.id]: false })} />
-                  <Button scale="sm" onClick={() => setModals({ ...modals, [owner.id]: true })}>
+                  <Button className='mt-2 desktop:mt-0 tablet:mt-0' scale="sm" onClick={() => setModals({ ...modals, [owner.id]: true })}>
                     Buy now
                   </Button>
                 </>

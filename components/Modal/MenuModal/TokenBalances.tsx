@@ -69,11 +69,11 @@ export default function TokenBalances() {
         {Object.values(tokens).map((token, index) => {
           const balance = tokenBalances ? formatUnits(tokenBalances[index].result as BigNumberish, 18) : 0
           return (
-            <div className="flex gap-2 items-center p-1 justify-between" key={token.address}>
+            <div className="flex gap-2 desktop:items-center tablet:items-center items-start p-1 justify-between flex-col tablet:flex-row desktop:flex-row" key={token.address}>
               <div className="flex gap-2 items-center">
                 <Image src={token.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
                 <Tooltip content={balance} placement="bottom">
-                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block max-w-[60px] text-ellipsis ">
+                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
                     {balance}
                   </p>
                 </Tooltip>

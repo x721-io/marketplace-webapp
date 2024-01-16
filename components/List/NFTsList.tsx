@@ -1,13 +1,13 @@
-import { APIParams, APIResponse } from '@/services/api/types'
-import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
-import { classNames } from '@/utils/string'
+import {APIParams, APIResponse} from '@/services/api/types'
+import NFTFilters, {FilterType} from '@/components/Filters/NFTFilters'
+import {classNames} from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
-import { Pagination, Spinner } from 'flowbite-react'
-import React, { useCallback, useMemo } from 'react'
+import {Pagination, Spinner} from 'flowbite-react'
+import React, {useCallback, useMemo} from 'react'
 import Text from '@/components/Text'
-import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
-import { isMobile } from 'react-device-detect'
-import { NFT } from '@/types'
+import MobileNFTFiltersModal from '@/components/Modal/MobileNFTFiltersModal'
+import {isMobile} from 'react-device-detect'
+import {NFT} from '@/types'
 import Link from 'next/link'
 import Button from '../Button'
 import useAuthStore from '@/store/auth/store'
@@ -130,7 +130,7 @@ export default function NFTsList({
       )}>
         {
           isMobile ? (
-            <MobileFiltersModal
+            <MobileNFTFiltersModal
               show={showFilters}
               onClose={onClose}
               baseFilters={filters}

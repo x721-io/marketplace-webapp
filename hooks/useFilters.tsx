@@ -1,14 +1,14 @@
-import { useMemo, useState } from 'react'
-import { usePathname } from 'next/navigation'
-import { useUIStore } from '@/store/ui/store'
-import { APIParams } from '@/services/api/types'
-import { parseEther } from 'ethers'
-import { FilterKey, SearchKey } from '@/store/ui/types'
-import { sanitizeObject } from '@/utils'
+import {useMemo, useState} from 'react'
+import {usePathname} from 'next/navigation'
+import {useUIStore} from '@/store/ui/store'
+import {APIParams} from '@/services/api/types'
+import {parseEther} from 'ethers'
+import {FilterKey, SearchKey} from '@/store/ui/types'
+import {sanitizeObject} from '@/utils'
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname()
-  const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(state => state)
+  const {showFilters, toggleFilter, queryString, setQueryString} = useUIStore(state => state)
 
   const routeKey: FilterKey = useMemo(() => {
     switch (true) {
@@ -48,7 +48,7 @@ export const useExploreSectionFilters = () => {
 
   const query = useMemo(() => queryString[searchKey], [queryString, searchKey])
 
-  return { isFiltersVisible, routeKey, handleToggleFilters, searchKey, query, setQueryString }
+  return {isFiltersVisible, routeKey, handleToggleFilters, searchKey, query, setQueryString}
 }
 
 export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
