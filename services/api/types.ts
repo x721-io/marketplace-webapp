@@ -1,6 +1,7 @@
 import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/entitites'
 import { Address } from 'wagmi'
 import { MarketEvent, MarketEventType } from '@/types/market'
+import {Project, RoundStatus} from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
@@ -89,10 +90,30 @@ export namespace APIParams {
     bidListPage: number
     bidListLimit: number
   }
+
+  export interface FetchProjects {
+    mode?: RoundStatus
+  }
+  export interface SubscribeRoundZero {
+    projectId: string
+    walletAddress: Address
+  }
+  export interface FetchSnapshot {
+    userId: `0x${string}`;
+    projectId: string | string[];
+  }
 }
 
 /********** =========== API Response types ========== ***********/
 export namespace APIResponse {
+
+  export type FetchProjects = Project[]
+
+  export interface Snapshot {
+    stakingTotal: string;
+    lastDateRecord: Date;
+  }
+
   interface Pagination {
     page: number
     limit: number
@@ -186,4 +207,5 @@ export namespace APIResponse {
   >[]
 
   export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
+
 }

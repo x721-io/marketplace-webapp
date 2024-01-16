@@ -50,7 +50,7 @@ export default function MainHeader() {
                     dropdown={
                       <div className="flex flex-col">
                         {nav.items.map((item, i) => (
-                          <Link className="py-1.5" key={i} href={item.href ?? '/'}>{item.label}</Link>
+                          <Link className="py-1.5" key={i} href={item.href ?? '/'} target={item.external && "_blank"}>{item.label}</Link>
                         ))}
                       </div>
                     }

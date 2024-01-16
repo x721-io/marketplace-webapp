@@ -1,4 +1,6 @@
 export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+export const LAUNCHPAD_BASE_API_URL = process.env.NEXT_PUBLIC_LAUNCHPAD_BASE_API_URL
+
 
 export const API_ENDPOINTS = {
   CONNECT: '/auth/connect',
@@ -16,4 +18,8 @@ export const API_ENDPOINTS = {
   USER_ACTIVITIES: '/user/activity',
   SEARCH: '/common/search-all',
   VALIDATE_INPUT: '/validator',
+  LAUNCHPAD : '/launchpad',
+  CHECK_IS_SUBSCRIBED: '/launchpad/isSubscribed',
+  SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
+  SNAPSHOT: '/user/projects',
 }

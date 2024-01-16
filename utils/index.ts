@@ -1,3 +1,6 @@
+import {Round} from "@/types";
+import {abis} from "@/abi";
+
 export const sleep = (millisecond: number) => new Promise((resolve) => setTimeout(resolve, millisecond))
 
 export const sanitizeObject = (obj: Record<string, any>) => {
@@ -23,4 +26,9 @@ export const parseQueries = (queries: Record<string, any>) => {
 export const formatDisplayedBalance = (value: string | number, digits = 2) => {
   if (!value) return '0'
   return Number(value).toLocaleString('en-us')
+}
+
+export const getRoundAbi = (round: Round) => {
+  const { type: roundType } = round
+  return abis[roundType]
 }
