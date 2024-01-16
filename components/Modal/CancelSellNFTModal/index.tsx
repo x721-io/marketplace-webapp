@@ -83,13 +83,16 @@ export default function CancelSellNFTModal({nft, show, onClose, marketData}: Pro
       case 1:
       default:
         return (
-           <div className='flex flex-col items-center justify-center gap-4'>
-             <Text className="font-semibold text-primary text-center" variant="heading-xs">
-               {nft.collection.name} - {nft.name}
-             </Text>
-             <Text className="text-secondary text-center" variant="body-18">
-               Are you sure to cancel listing?
-             </Text>
+          <div className='flex flex-col items-center justify-center gap-4'>
+            <div className="font-bold">
+              <Text className="mb-3 text-center" variant="heading-xs">
+                Cancel listing
+              </Text>
+              <Text className="text-secondary" variant="body-16">
+                Cancel sale
+                for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+              </Text>
+            </div>
 
              <div className="flex gap-4">
                <Button variant="secondary" onClick={handleReset}>
