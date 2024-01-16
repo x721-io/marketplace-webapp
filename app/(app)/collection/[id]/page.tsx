@@ -100,7 +100,6 @@ export default function CollectionPage() {
             paging={items?.paging}
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
-            creatordUserId= {data?.collection.creators[0].userId}
             dataCollectionType= {data.collection.type}
           />
         </div>
