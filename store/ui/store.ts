@@ -27,16 +27,10 @@ export const useUIStore = create(devtools<UIState & UIAction>(
         }
       }
     }),
-    setQueryString: (key, text, clearInput = false) => set((state) => ({
+    setQueryString: (key, text) => set((state) => ({
       queryString: {
         ...state.queryString,
         [key]: text
-      }
-    })),
-    clearInput: (key: any) => set((state) => ({
-      queryString: {
-        ...state.queryString,
-        [key]: ''
       }
     }))
   }),

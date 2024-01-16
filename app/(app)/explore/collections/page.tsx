@@ -12,18 +12,14 @@ import React, { useEffect, useState } from 'react'
 import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
 
-interface Props {
-   onClose?: () => void
- }
-
-export default function ExploreCollectionsPage({onClose} : Props) {
+export default function ExploreCollectionsPage() {
    const [showFilters, setShowFilters] = useState(false)
 
    const api = useMarketplaceApi()
 
    const { activeFilters, handleApplyFilters, handleChangePage } = useCollectionFilters()
 
-   const { queryString, clearInput } = useUIStore(state => state)
+   const { queryString } = useUIStore(state => state)
    const { searchKey } = useExploreSectionFilters()
 
    const { data: collections, error, isLoading } = useSWR(
@@ -33,10 +29,6 @@ export default function ExploreCollectionsPage({onClose} : Props) {
    )
 
    const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters()
-
-   useEffect(() => {
-      clearInput(searchKey)
-   }, [])
 
    return (
       <div className="flex gap-6 flex-col desktop:flex-row">
