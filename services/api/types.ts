@@ -169,7 +169,7 @@ export namespace APIResponse {
   export interface NFTMarketData {
     sellInfo: MarketEvent[]
     bidInfo: MarketEvent[],
-    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id'> & { quantity: number })[],
+    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id' | 'signer'> & { quantity: number })[],
     totalSupply: string
   }
 
