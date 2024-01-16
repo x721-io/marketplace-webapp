@@ -3,7 +3,7 @@ export const sleep = (millisecond: number) => new Promise((resolve) => setTimeou
 export const sanitizeObject = (obj: Record<string, any>) => {
   const _obj = { ...obj }
   Object.entries(_obj).forEach(([key, value]) => {
-    if (!value) delete _obj[key]
+    if (value === undefined || value === null || value === false || value === '') delete _obj[key]
   })
 
   return _obj
