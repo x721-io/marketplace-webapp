@@ -123,7 +123,6 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
   useEffect(() => {
     if (show) {
-      console.log('-----')
       handleSignMessage()
     } else {
       setAuthError('')

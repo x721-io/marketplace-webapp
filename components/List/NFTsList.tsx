@@ -29,8 +29,9 @@ interface Props {
   onClose?: () => void // For mobile only: Close modal filters
   loading?: boolean
   error?: boolean
-  creatorUserId?: string
   dataCollectionType?: string
+  userId?: string
+  showCreateNFT?: boolean
 }
 
 export default function NFTsList({
@@ -44,8 +45,9 @@ export default function NFTsList({
   onClose,
   loading,
   error,
-  creatorUserId,
-  dataCollectionType
+  dataCollectionType,
+  userId,
+  showCreateNFT
 }: Props) {
   const myId = useAuthStore(state => state.profile?.id)
   const totalPage = useMemo(() => {
@@ -77,14 +79,14 @@ export default function NFTsList({
     if (!items?.length) {
       return (
         <>
-          {myId === creatorUserId &&
+          {showCreateNFT ? myId === userId &&
             <Link href={`/create/nft/${dataCollectionType}`}>
               <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
                 <Button variant="primary">
                   Create an NFT
                 </Button>
               </div>
-            </Link>
+            </Link> : ''
           }
           <div className="w-full h-[295px] flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
             <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
@@ -99,14 +101,14 @@ export default function NFTsList({
             'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
             isMobile ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
           )}>
-          {myId === creatorUserId &&
+          {showCreateNFT ? myId === userId &&
             <Link href={`/create/nft/${dataCollectionType}`}>
-              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[295px] desktop:w-[250px] w-full ">
+              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[295px] desktop:w-auto w-full border">
                 <Button variant="primary">
                   Create an NFT
                 </Button>
               </div>
-            </Link>
+            </Link> : ''
           }
           {items.map(item => (
             <div className="h-full" key={item.collection.address + '-' + item.u2uId}>
