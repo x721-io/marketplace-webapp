@@ -1,9 +1,15 @@
-import { Modal, ModalProps } from 'flowbite-react'
+import { CustomFlowbiteTheme, Modal, ModalProps } from 'flowbite-react'
 import NFTFilters, { FilterProps } from '@/components/Filters/NFTFilters'
-import Button from '@/components/Button'
 import React from 'react'
 
-export default function MobileFiltersModal({
+const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col tablet:h-auto h-auto desktop:h-auto ",
+    base: "relative w-full p-10 desktop:h-auto tablet:h-auto max-h-[90vh]",
+  }
+}
+
+export default function MobileNFTFiltersModal({
   baseFilters,
   onApplyFilters,
   traitsFilter,
@@ -12,6 +18,7 @@ export default function MobileFiltersModal({
 }: ModalProps & FilterProps) {
   return (
     <Modal
+      theme={modalTheme}
       position="center"
       onClose={onClose}
       show={show}

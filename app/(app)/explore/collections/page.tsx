@@ -8,41 +8,59 @@ import { useUIStore } from '@/store/ui/store'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { isMobile } from "react-device-detect";
+import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
 
-export default function ExploreCollectionsPage() {
-  const api = useMarketplaceApi()
+interface Props {
+   onClose?: () => void
+ }
 
-  const { activeFilters, handleApplyFilters, handleChangePage  } = useCollectionFilters()
+export default function ExploreCollectionsPage({onClose} : Props) {
+   const [showFilters, setShowFilters] = useState(false)
 
-  const { queryString, clearInput } = useUIStore(state => state)
-  const { searchKey } = useExploreSectionFilters()
+   const api = useMarketplaceApi()
 
-  const { data: collections, error, isLoading } = useSWR(
-    { ...activeFilters, name: queryString[searchKey] },
-    (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
-    { refreshInterval: 10000 }
-  )
+   const { activeFilters, handleApplyFilters, handleChangePage } = useCollectionFilters()
 
-  const { isFiltersVisible } = useExploreSectionFilters()
+   const { queryString, clearInput } = useUIStore(state => state)
+   const { searchKey } = useExploreSectionFilters()
 
-  useEffect(()=> {
-    clearInput(searchKey)
-  },[])
+   const { data: collections, error, isLoading } = useSWR(
+      { ...activeFilters, name: queryString[searchKey] },
+      (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+      { refreshInterval: 10000 }
+   )
 
-  return (
-    <div className="flex gap-6 flex-col desktop:flex-row">
-      <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
+   const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters()
 
-      <div className="flex-1">
-        <CollectionsList
-          loading={isLoading}
-          collections={collections?.data}
-          paging={collections?.paging}
-          onChangePage={handleChangePage}
-          showFilter={isFiltersVisible}
-        />
+   useEffect(() => {
+      clearInput(searchKey)
+   }, [])
+
+   return (
+      <div className="flex gap-6 flex-col desktop:flex-row">
+         {
+            isMobile ? (
+               <MobileCollectionFiltersModal
+                  onApplyFilters={handleApplyFilters}
+                  showFilter={isFiltersVisible} 
+                  closeFilter={handleToggleFilters}
+               />
+            ) :
+               isFiltersVisible && (
+                  <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
+               )
+         }
+         <div className="flex-1">
+            <CollectionsList
+               loading={isLoading}
+               collections={collections?.data}
+               paging={collections?.paging}
+               onChangePage={handleChangePage}
+               showFilter={isFiltersVisible}
+            />
+         </div>
       </div>
-    </div>
-  )
+   )
 }

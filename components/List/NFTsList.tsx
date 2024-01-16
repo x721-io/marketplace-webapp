@@ -1,13 +1,13 @@
-import { APIParams, APIResponse } from '@/services/api/types'
-import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
-import { classNames } from '@/utils/string'
+import {APIParams, APIResponse} from '@/services/api/types'
+import NFTFilters, {FilterType} from '@/components/Filters/NFTFilters'
+import {classNames} from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
-import { Pagination, Spinner } from 'flowbite-react'
-import React, { useCallback, useMemo } from 'react'
+import {Pagination, Spinner} from 'flowbite-react'
+import React, {useCallback, useMemo} from 'react'
 import Text from '@/components/Text'
-import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
-import { isMobile } from 'react-device-detect'
-import { NFT } from '@/types'
+import MobileNFTFiltersModal from '@/components/Modal/MobileNFTFiltersModal'
+import {isMobile} from 'react-device-detect'
+import {NFT} from '@/types'
 import Link from 'next/link'
 import Button from '../Button'
 import useAuthStore from '@/store/auth/store'
@@ -29,7 +29,7 @@ interface Props {
   onClose?: () => void // For mobile only: Close modal filters
   loading?: boolean
   error?: boolean
-  creatordUserId?: string
+  creatorUserId?: string
   dataCollectionType?: string
 }
 
@@ -44,7 +44,7 @@ export default function NFTsList({
   onClose,
   loading,
   error,
-  creatordUserId,
+  creatorUserId,
   dataCollectionType
 }: Props) {
   const myId = useAuthStore(state => state.profile?.id)
@@ -77,7 +77,7 @@ export default function NFTsList({
     if (!items?.length) {
       return (
         <>
-          {myId === creatordUserId &&
+          {myId === creatorUserId &&
             <Link href={`/create/nft/${dataCollectionType}`}>
               <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
                 <Button variant="primary">
@@ -99,7 +99,7 @@ export default function NFTsList({
             'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
             isMobile ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
           )}>
-          {myId === creatordUserId &&
+          {myId === creatorUserId &&
             <Link href={`/create/nft/${dataCollectionType}`}>
               <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[295px] desktop:w-[250px] w-full ">
                 <Button variant="primary">
@@ -128,7 +128,7 @@ export default function NFTsList({
       )}>
         {
           isMobile ? (
-            <MobileFiltersModal
+            <MobileNFTFiltersModal
               show={showFilters}
               onClose={onClose}
               baseFilters={filters}
