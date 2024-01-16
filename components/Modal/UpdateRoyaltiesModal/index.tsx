@@ -22,6 +22,10 @@ interface FormState {
 }
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
+  },
   body: {
     base: "p-0 flex-1 overflow-auto"
   }

@@ -17,17 +17,9 @@ interface Props extends ModalProps {
 
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
-  // root: {
-  //   sizes: {
-  //     "7xl": "max-w-8 !p-0",
-  //     'sm': 'max-w-sm !p-0'
-  //   }
-  // },
   content: {
-    // inner: "relative h-full w-full  h-auto",
-    // base: "relative rounded-lg bg-white shadow flex flex-col max-h-[90vh]",
-    inner: "relative rounded-lg bg-white shadow flex flex-col tablet:h-auto h-auto desktop:h-auto ",
-    base: "relative w-full p-10 desktop:h-auto tablet:h-auto max-h-[90vh]",
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
   },
   body: {
     base: "p-0 flex-1 overflow-auto"

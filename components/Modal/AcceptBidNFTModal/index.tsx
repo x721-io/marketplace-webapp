@@ -1,4 +1,4 @@
-import { Modal, ModalProps, Tooltip } from 'flowbite-react'
+import { CustomFlowbiteTheme, Modal, ModalProps, Tooltip } from 'flowbite-react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import ApprovalStep from './ApprovalStep'
@@ -9,6 +9,16 @@ import { NFT, MarketEvent } from '@/types'
 interface Props extends ModalProps {
   nft?: NFT,
   bid?: MarketEvent
+}
+
+const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
+  },
+  body: {
+    base: "p-0 flex-1 overflow-auto"
+  }
 }
 
 export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
@@ -55,6 +65,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
 
   return (
     <Modal
+      theme={modalTheme}
       dismissible
       size="lg"
       show={show}

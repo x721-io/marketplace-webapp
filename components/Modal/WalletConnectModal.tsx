@@ -42,8 +42,8 @@ export default function WalletConnectModal({ show, onClose, onSignMessage }: Pro
         show={show}
         onClose={onClose} size="lg">
        <Modal.Body>
-         <div className="mx-auto flex flex-col gap-8 p-2 desktop:p-8 items-center overflow-ellipsis">
-           <Text className="text-heading-md text-primary font-semibold text-center">
+         <div className="mx-auto flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
+           <Text className="desktop:text-heading-md tablet:text-heading-md text-body-32 text-primary font-semibold text-center">
              Connect wallet
            </Text>
            <Text className="text-body-18 text-secondary text-center">
