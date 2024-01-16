@@ -317,9 +317,7 @@ export default function CreateNftPage() {
 
                         </div>
                       )) : (
-                        <div className="flex justify-center items-center w-full h-40 rounded-2xl border border-dashed border-disabled">
-                          <Link className="text-center" href={`/create/collection`}>Create Collection</Link>
-                        </div>
+                        ''
                       )
                     }
                   </div>

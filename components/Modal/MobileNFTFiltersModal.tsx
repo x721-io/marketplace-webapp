@@ -4,8 +4,11 @@ import React from 'react'
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
-    inner: "relative rounded-lg bg-white shadow flex flex-col tablet:h-auto h-auto desktop:h-auto ",
-    base: "relative w-full p-10 desktop:h-auto tablet:h-auto max-h-[90vh]",
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
+  },
+  body: {
+    base: "p-0 flex-1 overflow-auto"
   }
 }
 
