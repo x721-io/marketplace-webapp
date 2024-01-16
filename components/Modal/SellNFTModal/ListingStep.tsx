@@ -114,6 +114,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
             error={!!errors.quantity}
             register={register('quantity', formRules.quantity)}
             type="number"
+            containerClass="mb-4"
             appendIcon={
               <Text className="mr-5">
                 Owned: {ownerData?.quantity}
@@ -123,7 +124,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
             mode="seller"
             nft={nft}
             quoteToken={quoteToken?.address}
-            price={parseUnits(String(Number(price) * Number(quantity)), quoteToken?.decimal)} />
+            price={parseUnits(String(Number(price || 0) * Number(quantity || 0)), quoteToken?.decimal)} />
         </div>
       ) : (
         <FeeCalculator
