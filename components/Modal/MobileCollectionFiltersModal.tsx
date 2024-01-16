@@ -1,6 +1,8 @@
-import {CustomFlowbiteTheme, Modal} from 'flowbite-react'
+import { CustomFlowbiteTheme, Modal, ModalProps } from 'flowbite-react'
 import React from 'react'
-import CollectionFilters from "@/components/Filters/CollectionFilters";
+import CollectionFilters, { CollectionProps } from "@/components/Filters/CollectionFilters";
+import { useExploreSectionFilters } from '@/hooks/useFilters';
+import { APIParams } from '@/services/api/types';
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
@@ -9,19 +11,34 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
   }
 }
 
-export default function MobileCollectionFiltersModal({handleApplyFilters, isFiltersVisible, onClose,showModal}) {
+interface Props {
+  closeFilter?: () => void
+  showFilter: boolean
+  onApplyFilters?: (filters: APIParams.FetchCollections) => void
+}
+
+export default function MobileCollectionFiltersModal({
+  closeFilter,
+  showFilter,
+  onApplyFilters,
+}: Props) {
+  const { isFiltersVisible } = useExploreSectionFilters()
   return (
-     <Modal
-        theme={modalTheme}
-        position="center"
-        onClose={onClose}
-        show={showModal}
-        size="md"
-        className="bg-black flex items-center justify-center">
-       <Modal.Header>Filters</Modal.Header>
-       <Modal.Body>
-         <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} onCloseModal={isFiltersVisible}/>
-       </Modal.Body>
-     </Modal>
+    <Modal
+      theme={modalTheme}
+      position="center"
+      onClose={closeFilter}
+      show={showFilter}
+      size="md"
+      className="bg-black flex items-center justify-center">
+      <Modal.Header>Filters</Modal.Header>
+      <Modal.Body>
+        <CollectionFilters 
+          visible={isFiltersVisible} 
+          onApplyFilters={onApplyFilters} 
+          onCloseModal={closeFilter} 
+          containerClass="w-full"/>
+      </Modal.Body>
+    </Modal>
   )
 }

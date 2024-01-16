@@ -1,64 +1,66 @@
 'use client'
 
-import {useCollectionFilters, useExploreSectionFilters} from '@/hooks/useFilters'
+import { useCollectionFilters, useExploreSectionFilters } from '@/hooks/useFilters'
 import CollectionFilters from '@/components/Filters/CollectionFilters'
 import CollectionsList from '@/components/List/CollectionsList'
-import {useMarketplaceApi} from '@/hooks/useMarketplaceApi'
-import {useUIStore} from '@/store/ui/store'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
+import { useUIStore } from '@/store/ui/store'
 import useSWR from 'swr'
-import {sanitizeObject} from '@/utils'
-import {APIParams} from '@/services/api/types'
-import React, {useEffect, useState} from 'react'
-import {isMobile} from "react-device-detect";
+import { sanitizeObject } from '@/utils'
+import { APIParams } from '@/services/api/types'
+import React, { useEffect, useState } from 'react'
+import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
 
-export default function ExploreCollectionsPage() {
-  const [showFilters, setShowFilters] = useState(false)
+interface Props {
+   onClose?: () => void
+ }
 
-  const api = useMarketplaceApi()
+export default function ExploreCollectionsPage({onClose} : Props) {
+   const [showFilters, setShowFilters] = useState(false)
 
-  const {activeFilters, handleApplyFilters, handleChangePage} = useCollectionFilters()
+   const api = useMarketplaceApi()
 
-  const {queryString, clearInput} = useUIStore(state => state)
-  const {searchKey} = useExploreSectionFilters()
+   const { activeFilters, handleApplyFilters, handleChangePage } = useCollectionFilters()
 
-  const {data: collections, error, isLoading} = useSWR(
-     {...activeFilters, name: queryString[searchKey]},
-     (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
-     {refreshInterval: 10000}
-  )
+   const { queryString, clearInput } = useUIStore(state => state)
+   const { searchKey } = useExploreSectionFilters()
 
-  const {isFiltersVisible} = useExploreSectionFilters()
+   const { data: collections, error, isLoading } = useSWR(
+      { ...activeFilters, name: queryString[searchKey] },
+      (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+      { refreshInterval: 10000 }
+   )
 
-  useEffect(() => {
-    clearInput(searchKey)
-  }, [])
-  console.log(isFiltersVisible)
+   const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters()
 
-  return (
-     <div className="flex gap-6 flex-col desktop:flex-row">
-       {
-         isMobile ? (
+   useEffect(() => {
+      clearInput(searchKey)
+   }, [])
+
+   return (
+      <div className="flex gap-6 flex-col desktop:flex-row">
+         {
+            isMobile ? (
                <MobileCollectionFiltersModal
-                  onApplyFilters={handleApplyFilters} isFiltersVisible={isFiltersVisible}
-                  onCloseModal={() => setShowFilters(!isFiltersVisible)} showModal={isFiltersVisible}
+                  onApplyFilters={handleApplyFilters}
+                  showFilter={isFiltersVisible} 
+                  closeFilter={handleToggleFilters}
                />
             ) :
-            isFiltersVisible && (
-               <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters}/>
-            )
-       }
-       {/*<CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters}/>*/}
-
-       <div className="flex-1">
-         <CollectionsList
-            loading={isLoading}
-            collections={collections?.data}
-            paging={collections?.paging}
-            onChangePage={handleChangePage}
-            showFilter={isFiltersVisible}
-         />
-       </div>
-     </div>
-  )
+               isFiltersVisible && (
+                  <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
+               )
+         }
+         <div className="flex-1">
+            <CollectionsList
+               loading={isLoading}
+               collections={collections?.data}
+               paging={collections?.paging}
+               onChangePage={handleChangePage}
+               showFilter={isFiltersVisible}
+            />
+         </div>
+      </div>
+   )
 }
