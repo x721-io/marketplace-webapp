@@ -22,6 +22,10 @@ interface FormState {
 }
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
+  },
   body: {
     base: "p-0 flex-1 overflow-auto"
   }
@@ -88,7 +92,7 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
   useEffect(() => {
     if (royalties) {
       const parsedRoyalties = royalties.map(item => {
-        const valueInNumber = BigInt(item.value) / BigInt(100)
+        const valueInNumber = Number(item.value) / 100
         return { ...item, value: valueInNumber.toString() }
       })
       setValue('royalties', parsedRoyalties)

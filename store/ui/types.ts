@@ -9,5 +9,4 @@ export interface UIState {
 export interface UIAction {
   toggleFilter: (key: FilterKey, bool?: boolean) => void
   setQueryString: (key: SearchKey, text: string) => void
-  clearInput: (key: string) => void
 }
