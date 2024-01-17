@@ -9,6 +9,11 @@ import { useAccount } from "wagmi";
 import TokenBalances from "./TokenBalances";
 import { toast } from 'react-toastify'
 import {APPLY_URL} from "@/config/constants";
+import Collapsible from "@/components/Collapsible";
+import Input from "@/components/Form/Input";
+import {BrowserView} from "react-device-detect";
+import Button from "@/components/Button";
+import React from "react";
 
 interface Props {
   onClose?: () => void
@@ -60,16 +65,22 @@ export default function MenuAccountInformation({ onClose }: Props) {
         <Link className="text-secondary hover:text-primary" href={"/create/nft"} onClick={onClose}>
           Create NFT
         </Link>
-        <Link className="text-secondary hover:text-primary" href={"/launchpad"} onClick={onClose}>
-          Project
-        </Link>
-        <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose}>
-          Apply
-        </Link>
+        <Collapsible className="!p-0" header="Launchpad">
+          <div className="flex flex-col gap-4 mb-4">
+            <Link className="text-secondary hover:text-primary" href={"/launchpad"} onClick={onClose}>
+              Project
+            </Link>
+            <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose}>
+              Apply
+            </Link>
+          </div>
+        </Collapsible>
+
         <div className="border-b" />
         <Link className="text-secondary hover:text-primary" href={"/profile"} onClick={onClose}>
           Settings
         </Link>
+
       </div>
       <div className=" flex flex-col gap-4">
         <div className="flex items-center justify-between px-3">

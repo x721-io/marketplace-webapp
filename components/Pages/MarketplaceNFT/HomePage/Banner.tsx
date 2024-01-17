@@ -13,6 +13,7 @@ import defaultSlider4 from '@/assets/images/default-slider-4.png'
 import defaultSlider5 from '@/assets/images/default-slider-5.png'
 import {useRouter} from "next/navigation";
 import Link from "next/link";
+import {CAMPAIGN_URL} from "@/config/constants";
 
 const modalTheme: CustomFlowbiteTheme['carousel'] = {
   control: {
@@ -33,7 +34,7 @@ export default function HomePageBanner() {
   const router = useRouter()
 
   const sliderImages = [
-    {src: defaultSlider1, alt: 'Slide 1', showButton: true, link: ''},
+    {src: defaultSlider1, alt: 'Slide 1', showButton: true, link: CAMPAIGN_URL},
     {src: defaultSlider2, alt: 'Slide 2', showButton: false, link: ''},
     {src: defaultSlider3, alt: 'Slide 3', showButton: false, link: ''},
     {src: defaultSlider4, alt: 'Slide 4', showButton: false, link: ''},
@@ -69,7 +70,7 @@ export default function HomePageBanner() {
        <div className="flex justify-center items-center order-1 tablet:order-2">
          <div
             className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-full h-[320px] tablet:pr-8">
-           <Carousel theme={modalTheme} indicators={true}>
+           <Carousel pauseOnHover theme={modalTheme} indicators={true}>
              {sliderImages.map((image, index) => (
                 <div key={index} className="flex h-full w-full  justify-end items-end">
                   <Image
@@ -81,10 +82,13 @@ export default function HomePageBanner() {
                   />
                   {image.showButton && (
                      <div
-                        className="absolute top-[70%] right-[12%] tablet:top-[70%] tablet:right-[15%] desktop:top-[75%] desktop:right-[15%]">
-                       <Link href={image.link}>
-                         <Button className="" scale="lg tablet:sm desktop:md" variant="secondary">
-                           CTA
+                        className="absolute top-[70%] right-[12%] tablet:top-[70%] tablet:right-[15%] desktop:top-[80%] desktop:right-[12%]">
+                       <Link target="_blank" href={image.link}>
+                         <Button className="flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 shadow-2xl shadow-cyan-500/50 opacity-50 hover:opacity-75" scale="sm" variant="secondary">
+                           <span className="text-white">
+                             Open Link
+                           </span>
+                           {/*<Icon name="arrowRight"/>*/}
                          </Button>
                        </Link>
                      </div>

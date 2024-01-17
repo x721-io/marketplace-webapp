@@ -5,6 +5,8 @@ export const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 export const MARKETPLACE_URL = process.env.NEXT_PUBLIC_MARKETPLACE_URL as string
 export const APPLY_URL = process.env.NEXT_PUBLIC_APPLY_URL as string
 export const ZERO_COLLECTION = process.env.NEXT_PUBLIC_REQUIRED_COLLECTION
+export const CAMPAIGN_URL = process.env.NEXT_PUBLIC_CAMPAIGN_URL as string
+
 
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) => `I want to login on U2UNFTMarket at ${time}. I accept the U2U Terms of Service https://unicornultra.xyz and I am at least 13 years old.`
