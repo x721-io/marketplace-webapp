@@ -63,7 +63,7 @@ export default function CreateNftPage() {
   const formRules = {
     media: {
       validate: {
-        required: (v: Blob[]) =>  (v && v.length > 0)|| 'NFT image is required',
+        required: (v: Blob[]) => (v && v.length > 0) || 'NFT image is required',
         audio: (values: Blob[]) => {
           if (values && values.length > 0) {
             const firstFileType = values[0].type.split('/')[0];
@@ -118,7 +118,7 @@ export default function CreateNftPage() {
 
   const handleSelectMedia = (file?: Blob) => {
     if (!file) {
-      setValue('media', [],)
+      setValue('media', [])
     } else {
       setValue('media', [file])
       clearErrors('media')
@@ -130,6 +130,7 @@ export default function CreateNftPage() {
       setValue('media', [media[0]])
     } else {
       setValue('media', [media[0], file])
+      clearErrors('media');
     }
   }
 
