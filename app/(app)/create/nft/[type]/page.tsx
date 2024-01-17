@@ -22,6 +22,7 @@ import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
+import { numberRegex } from "@/utils/regex";
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -84,6 +85,7 @@ export default function CreateNftPage() {
       maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
     },
     royalties: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
       required: 'Royalties is required',
       min: { value: 1, message: 'Royalties should be within range of 1% - 50%' },
       max: { value: 50, message: 'Royalties should be within range of 1% - 50%' }
@@ -345,7 +347,6 @@ export default function CreateNftPage() {
             <div>
               <Text className="text-body-16 font-semibold mb-1">Royalties</Text>
               <Input
-                type="number"
                 error={!!errors.royalties}
                 register={register('royalties', formRules.royalties)}
                 appendIcon={(
