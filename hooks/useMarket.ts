@@ -7,7 +7,7 @@ import { AssetType, NFT } from '@/types'
 import { useTransactionStatus } from '@/hooks/useTransactionStatus'
 import { BigNumberish, MaxInt256, parseEther } from 'ethers'
 import { FINGERPRINT } from '@/config/constants'
-import { readContract } from '@wagmi/core'
+import { readContract, waitForTransaction, writeContract } from '@wagmi/core'
 
 export const useNFTMarketStatus = (type: AssetType, marketData?: APIResponse.NFTMarketData) => {
   const { owners, sellInfo, bidInfo } = useMemo(() => marketData || {
@@ -259,55 +259,70 @@ export const useBidNFT = (nft: NFT) => {
 export const useBidUsingNative = (nft: NFT) => {
   const type = nft.collection.type
   const { txStatus, updateHash } = useTransactionStatus()
-  const {
-    writeAsync,
-    error: writeError
-  } = useWriteMarketContract(type, type === 'ERC721' ? 'createBidUsingEth' : 'createOfferUsingEth')
+
+  const onBidERC721 = (price: any, value: any) => writeContract({
+    ...contracts.erc721Market,
+    functionName: 'createBidUsingEth',
+    args: [
+      nft.collection.address,
+      (nft.u2uId ?? nft.id) as any,
+      price
+    ],
+    value
+  })
+
+  const onBidERC1155 = (pricePerUnit: any, quantity: any, value: any) => writeContract({
+    ...contracts.erc1155Market,
+    functionName: 'createOfferUsingEth',
+    args: [
+      nft.collection.address,
+      (nft.u2uId ?? nft.id) as any,
+      quantity,
+      pricePerUnit
+    ],
+    value
+  })
 
   const onBidUsingNative = async (price: string, quantity?: string) => {
     const totalPrice = type === 'ERC721' ? parseEther(price) : parseEther(price) * BigInt(quantity ?? 0)
     const pricePerUnit = parseEther(price)
+
     const [_, buyerFee] = await readContract({
       ...contracts.feeDistributorContract,
       functionName: 'calculateFee',
       args: [totalPrice, nft.collection.address, (nft.u2uId || nft.id) as any]
     })
 
-    const args = type === 'ERC721' ? [
-      nft.collection.address,
-      nft.u2uId ?? nft.id,
-      totalPrice
-    ] : [
-      nft.collection.address,
-      nft.u2uId ?? nft.id,
-      quantity,
-      pricePerUnit
-    ]
+    const totalCost = totalPrice + buyerFee
 
-    const { hash } = await writeAsync?.({
-      args,
-      value: totalPrice + buyerFee
-    })
+    const { hash } = type === 'ERC721' ? await onBidERC721(totalPrice, totalCost) : await onBidERC1155(pricePerUnit, quantity, totalCost)
     updateHash(hash)
   }
-  return { onBidUsingNative, writeError, ...txStatus }
+  return { onBidUsingNative, ...txStatus }
 }
 
 export const useCancelBidNFT = (nft: NFT) => {
   const type = nft.collection.type
   const { txStatus, updateHash } = useTransactionStatus()
-  const {
-    writeAsync,
-    error: writeError
-  } = useWriteMarketContract(type, type === 'ERC721' ? 'cancelBid' : 'cancelOffer')
+
+  const onCancelERC721Bid = () => writeContract({
+    ...contracts.erc721Market,
+    functionName: 'cancelBid',
+    args: [nft.collection.address, (nft.u2uId ?? nft.id) as any]
+  })
+
+  const onCancelERC1155Bid = (operationId?: string) => writeContract({
+    ...contracts.erc1155Market,
+    functionName: 'cancelOffer',
+    args: [operationId as any]
+  })
 
   const onCancelBid = async (operationId?: string) => {
-    const args = type === 'ERC721' ? [nft.collection.address, nft.u2uId ?? nft.id] : [operationId]
-    const { hash } = await writeAsync?.({ args })
-    updateHash(hash)
+    const { hash } = type === 'ERC721' ? await onCancelERC721Bid() : await onCancelERC1155Bid(operationId)
+    return updateHash(hash)
   }
 
-  return { onCancelBid, writeError, ...txStatus }
+  return { onCancelBid, ...txStatus }
 }
 
 export const useAcceptBidNFT = (nft: NFT) => {
