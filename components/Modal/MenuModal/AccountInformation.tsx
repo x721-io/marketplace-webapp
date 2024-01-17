@@ -8,6 +8,7 @@ import { getUserAvatarImage, getUserLink, truncate } from "@/utils/string";
 import { useAccount } from "wagmi";
 import TokenBalances from "./TokenBalances";
 import { toast } from 'react-toastify'
+import {APPLY_URL} from "@/config/constants";
 
 interface Props {
   onClose?: () => void
@@ -58,6 +59,12 @@ export default function MenuAccountInformation({ onClose }: Props) {
         </Link>
         <Link className="text-secondary hover:text-primary" href={"/create/nft"} onClick={onClose}>
           Create NFT
+        </Link>
+        <Link className="text-secondary hover:text-primary" href={"/launchpad"} onClick={onClose}>
+          Project
+        </Link>
+        <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose}>
+          Apply
         </Link>
         <div className="border-b" />
         <Link className="text-secondary hover:text-primary" href={"/profile"} onClick={onClose}>

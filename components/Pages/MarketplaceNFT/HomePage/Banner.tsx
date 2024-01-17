@@ -1,87 +1,99 @@
 "use client"
 
 import Text from '@/components/Text'
-import { Carousel } from 'flowbite-react'
+import {Carousel, CustomFlowbiteTheme} from 'flowbite-react'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { HEADER_HEIGHT } from '@/components/Layout/MainHeader'
+import {HEADER_HEIGHT} from '@/components/Layout/MainHeader'
 import Image from 'next/image'
 import defaultSlider1 from '@/assets/images/default-slider-1.png'
 import defaultSlider2 from '@/assets/images/default-slider-2.png'
 import defaultSlider3 from '@/assets/images/default-slider-3.png'
 import defaultSlider4 from '@/assets/images/default-slider-4.png'
 import defaultSlider5 from '@/assets/images/default-slider-5.png'
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
+import Link from "next/link";
+
+const modalTheme: CustomFlowbiteTheme['carousel'] = {
+  control: {
+    base: "inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white sm:h-7 sm:w-7",
+    icon: "h-4 w-4 text-white sm:h-5 sm:w-5"
+  },
+  indicators: {
+    active: {
+      off: "bg-white/50 hover:bg-white",
+      on: "bg-white"
+    },
+    base: "h-1 w-5 rounded-full",
+    wrapper: "absolute bottom-3 left-1/2 flex -translate-x-1/2 space-x-3"
+  }
+}
 
 export default function HomePageBanner() {
   const router = useRouter()
 
-  return (
-    <div className="flex items-stretch justify-center gap-12 bg-transparent flex-col desktop:flex-row tablet:flex-row tablet:w-full my-8 mx-4 tablet:mx-auto desktop:mx-auto">
-      <div className="flex justify-center items-center order-2 tablet:order-1">
-        <div className="desktop:w-[611px] w-full tablet:pl-8">
-          <Text className="desktop:text-heading-xl text-body-40 text-primary font-semibold mb-12">
-            Discover digital art and Collect NFTs
-          </Text>
-          <div className="flex items-center gap-4 flex-col tablet:flex-row desktop:flex-row">
-            <Button
-              onClick={() => router.push('/create/nft')}
-              className="bg-purple-500 hover:bg-purple-500/80 w-full tablet:w-auto desktop:w-auto">
-              Create your NFTs
-              <Icon name="arrowRight" />
-            </Button>
-            <Button
-              onClick={() => router.push('/explore/items')}
-              className="w-full tablet:w-auto desktop:w-auto"
-              variant="secondary">
-              Start exploring
-              <Icon name="arrowRight" />
-            </Button>
-          </div>
-        </div>
-      </div>
+  const sliderImages = [
+    {src: defaultSlider1, alt: 'Slide 1', showButton: true, link: ''},
+    {src: defaultSlider2, alt: 'Slide 2', showButton: false, link: ''},
+    {src: defaultSlider3, alt: 'Slide 3', showButton: false, link: ''},
+    {src: defaultSlider4, alt: 'Slide 4', showButton: false, link: ''},
+    {src: defaultSlider5, alt: 'Slide 5', showButton: false, link: ''},
+  ];
 
-      <div className="flex justify-center items-center order-1 tablet:order-2">
-        <div className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-full h-[320px] tablet:pr-8">
-          <Carousel>
-            <Image
-              className="rounded-tl-xl rounded-tr-xl object-cover"
-              src={defaultSlider1}
-              alt="Cover"
-              width={500}
-              style={{ width: '100%', height: '100%' }}
-            />
-            <Image
-              className="rounded-tl-xl rounded-tr-xl object-cover"
-              src={defaultSlider2}
-              alt="Cover"
-              width={500}
-              style={{ width: '100%', height: '100%' }}
-            />
-            <Image
-              className="rounded-tl-xl rounded-tr-xl object-cover"
-              src={defaultSlider3}
-              alt="Cover"
-              width={500}
-              style={{ width: '100%', height: '100%' }}
-            />
-            <Image
-              className="rounded-tl-xl rounded-tr-xl object-cover"
-              src={defaultSlider4}
-              alt="Cover"
-              width={500}
-              style={{ width: '100%', height: '100%' }}
-            />
-            <Image
-              className="rounded-tl-xl rounded-tr-xl object-cover"
-              src={defaultSlider5}
-              alt="Cover"
-              width={500}
-              style={{ width: '100%', height: '100%' }}
-            />
-          </Carousel>
-        </div>
-      </div>
-    </div>
+  return (
+     <div
+        className="flex items-stretch justify-center gap-12 bg-transparent flex-col desktop:flex-row tablet:flex-row tablet:w-full my-8 mx-4 tablet:mx-auto desktop:mx-auto">
+       <div className="flex justify-center items-center order-2 tablet:order-1">
+         <div className="desktop:w-[611px] w-full tablet:pl-8">
+           <Text className="desktop:text-heading-xl text-body-40 text-primary font-semibold mb-12">
+             Discover digital art and Collect NFTs
+           </Text>
+           <div className="flex items-center gap-4 flex-col tablet:flex-row desktop:flex-row">
+             <Button
+                onClick={() => router.push('/create/nft')}
+                className="bg-purple-500 hover:bg-purple-500/80 w-full tablet:w-auto desktop:w-auto">
+               Create your NFTs
+               <Icon name="arrowRight"/>
+             </Button>
+             <Button
+                onClick={() => router.push('/explore/items')}
+                className="w-full tablet:w-auto desktop:w-auto"
+                variant="secondary">
+               Start exploring
+               <Icon name="arrowRight"/>
+             </Button>
+           </div>
+         </div>
+       </div>
+
+       <div className="flex justify-center items-center order-1 tablet:order-2">
+         <div
+            className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-full h-[320px] tablet:pr-8">
+           <Carousel theme={modalTheme} indicators={true}>
+             {sliderImages.map((image, index) => (
+                <div key={index} className="flex h-full w-full  justify-end items-end">
+                  <Image
+                     className="rounded-tl-xl rounded-tr-xl object-cover"
+                     src={image.src}
+                     alt={image.alt}
+                     width={500}
+                     style={{width: '100%', height: '100%'}}
+                  />
+                  {image.showButton && (
+                     <div
+                        className="absolute top-[70%] right-[12%] tablet:top-[70%] tablet:right-[15%] desktop:top-[75%] desktop:right-[15%]">
+                       <Link href={image.link}>
+                         <Button className="" scale="lg tablet:sm desktop:md" variant="secondary">
+                           CTA
+                         </Button>
+                       </Link>
+                     </div>
+                  )}
+                </div>
+             ))}
+           </Carousel>
+         </div>
+       </div>
+     </div>
   )
 }
