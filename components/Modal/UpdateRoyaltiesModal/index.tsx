@@ -56,6 +56,12 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
       const isMissingValue = value.some(item => isNaN(item.value) || Number(item.value) <= 0)
       if (isMissingValue) return 'Royalty value must be greater than Zero'
 
+      const isTwoDecimal = value.some(item => {
+        let decimal = item.value - Math.floor(item.value);
+        let shift = decimal * 100;
+        return Number.isInteger(shift)
+      })
+      if (!isTwoDecimal) return 'Royalty value only allow 2 decimal';
       const totalRoyalties = value.reduce((accumulator, current) => {
         return Number(current.value) + Number(accumulator)
       }, 0)
@@ -72,7 +78,9 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
     setLoading(true)
 
     try {
-      const _royalties = data.royalties.map(item => ({ ...item, value: BigInt(Number(item.value) * 100) }))
+      const _royalties = data.royalties.map(item => {
+        console.log(item.value)
+        return ({ ...item, value: BigInt((item.value) * 1000 ) / BigInt(10) })})
       await onUpdateRoyalties(collection.address, _royalties)
       toast.success('Royalties have been successfully updated', { autoClose: 1000, closeButton: true })
       handleClose()
@@ -158,7 +166,7 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
                           onClick={() => {
                             // Delete row
                             const newRoyalties = [...value]
-                            newRoyalties.splice(index, 1)
+                            newRoyalties.splice(index, 2)
                             setValue('royalties', newRoyalties)
                           }}>
                           <Icon name="close" width={12} height={12} />
