@@ -38,18 +38,14 @@ export default function ProfilePage() {
 
   if (error && !user) {
     return (
-      <div className="w-full h-96 flex flex-col gap-2 justify-center items-center p-7 rounded-2xl">
-        <Text variant="heading-xs" className="text-center text-error">
-          Error Report:
-        </Text>
-        <Text variant="heading-xs" className="text-center text-error">
-          <br/>
-          {error.message}
+      <div className="w-full h-96 flex justify-center items-center">
+        <Text variant="heading-xs" className="text-center">
+          Network Error!
           <br />
           Please try again later
         </Text>
       </div>
-    )
+    );
   }
 
   if (!user) {
@@ -59,28 +55,73 @@ export default function ProfilePage() {
           User does not exist!
         </Text>
       </div>
-    )
+    );
   }
 
   return (
     <div className="w-full">
       <Profile {...user} />
 
-      <div className="desktop:px-20 tablet:px-20 px-4">
-        <Tabs.Group style="underline">
-          <Tabs.Item title={`Owned (${formatDisplayedBalance(ownedAmount, 0)})`}>
-            <OwnedNFTs wallet={user.publicKey} onUpdateAmount={setOwnedAmount} />
+      <div className='desktop:px-20 tablet:px-20 px-4'>
+        <Tabs.Group
+          style='underline'
+          className='flex flex-nowrap overflow-x-auto'
+        >
+          <Tabs.Item
+            title={
+              <div className='min-w-fit whitespace-nowrap'>
+                Owned ({formatDisplayedBalance(ownedAmount, 0)})
+              </div>
+            }
+          >
+            <OwnedNFTs
+              wallet={user.publicKey}
+              onUpdateAmount={setOwnedAmount}
+            />
           </Tabs.Item>
-          <Tabs.Item title={`On Sale (${formatDisplayedBalance(saleAmount, 0)})`}>
-            <OnSaleNFTs wallet={user.publicKey}  onUpdateAmount={setSaleAmount}/>
+          <Tabs.Item
+            title={
+              <div className='min-w-fit whitespace-nowrap'>
+                On Sale ({formatDisplayedBalance(saleAmount, 0)})
+              </div>
+            }
+          >
+            <OnSaleNFTs
+              wallet={user.publicKey}
+              onUpdateAmount={setSaleAmount}
+            />
           </Tabs.Item>
-          <Tabs.Item title={`Created (${formatDisplayedBalance(createdAmount, 0)})`}>
-            <CreatedNFTs userId={user.id} wallet={user.publicKey} onUpdateAmount={setCreatedAmount}/>
+          <Tabs.Item
+            title={
+              <div className='min-w-fit whitespace-nowrap'>
+                Created ({formatDisplayedBalance(createdAmount, 0)})
+              </div>
+            }
+          >
+            <CreatedNFTs
+              userId={user.id}
+              wallet={user.publicKey}
+              onUpdateAmount={setCreatedAmount}
+            />
           </Tabs.Item>
-          <Tabs.Item title={`Collections (${formatDisplayedBalance(createdCollectionAmount, 0)})`}>
-            <UserCollections userId={user.id} onUpdateAmount={setCreatedCollectionAmount} />
+          <Tabs.Item
+            title={
+              <div className='min-w-fit whitespace-nowrap'>
+                Collections (
+                {formatDisplayedBalance(createdCollectionAmount, 0)})
+              </div>
+            }
+          >
+            <UserCollections
+              userId={user.id}
+              onUpdateAmount={setCreatedCollectionAmount}
+            />
           </Tabs.Item>
-          <Tabs.Item title={"Activities"}>
+          <Tabs.Item
+            title={
+              <div className='min-w-fit whitespace-nowrap'>Activities</div>
+            }
+          >
             <Activities wallet={user.publicKey} />
           </Tabs.Item>
         </Tabs.Group>
