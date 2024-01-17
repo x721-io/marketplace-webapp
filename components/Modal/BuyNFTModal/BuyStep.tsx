@@ -91,6 +91,8 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
               Balance: {formatDisplayedBalance(formatUnits(tokenBalance?.value || 0, 18))}
             </Text>
           }
+          // @ts-ignore
+          error={ tokenBalance?.value < saleData?.price }
         />
       </div>
 
