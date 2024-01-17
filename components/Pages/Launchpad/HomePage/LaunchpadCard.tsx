@@ -78,17 +78,17 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
         <div className="mt-1 flex gap-10 justify-end items-center">
           {activeRound?.status === 'UPCOMING' && (
             <Text className="text-secondary" variant="body-12">
-              Start: <span className="font-medium text-primary">{format(activeRound.start, 'yyyy/M/dd - hh:mm a')}</span>
+              {/*Start: <span className="font-medium text-primary">{format(activeRound.start , 'yyyy/M/dd - hh:mm a')}</span>*/}
             </Text>
           )}
           {activeRound?.status === 'ENDED' && (
             <Text className="text-secondary" variant="body-12">
-              Ended: <span className="font-medium text-primary">{format(activeRound.end, 'yyyy/M/dd - hh:mm a')}</span>
+              {/*Ended: <span className="font-medium text-primary">{format(activeRound.end, 'yyyy/M/dd - hh:mm a')}</span>*/}
             </Text>
           )}
           {activeRound?.status === 'MINTING' && (
             <Text className="text-secondary" variant="body-12">
-              Ending in: <span className="font-medium text-primary">{format(activeRound.end, 'yyyy/M/dd - hh:mm a')}</span>
+              {/*Ending in: <span className="font-medium text-primary">{format(activeRound.end, 'yyyy/M/dd - hh:mm a')}</span>*/}
             </Text>
           )}
 

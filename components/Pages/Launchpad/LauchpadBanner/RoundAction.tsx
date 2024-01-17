@@ -284,7 +284,7 @@ export default function RoundAction({
              <p className='text-body-14 text-secondary'>
                Minting starts:{' '}
                <span className='text-primary font-semibold'>
-                {format(round.start, 'yyyy/M/dd - hh:mm a')}
+                {format(new Date(round.start || 0), 'yyyy/M/dd - hh:mm a')}
               </span>
              </p>
 
@@ -351,7 +351,7 @@ export default function RoundAction({
                                Stake before:
                              </p>
                              <p className='text-primary font-semibold text-right'>
-                               {format(round.stakeBefore, 'yyyy/M/dd - hh:mm a O')}
+                               {format(new Date(round.stakeBefore || 0), 'yyyy/M/dd - hh:mm a O')}
                              </p>
                            </div>
 

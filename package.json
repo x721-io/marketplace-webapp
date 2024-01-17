@@ -30,7 +30,9 @@
     "viem": "^1.18.9",
     "wagmi": "^1.4.6",
     "web3": "^4.2.2",
-    "zustand": "^4.4.6"
+    "zustand": "^4.4.6",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -40,6 +42,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.0.2",
     "postcss": "^8.4.31",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@types/react-slick": "^0.23.12"
   }
 }

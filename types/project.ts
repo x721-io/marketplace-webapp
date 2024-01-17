@@ -1,4 +1,5 @@
-import {Collection, Round} from "@/types/launchpad";
+import {Round} from "@/types/launchpad";
+import {Collection} from "@/types/entitites";
 
 export interface Project {
   id: string,

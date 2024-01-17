@@ -40,7 +40,7 @@ export default function LaunchpadSlide({ project, ...rest }: Props) {
 
   return (
     <div {...rest}>
-      <div className="flex justify-center desktop:gap-8 mb-10 flex-col tablet:flex-row desktop:flex-row">
+      <div className="flex justify-center desktop:gap-8 m-10 flex-col tablet:flex-row desktop:flex-row">
         {/** Project Image **/}
         <Image
           width={384}
