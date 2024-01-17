@@ -8,6 +8,7 @@ export type RoundType =
    | 'U2UPremintRoundFCFS'
    | 'U2UPremintRoundWhitelist'
    | 'U2UPremintRoundZero'
+   | 'U2UMintRoundWhitelistCustomized'
 
 export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING' | 'CLAIM'
 

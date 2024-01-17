@@ -99,6 +99,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
         <RoundContractInteractions
           round={activeRound}
           collection={project.collection}
+          isSpecial={activeRound.address == '0xE797C47B342d7BfF7737b067e3C343925c9d2249'}
         />
       </div>
     </div>

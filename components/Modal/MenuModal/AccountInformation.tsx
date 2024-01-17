@@ -70,7 +70,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
             <Link className="text-secondary hover:text-primary" href={"/launchpad"} onClick={onClose}>
               Project
             </Link>
-            <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose}>
+            <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose} target='_blank'>
               Apply
             </Link>
           </div>
