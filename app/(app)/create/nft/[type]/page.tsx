@@ -130,6 +130,7 @@ export default function CreateNftPage() {
       setValue('media', [media[0]])
     } else {
       setValue('media', [media[0], file])
+      clearErrors('media');
     }
   }
 
