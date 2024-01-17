@@ -38,9 +38,13 @@ export default function ProfilePage() {
 
   if (error && !user) {
     return (
-      <div className="w-full h-96 flex justify-center items-center">
-        <Text variant="heading-xs" className="text-center">
-          Network Error!
+      <div className="w-full h-96 flex flex-col gap-2 justify-center items-center p-7 rounded-2xl">
+        <Text variant="heading-xs" className="text-center text-error">
+          Error Report:
+        </Text>
+        <Text variant="heading-xs" className="text-center text-error">
+          <br/>
+          {error.message}
           <br />
           Please try again later
         </Text>
