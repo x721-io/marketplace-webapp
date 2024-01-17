@@ -33,11 +33,11 @@ const tab: CustomFlowbiteTheme['tab'] = {
 
 const table: CustomFlowbiteTheme['table'] = {
   root: {
-    base: "w-full text-left text-sm text-secondary dark:text-gray-400 rounded-2xl",
-    shadow: "absolute bg-white dark:bg-black w-full h-full top-0 left-0 rounded-lg shadow -z-10"
+    base: "w-full text-left text-sm text-secondary rounded-2xl",
+    shadow: "absolute bg-white w-full h-full top-0 left-0 rounded-lg shadow -z-10"
   },
   head: {
-    base: "group/head text-heading-xs uppercase text-secondary font-semibold dark:text-gray-400"
+    base: "group/head text-heading-xs uppercase text-secondary font-semibold"
   }
 }
 

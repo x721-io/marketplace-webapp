@@ -25,7 +25,6 @@ export default function CollectionPage() {
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
   const myId = useAuthStore(state => state.profile?.id)
-  const { clearInput } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
 
   const { data, isLoading, error } = useSWR(
@@ -42,10 +41,6 @@ export default function CollectionPage() {
     }) as APIParams.FetchNFTs),
     { refreshInterval: 10000 }
   )
-
-  useEffect(()=> {
-    clearInput(searchKey)
-  },[])
 
   if (error) {
     return (
@@ -100,7 +95,6 @@ export default function CollectionPage() {
             paging={items?.paging}
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
-            creatordUserId= {data?.collection.creators[0].userId}
             dataCollectionType= {data.collection.type}
           />
         </div>

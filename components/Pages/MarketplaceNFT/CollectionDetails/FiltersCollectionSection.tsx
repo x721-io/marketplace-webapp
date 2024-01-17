@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SliderIcon from '@/components/Icon/Sliders'
 import Button from '@/components/Button'
 import CommandIcon from '@/components/Icon/Command'
@@ -12,6 +12,10 @@ interface Props {
 
 export default function FiltersSectionCollection({ showFilters, setShowFilters }: Props) {
   const { setQueryString, query } = useExploreSectionFilters()
+
+  useEffect(() => {
+    return () => setQueryString('collection', '')
+  }, []);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">
