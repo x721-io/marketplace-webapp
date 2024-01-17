@@ -266,6 +266,7 @@ export const useBidUsingNative = (nft: NFT) => {
 
   const onBidUsingNative = async (price: string, quantity?: string) => {
     const totalPrice = type === 'ERC721' ? parseEther(price) : parseEther(price) * BigInt(quantity ?? 0)
+    const pricePerUnit = parseEther(price)
     const [_, buyerFee] = await readContract({
       ...contracts.feeDistributorContract,
       functionName: 'calculateFee',
@@ -280,7 +281,7 @@ export const useBidUsingNative = (nft: NFT) => {
       nft.collection.address,
       nft.u2uId ?? nft.id,
       quantity,
-      totalPrice
+      pricePerUnit
     ]
 
     const { hash } = await writeAsync?.({

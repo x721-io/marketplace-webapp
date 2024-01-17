@@ -23,9 +23,9 @@ export const parseQueries = (queries: Record<string, any>) => {
     .map(([key, value]) => `${key}=${value}`).join("&")
 }
 
-export const formatDisplayedBalance = (value: string | number, digits = 2) => {
+export const formatDisplayedBalance = (value: string | number, digits = 10) => {
   if (!value) return '0'
-  return Number(value).toLocaleString('en-us')
+  return Number(value).toLocaleString('en-us', { maximumFractionDigits: digits })
 }
 
 export const getRoundAbi = (round: Round) => {
