@@ -9,7 +9,8 @@ import Link from 'next/link'
 import { Tooltip } from 'flowbite-react'
 import { NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
-import { getUserAvatarImage, truncate } from '@/utils/string'
+import { getDisplayedUserName, getUserAvatarImage, getUserLink, truncate } from '@/utils/string'
+import { formatDisplayedBalance } from '@/utils'
 
 export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
   const type = nft.collection.type
@@ -57,14 +58,14 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
               </Text>
               <Link
                 className="hover:underline flex items-center gap-1"
-                href={`/user/${marketData.owners[0].id || marketData.owners[0].signer}`}>
+                href={getUserLink(marketData.owners[0])}>
                 <Image
                   width={56}
                   height={56}
                   className="w-6 h-6 rounded-full"
-                  src={marketData.owners[0].avatar || getUserAvatarImage(marketData.owners[0])}
+                  src={getUserAvatarImage(marketData.owners[0])}
                   alt="avatar" />
-                {marketData.owners[0].username || truncate({str: marketData.owners[0].signer})}
+                {getDisplayedUserName(marketData.owners[0])}
               </Link>
             </div>
           )
@@ -97,7 +98,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {Number(formatUnits(saleData?.price || 0)).toLocaleString('en-US')}
+                      {formatDisplayedBalance(formatUnits(saleData?.price || 0))}
                     </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
