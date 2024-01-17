@@ -92,7 +92,7 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
   useEffect(() => {
     if (royalties) {
       const parsedRoyalties = royalties.map(item => {
-        const valueInNumber = BigInt(item.value) / BigInt(100)
+        const valueInNumber = Number(item.value) / 100
         return { ...item, value: valueInNumber.toString() }
       })
       setValue('royalties', parsedRoyalties)
