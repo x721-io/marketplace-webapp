@@ -1,6 +1,5 @@
-import { RoundStatus } from '@/types'
+import {Round, RoundStatus} from '@/types'
 import { useMemo } from 'react'
-import {Round} from "@/types/round";
 
 const getRoundStatus = (round: Round) => {
   if (!round) return 'ENDED'

@@ -52,7 +52,7 @@ export default function LaunchpadSlide({ project, ...rest }: Props) {
         <div className="flex flex-col justify-between">
           {/** Project descriptions **/}
           <div className="flex flex-col gap-4 mb-6 desktop:mb-0 tablet:mb-0">
-            <Text className="font-semibold" variant="heading-lg">
+            <Text className="font-semibold" variant="heading-md">
               Projects: {project.name}
             </Text>
             <div className="flex gap-3 items-center">

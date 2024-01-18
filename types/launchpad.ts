@@ -1,5 +1,6 @@
-import { Address } from 'wagmi'
-import { BigNumberish } from 'ethers'
+import {Address} from 'wagmi'
+import {BigNumberish} from 'ethers'
+import {Collection} from "@/types/entitites";
 
 export type RoundType =
    'U2UMintRoundFCFS'
@@ -11,8 +12,6 @@ export type RoundType =
    | 'U2UMintRoundWhitelistCustomized'
 
 export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING' | 'CLAIM'
-
-export type AssetType = 'ERC721' | 'ERC1155'
 
 export interface Round {
   id: number,
@@ -34,19 +33,23 @@ export interface Round {
   stakeBefore: string,
 }
 
-export interface User {
-  id: string
-  email: string
-  avatar?: string | null
-  username: string | null
-  signature: Address
-  signedMessage: string
-  signer: Address
-  publicKey: string
-  signDate: string
-  acceptedTerms: boolean
-  createdAt: string
-  updatedAt?: string | null
-  bio?: string | null
-  coverImage?: string | null
+export interface Project {
+  id: string,
+  idOnchain: number,
+  name: string,
+  banner: string,
+  logo: string
+  description: string,
+  organization: string,
+  website: string,
+  telegram: string,
+  twitter: string,
+  facebook: string,
+  instagram: string,
+  discord: string,
+  shortLink: string,
+  isActivated: boolean,
+  collection: Collection,
+  rounds: Round[]
+  details: { key: string, content: string }[]
 }

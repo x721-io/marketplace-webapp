@@ -12,7 +12,10 @@ export const sanitizeObject = (obj: Record<string, any>) => {
   return _obj
 }
 
-export const parseQueries = (queries: Record<string, any>) => {
+export const parseQueries = (queries?: Record<string, any> | undefined ) => {
+  if (!queries) {
+    return '';
+  }
   return '?' + Object.entries(queries)
     .filter(([_, value]) => {
       if (Array.isArray(value)) {

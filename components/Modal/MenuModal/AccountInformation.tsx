@@ -3,16 +3,13 @@ import Icon from '@/components/Icon'
 import Image from 'next/image'
 import Link from 'next/link'
 import useAuthStore from '@/store/auth/store'
-import { useAuth } from '@/hooks/useAuth'
-import { getUserAvatarImage, getUserLink, truncate } from "@/utils/string";
-import { useAccount } from "wagmi";
+import {useAuth} from '@/hooks/useAuth'
+import {getUserAvatarImage, getUserLink, truncate} from "@/utils/string";
+import {useAccount} from "wagmi";
 import TokenBalances from "./TokenBalances";
-import { toast } from 'react-toastify'
+import {toast} from 'react-toastify'
 import {APPLY_URL} from "@/config/constants";
 import Collapsible from "@/components/Collapsible";
-import Input from "@/components/Form/Input";
-import {BrowserView} from "react-device-detect";
-import Button from "@/components/Button";
 import React from "react";
 
 interface Props {

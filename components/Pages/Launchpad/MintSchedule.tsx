@@ -89,7 +89,7 @@ const RoundSchedule = ({
        </div>
 
        <Collapsible
-          defaultOpen={isActive || claimable}
+          // defaultOpen={isActive || claimable}
           className="flex-1 !px-0 !py-1"
           header={<p className="text-body-16 font-medium">{round.name}</p>}>
          <div className="rounded-2xl bg-surface-soft p-4 my-4 flex flex-col gap-2">

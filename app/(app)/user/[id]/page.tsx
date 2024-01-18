@@ -1,18 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import Profile from '@/components/Pages/UserDetails/Profile';
 import { Spinner, Tabs } from 'flowbite-react';
-import OwnedNFTs from '@/components/Pages/UserDetails/OwnedNFTs';
-import OnSaleNFTs from '@/components/Pages/UserDetails/OnSaleNFTs';
-import UserCollections from '@/components/Pages/UserDetails/UserCollections';
-import CreatedNFTs from '@/components/Pages/UserDetails/CreatedNFTs';
-import Activities from '@/components/Pages/UserDetails/Activities';
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import Text from '@/components/Text';
 import { formatDisplayedBalance } from '@/utils';
+import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
+import OnSaleNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OnSaleNFTs";
+import CreatedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/CreatedNFTs";
+import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserCollections";
+import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
+import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi();
