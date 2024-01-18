@@ -98,7 +98,7 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(formatUnits(saleData?.price || 0))}
+                      {formatDisplayedBalance(formatUnits(saleData?.price || 0), 3)}
                     </span>&nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>

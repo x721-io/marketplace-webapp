@@ -96,6 +96,8 @@ export default function CollectionPage() {
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
             dataCollectionType= {data.collection.type}
+            showCreateNFT = {true}
+            userId={data?.collection?.creators[0].userId}
           />
         </div>
       </div>
