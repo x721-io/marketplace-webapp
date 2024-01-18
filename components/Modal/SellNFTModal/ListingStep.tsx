@@ -14,6 +14,7 @@ import NFTMarketData = APIResponse.NFTMarketData
 import FeeCalculator from '@/components/FeeCalculator'
 import { formatUnits, parseUnits } from 'ethers'
 import { findTokenByAddress } from '@/utils/token'
+import { numberRegex } from "@/utils/regex";
 
 interface Props {
   onSuccess: () => void
@@ -50,6 +51,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       }
     },
     quantity: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: number) => {
           if (type === 'ERC721') return true
@@ -113,7 +115,6 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
           <Input
             error={!!errors.quantity}
             register={register('quantity', formRules.quantity)}
-            type="number"
             containerClass="mb-4"
             appendIcon={
               <Text className="mr-5">

@@ -16,6 +16,7 @@ import Input from '@/components/Form/Input'
 import { formatDisplayedBalance } from '@/utils'
 import FeeCalculator from '@/components/FeeCalculator'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { numberRegex } from '@/utils/regex'
 
 interface Props extends ModalProps {
   nft: NFT,
@@ -66,6 +67,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       }
     },
     quantity: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
@@ -147,7 +149,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 <div>
                   <Text className="text-secondary font-semibold mb-1">Quantity</Text>
                   <Input
-                    type="number"
                     register={register('quantity', formRules.quantity)}
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
