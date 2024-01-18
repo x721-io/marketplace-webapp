@@ -15,4 +15,4 @@ export const noSpecialCharacterRegex = new RegExp(/^[A-Za-z0-9 ]+$/)
 
 export const numberRegex = new RegExp(/^[0-9 ]+$/)
 
-export const decimalRegex = new RegExp(/^[0-9]+(\.[0-9]+)?$/);
+export const decimalRegex = new RegExp(/^[0-9]+([.,][0-9]{1,2})?$/);
