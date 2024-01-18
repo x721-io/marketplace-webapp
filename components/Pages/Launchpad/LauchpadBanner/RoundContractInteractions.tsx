@@ -44,7 +44,7 @@ export default function RoundContractInteractions({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: 'getTimeframesLength',
-    enabled: !!address && round.type === 'U2UMintRoundWhitelistCustomized',
+    enabled: !!address,
     watch: true,
   });
 
@@ -65,7 +65,7 @@ export default function RoundContractInteractions({
     select: (data) => data.map((item) => item.result as unknown as Timeframe),
   });
 
-  const hasTimeFrame = useMemo(() => {
+  const hasTimeframe = useMemo(() => {
     if (timeframes?.length == 1 && timeframes[0]) {
       if (
         timeframes[0].hourStart == 0 &&
@@ -78,6 +78,27 @@ export default function RoundContractInteractions({
     }
     return true;
   }, [timeframes]);
+
+  const isInTimeframe = useMemo(() => {
+    let result;
+    if (hasTimeframe) {
+      timeframes?.forEach((timeframe) => {
+        if (new Date().getUTCHours() < timeframe.hourStart) {
+          result = false;
+        } else if (new Date().getUTCHours() > timeframe.hourEnd) {
+          result = false;
+        } else if (
+          new Date().getMinutes() >= timeframe.minuteStart &&
+          new Date().getMinutes() <= timeframe.minuteEnd
+        ) {
+          result = true;
+        }
+      });
+    } else {
+      result = false;
+    }
+    return result;
+  }, [hasTimeframe, timeframes]);
 
   return (
     <div className='w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4'>
@@ -98,7 +119,7 @@ export default function RoundContractInteractions({
                     <p className='text-body-14 text-secondary'>
                       End:{' '}
                       <span className='text-secondary'>
-                        {/* {format(round?.end || 0, 'yyyy/M/dd hh:mm a')} */}
+                        {format(new Date(round?.end) || 0, 'yyyy/M/dd hh:mm a')}
                       </span>
                     </p>
                   </div>
@@ -116,7 +137,7 @@ export default function RoundContractInteractions({
                     <p className='text-body-14 text-secondary'>
                       Start:{' '}
                       <span className='text-secondary'>
-                        {/* {format(round?.start || 0, 'yyyy/M/dd hh:mm a')} */}
+                        {format(new Date(round?.start) || 0, 'yyyy/M/dd hh:mm a')}
                       </span>
                     </p>
                   </div>
@@ -134,7 +155,7 @@ export default function RoundContractInteractions({
                     <p className='text-body-14 text-secondary'>
                       End:{' '}
                       <span className='text-secondary'>
-                        {/* {format(round?.end || 0, 'yyyy/M/dd hh:mm a')} */}
+                        {format(new Date(round?.end) || 0, 'yyyy/M/dd hh:mm a')}
                       </span>
                     </p>
                   </div>
@@ -182,10 +203,14 @@ export default function RoundContractInteractions({
 
       <div className='w-full h-[1px] bg-gray-200' />
 
-      {hasTimeFrame && (
+      {hasTimeframe && (
         <div className='flex flex-row desktop:flex-col items-center desktop:items-start gap-1'>
           <p className='text-heading-sm font-semibold'>Minting time frame:</p>
-          {isSpecial && <p className='text-secondary text-body-14 font-semibold'>(Timeframes can be changed)</p>}
+          {isSpecial && (
+            <p className='text-secondary text-body-14 font-semibold'>
+              (Timeframes can be changed)
+            </p>
+          )}
           {timeframes?.map((timeframe) => (
             <div className='w-full flex items-center justify-between'>
               <p className='text-primary text-body-16 font-semibold'>
@@ -210,7 +235,7 @@ export default function RoundContractInteractions({
                   (Please comeback tomorrow)
                 </span> */}
               </p>
-              {new Date().getUTCHours() < timeframe.hourStart ? (
+              {/* {new Date().getUTCHours() < timeframe.hourStart ? (
                 <p className='text-warning font-semibold'>Upcoming</p>
               ) : new Date().getUTCHours() > timeframe.hourEnd ? (
                 <p className='text-error font-semibold'>Ended</p>
@@ -219,7 +244,7 @@ export default function RoundContractInteractions({
                 new Date().getMinutes() <= timeframe.minuteEnd && (
                   <p className='text-success font-semibold'>Minting</p>
                 )
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -231,6 +256,7 @@ export default function RoundContractInteractions({
         collection={collection}
         round={round}
         isWhitelisted={!!isWhitelisted}
+        isInTimeframe={isInTimeframe}
       />
     </div>
   );

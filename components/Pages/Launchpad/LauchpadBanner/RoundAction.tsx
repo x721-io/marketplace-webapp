@@ -29,12 +29,14 @@ interface Props {
   collection: Collection;
   round: Round;
   isWhitelisted: boolean;
+  isInTimeframe?: boolean;
 }
 
 export default function RoundAction({
   round,
   collection,
   isWhitelisted,
+  isInTimeframe,
 }: Props) {
   const api = useLaunchpadApi();
   const { address } = useAccount();
@@ -270,7 +272,8 @@ export default function RoundAction({
                       ? false
                       : Number(amountBought) === round.maxPerWallet ||
                         maxAmountNFT == soldAmountNFT ||
-                        !eligibleStatus
+                        !eligibleStatus ||
+                        !isInTimeframe
                   }
                   scale='lg'
                   className='w-full'
