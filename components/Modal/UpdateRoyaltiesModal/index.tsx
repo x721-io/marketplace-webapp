@@ -58,19 +58,19 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
 
       const isTwoDecimal = value.every(item => {
         let numStr = item.value.replace(',', '.');
-    
+
         let decimalIndex = numStr.indexOf('.');
         if (decimalIndex === -1) {
             return true;
         }
-    
+
         let decimalPart = numStr.substring(decimalIndex + 1);
-    
+
         return decimalPart.length <= 2;
     });
-    
+
     if (!isTwoDecimal) return 'Royalty value only allow 2 decimal';
-    
+
       const totalRoyalties = value.reduce((accumulator, current) => {
         return Number(current.value) + Number(accumulator)
       }, 0)
@@ -88,7 +88,6 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
 
     try {
       const _royalties = data.royalties.map(item => {
-        console.log(item.value)
         return ({ ...item, value: BigInt((item.value) * 1000 ) / BigInt(10) })})
       await onUpdateRoyalties(collection.address, _royalties)
       toast.success('Royalties have been successfully updated', { autoClose: 1000, closeButton: true })
@@ -175,7 +174,7 @@ export default function UpdateRoyaltiesModal({ onClose, show, collection }: Prop
                           onClick={() => {
                             // Delete row
                             const newRoyalties = [...value]
-                            newRoyalties.splice(index, 2)
+                            newRoyalties.splice(index, 1)
                             setValue('royalties', newRoyalties)
                           }}>
                           <Icon name="close" width={12} height={12} />
