@@ -1,4 +1,3 @@
-import * as process from 'process'
 import { LAUNCHPAD_APPLY_URL } from '@/config/constants'
 
 interface NavItem {
