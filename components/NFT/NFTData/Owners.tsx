@@ -11,8 +11,6 @@ import {APIResponse} from '@/services/api/types'
 import Text from '@/components/Text'
 import {getUserAvatarImage} from '@/utils/string';
 import BidNFTModal from "@/components/Modal/BidNFTModal";
-import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
-import {useNFTMarketStatus} from "@/hooks/useMarket";
 
 export default function OwnersTab({nft, marketData}: {
   nft: NFT,
@@ -21,8 +19,6 @@ export default function OwnersTab({nft, marketData}: {
   const [modals, setModals] = useState<Record<string, any>>({})
   const userWallet = useAuthStore(state => state.profile?.publicKey)
   const [showBidModal, setShowBidModal] = useState(false)
-  const [showCancelBidModal, setShowCancelBidModal] = useState(false)
-  const { isOwner, isBidder } = useNFTMarketStatus(nft.collection.type, marketData)
 
   const owners = useMemo(() => {
     if (!marketData) return []
@@ -45,7 +41,6 @@ export default function OwnersTab({nft, marketData}: {
       return (!!bid.to?.publicKey && !!userWallet) && bid.to?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
     })
   }, [marketData])
-  console.log(isBidder)
 
 
   return (
@@ -100,12 +95,12 @@ export default function OwnersTab({nft, marketData}: {
                    <Button scale="sm" onClick={() => setModals({...modals, [owner.id]: true})}>
                      Buy now
                    </Button>
-                ) : myBid? (
+                ) : myBid ? (
                    <Button scale="sm" onClick={() => setShowBidModal(true)}>
                      Place a bid
                    </Button>
                 ) : (
-                  ""
+                   ""
                 )}
                 <BuyNFTModal saleData={owner.sellInfo} nft={nft} show={modals[owner.id]}
                              onClose={() => setModals({...modals, [owner.id]: false})}/>
