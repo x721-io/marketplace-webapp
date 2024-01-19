@@ -7,9 +7,9 @@ import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
-import BannerSectionCollection from '@/components/Pages/CollectionDetails/BannerSection'
-import InformationSectionCollection from '@/components/Pages/CollectionDetails/InformationSection'
-import FiltersSectionCollection from '@/components/Pages/CollectionDetails/FiltersCollectionSection'
+import BannerSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection'
+import InformationSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection'
+import FiltersSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection'
 import { Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Link from 'next/link'
@@ -96,6 +96,8 @@ export default function CollectionPage() {
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
             dataCollectionType= {data.collection.type}
+            showCreateNFT = {true}
+            userId={data?.collection?.creators[0].userId}
           />
         </div>
       </div>
