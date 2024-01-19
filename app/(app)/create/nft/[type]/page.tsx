@@ -76,7 +76,8 @@ export default function CreateNftPage() {
       }
     },
     name: {
-      required: 'Display name is required'
+      required: 'Display name is required',
+      maxLength: { value: 25, message: 'Display name cannot exceed 25 characters' }
     },
     collection: {
       required: 'Please choose a collection'
@@ -207,7 +208,7 @@ export default function CreateNftPage() {
           collectionId: getValues('collection')
         })
         if (existed) setError('name', { type: 'custom', message: 'NFT name already existed' })
-        else clearErrors('name')
+        else if (errors.name) clearErrors('name')
       }
     } finally {
       setValidating(false)

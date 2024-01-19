@@ -62,26 +62,30 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
         <FeeCalculator mode="seller" nft={nft} quoteToken={bid?.quoteToken} price={BigInt(bid?.price || 0)} />
       ) : (
         <>
-          <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
-          <Input
-            error={!!errors.quantity}
-            appendIcon={
-              <Text>
-                Available: {bid?.quantity}
-              </Text>
-            }
-            register={
-              register(
-                'quantity',
-                {
-                  pattern: { value: numberRegex, message: 'Wrong number format' },
-                  validate: {
-                    required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
-                    amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
-                  }
+          <div className='mb-4'>
+            <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
+              <Input
+                maxLength={18}
+                size={18}
+                error={!!errors.quantity}
+                appendIcon={
+                  <Text>
+                    Available: {bid?.quantity}
+                  </Text>
                 }
-              )}
-          />
+                register={
+                  register(
+                    'quantity',
+                    {
+                      pattern: { value: numberRegex, message: 'Wrong number format' },
+                      validate: {
+                        required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
+                        amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
+                      }
+                    }
+                  )}
+              />
+          </div>
           <FeeCalculator
             mode="seller"
             nft={nft}

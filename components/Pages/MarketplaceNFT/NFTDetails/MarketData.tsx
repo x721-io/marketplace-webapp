@@ -27,9 +27,12 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
           {/* <Icon name="verified" width={16} height={16} /> */}
-          <Link href={`/collection/${nft.collection.id}`} className="text-secondary underline">
-            {nft.collection.name}
-          </Link>
+          <Text showTooltip labelTooltip={nft.collection.name} className='w-auto max-w-[300px]'>
+            <Link href={`/collection/${nft.collection.id}`} className="text-secondary underline">
+              {nft.collection.name}
+            </Link>
+          </Text>
+          
         </div>
 
         <Tooltip content={nft.name} placement="bottom">

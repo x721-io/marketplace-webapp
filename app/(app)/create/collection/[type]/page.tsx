@@ -50,7 +50,8 @@ export default function CreateNFTCollectionPage() {
   const formRules = {
     name: {
       required: 'Collection name is required!',
-      pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' }
+      pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' },
+      maxLength: { value: 25, message: 'Collection name cannot exceed 25 characters' }
     },
     symbol: {
       required: 'Symbol is required!',
@@ -152,13 +153,13 @@ export default function CreateNFTCollectionPage() {
       if (name === 'name' && !!value.name) {
         const existed = await api.validateInput({ key: 'collectionName', value: value.name })
         if (existed) setError('name', { type: 'custom', message: 'Collection name already existed' })
-        else clearErrors('name')
+        else if (errors.name) clearErrors('name')
       }
 
       if (name === 'shortUrl' && !!value.shortUrl) {
         const existed = await api.validateInput({ key: 'collectionShortUrl', value: value.shortUrl })
         if (existed) setError('shortUrl', { type: 'custom', message: 'Short url already existed' })
-        else clearErrors('shortUrl')
+        else if (errors.shortUrl) clearErrors('shortUrl')
       }
     } finally {
       setValidating(false)
