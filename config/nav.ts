@@ -1,4 +1,5 @@
 import * as process from 'process'
+import { LAUNCHPAD_APPLY_URL } from '@/config/constants'
 
 interface NavItem {
   label: string
@@ -30,7 +31,7 @@ export const navs: NavItem[] = [
     href: '/launchpad',
     items: [
       { href: '/launchpad', label: 'Projects' },
-      { href: 'https://forms.gle/9MaNk6gQbKccqqAeA' as string, external: true, label: 'Apply' }
+      { href: LAUNCHPAD_APPLY_URL as string, external: true, label: 'Apply' }
     ]
   }
 ]

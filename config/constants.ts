@@ -5,7 +5,8 @@ export const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 export const MARKETPLACE_URL = process.env.NEXT_PUBLIC_MARKETPLACE_URL as string
 export const APPLY_URL = process.env.NEXT_PUBLIC_APPLY_URL as string
 export const ZERO_COLLECTION = process.env.NEXT_PUBLIC_REQUIRED_COLLECTION
-export const CAMPAIGN_URL = process.env.NEXT_PUBLIC_CAMPAIGN_URL as string
+export const CAMPAIGN_URL = 'https://voyage.u2nft.io/'
+export const LAUNCHPAD_APPLY_URL = 'https://forms.gle/9MaNk6gQbKccqqAeA'
 
 
 export const SIGN_MESSAGE = {
