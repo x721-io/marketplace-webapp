@@ -89,7 +89,7 @@ export default function HomePageBanner() {
                         scale="lg"
                         variant="secondary">
                            <span className="text-black">
-                             Open Link
+                             Discover
                            </span>
                         {/*<Icon name="arrowRight"/>*/}
                       </Button>

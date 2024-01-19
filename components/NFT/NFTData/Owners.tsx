@@ -9,10 +9,10 @@ import {formatDisplayedBalance} from '@/utils'
 import {NFT} from '@/types'
 import {APIResponse} from '@/services/api/types'
 import Text from '@/components/Text'
-import { getUserAvatarImage } from '@/utils/string';
 import {getUserAvatarImage} from '@/utils/string';
 import BidNFTModal from "@/components/Modal/BidNFTModal";
 import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
+import {useNFTMarketStatus} from "@/hooks/useMarket";
 
 export default function OwnersTab({nft, marketData}: {
   nft: NFT,
@@ -22,6 +22,8 @@ export default function OwnersTab({nft, marketData}: {
   const userWallet = useAuthStore(state => state.profile?.publicKey)
   const [showBidModal, setShowBidModal] = useState(false)
   const [showCancelBidModal, setShowCancelBidModal] = useState(false)
+  const { isOwner, isBidder } = useNFTMarketStatus(nft.collection.type, marketData)
+
   const owners = useMemo(() => {
     if (!marketData) return []
     return marketData.owners.map(owner => {
@@ -37,55 +39,48 @@ export default function OwnersTab({nft, marketData}: {
     })
   }, [marketData])
 
-
   const myBid = useMemo(() => {
-       if (!marketData) return
-       return marketData.owners.map(owner => {
-         const bidInfo = marketData.bidInfo?.find(bid => {
-           return (!!bid.from?.publicKey && !!userWallet) && bid.from?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
-         })
-         return {
-           ...owner,
-           bidInfo
-         }
-       }).sort((a, b) => {
-         return !!a.bidInfo ? -1 : 0
-       })
-     }
-     ,
-     [marketData]
-  )
-  console.log(myBid)
+    if (!marketData) return
+    return marketData.bidInfo?.find(bid => {
+      return (!!bid.to?.publicKey && !!userWallet) && bid.to?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
+    })
+  }, [marketData])
+  console.log(isBidder)
+
 
   return (
-    <div className="w-full py-7">
-      <div className="w-full p-7 flex flex-col desktop:gap-4 tablet:gap-4 gap-6 rounded-2xl border border-disabled border-dashed">
-        {(!marketData || !owners.length) ? (
-          <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
-        ) : owners.map((owner) => {
-          return (
-            <div className="flex desktop:items-center tablet:items-center items-start justify-between flex-col desktop:flex-row tablet:flex-row" key={owner.id}>
-              <Link href={`/user/${owner.id}`} className="flex items-center gap-4">
-                <Image
-                  className="w-12 h-12 rounded-2xl"
-                  width={80}
-                  height={80}
-                  src={getUserAvatarImage(owner)}
-                  alt="avatar" />
-                <div>
-                  <p className="font-medium">
-                    {owner.username}
-                  </p>
-                  {!!owner.sellInfo ? (
-                    <p className="text-secondary text-body-14 font-semibold break-all">
-                      {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
-                      <span className="text-primary">
+     <div className="w-full py-7">
+       <div
+          className="w-full p-7 flex flex-col desktop:gap-4 tablet:gap-4 gap-6 rounded-2xl border border-disabled border-dashed">
+         {(!marketData || !owners.length) ? (
+            <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
+         ) : owners.map((owner) => {
+
+           return (
+              <div
+                 className="flex desktop:items-center tablet:items-center items-start justify-between flex-col desktop:flex-row tablet:flex-row"
+                 key={owner.id}>
+                <Link href={`/user/${owner.id}`} className="flex items-center gap-4">
+                  <Image
+                     className="w-12 h-12 rounded-2xl"
+                     width={80}
+                     height={80}
+                     src={getUserAvatarImage(owner)}
+                     alt="avatar"/>
+                  <div>
+                    <p className="font-medium">
+                      {owner.username}
+                    </p>
+                    {!!owner.sellInfo ? (
+                       <p className="text-secondary text-body-14 font-semibold break-all">
+                         {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
+                         <span className="text-primary">
                         {" "}{formatDisplayedBalance(formatEther(owner.sellInfo.price), 2)} U2U
                       </span>
-                      {" "}each
-                    </p>
-                  ) : (
-                     <p className="flex items-center gap-1">
+                         {" "}each
+                       </p>
+                    ) : (
+                       <p className="flex items-center gap-1">
                          <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
                            {formatDisplayedBalance(owner.quantity, 0)}
                          </p>
@@ -105,26 +100,23 @@ export default function OwnersTab({nft, marketData}: {
                    <Button scale="sm" onClick={() => setModals({...modals, [owner.id]: true})}>
                      Buy now
                    </Button>
-                ) : !!myBid ? (
-                   <Button scale="sm" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
-                     Cancel bidding
-                   </Button>
-                ) : (
+                ) : myBid? (
                    <Button scale="sm" onClick={() => setShowBidModal(true)}>
                      Place a bid
                    </Button>
+                ) : (
+                  ""
                 )}
                 <BuyNFTModal saleData={owner.sellInfo} nft={nft} show={modals[owner.id]}
                              onClose={() => setModals({...modals, [owner.id]: false})}/>
 
-                <BidNFTModal marketData={marketData} nft={nft} show={showBidModal}
-                             onClose={() => setShowBidModal(false)}/>
-                <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal}
-                                   onClose={() => setShowCancelBidModal(false)}/>
+
               </div>
            )
          })}
        </div>
+       <BidNFTModal marketData={marketData} nft={nft} show={showBidModal}
+                    onClose={() => setShowBidModal(false)}/>
      </div>
   )
 }

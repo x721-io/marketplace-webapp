@@ -8,7 +8,7 @@ import {getUserAvatarImage, getUserLink, truncate} from "@/utils/string";
 import {useAccount} from "wagmi";
 import TokenBalances from "./TokenBalances";
 import {toast} from 'react-toastify'
-import {APPLY_URL} from "@/config/constants";
+import {LAUNCHPAD_APPLY_URL} from "@/config/constants";
 import Collapsible from "@/components/Collapsible";
 import React from "react";
 
@@ -67,7 +67,7 @@ export default function MenuAccountInformation({ onClose }: Props) {
             <Link className="text-secondary hover:text-primary" href={"/launchpad"} onClick={onClose}>
               Project
             </Link>
-            <Link className="text-secondary hover:text-primary" href={APPLY_URL as string} onClick={onClose} target='_blank'>
+            <Link className="text-secondary hover:text-primary" href={LAUNCHPAD_APPLY_URL} onClick={onClose} target='_blank'>
               Apply
             </Link>
           </div>
