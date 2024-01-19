@@ -17,6 +17,7 @@ import { formatDisplayedBalance } from '@/utils'
 import FeeCalculator from '@/components/FeeCalculator'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { numberRegex } from '@/utils/regex'
+import { PRICE, QUANTITY } from '@/config/form/rules'
 
 interface Props extends ModalProps {
   nft: NFT,
@@ -126,8 +127,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
               </label>
               <Input
-                maxLength={18}
-                size={18}
+                maxLength={PRICE}
+                size={PRICE}
                 error={!!errors.price}
                 register={register('price', formRules.price)}
               />
@@ -151,8 +152,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 <div>
                   <Text className="text-secondary font-semibold mb-1">Quantity</Text>
                   <Input
-                    maxLength={3}
-                    size={3}
+                    maxLength={QUANTITY}
+                    size={QUANTITY}
                     register={register('quantity', formRules.quantity)}
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">

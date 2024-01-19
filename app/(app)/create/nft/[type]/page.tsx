@@ -23,6 +23,7 @@ import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { decimalRegex, numberRegex } from "@/utils/regex";
+import { CREATE_NAME, DESCRIPTION, ROYALTIES_MAX, ROYALTIES_MIN } from "@/config/form/rules";
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -77,19 +78,19 @@ export default function CreateNftPage() {
     },
     name: {
       required: 'Display name is required',
-      maxLength: { value: 25, message: 'Display name cannot exceed 25 characters' }
+      maxLength: { value: CREATE_NAME, message: 'Display name cannot exceed 25 characters' }
     },
     collection: {
       required: 'Please choose a collection'
     },
     description: {
-      maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
+      maxLength: { value: DESCRIPTION, message: 'Description cannot exceed 256 characters' }
     },
     royalties: {
       pattern: { value: decimalRegex, message: 'Royalties are in the wrong format' },
       required: 'Royalties is required',
-      min: { value: 1, message: 'Royalties should be within range of 1% - 50%' },
-      max: { value: 50, message: 'Royalties should be within range of 1% - 50%' }
+      min: { value: ROYALTIES_MIN, message: 'Royalties should be within range of 1% - 50%' },
+      max: { value: ROYALTIES_MAX, message: 'Royalties should be within range of 1% - 50%' }
     },
     amount: {
       required: 'Number of copies is required',

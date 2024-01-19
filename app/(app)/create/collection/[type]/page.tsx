@@ -26,6 +26,7 @@ import { waitForTransaction } from '@wagmi/core'
 import { redirect, useParams, useRouter } from 'next/navigation'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
 import { CHAIN_ID } from '@/config/constants'
+import { CREATE_NAME, DESCRIPTION } from '@/config/form/rules'
 
 export default function CreateNFTCollectionPage() {
   const { chain } = useNetwork();
@@ -55,7 +56,7 @@ export default function CreateNFTCollectionPage() {
     name: {
       required: 'Collection name is required!',
       pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' },
-      maxLength: { value: 25, message: 'Collection name cannot exceed 25 characters' }
+      maxLength: { value: CREATE_NAME, message: 'Collection name cannot exceed 25 characters' }
     },
     symbol: {
       required: 'Symbol is required!',
@@ -65,7 +66,7 @@ export default function CreateNFTCollectionPage() {
       pattern: { value: noSpecialCharacterRegex, message: 'Short url should not contain special characters' }
     },
     description: {
-      maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
+      maxLength: { value: DESCRIPTION, message: 'Description cannot exceed 256 characters' }
     },
     image: {
       required: 'Collection image is required!'

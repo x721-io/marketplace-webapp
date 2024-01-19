@@ -11,6 +11,7 @@ import {useAuth} from '@/hooks/useAuth'
 import {emailRegex, nameRegex, urlRegex} from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import {FormState} from '@/types'
+import { DESCRIPTION } from '@/config/form/rules';
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
@@ -96,7 +97,7 @@ export default function ProfileStep() {
              <Textarea
                 className="h-[160px] resize-none"
                 register={register('bio')}
-                maxLength={1200}
+                maxLength={DESCRIPTION}
                 placeholder="Limit 1200 character"
              />
            </div>

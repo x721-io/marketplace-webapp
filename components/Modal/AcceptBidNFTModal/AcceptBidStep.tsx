@@ -8,6 +8,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
 import FeeCalculator from '@/components/FeeCalculator'
 import { numberRegex } from '@/utils/regex'
+import { QUANTITY } from '@/config/form/rules'
 
 interface Props {
   nft: NFT,
@@ -65,8 +66,8 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
           <div className='mb-4'>
             <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
               <Input
-                maxLength={18}
-                size={18}
+                maxLength={QUANTITY}
+                size={QUANTITY}
                 error={!!errors.quantity}
                 appendIcon={
                   <Text>
