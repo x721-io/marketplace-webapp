@@ -24,7 +24,7 @@ export default function ExploreUsersPage() {
   })
 
   const { data: users, isLoading, error } = useSWR(
-    { ...activePagination, search: queryString[searchKey] },
+    !!queryString[searchKey] ? { ...activePagination, search: queryString[searchKey] , page: 1 } : {...activePagination, search: queryString[searchKey] },
     params => api.fetchUsers(params),
     { refreshInterval: 10000 }
   )
