@@ -50,7 +50,8 @@ export default function CreateNFTCollectionPage() {
   const formRules = {
     name: {
       required: 'Collection name is required!',
-      pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' }
+      pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' },
+      maxLength: { value: 25, message: 'Collection name cannot exceed 25 characters' }
     },
     symbol: {
       required: 'Symbol is required!',

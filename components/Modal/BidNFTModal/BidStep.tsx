@@ -105,6 +105,8 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
           {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
         </label>
         <Input
+          maxLength={18}
+          size={18}
           error={!!errors.price}
           register={register('price', formRules.price)}
         />
