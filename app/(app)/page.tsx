@@ -1,6 +1,7 @@
 "use client"
 
-import HomePageBanner from '@/components/Pages/HomePage/Banner'
+
+import HomePageBanner from "@/components/Pages/MarketplaceNFT/HomePage/Banner";
 
 export default function Home() {
 
