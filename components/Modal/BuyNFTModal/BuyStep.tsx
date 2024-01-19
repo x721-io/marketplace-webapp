@@ -72,6 +72,8 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          maxLength={18}
+          size={18}
           readOnly
           value={formatUnits(saleData?.price || '0', 18)}
           appendIcon={nft.collection.type === 'ERC1155' &&
@@ -105,6 +107,8 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
+              maxLength={3}
+              size={3}
               error={!!errors.quantity}
               register={register('quantity', {
                 pattern: { value: numberRegex, message: 'Wrong number format' },
