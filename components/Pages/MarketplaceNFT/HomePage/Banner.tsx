@@ -35,10 +35,10 @@ export default function HomePageBanner() {
 
   const sliderImages = [
     { src: defaultSlider1, alt: 'Slide 1', showButton: true, link: CAMPAIGN_URL },
-    { src: defaultSlider2, alt: 'Slide 2', showButton: false, link: '' },
-    { src: defaultSlider3, alt: 'Slide 3', showButton: false, link: '' },
-    { src: defaultSlider4, alt: 'Slide 4', showButton: false, link: '' },
-    { src: defaultSlider5, alt: 'Slide 5', showButton: false, link: '' }
+    { src: defaultSlider2, alt: 'Slide 2', showButton: true, link: '' },
+    { src: defaultSlider3, alt: 'Slide 3', showButton: true, link: '' },
+    { src: defaultSlider4, alt: 'Slide 4', showButton: true, link: '' },
+    { src: defaultSlider5, alt: 'Slide 5', showButton: true, link: '' }
   ];
 
   return (
@@ -72,7 +72,7 @@ export default function HomePageBanner() {
           className="desktop:w-[480px] desktop:h-[480px] tablet:w-[340px] tablet:h-[340px] w-full h-[320px] tablet:pr-8">
           <Carousel pauseOnHover theme={carouselTheme} indicators={true}>
             {sliderImages.map((image, index) => (
-              <div key={index} className="flex h-full w-full  justify-end items-end">
+              <div key={index} className="flex h-full w-full  justify-center items-center">
                 <Image
                   className="rounded-tl-xl rounded-tr-xl object-cover"
                   src={image.src}
@@ -82,13 +82,13 @@ export default function HomePageBanner() {
                 />
                 {image.showButton && (
                   <div
-                    className="absolute top-[70%] right-[12%] tablet:top-[70%] tablet:right-[15%] desktop:top-[80%] desktop:right-[12%]">
+                    className="absolute bottom-8 px-10 w-full">
                     <Link target="_blank" href={image.link}>
                       <Button
-                        className="flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 shadow-2xl shadow-cyan-500/50 opacity-50 hover:opacity-75"
-                        scale="sm"
+                        className="w-full flex items-center justify-center  shadow-2xl shadow-cyan-500/50 opacity-70 hover:opacity-100"
+                        scale="lg"
                         variant="secondary">
-                           <span className="text-white">
+                           <span className="text-black">
                              Open Link
                            </span>
                         {/*<Icon name="arrowRight"/>*/}
