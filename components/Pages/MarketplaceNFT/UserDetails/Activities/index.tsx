@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import React, { useState } from 'react'
 import { Address } from 'wagmi'
 import Text from '@/components/Text'
-import UserMarketEvent from '@/components/Pages/UserDetails/Activities/MarketEvent'
+import UserMarketEvent from '@/components/Pages/MarketplaceNFT/UserDetails/Activities/MarketEvent'
 
 export default function Activities({ wallet }: { wallet: Address }) {
   const api = useMarketplaceApi()

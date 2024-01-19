@@ -14,7 +14,6 @@ import NFTMarketData = APIResponse.NFTMarketData
 import { formatDisplayedBalance } from '@/utils'
 import FeeCalculator from '@/components/FeeCalculator'
 import { findTokenByAddress } from '@/utils/token'
-import { numberRegex } from '@/utils/regex'
 
 interface Props {
   onSuccess: () => void
@@ -57,7 +56,6 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
       }
     },
     quantity: {
-      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
@@ -66,8 +64,8 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
         quantity: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
           return Number(v) <= Number(marketData?.totalSupply || 0) || 'Cannot bid more than total supply'
-        }, 
-      },
+        }
+      }
     }
   }
   const [price, quantity] = watch(['price', 'quantity'])
@@ -105,6 +103,8 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
           {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
         </label>
         <Input
+          maxLength={18}
+          size={18}
           error={!!errors.price}
           register={register('price', formRules.price)}
         />
@@ -128,6 +128,8 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
+              maxLength={3}
+              size={3}
               register={register('quantity', formRules.quantity)}
               appendIcon={
                 <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">

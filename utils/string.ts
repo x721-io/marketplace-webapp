@@ -39,8 +39,14 @@ export const getDisplayedUserName = (user?: Partial<Pick<User, 'username' | 'pub
 
 export const getUserLink = (user?: Partial<Pick<User, 'shortLink' | 'id' | 'publicKey' | 'signer'>> | null) => {
   if (!user) return '#'
-  const queryString = user.shortLink ?? user.id ?? user.publicKey ?? user.signer
-  return `/user/${queryString}`
+  const userQueryId = user.shortLink ?? user.id ?? user.publicKey ?? user.signer
+  return `/user/${userQueryId}`
+}
+
+export const getCollectionLink = (collection?: Partial<Pick<Collection, 'address' | 'shortUrl' | 'id'>> | null) => {
+  if (!collection) return '#'
+  const collectionQueryId = collection.shortUrl ?? collection.address ?? collection.id
+  return `/collection/${collectionQueryId}`
 }
 
 export const getNFTLink = (nft?: NFT | null) => {
