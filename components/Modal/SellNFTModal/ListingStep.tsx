@@ -11,6 +11,10 @@ import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { FormState, NFT } from '@/types'
 import { APIResponse } from '@/services/api/types'
 import NFTMarketData = APIResponse.NFTMarketData
+import FeeCalculator from '@/components/FeeCalculator'
+import { formatUnits, parseUnits } from 'ethers'
+import { findTokenByAddress } from '@/utils/token'
+import { numberRegex } from "@/utils/regex";
 
 interface Props {
   onSuccess: () => void
@@ -26,8 +30,12 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
     if (!wallet || !marketData) return undefined
     return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
-  const { register, handleSubmit, formState: { errors } } = useForm<FormState.SellNFT>()
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft)
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormState.SellNFT>()
+  const quoteToken = findTokenByAddress(watch('quoteToken'))
+  const price = watch('price')
+  const quantity = watch('quantity')
 
   const formRules = {
     price: {
@@ -35,7 +43,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       validate: {
         isNumber: (v: number) => !isNaN(v) || 'Please input a valid price number',
         min: (v: number) => Number(v) > 0 || 'Price must be greater than 0',
-        max: (v: number) =>  Number(v) < 10e15 - 1 || 'Please input a safe price number',
+        max: (v: number) => Number(v) < 10e15 - 1 || 'Please input a safe price number',
         decimals: (v: number) => {
           const decimalPart = (v.toString().split('.')[1] || '').length;
           return decimalPart <= 18 || 'The decimal length of the price cannot exceed 18 decimal digits of the token';
@@ -43,6 +51,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       }
     },
     quantity: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: number) => {
           if (type === 'ERC721') return true
@@ -75,13 +84,21 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-xs">
-        Create Sell Order
-      </Text>
+      <div className="font-bold">
+        <Text className="mb-3" variant="heading-xs">
+          Sell NFT
+        </Text>
+        <Text className="text-secondary" variant="body-16">
+          Creating sell order
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+        </Text>
+      </div>
 
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          maxLength={18}
+          size={18}
           error={!!errors.price}
           register={register('price', formRules.price)} />
       </div>
@@ -94,22 +111,33 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
         />
       </div>
 
-      {
-        nft.collection.type === 'ERC1155' && (
-          <div>
-            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-            <Input
-              error={!!errors.quantity}
-              register={register('quantity', formRules.quantity)}
-              type="number"
-              appendIcon={
-                <Text className="mr-5">
-                  Owned: {ownerData?.quantity}
-                </Text>
-              }/>
-          </div>
-        )
-      }
+      {nft.collection.type === 'ERC1155' ? (
+        <div>
+          <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+          <Input
+            maxLength={3}
+            size={3}
+            error={!!errors.quantity}
+            register={register('quantity', formRules.quantity)}
+            containerClass="mb-4"
+            appendIcon={
+              <Text className="mr-5">
+                Owned: {ownerData?.quantity}
+              </Text>
+            } />
+          <FeeCalculator
+            mode="seller"
+            nft={nft}
+            quoteToken={quoteToken?.address}
+            price={parseUnits(String(Number(price || 0) * Number(quantity || 0)), quoteToken?.decimal)} />
+        </div>
+      ) : (
+        <FeeCalculator
+          mode="seller"
+          nft={nft}
+          quoteToken={quoteToken?.address}
+          price={parseUnits(String(price || 0), quoteToken?.decimal)} />
+      )}
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Put on sale

@@ -22,6 +22,7 @@ import ImageUploader from "@/components/Form/ImageUploader";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
+import { decimalRegex, numberRegex } from "@/utils/regex";
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -63,7 +64,7 @@ export default function CreateNftPage() {
   const formRules = {
     media: {
       validate: {
-        required: (v: Blob[]) =>  (v && v.length > 0)|| 'Collection image is required!',
+        required: (v: Blob[]) => (v && v.length > 0) || 'NFT image is required',
         audio: (values: Blob[]) => {
           if (values && values.length > 0) {
             const firstFileType = values[0].type.split('/')[0];
@@ -75,7 +76,8 @@ export default function CreateNftPage() {
       }
     },
     name: {
-      required: 'Collection name is required!'
+      required: 'Display name is required',
+      maxLength: { value: 25, message: 'Display name cannot exceed 25 characters' }
     },
     collection: {
       required: 'Please choose a collection'
@@ -84,14 +86,23 @@ export default function CreateNftPage() {
       maxLength: { value: 256, message: 'Description cannot exceed 256 characters' }
     },
     royalties: {
+      pattern: { value: decimalRegex, message: 'Royalties are in the wrong format' },
       required: 'Royalties is required',
       min: { value: 1, message: 'Royalties should be within range of 1% - 50%' },
       max: { value: 50, message: 'Royalties should be within range of 1% - 50%' }
     },
     amount: {
+      required: 'Number of copies is required',
       validate: (value: number) => {
-        if (type === 'ERC721') return true
-        return value > 0 || 'Quantity must be greater than 1'
+        if (type === 'ERC721') return true;
+        if (value < 1) {
+          return 'Number of copies must be greater than 1';
+        }
+        if (!/^\d+$/.test(value.toString())) {
+          return 'Number of copies must be an integer';
+        }
+
+        return true;
       }
     }
   }
@@ -113,6 +124,7 @@ export default function CreateNftPage() {
       setValue('media', [])
     } else {
       setValue('media', [file])
+      clearErrors('media')
     }
   }
 
@@ -121,6 +133,7 @@ export default function CreateNftPage() {
       setValue('media', [media[0]])
     } else {
       setValue('media', [media[0], file])
+      clearErrors('media');
     }
   }
 
@@ -195,7 +208,7 @@ export default function CreateNftPage() {
           collectionId: getValues('collection')
         })
         if (existed) setError('name', { type: 'custom', message: 'NFT name already existed' })
-        else clearErrors('name')
+        else if (errors.name) clearErrors('name')
       }
     } finally {
       setValidating(false)
@@ -308,9 +321,7 @@ export default function CreateNftPage() {
 
                         </div>
                       )) : (
-                        <div className="flex justify-center items-center w-full h-40 rounded-2xl border border-dashed border-disabled">
-                          <Link className="text-center" href={`/create/collection`}>Create Collection</Link>
-                        </div>
+                        ''
                       )
                     }
                   </div>
@@ -338,7 +349,6 @@ export default function CreateNftPage() {
             <div>
               <Text className="text-body-16 font-semibold mb-1">Royalties</Text>
               <Input
-                type="number"
                 error={!!errors.royalties}
                 register={register('royalties', formRules.royalties)}
                 appendIcon={(
@@ -398,7 +408,7 @@ export default function CreateNftPage() {
               <Button
                 loading={loading}
                 loadingText="Creating NFT ..."
-                disabled={uploading || validating}
+                disabled={uploading || validating || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create Item

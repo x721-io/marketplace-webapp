@@ -1,13 +1,16 @@
-import { APIParams, APIResponse } from '@/services/api/types'
-import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters'
-import { classNames } from '@/utils/string'
+import {APIParams, APIResponse} from '@/services/api/types'
+import NFTFilters, {FilterType} from '@/components/Filters/NFTFilters'
+import {classNames} from '@/utils/string'
 import NFTCard from '@/components/NFT/NFTCard'
-import { Pagination, Spinner } from 'flowbite-react'
-import React, { useCallback, useMemo } from 'react'
+import {Pagination, Spinner} from 'flowbite-react'
+import React, {useCallback, useMemo} from 'react'
 import Text from '@/components/Text'
-import MobileFiltersModal from '@/components/Modal/MobileFiltersModal'
-import { isMobile } from 'react-device-detect'
-import { NFT } from '@/types'
+import MobileNFTFiltersModal from '@/components/Modal/MobileNFTFiltersModal'
+import {isMobile} from 'react-device-detect'
+import {NFT} from '@/types'
+import Link from 'next/link'
+import Button from '../Button'
+import useAuthStore from '@/store/auth/store'
 
 interface Paging {
   page?: number
@@ -26,6 +29,9 @@ interface Props {
   onClose?: () => void // For mobile only: Close modal filters
   loading?: boolean
   error?: boolean
+  dataCollectionType?: string
+  userId?: string
+  showCreateNFT?: boolean
 }
 
 export default function NFTsList({
@@ -38,8 +44,12 @@ export default function NFTsList({
   onChangePage,
   onClose,
   loading,
-  error
+  error,
+  dataCollectionType,
+  userId,
+  showCreateNFT
 }: Props) {
+  const myId = useAuthStore(state => state.profile?.id)
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
@@ -68,9 +78,20 @@ export default function NFTsList({
 
     if (!items?.length) {
       return (
-        <div className="w-full h-[295px] flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
-          <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
-        </div>
+        <>
+          {showCreateNFT ? myId === userId &&
+            <Link href={`/create/nft/${dataCollectionType}`}>
+              <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
+                <Button variant="primary">
+                  Create an NFT
+                </Button>
+              </div>
+            </Link> : ''
+          }
+          <div className="w-full h-[295px] flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+            <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
+          </div>
+        </>
       )
     }
     return (
@@ -80,6 +101,15 @@ export default function NFTsList({
             'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
             isMobile ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2' : (showFilters ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1' : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2')
           )}>
+          {showCreateNFT ? myId === userId &&
+            <Link href={`/create/nft/${dataCollectionType}`}>
+              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[295px] desktop:w-auto w-full border">
+                <Button variant="primary">
+                  Create an NFT
+                </Button>
+              </div>
+            </Link> : ''
+          }
           {items.map(item => (
             <div className="h-full" key={item.collection.address + '-' + item.u2uId}>
               <NFTCard {...item} />
@@ -90,6 +120,8 @@ export default function NFTsList({
     )
   }, [items, loading, error])
 
+
+
   return (
     <div className="w-full">
       <div className={classNames(
@@ -98,14 +130,14 @@ export default function NFTsList({
       )}>
         {
           isMobile ? (
-              <MobileFiltersModal
-                show={showFilters}
-                onClose={onClose}
-                baseFilters={filters}
-                onApplyFilters={onApplyFilters}
-                traitsFilter={traitFilters}
-              />
-            ) :
+            <MobileNFTFiltersModal
+              show={showFilters}
+              onClose={onClose}
+              baseFilters={filters}
+              onApplyFilters={onApplyFilters}
+              traitsFilter={traitFilters}
+            />
+          ) :
             showFilters && (
               <NFTFilters
                 baseFilters={filters}
@@ -117,7 +149,7 @@ export default function NFTsList({
         {renderList()}
       </div>
       {items?.length ? <div className="flex justify-end">
-          <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
+        <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />
       </div> : ""}
 
     </div>

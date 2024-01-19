@@ -9,6 +9,9 @@ import { useEffect, useMemo } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
+import FeeCalculator from '@/components/FeeCalculator'
+import { formatDisplayedBalance } from '@/utils'
+import { numberRegex } from '@/utils/regex'
 
 interface Props {
   onSuccess: () => void
@@ -23,7 +26,6 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     address: address,
     enabled: !!address
   })
-  // const { saleData } = useNFTMarketStatus(nft)
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyUsingNative(nft)
   const { handleSubmit, watch, register, formState: { errors } } = useForm<FormState.BuyNFT>()
   const quantity = watch('quantity')
@@ -57,16 +59,24 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
 
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="text-center" variant="heading-xs">
-        Purchasing {nft.collection.name} - {nft.name}
-      </Text>
+      <div className="font-bold">
+        <Text className="mb-3" variant="heading-xs">
+          Purchase NFT
+        </Text>
+        <Text className="text-secondary" variant="body-16">
+          Filling sell order
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+        </Text>
+      </div>
 
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          maxLength={18}
+          size={18}
           readOnly
           value={formatUnits(saleData?.price || '0', 18)}
-          appendIcon={
+          appendIcon={nft.collection.type === 'ERC1155' &&
             <Text>
               Quantity: {saleData?.quantity}
             </Text>
@@ -80,47 +90,56 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           value={token?.symbol}
           appendIcon={
             <Text>
-              Balance: {formatUnits(tokenBalance?.value || 0, 18)}
+              Balance: {formatDisplayedBalance(formatUnits(tokenBalance?.value || 0, 18))}
             </Text>
           }
+          // @ts-ignore
+          error={ tokenBalance?.value < saleData?.price }
         />
       </div>
 
-      {
-        nft.collection.type === 'ERC1155' && (
-          <>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-              <Input
-                error={!!errors.quantity}
-                register={register('quantity', {
-                  validate: {
-                    required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
-                    max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
-                    balance: v => {
-                      if (!tokenBalance?.value) return 'Not enough balance'
-                      const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)
-                      return totalPriceBN < tokenBalance.value || 'Not enough balance'
-                    }
+      {nft.collection.type === 'ERC721' && (
+        <FeeCalculator quoteToken={saleData?.quoteToken} mode="buyer" price={BigInt(saleData?.price || 0)} nft={nft} />
+      )}
+
+      {nft.collection.type === 'ERC1155' && (
+        <>
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+            <Input
+              maxLength={3}
+              size={3}
+              error={!!errors.quantity}
+              register={register('quantity', {
+                pattern: { value: numberRegex, message: 'Wrong number format' },
+                validate: {
+                  required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
+                  max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
+                  balance: v => {
+                    if (!tokenBalance?.value) return 'Not enough balance'
+                    const totalPriceBN = BigInt(saleData?.price || 0) * BigInt(v)
+                    return totalPriceBN < tokenBalance.value || 'Not enough balance'
                   }
-                })}
-                type="number" />
-            </div>
-            <div>
-              <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
-              <Input
-                readOnly
-                value={formatEther(totalPriceBN)}
-                type="number"
-                appendIcon={
-                  <Text>
-                    U2U
-                  </Text>
-                } />
-            </div>
-          </>
-        )
-      }
+                }
+              })} />
+          </div>
+
+          <div>
+            <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
+            <Input
+              readOnly
+              value={formatDisplayedBalance(formatEther(totalPriceBN))}
+              appendIcon={
+                <Text>
+                  U2U
+                </Text>
+              } />
+          </div>
+
+          <FeeCalculator mode="buyer" price={totalPriceBN} nft={nft} quoteToken={token?.address} />
+        </>
+      )}
+
       <FormValidationMessages errors={errors} />
       <Button type={'submit'} className="w-full" loading={isLoading}>
         Purchase item

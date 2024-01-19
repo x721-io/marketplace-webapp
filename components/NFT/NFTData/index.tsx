@@ -23,7 +23,7 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
           </Tabs.Item>
         )}
         <Tabs.Item active title="Overview">
-          <OverviewTab metaData={metaData}/>
+          <OverviewTab metaData={metaData} nft={nft}/>
         </Tabs.Item>
         <Tabs.Item title="Properties">
           <PropertiesTab metaData={metaData}/>

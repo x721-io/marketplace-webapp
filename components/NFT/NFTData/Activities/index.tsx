@@ -14,7 +14,7 @@ export default function ActivitiesTab({ nft }: { nft: NFT }) {
     {
       page,
       limit,
-      tokenId: nft.u2uId,
+      tokenId: nft.u2uId ? nft.u2uId : nft.id,
       collectionAddress: nft.collection.address
     },
     (params) => api.fetchNFTEvents(params),
@@ -24,7 +24,7 @@ export default function ActivitiesTab({ nft }: { nft: NFT }) {
   return (
     <div className="py-7 overflow-x-auto">
       {!!data?.length ? (
-        <div className="p-3 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal h-auto max-h-[400px] overflow-auto">
+        <div className="p-3 tablet:p-7 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal h-auto max-h-[400px] overflow-auto">
           {data.map(event => <NFTMarketEvent key={event.id} event={event}/>)}
         </div>
       ) : (

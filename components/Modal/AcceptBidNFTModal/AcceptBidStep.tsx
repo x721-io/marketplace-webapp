@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 import Input from '@/components/Form/Input'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
+import FeeCalculator from '@/components/FeeCalculator'
+import { numberRegex } from '@/utils/regex'
 
 interface Props {
   nft: NFT,
@@ -28,7 +30,7 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
     if (!bid || !bid.to?.signer) return
     try {
       if (type === 'ERC721') {
-        onAcceptERC721Bid(bid.to.signer, bid.quoteToken, bid.price)
+        onAcceptERC721Bid(bid.to.signer, bid.quoteToken)
       } else {
         onAcceptERC1155Bid(bid.operationId, quantity)
       }
@@ -46,40 +48,51 @@ export default function AcceptBidStep({ nft, onError, onSuccess, onClose, bid }:
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-      <Text className="font-semibold text-primary text-center mb-4" variant="heading-xs">
-        {nft.collection.name} - {nft.name}
-      </Text>
-      {
-        type === 'ERC721' ? (
-          <Text className="text-secondary text-center mb-4" variant="body-18">
-            Are you sure to accept this bid?
-          </Text>
-        ) : (
-          <>
-            <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
-            <Input
-              error={!!errors.quantity}
-              type="number"
-              appendIcon={
-                <Text>
-                  Available: {bid?.quantity}
-                </Text>
-              }
-              register={
-                register(
-                  'quantity',
-                  {
-                    validate: {
-                      required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
-                      amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
-                    }
-                  }
-                )}
-            />
-          </>
+      <div className="font-bold">
+        <Text className="mb-3 text-center" variant="heading-xs">
+          Accept Bid
+        </Text>
+        <Text className="text-secondary" variant="body-16">
+          Filling bid order
+          for <span className="text-primary font-bold">{nft.name}</span> from <span className="text-primary font-bold">{nft.collection.name}</span> collection
+        </Text>
+      </div>
 
-        )
-      }
+      {type === 'ERC721' ? (
+        <FeeCalculator mode="seller" nft={nft} quoteToken={bid?.quoteToken} price={BigInt(bid?.price || 0)} />
+      ) : (
+        <>
+          <div className='mb-4'>
+            <label className="text-body-14 text-secondary" htmlFor="">Quantity:</label>
+              <Input
+                maxLength={18}
+                size={18}
+                error={!!errors.quantity}
+                appendIcon={
+                  <Text>
+                    Available: {bid?.quantity}
+                  </Text>
+                }
+                register={
+                  register(
+                    'quantity',
+                    {
+                      pattern: { value: numberRegex, message: 'Wrong number format' },
+                      validate: {
+                        required: v => !!v && v > 0 && !isNaN(v) || 'Please input quantity',
+                        amount: v => (v <= Number(bid?.quantity)) || 'Quantity cannot exceed bid amount'
+                      }
+                    }
+                  )}
+              />
+          </div>
+          <FeeCalculator
+            mode="seller"
+            nft={nft}
+            quoteToken={bid?.quoteToken}
+            price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)} />
+        </>
+      )}
       <FormValidationMessages errors={errors} />
 
       <div className="flex gap-4 mt-7 w-full">

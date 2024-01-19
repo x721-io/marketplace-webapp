@@ -1,3 +1,6 @@
+import {Round} from "@/types";
+import {abis} from "@/abi";
+
 export const sleep = (millisecond: number) => new Promise((resolve) => setTimeout(resolve, millisecond))
 
 export const sanitizeObject = (obj: Record<string, any>) => {
@@ -9,7 +12,10 @@ export const sanitizeObject = (obj: Record<string, any>) => {
   return _obj
 }
 
-export const parseQueries = (queries: Record<string, any>) => {
+export const parseQueries = (queries?: Record<string, any> | undefined ) => {
+  if (!queries) {
+    return '';
+  }
   return '?' + Object.entries(queries)
     .filter(([_, value]) => {
       if (Array.isArray(value)) {
@@ -20,7 +26,12 @@ export const parseQueries = (queries: Record<string, any>) => {
     .map(([key, value]) => `${key}=${value}`).join("&")
 }
 
-export const formatDisplayedBalance = (value: string | number, digits = 2) => {
+export const formatDisplayedBalance = (value: string | number, digits = 10) => {
   if (!value) return '0'
-  return Number(value).toLocaleString('en-us')
+  return Number(value).toLocaleString('en-us', { maximumFractionDigits: digits })
+}
+
+export const getRoundAbi = (round: Round) => {
+  const { type: roundType } = round
+  return abis[roundType]
 }

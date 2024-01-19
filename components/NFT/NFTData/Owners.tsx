@@ -9,6 +9,7 @@ import {formatDisplayedBalance} from '@/utils'
 import {NFT} from '@/types'
 import {APIResponse} from '@/services/api/types'
 import Text from '@/components/Text'
+import { getUserAvatarImage } from '@/utils/string';
 import {getUserAvatarImage} from '@/utils/string';
 import BidNFTModal from "@/components/Modal/BidNFTModal";
 import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
@@ -57,34 +58,34 @@ export default function OwnersTab({nft, marketData}: {
   console.log(myBid)
 
   return (
-     <div className="w-full py-7">
-       <div className="w-full p-7 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed">
-         {(!marketData || !owners.length) ? (
-            <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
-         ) : owners.map((owner) => {
-           return (
-              <div className="flex items-center justify-between" key={owner.id}>
-                <Link href={`/user/${owner.id}`} className="flex items-center gap-4">
-                  <Image
-                     className="w-12 h-12 rounded-2xl"
-                     width={80}
-                     height={80}
-                     src={getUserAvatarImage(owner)}
-                     alt="avatar"/>
-                  <div>
-                    <p className="font-medium">
-                      {owner.username}
-                    </p>
-                    {!!owner.sellInfo ? (
-                       <p className="text-secondary text-body-14 font-semibold break-all">
-                         {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
-                         <span className="text-primary">
+    <div className="w-full py-7">
+      <div className="w-full p-7 flex flex-col desktop:gap-4 tablet:gap-4 gap-6 rounded-2xl border border-disabled border-dashed">
+        {(!marketData || !owners.length) ? (
+          <Text className="text-secondary font-semibold text-body-4 text-center">Nothing to show</Text>
+        ) : owners.map((owner) => {
+          return (
+            <div className="flex desktop:items-center tablet:items-center items-start justify-between flex-col desktop:flex-row tablet:flex-row" key={owner.id}>
+              <Link href={`/user/${owner.id}`} className="flex items-center gap-4">
+                <Image
+                  className="w-12 h-12 rounded-2xl"
+                  width={80}
+                  height={80}
+                  src={getUserAvatarImage(owner)}
+                  alt="avatar" />
+                <div>
+                  <p className="font-medium">
+                    {owner.username}
+                  </p>
+                  {!!owner.sellInfo ? (
+                    <p className="text-secondary text-body-14 font-semibold break-all">
+                      {owner.sellInfo.quantity} / {owner.quantity} item(s) on sale for
+                      <span className="text-primary">
                         {" "}{formatDisplayedBalance(formatEther(owner.sellInfo.price), 2)} U2U
                       </span>
-                         {" "}each
-                       </p>
-                    ) : (
-                       <p className="flex items-center gap-1">
+                      {" "}each
+                    </p>
+                  ) : (
+                     <p className="flex items-center gap-1">
                          <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
                            {formatDisplayedBalance(owner.quantity, 0)}
                          </p>

@@ -24,8 +24,12 @@ import { noSpecialCharacterRegex } from '@/utils/regex'
 import { parseImageUrl } from '@/utils/nft'
 import { waitForTransaction } from '@wagmi/core'
 import { redirect, useParams, useRouter } from 'next/navigation'
+import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { CHAIN_ID } from '@/config/constants'
 
 export default function CreateNFTCollectionPage() {
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
   const type = useParams().type.toString().toUpperCase() as AssetType
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -49,7 +53,9 @@ export default function CreateNFTCollectionPage() {
 
   const formRules = {
     name: {
-      required: 'Collection name is required!'
+      required: 'Collection name is required!',
+      pattern: { value: noSpecialCharacterRegex, message: 'Collection name should not contain special characters' },
+      maxLength: { value: 25, message: 'Collection name cannot exceed 25 characters' }
     },
     symbol: {
       required: 'Symbol is required!',
@@ -77,7 +83,8 @@ export default function CreateNFTCollectionPage() {
         pending: 'Uploading image...',
         success: {
           render: (data) => {
-            setValue('avatar', parseImageUrl(data.data?.fileHashes[0]) as string)
+            setValue('avatar', parseImageUrl(data?.data?.fileHashes[0]) as string)
+            clearErrors('avatar');
             return 'Collection image uploaded successfully'
           }
         },
@@ -100,6 +107,10 @@ export default function CreateNFTCollectionPage() {
 
   const onSubmit = async (data: FormState.CreateCollection) => {
     if (!type || !creator) return
+    if (!!chain?.id && chain?.id !== Number(CHAIN_ID)) {
+      switchNetwork?.(Number(CHAIN_ID));
+      return;
+    }
     const toastId = toast.loading('Preparing data...', { type: 'info' })
     setLoading(true)
     try {
@@ -150,19 +161,13 @@ export default function CreateNFTCollectionPage() {
       if (name === 'name' && !!value.name) {
         const existed = await api.validateInput({ key: 'collectionName', value: value.name })
         if (existed) setError('name', { type: 'custom', message: 'Collection name already existed' })
-        else clearErrors('name')
-      }
-
-      if (name === 'symbol' && !!value.symbol) {
-        const existed = await api.validateInput({ key: 'collectionSymbol', value: value.symbol })
-        if (existed) setError('symbol', { type: 'custom', message: 'Collection symbol already existed' })
-        else clearErrors('symbol')
+        else if (errors.name) clearErrors('name')
       }
 
       if (name === 'shortUrl' && !!value.shortUrl) {
         const existed = await api.validateInput({ key: 'collectionShortUrl', value: value.shortUrl })
         if (existed) setError('shortUrl', { type: 'custom', message: 'Short url already existed' })
-        else clearErrors('shortUrl')
+        else if (errors.shortUrl) clearErrors('shortUrl')
       }
     } finally {
       setValidating(false)
@@ -254,7 +259,7 @@ export default function CreateNFTCollectionPage() {
               <Button
                 loading={loading}
                 loadingText="Creating collection ..."
-                disabled={validating || uploading}
+                disabled={validating || uploading || Object.keys(errors).length > 0}
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto">
                 Create collection

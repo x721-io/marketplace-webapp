@@ -9,6 +9,7 @@ import { formatDisplayedBalance } from '@/utils'
 import Button from '../Button'
 import { Collection } from '@/types'
 import { classNames, getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
+import useAuthStore from '@/store/auth/store'
 
 interface Paging {
   page?: number
@@ -24,9 +25,12 @@ interface Props {
   collections?: Collection[]
   onChangePage: (page: number) => void
   showFilter?: boolean
+  showCreateCollection?: boolean
+  creator?: string
 }
 
-export default function CollectionsList({ collections, paging, onChangePage, id, loading, error, showFilter }: Props) {
+export default function CollectionsList({ collections, paging, onChangePage, id, loading, error, showFilter, showCreateCollection, creator }: Props) {
+  const myId = useAuthStore(state => state.profile?.id)
   const totalPage = useMemo(() => {
     if (!paging?.total) return 0
     return Math.ceil(paging.total / paging.limit)
@@ -67,16 +71,18 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
       showFilter ? 'desktop:grid-cols-3' : 'desktop:grid-cols-4'
     )}>
       {
-          id && <Link href={`/create/collection`}>
-            <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px]">
+          showCreateCollection ? creator === myId  && <Link href={`/create/collection`}>
+            <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
               <Button variant="primary">
                 Create a collection
               </Button>
             </div>
-          </Link>
+          </Link> : ''
         }
-        {Array.isArray(collections) && collections.map((c, index) => (
-          <Link key={c.id} href={`/collection/${c.shortUrl}`}>
+        {Array.isArray(collections) && collections.map((c, index) => {
+          let link = c.shortUrl || c.id || c.address || c.name
+          return(
+            <Link key={c.id} href={`/collection/${link}`}>
             <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
               <div className="relative">
                 <Image
@@ -127,7 +133,8 @@ export default function CollectionsList({ collections, paging, onChangePage, id,
               </div>
             </div>
           </Link>
-        ))}
+          )
+        } )}
       </div>
       <div className="flex justify-end mt-20">
         <Pagination currentPage={paging?.page ?? 1} totalPages={totalPage} onPageChange={onChangePage} />

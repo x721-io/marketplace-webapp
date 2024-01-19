@@ -1,10 +1,26 @@
-import { Address } from 'wagmi'
-import { MarketEvent, MarketEventType } from '@/types/market'
-import { BigNumberish } from 'ethers'
+import {Address} from 'wagmi'
+import {MarketEventType} from '@/types/market'
+import {BigNumberish} from 'ethers'
 
 export type AssetType = 'ERC721' | 'ERC1155'
 
 export type EntityStatus = 'PENDING' | 'SUCCESS' | 'FAILED'
+
+export type ContractName =
+  'erc721Market'
+  | 'erc721Factory'
+  | 'erc721Proxy'
+  | 'erc721Base'
+  | 'erc1155Market'
+  | 'erc1155Factory'
+  | 'erc1155Proxy'
+  | 'erc1155Base'
+  | 'royaltiesRegistry'
+
+export interface Contract {
+  address: Address,
+  abi: any
+}
 
 export interface Trait {
   trait_type?: string

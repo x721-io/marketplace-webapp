@@ -4,7 +4,7 @@ import Image from "next/image";
 import { BigNumberish, formatUnits } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import Button from '@/components/Button'
-import WETH_ABI from '@/abi/WETH.json'
+import WETH_ABI from '@/abi/WETH'
 import { useMemo, useState } from 'react'
 import { waitForTransaction } from '@wagmi/core'
 import { toast } from 'react-toastify'
@@ -29,7 +29,7 @@ export default function TokenBalances() {
 
   const wu2uBalance = useMemo(() => {
     if (!tokenBalances) return BigInt(0)
-    return tokenBalances[0].result
+    return tokenBalances[0].result as bigint
   }, [tokenBalances])
 
   const { data: u2uBalance } = useBalance({
@@ -69,11 +69,11 @@ export default function TokenBalances() {
         {Object.values(tokens).map((token, index) => {
           const balance = tokenBalances ? formatUnits(tokenBalances[index].result as BigNumberish, 18) : 0
           return (
-            <div className="flex gap-2 items-center p-1 justify-between" key={token.address}>
+            <div className="flex flex-col gap-3 p-1 justify-between " key={token.address}>
               <div className="flex gap-2 items-center">
-                <Image src={token.logo} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
+                <Image src={token.logo} alt="" width={30} height={30} className="w-6 h-6 rounded-full" />
                 <Tooltip content={balance} placement="bottom">
-                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block max-w-[60px] text-ellipsis ">
+                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
                     {balance}
                   </p>
                 </Tooltip>

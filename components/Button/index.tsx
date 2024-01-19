@@ -21,7 +21,10 @@ export default function Button({
   ...rest
 }: ButtonProps) {
   const baseClass = useMemo(() => {
-    return `focus:outline-none transition-all whitespace-nowrap text-ellipsis ${disabled ? 'cursor-not-allowed text-disabled' : 'cursor-pointer'}`
+    return classNames(
+      `transition-all duration-500 whitespace-nowrap text-ellipsis hover:shadow`,
+      disabled ? 'cursor-not-allowed text-disabled' : 'cursor-pointer'
+    )
   }, [disabled])
 
   const scaleClass = useMemo(() => {
@@ -54,7 +57,7 @@ export default function Button({
         return 'bg-transparent text-primary outline-none !p-0 hover:underline'
       case 'secondary':
         if (disabled) return 'bg-gray-100 text-disabled'
-        return 'text-primary bg-button-secondary hover:bg-gray-200'
+        return 'text-primary bg-button-secondary'
       case 'outlined':
         if (disabled) return 'bg-gray-100 text-disabled'
         return 'text-primary bg-surface-soft border-hard border hover:bg-gray-200'
@@ -77,15 +80,12 @@ export default function Button({
       {...rest}
     >
       <div className="flex justify-center items-center gap-3">
-        {
-          loading ? (
-            <>
-              <Spinner size="sm" />
-              {loadingText || 'Loading...'}
-            </>
-
-          ) : children
-        }
+        {loading ? (
+          <>
+            <Spinner size="sm" />
+            {loadingText || 'Loading...'}
+          </>
+        ) : children}
       </div>
     </button>
   )

@@ -2,11 +2,11 @@
 
 import React, { useEffect } from 'react';
 import { Tabs } from 'flowbite-react';
-import AccountStep from './component/AccountStep';
-import ProfileStep from './component/ProfileStep';
-import WalletStep from './component/WalletStep';
-import NotificationStep from './component/NotificationStep';
-import BannerSection from './component/BannerSection';
+import AccountStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/AccountStep';
+import ProfileStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/ProfileStep';
+import WalletStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/WalletStep';
+import NotificationStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/NotificationStep';
+import BannerSection from '@/components/Pages/MarketplaceNFT/ProfileSettings/BannerSection';
 import { useAuth } from '@/hooks/useAuth'
 import { redirect } from 'next/navigation'
 
