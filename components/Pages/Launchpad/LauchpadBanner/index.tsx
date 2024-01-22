@@ -29,10 +29,6 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     watch: true
   })
 
-  useEffect(()=> {
-    console.log("----",roundData)
-  },[roundData])
-
   return (
     <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-row">
       <div className="flex-1">
