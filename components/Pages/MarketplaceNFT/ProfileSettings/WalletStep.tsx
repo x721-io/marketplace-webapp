@@ -18,7 +18,7 @@ export default function WalletStep() {
           <div className="flex">
             <Image width={40} height={40} src={u2uWalletSvg} alt="u2u-brand" className="rounded-full mr-3" />
             <div className="flex flex-col gap-1">
-              <Text className="text-body-16 text-primary">{wallet}</Text>
+              <Text className="text-body-16 text-primary break-all">{wallet}</Text>
               <div className="bg-white rounded-lg text-center w-fit px-2 py-1">
                 <Text className="text-body-12 text-secondary">U2U Chain</Text>
               </div>
