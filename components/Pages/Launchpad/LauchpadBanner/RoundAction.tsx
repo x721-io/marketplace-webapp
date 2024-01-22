@@ -30,6 +30,8 @@ interface Props {
   round: Round;
   isWhitelisted: boolean;
   isInTimeframe?: boolean;
+  hasTimeframe?: boolean;
+  isSpecial?: boolean;
 }
 
 export default function RoundAction({
@@ -37,6 +39,8 @@ export default function RoundAction({
   collection,
   isWhitelisted,
   isInTimeframe,
+  hasTimeframe,
+  isSpecial,
 }: Props) {
   const api = useLaunchpadApi();
   const { address } = useAccount();
@@ -141,7 +145,7 @@ export default function RoundAction({
     }
   };
 
-  const { onBuyNFT } = useWriteRoundContract(round, collection);
+  const { onBuyNFT, onBuyNFTCustomized } = useWriteRoundContract(round, collection);
   const handleBuyNFT = async () => {
     if (
       !balanceInfo ||
@@ -154,12 +158,17 @@ export default function RoundAction({
 
     try {
       setLoading(true);
-      const { waitForTransaction } =
-        collection.type === 'ERC721'
-          ? await onBuyNFT()
-          : await onBuyNFT(amount);
+      const { waitForTransaction, hash } = isSpecial
+        ? await onBuyNFTCustomized()
+        : collection.type === 'ERC721'
+        ? await onBuyNFT()
+        : await onBuyNFT(amount);
       await waitForTransaction();
       toast.success('Your item has been successfully purchased!');
+      api.crawlNFTInfo({
+        txCreation: hash,
+        collectionAddress: collection.address,
+      });
     } catch (e: any) {
       toast.error(`Error report: ${e?.message || e}`);
       console.error(e);
@@ -270,10 +279,11 @@ export default function RoundAction({
                     Number(startClaim) == 0 &&
                     Number(price) == 0
                       ? false
-                      : Number(amountBought) === round.maxPerWallet ||
-                        maxAmountNFT == soldAmountNFT ||
+                      : (Number(amountBought) === round.maxPerWallet &&
+                          round.maxPerWallet != 0) ||
+                        (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
                         !eligibleStatus ||
-                        !isInTimeframe
+                        (!isInTimeframe && hasTimeframe)
                   }
                   scale='lg'
                   className='w-full'
