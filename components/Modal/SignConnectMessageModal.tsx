@@ -44,11 +44,6 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
     try {
       setIsAuthenticating(true)
-      // const signature = isMobile ? await (window as any).ethereum.request({
-      //   method: 'personal_sign',
-      //   params: [SIGN_MESSAGE.CONNECT(date), address]
-      // }) : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
-      // const signature = await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
 
       // @ts-ignore
       const signature = window.ReactNativeWebView ? await (window as any).ethereum.request({

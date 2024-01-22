@@ -14,7 +14,7 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
   const { setQueryString, query } = useExploreSectionFilters()
 
   useEffect(() => {
-    return () => setQueryString('collection', '')
+    setQueryString('collection', '')
   }, []);
 
   return (

@@ -48,7 +48,8 @@ export const useCreateNFT = (type: AssetType) => {
         address: collection,
         abi: contracts.erc721Proxy.abi,
         functionName: 'mintAndTransfer',
-        args: [tokenArgs, address]
+        args: [tokenArgs, address],
+        value: BigInt(0) as any
       })
     }
 
@@ -66,37 +67,12 @@ export const useCreateNFT = (type: AssetType) => {
         address: collection,
         abi: contracts.erc1155Proxy.abi,
         functionName: 'mintAndTransfer',
-        args: [tokenArgs, address, amount]
+        args: [tokenArgs, address, amount],
+        value: BigInt(0) as any
       })
     }
 
     const tx = await (type === 'ERC721' ? mintERC721() : mintERC1155())
-    // const tokenArgs: Record<string, any> = type === 'ERC1155' ? {
-    //   tokenId: BigInt(u2uId),
-    //   tokenURI: metadataHash,
-    //   supply: amount,
-    //   creators: [{ account: address, value: 10000 }],
-    //   royalties: [{ account: address, value: Number(royalties) * 100 }],
-    //   signatures: ["0x"]
-    // } : {
-    //   tokenId: BigInt(u2uId).toString(),
-    //   tokenURI: metadataHash,
-    //   creators: [{ account: address, value: 10000 }],
-    //   royalties: [{ account: address, value: Number(royalties) * 100 }],
-    //   signatures: ["0x"]
-    // }
-    // const contractArgs = [
-    //   tokenArgs,
-    //   address,
-    //   type === 'ERC1155' && amount
-    // ].filter(Boolean)
-
-    // const tx = await writeContract({
-    //   address: collection,
-    //   abi: proxyContract.abi,
-    //   functionName: 'mintAndTransfer',
-    //   args: contractArgs
-    // })
 
     const createNFTParams = {
       id: id.toString(),

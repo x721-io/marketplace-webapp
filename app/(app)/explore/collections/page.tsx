@@ -23,7 +23,7 @@ export default function ExploreCollectionsPage() {
    const { searchKey } = useExploreSectionFilters()
 
    const { data: collections, error, isLoading } = useSWR(
-      { ...activeFilters, name: queryString[searchKey] },
+      !!queryString[searchKey] ? { ...activeFilters, name: queryString[searchKey], page: 1 } : {...activeFilters, name: queryString[searchKey]},
       (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
       { refreshInterval: 10000 }
    )
