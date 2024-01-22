@@ -4,8 +4,9 @@ import useSWR from 'swr'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-export default function UserCollections({ onUpdateAmount }: {
+export default function UserCollections({ onUpdateAmount, userId }: {
   onUpdateAmount: (n: number) => void
+  userId: string
 }) {
   const { id } = useParams()
   const api = useMarketplaceApi()
@@ -42,7 +43,9 @@ export default function UserCollections({ onUpdateAmount }: {
         collections={collections?.data}
         paging={collections?.paging}
         onChangePage={handleChangePage}
-        id={id} />
+        id={id} 
+        showCreateCollection={true}
+        creator={userId}/>
     </div>
   )
 }

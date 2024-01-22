@@ -14,6 +14,7 @@ import NFTMarketData = APIResponse.NFTMarketData
 import FeeCalculator from '@/components/FeeCalculator'
 import { formatUnits, parseUnits } from 'ethers'
 import { findTokenByAddress } from '@/utils/token'
+import { numberRegex } from "@/utils/regex";
 
 interface Props {
   onSuccess: () => void
@@ -50,6 +51,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       }
     },
     quantity: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: number) => {
           if (type === 'ERC721') return true
@@ -95,6 +97,8 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          maxLength={18}
+          size={18}
           error={!!errors.price}
           register={register('price', formRules.price)} />
       </div>
@@ -111,9 +115,11 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
         <div>
           <Text className="text-secondary font-semibold mb-1">Quantity</Text>
           <Input
+            maxLength={3}
+            size={3}
             error={!!errors.quantity}
             register={register('quantity', formRules.quantity)}
-            type="number"
+            containerClass="mb-4"
             appendIcon={
               <Text className="mr-5">
                 Owned: {ownerData?.quantity}
@@ -123,7 +129,7 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
             mode="seller"
             nft={nft}
             quoteToken={quoteToken?.address}
-            price={parseUnits(String(Number(price) * Number(quantity)), quoteToken?.decimal)} />
+            price={parseUnits(String(Number(price || 0) * Number(quantity || 0)), quoteToken?.decimal)} />
         </div>
       ) : (
         <FeeCalculator

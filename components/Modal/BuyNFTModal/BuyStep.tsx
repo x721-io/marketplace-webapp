@@ -11,6 +11,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
 import FeeCalculator from '@/components/FeeCalculator'
 import { formatDisplayedBalance } from '@/utils'
+import { numberRegex } from '@/utils/regex'
 
 interface Props {
   onSuccess: () => void
@@ -71,6 +72,8 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
+          maxLength={18}
+          size={18}
           readOnly
           value={formatUnits(saleData?.price || '0', 18)}
           appendIcon={nft.collection.type === 'ERC1155' &&
@@ -90,6 +93,8 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
               Balance: {formatDisplayedBalance(formatUnits(tokenBalance?.value || 0, 18))}
             </Text>
           }
+          // @ts-ignore
+          error={ tokenBalance?.value < saleData?.price }
         />
       </div>
 
@@ -102,8 +107,11 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
           <div>
             <Text className="text-secondary font-semibold mb-1">Quantity</Text>
             <Input
+              maxLength={3}
+              size={3}
               error={!!errors.quantity}
               register={register('quantity', {
+                pattern: { value: numberRegex, message: 'Wrong number format' },
                 validate: {
                   required: v => (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to purchase',
                   max: v => v <= Number(saleData?.quantity) || 'Quantity exceeds sale amount',
@@ -113,8 +121,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
                     return totalPriceBN < tokenBalance.value || 'Not enough balance'
                   }
                 }
-              })}
-              type="number" />
+              })} />
           </div>
 
           <div>
@@ -122,7 +129,6 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
             <Input
               readOnly
               value={formatDisplayedBalance(formatEther(totalPriceBN))}
-              type="number"
               appendIcon={
                 <Text>
                   U2U

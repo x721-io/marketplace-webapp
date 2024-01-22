@@ -1,14 +1,6 @@
-import { Address } from 'wagmi'
-import { MarketEvent, MarketEventType } from '@/types/market'
-import { BigNumberish } from 'ethers'
-import process from 'process'
-import erc721MarketABI from '@/abi/ERC721Marketplace'
-import erc721Factory from '@/abi/ERC721Factory'
-import erc721ABI from '@/abi/ERC721Rarible'
-import erc1155MarketABI from '@/abi/ERC1155Marketplace'
-import erc1155FactoryABI from '@/abi/ERC1155Factory'
-import erc1155ABI from '@/abi/ERC1155'
-import royaltiesRegistryABI from '@/abi/RoyaltiesRegistry'
+import {Address} from 'wagmi'
+import {MarketEventType} from '@/types/market'
+import {BigNumberish} from 'ethers'
 
 export type AssetType = 'ERC721' | 'ERC1155'
 

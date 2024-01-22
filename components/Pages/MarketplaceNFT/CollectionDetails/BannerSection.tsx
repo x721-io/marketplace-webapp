@@ -61,10 +61,10 @@ export default function BannerSectionCollection({ collectionId, cover, avatar, c
   }
   return (
     <div
-      className="bg-cover relative w-full h-[80px] tablet:h-[180px] desktop:h-[220px]"
+      className="bg-cover relative w-full desktop:h-[220px] tablet:h-[220px] h-[160px]"
       style={{ background: 'var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))' }}>
 
-      <div className="absolute desktop:ml-20 tablet:ml-20 ml-4 block w-[120px] h-[120px] desktop:bottom-[-46px] tablet:bottom-[-46px] bottom-[-75px]">
+      <div className="absolute desktop:ml-20 tablet:ml-20 ml-4 block w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px] desktop:bottom-[-46px] tablet:bottom-[-46px] bottom-[-38px]">
         <Image
           src={avatar}
           alt="user-detail-bg"

@@ -1,4 +1,4 @@
-import { Modal, ModalProps, Spinner, Tooltip } from 'flowbite-react'
+import { CustomFlowbiteTheme, Modal, ModalProps, Spinner, Tooltip } from 'flowbite-react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { useAccount, useSignMessage } from 'wagmi'
@@ -9,10 +9,21 @@ import { useRouter } from 'next/navigation'
 import useAuthStore from '@/store/auth/store'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { signMessage } from '@wagmi/core'
+import { isMobile } from 'react-device-detect'
 
 interface Props extends ModalProps {
   onSignup: () => void
   mode?: 'link' | 'modal'
+}
+
+const modalTheme: CustomFlowbiteTheme['modal'] = {
+  content: {
+    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 "
+  },
+  body: {
+    base: "p-0 flex-1 overflow-auto"
+  }
 }
 
 export default function SignConnectMessageModal({ show, onClose, onSignup, mode = 'modal' }: Props) {
@@ -33,7 +44,13 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
     try {
       setIsAuthenticating(true)
-      const signature = await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
+
+      // @ts-ignore
+      const signature = window.ReactNativeWebView ? await (window as any).ethereum.request({
+        method: 'personal_sign',
+        params: [SIGN_MESSAGE.CONNECT(date), address]
+      }) : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
+
       await onAuth(date, signature)
       const profile = await api.viewProfile(address)
 
@@ -42,7 +59,7 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
       } else {
         setProfile(profile)
         if (mode === 'link') {
-          router.push('/')
+          router.back()
         } else {
           onClose?.()
         }
@@ -113,7 +130,6 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
 
   useEffect(() => {
     if (show) {
-      console.log('-----')
       handleSignMessage()
     } else {
       setAuthError('')
@@ -121,7 +137,7 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
   }, [show])
 
   return (
-    <Modal dismissible show={show} onClose={onClose} size="md">
+    <Modal theme={modalTheme} dismissible show={show} onClose={onClose} size="md">
       <Modal.Body>
         <div className="mx-auto flex flex-col gap-8 p-8 items-center overflow-ellipsis">
           {renderContent()}

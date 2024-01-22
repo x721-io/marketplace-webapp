@@ -17,7 +17,7 @@ export default function ExploreNFTsPage() {
   const { searchKey } = useExploreSectionFilters()
 
   const { data, isLoading } = useSWR(
-    { ...activeFilters, name: queryString[searchKey] },
+    !!queryString[searchKey] ? { ...activeFilters, name: queryString[searchKey] , page: 1 } : {...activeFilters, name: queryString[searchKey] },
     (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
     { refreshInterval: 5000 }
   )

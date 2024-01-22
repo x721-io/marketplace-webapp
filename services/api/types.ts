@@ -2,6 +2,7 @@ import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/en
 import { Address } from 'wagmi'
 import { MarketEvent, MarketEventType } from '@/types/market'
 import { FormState } from '@/types'
+import { Project, RoundStatus } from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
@@ -105,111 +106,131 @@ export namespace APIParams {
   export interface FetchEmailVerify {
     token: string
   }
-}
 
-/********** =========== API Response types ========== ***********/
-export namespace APIResponse {
-  interface Pagination {
-    page: number
-    limit: number
-    total: number
+  export interface FetchProjects {
+    mode?: RoundStatus
+  }
+  export interface SubscribeRoundZero {
+    projectId: string
+    walletAddress: Address
+  }
+  export interface FetchSnapshot {
+    userId: `0x${string}`;
+    projectId: string | string[];
   }
 
-  export interface Connect {
-    accessToken: string
-    accessTokenExpire: number // 1700117015092
-    refreshToken: string
-    refreshTokenExpire: number // 1700721515092
-    userId: string
-  }
 
-  export type ProfileDetails = User
+  /********** =========== API Response types ========== ***********/
+  export namespace APIResponse {
 
-  export interface ResendEmail {
-    status: boolean
-  }
+    export type FetchProjects = Project[]
 
-  export interface UploadImage {
-    fileHashes: string[],
-    metadataHash: string
-  }
-
-  export interface UploadMetadata {
-    metadataHash: string
-  }
-
-  export interface CollectionDetails {
-    collection: Collection
-    traitAvailable: {
-      key: string;
-      count: number;
-      traits: {
-        value: string;
-        count: number;
-      }[];
-    }[],
-    generalInfo: {
-      volumn: string
-      totalOwner: number
-      totalNft: number
-      floorPrice: string
+    export interface Snapshot {
+      stakingTotal: string;
+      lastDateRecord: Date;
     }
+
+    interface Pagination {
+      page: number
+      limit: number
+      total: number
+    }
+
+    export interface Connect {
+      accessToken: string
+      accessTokenExpire: number // 1700117015092
+      refreshToken: string
+      refreshTokenExpire: number // 1700721515092
+      userId: string
+    }
+
+    export type ProfileDetails = User
+
+    export interface ResendEmail {
+      status: boolean
+    }
+
+    export interface UploadImage {
+      fileHashes: string[],
+      metadataHash: string
+    }
+
+    export interface UploadMetadata {
+      metadataHash: string
+    }
+
+    export interface CollectionDetails {
+      collection: Collection
+      traitAvailable: {
+        key: string;
+        count: number;
+        traits: {
+          value: string;
+          count: number;
+        }[];
+      }[],
+      generalInfo: {
+        volumn: string
+        totalOwner: number
+        totalNft: number
+        floorPrice: string
+      }
+    }
+
+    export interface CollectionsData {
+      data: Collection[],
+      paging: Pagination
+    }
+
+    export interface GenerateTokenId {
+      u2uId: string
+      id: string
+    }
+
+    export interface CreateNFT {
+      tokenId: string
+    }
+
+    export type NFTDetails = NFT
+
+    export interface FetchNFTs {
+      data: NFT[]
+      paging: Pagination
+    }
+
+    export interface FetchEmailVerify {
+      token: string
+    }
+
+    export interface UsersData {
+      data: User[],
+      paging: Pagination
+    }
+
+    export type NFTEvents = MarketEvent[]
+
+    export type UserActivities = MarketEvent[]
+
+    export interface NFTMarketData {
+      sellInfo: MarketEvent[]
+      bidInfo: MarketEvent[],
+      owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id' | 'signer'> & { quantity: number })[],
+      totalSupply: string
+    }
+
+    export type FetchNFTMetadata = NFTMetadata
+
+    export type SearchNFTs = Pick<
+      NFT,
+      'id' | 'u2uId' | 'name' | 'image' | 'animationUrl' | 'createdAt' | 'updatedAt' | 'status' | 'tokenUri' | 'txCreationHash' | 'creatorId' | 'collectionId' | 'collection'
+    >[]
+
+    export type SearchCollections = Pick<
+      Collection,
+      'id' | 'txCreationHash' | 'name' | 'symbol' | 'description' | 'address' | 'shortUrl' | 'metadata' | 'status' | 'type' | 'categoryId' | 'createdAt' | 'updatedAt' | 'coverImage' | 'avatar'
+    >[]
+
+    export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
+
+    export type VerifyAccount = FormState.VerifyAccount
   }
-
-  export interface CollectionsData {
-    data: Collection[],
-    paging: Pagination
-  }
-
-  export interface GenerateTokenId {
-    u2uId: string
-    id: string
-  }
-
-  export interface CreateNFT {
-    tokenId: string
-  }
-
-  export type NFTDetails = NFT
-
-  export interface FetchNFTs {
-    data: NFT[]
-    paging: Pagination
-  }
-
-  export interface FetchEmailVerify {
-    token: string
-  }
-
-  export interface UsersData {
-    data: User[],
-    paging: Pagination
-  }
-
-  export type NFTEvents = MarketEvent[]
-
-  export type UserActivities = MarketEvent[]
-
-  export interface NFTMarketData {
-    sellInfo: MarketEvent[]
-    bidInfo: MarketEvent[],
-    owners: (Pick<User, 'username' | 'avatar' | 'email' | 'publicKey' | 'id'> & { quantity: number })[],
-    totalSupply: string
-  }
-
-  export type FetchNFTMetadata = NFTMetadata
-
-  export type SearchNFTs = Pick<
-    NFT,
-    'id' | 'u2uId' | 'name' | 'image' | 'animationUrl' | 'createdAt' | 'updatedAt' | 'status' | 'tokenUri' | 'txCreationHash' | 'creatorId' | 'collectionId' | 'collection'
-  >[]
-
-  export type SearchCollections = Pick<
-    Collection,
-    'id' | 'txCreationHash' | 'name' | 'symbol' | 'description' | 'address' | 'shortUrl' | 'metadata' | 'status' | 'type' | 'categoryId' | 'createdAt' | 'updatedAt' | 'coverImage' | 'avatar'
-  >[]
-
-  export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
-
-  export type VerifyAccount = FormState.VerifyAccount
-}

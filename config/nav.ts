@@ -1,4 +1,4 @@
-import * as process from 'process'
+import { LAUNCHPAD_APPLY_URL } from '@/config/constants'
 
 interface NavItem {
   label: string
@@ -25,5 +25,12 @@ export const navs: NavItem[] = [
       { href: '/create/nft', label: 'NFT' }
     ]
   },
-  { label: 'Launchpad', href: process.env.NEXT_PUBLIC_LAUNCHPAD_URL as string, external: true }
+  {
+    label: 'Launchpad',
+    href: '/launchpad',
+    items: [
+      { href: '/launchpad', label: 'Projects' },
+      { href: LAUNCHPAD_APPLY_URL as string, external: true, label: 'Apply' }
+    ]
+  }
 ]

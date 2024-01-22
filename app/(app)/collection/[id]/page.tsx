@@ -7,9 +7,9 @@ import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
 import NFTsList from '@/components/List/NFTsList'
-import BannerSectionCollection from '@/components/Pages/CollectionDetails/BannerSection'
-import InformationSectionCollection from '@/components/Pages/CollectionDetails/InformationSection'
-import FiltersSectionCollection from '@/components/Pages/CollectionDetails/FiltersCollectionSection'
+import BannerSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection'
+import InformationSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection'
+import FiltersSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection'
 import { Spinner } from 'flowbite-react'
 import Text from '@/components/Text'
 import Link from 'next/link'
@@ -25,7 +25,6 @@ export default function CollectionPage() {
   const { query } = useExploreSectionFilters()
   const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
   const myId = useAuthStore(state => state.profile?.id)
-  const { clearInput } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
 
   const { data, isLoading, error } = useSWR(
@@ -42,10 +41,6 @@ export default function CollectionPage() {
     }) as APIParams.FetchNFTs),
     { refreshInterval: 10000 }
   )
-
-  useEffect(()=> {
-    clearInput(searchKey)
-  },[])
 
   if (error) {
     return (
@@ -100,8 +95,9 @@ export default function CollectionPage() {
             paging={items?.paging}
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
-            creatordUserId= {data?.collection.creators[0].userId}
             dataCollectionType= {data.collection.type}
+            showCreateNFT = {true}
+            userId={data?.collection?.creators[0].userId}
           />
         </div>
       </div>

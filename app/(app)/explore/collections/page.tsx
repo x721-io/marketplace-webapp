@@ -8,41 +8,51 @@ import { useUIStore } from '@/store/ui/store'
 import useSWR from 'swr'
 import { sanitizeObject } from '@/utils'
 import { APIParams } from '@/services/api/types'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { isMobile } from "react-device-detect";
+import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
 
 export default function ExploreCollectionsPage() {
-  const api = useMarketplaceApi()
+   const [showFilters, setShowFilters] = useState(false)
 
-  const { activeFilters, handleApplyFilters, handleChangePage  } = useCollectionFilters()
+   const api = useMarketplaceApi()
 
-  const { queryString, clearInput } = useUIStore(state => state)
-  const { searchKey } = useExploreSectionFilters()
+   const { activeFilters, handleApplyFilters, handleChangePage } = useCollectionFilters()
 
-  const { data: collections, error, isLoading } = useSWR(
-    { ...activeFilters, name: queryString[searchKey] },
-    (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
-    { refreshInterval: 10000 }
-  )
+   const { queryString } = useUIStore(state => state)
+   const { searchKey } = useExploreSectionFilters()
 
-  const { isFiltersVisible } = useExploreSectionFilters()
+   const { data: collections, error, isLoading } = useSWR(
+      !!queryString[searchKey] ? { ...activeFilters, name: queryString[searchKey], page: 1 } : {...activeFilters, name: queryString[searchKey]},
+      (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+      { refreshInterval: 10000 }
+   )
 
-  useEffect(()=> {
-    clearInput(searchKey)
-  },[])
+   const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters()
 
-  return (
-    <div className="flex gap-6 flex-col desktop:flex-row">
-      <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
-
-      <div className="flex-1">
-        <CollectionsList
-          loading={isLoading}
-          collections={collections?.data}
-          paging={collections?.paging}
-          onChangePage={handleChangePage}
-          showFilter={isFiltersVisible}
-        />
+   return (
+      <div className="flex gap-6 flex-col desktop:flex-row">
+         {
+            isMobile ? (
+               <MobileCollectionFiltersModal
+                  onApplyFilters={handleApplyFilters}
+                  showFilter={isFiltersVisible} 
+                  closeFilter={handleToggleFilters}
+               />
+            ) :
+               isFiltersVisible && (
+                  <CollectionFilters visible={isFiltersVisible} onApplyFilters={handleApplyFilters} />
+               )
+         }
+         <div className="flex-1">
+            <CollectionsList
+               loading={isLoading}
+               collections={collections?.data}
+               paging={collections?.paging}
+               onChangePage={handleChangePage}
+               showFilter={isFiltersVisible}
+            />
+         </div>
       </div>
-    </div>
-  )
+   )
 }

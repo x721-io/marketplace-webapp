@@ -14,7 +14,7 @@ export default function ActivitiesTab({ nft }: { nft: NFT }) {
     {
       page,
       limit,
-      tokenId: nft.u2uId,
+      tokenId: nft.u2uId ? nft.u2uId : nft.id,
       collectionAddress: nft.collection.address
     },
     (params) => api.fetchNFTEvents(params),
