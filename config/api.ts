@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   NFT_TRANSACTIONS: '/nft/nftTransactionInfo',
   SEARCH_NFT: '/nft/search',
   NFT_EVENTS: '/nft/activity',
+  NFT_CRAWL_INFO: '/nft/crawl-nft-info',
   GET_METADATA: '/common/ipfs-serve',
   USER: '/user/all',
   USER_ACTIVITIES: '/user/activity',

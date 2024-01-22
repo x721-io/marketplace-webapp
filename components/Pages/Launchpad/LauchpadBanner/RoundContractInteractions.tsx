@@ -80,20 +80,18 @@ export default function RoundContractInteractions({
   }, [timeframes]);
 
   const isInTimeframe = useMemo(() => {
-    let result;
-    if (hasTimeframe) {
-      timeframes?.forEach((timeframe) => {
-        if (new Date().getUTCHours() < timeframe.hourStart) {
-          result = false;
-        } else if (new Date().getUTCHours() > timeframe.hourEnd) {
-          result = false;
-        } else if (
-          new Date().getMinutes() >= timeframe.minuteStart &&
-          new Date().getMinutes() <= timeframe.minuteEnd
-        ) {
+    let result = false;
+    if (hasTimeframe && timeframes && Array.isArray(timeframes)) {
+      for (let timeframe of timeframes) {
+        const start = timeframe.hourStart * 3600 + timeframe.minuteStart * 60;
+        const end = timeframe.hourEnd * 3600 + timeframe.minuteEnd * 60;
+        const currentTime =
+          new Date().getUTCHours() * 3600 + new Date().getMinutes() * 60;
+        if (currentTime > start && currentTime < end) {
           result = true;
+          break;
         }
-      });
+      }
     } else {
       result = false;
     }
@@ -137,7 +135,10 @@ export default function RoundContractInteractions({
                     <p className='text-body-14 text-secondary'>
                       Start:{' '}
                       <span className='text-secondary'>
-                        {format(new Date(round?.start) || 0, 'yyyy/M/dd hh:mm a')}
+                        {format(
+                          new Date(round?.start) || 0,
+                          'yyyy/M/dd hh:mm a'
+                        )}
                       </span>
                     </p>
                   </div>
@@ -257,6 +258,8 @@ export default function RoundContractInteractions({
         round={round}
         isWhitelisted={!!isWhitelisted}
         isInTimeframe={isInTimeframe}
+        hasTimeframe={hasTimeframe}
+        isSpecial={isSpecial}
       />
     </div>
   );
