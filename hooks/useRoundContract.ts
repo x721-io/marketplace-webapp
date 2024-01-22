@@ -39,6 +39,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       abi: roundAbi,
       functionName,
       args: [],
+      value: BigInt(0) as any
     })
 
     return { hash: tx.hash, waitForTransaction: () => waitForTransaction({ hash: tx.hash }) }
