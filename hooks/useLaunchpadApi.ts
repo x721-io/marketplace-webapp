@@ -20,6 +20,9 @@ export const useLaunchpadApi = () => {
     },
     fetchSnapshot: (params: APIParams.FetchSnapshot): Promise<APIResponse.Snapshot> => {
       return launchpadAPi.get(API_ENDPOINTS.SNAPSHOT + parseQueries(params));
+    },
+    crawlNFTInfo: (params: APIParams.CrawlNFTInfo) => {
+      return launchpadAPi.get(API_ENDPOINTS.NFT_CRAWL_INFO + parseQueries(params));
     }
   }
 }
