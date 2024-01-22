@@ -46,6 +46,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     handleSubmit,
     watch,
     register,
+    reset,
     formState: { errors }
   } = useForm<FormState.BidNFT>()
   const formRules = {
@@ -87,6 +88,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       await onBidUsingNative(price, quantity)
     } catch (e: any) {
       console.error(e)
+    } finally {
+      reset();
     }
   }
 
