@@ -31,7 +31,8 @@ export const useUpdateCollectionRoyalties = () => {
       args: [
         collectionAddress,
         royalties
-      ]
+      ],
+      value: BigInt(0) as any
     })
 
     return waitForTransaction({ hash })
