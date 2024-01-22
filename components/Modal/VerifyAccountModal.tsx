@@ -15,6 +15,9 @@ export default function VerifyAccountModal({ show, onClose, listVerify }: FromSt
     Object.keys(listVerify || {}).forEach(key => {
       if (listVerify && listVerify[key] === false) {
         switch (key) {
+          case 'avatar' || 'verifyEmail' || 'bio' || 'twitterLink':
+            router.push('/profile')
+            break;
           case 'ownerOrCreater':
             router.push('/create/nft')
             break;

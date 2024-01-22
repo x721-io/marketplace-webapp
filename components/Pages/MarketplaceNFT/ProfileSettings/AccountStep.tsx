@@ -28,7 +28,7 @@ export default function AccountStep() {
   })
 
   const [isCounting, setIsCounting] = useState(false);
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(60);
 
   const startCountdown = () => {
     setIsCounting(true);
@@ -36,7 +36,7 @@ export default function AccountStep() {
 
   const resetCountdown = () => {
     setIsCounting(false);
-    setCountdown(10);
+    setCountdown(60);
   };
 
   useEffect(() => {
@@ -52,7 +52,6 @@ export default function AccountStep() {
 
   const onSubmit = async ({ email }: FormState) => {
     try {
-      startCountdown();
       await toast.promise(onUpdateProfile({ email }), {
         pending: 'Updating email',
         success: 'Email updated successfully!',
@@ -87,7 +86,7 @@ export default function AccountStep() {
         autoClose: 1000
       })
     } finally {
-
+      startCountdown();
     }
   }
 
@@ -114,6 +113,7 @@ export default function AccountStep() {
               <Text className="text-tertiary flex items-center" variant="body-12">
                 Still no email?
                 <span className="text-primary ml-1 text-body-12 cursor-pointer" onClick={handleResend}>Resend</span>
+                {isCounting && <span className='text-body-12 text-tertiary ml-4'>{countdown}s</span>}
               </Text>
             {/* } */}
           </div>
@@ -121,7 +121,7 @@ export default function AccountStep() {
           <Button type="submit" disabled={!isDirty}>
             Update email
           </Button>
-          {isCounting && <span className='text-body-12 text-tertiary ml-4'>{countdown}s</span>}
+          
         </form>
 
       </div>
