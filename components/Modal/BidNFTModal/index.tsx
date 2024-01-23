@@ -17,7 +17,6 @@ import { formatDisplayedBalance } from '@/utils'
 import FeeCalculator from '@/components/FeeCalculator'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { numberRegex } from '@/utils/regex'
-import { PRICE, QUANTITY } from '@/config/form/rules'
 
 interface Props extends ModalProps {
   nft: NFT,
@@ -83,7 +82,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     }
   }
   const [price, quantity] = watch(['price', 'quantity'])
-  console.log('price: ', price, ' quantity: ', quantity);
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
@@ -131,8 +129,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
               </label>
               <Input
-                maxLength={PRICE}
-                size={PRICE}
+                maxLength={18}
+                size={18}
                 error={!!errors.price}
                 register={register('price', formRules.price)}
               />
@@ -156,8 +154,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 <div>
                   <Text className="text-secondary font-semibold mb-1">Quantity</Text>
                   <Input
-                    // maxLength={QUANTITY}
-                    // size={QUANTITY}
+                    maxLength={3}
+                    size={3}
                     register={register('quantity', formRules.quantity)}
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
@@ -169,15 +167,13 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
                   <Input
                     readOnly
-                    // value={Number(price) * Number(quantity) || 0}
                     value={!!price && !!quantity ? (BigInt(price) * BigInt(quantity)).toString() : 0}
                     appendIcon={<Text>U2U</Text>} />
                 </div>
                 <FeeCalculator
                   mode="buyer"
                   nft={nft}
-                  // price={parseUnits(String(Number(price) * Number(quantity) || 0), token?.decimal)}
-                  price={!!price && !!quantity ? parseUnits((BigInt(price) * BigInt(quantity)).toString(), token?.decimal) : BigInt(0)}
+                  price={parseUnits(String(Number(price) * Number(quantity) || 0), token?.decimal)}
                   quoteToken={token?.address} />
               </>
             ) : (
