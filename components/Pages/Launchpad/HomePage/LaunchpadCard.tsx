@@ -46,7 +46,7 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
       {...rest}>
       <div className="p-2">
         <Image
-          className="rounded-lg w-full h-auto max-h-[308px]"
+          className="rounded-lg w-full tablet:h-[515px] max-h-[308px] object-fit"
           src={project.banner}
           alt=""
           width={612}
