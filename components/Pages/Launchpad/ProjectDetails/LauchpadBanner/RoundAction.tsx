@@ -221,10 +221,10 @@ export default function RoundAction({
               round.type === 'U2UMintRoundWhitelist') && (
               <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
             )}
-            <div className='flex justify-between items-start'>
-              {collection.type === 'ERC1155' ? (
-                <div className='flex-1'>
-                  <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg mb-3'>
+            <div className='flex w-full gap-2 flex-col tablet:flex-row justify-between items-start'>
+              {(collection.type === 'ERC1155') ? (
+                <div className='flex-1 flex items-center gap-3'>
+                  <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg'>
                     <div onClick={() => handleAddAmount(-1)}>
                       <Icon
                         className='cursor-pointer text-secondary'
@@ -250,8 +250,7 @@ export default function RoundAction({
                       />
                     </div>
                   </div>
-
-                  <p className='text-body-12 text-secondary'>
+                  <p className='text-body-16 text-secondary'>
                     Total:{' '}
                     <span className='text-primary font-semibold'>
                       {estimatedCost} U2U
@@ -268,34 +267,35 @@ export default function RoundAction({
                   </p>
                 </div>
               )}
-            </div>
-            <div className='flex-1'>
-              <ConnectWalletButton scale='lg' className='w-full'>
-                <Button
-                  disabled={
-                    roundType == '2' &&
-                    Number(maxAmountNFT) == 0 &&
-                    Number(maxAmountNFTPerWallet) == 0 &&
-                    Number(startClaim) == 0 &&
-                    Number(price) == 0
-                      ? false
-                      : (Number(amountBought) === round.maxPerWallet &&
+              <div className='flex-1 w-full'>
+                <ConnectWalletButton scale='lg' className='w-full'>
+                  <Button
+                    disabled={
+                      roundType == '2' &&
+                      Number(maxAmountNFT) == 0 &&
+                      Number(maxAmountNFTPerWallet) == 0 &&
+                      Number(startClaim) == 0 &&
+                      Number(price) == 0
+                        ? false
+                        : (Number(amountBought) === round.maxPerWallet &&
                           round.maxPerWallet != 0) ||
                         (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
                         !eligibleStatus ||
                         (!isInTimeframe && hasTimeframe)
-                  }
-                  scale='lg'
-                  className='w-full'
-                  onClick={handleBuyNFT}
-                  loading={loading}
-                >
-                  {Number(amountBought) > 0 &&
-                  Number(amountBought) < round.maxPerWallet
-                    ? 'Mint another'
-                    : 'Mint Now'}
-                </Button>
-              </ConnectWalletButton>
+                    }
+                    scale='lg'
+                    className='w-full'
+                    onClick={handleBuyNFT}
+                    loading={loading}
+                  >
+                    {Number(amountBought) > 0 &&
+                    Number(amountBought) < round.maxPerWallet
+                      ? 'Mint another'
+                      : 'Mint Now'}
+                  </Button>
+                </ConnectWalletButton>
+              </div>
+
             </div>
           </>
         );
