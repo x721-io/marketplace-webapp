@@ -12,6 +12,7 @@ import React, { useMemo, useState } from 'react'
 import { APIParams } from '@/services/api/types'
 import { Pagination, Spinner } from 'flowbite-react'
 import { getUserAvatarImage, getUserCoverImage } from '@/utils/string'
+import VerifyDisableIcon from '@/components/Icon/VerifyDisable'
 
 export default function ExploreUsersPage() {
   const api = useMarketplaceApi()
@@ -99,7 +100,8 @@ export default function ExploreUsersPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2 items-center">
                     <Text className="font-medium">{user.username}</Text>
-                    {/* <VerifyIcon width={16} height={16} /> */}
+                    {user.accountStatus ? <VerifyIcon width={16} height={16} /> : <VerifyDisableIcon width={16} height={16} />}
+                    
                   </div>
                   {/*<div className="flex gap-3">*/}
                   {/*  <div className="flex gap-2">*/}

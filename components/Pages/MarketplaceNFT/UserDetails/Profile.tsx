@@ -7,6 +7,7 @@ import Button from '@/components/Button'
 import Link from 'next/link'
 import { User } from '@/types'
 import { getUserAvatarImage, getUserCoverImage } from "@/utils/string";
+import VerifyDisableIcon from "@/components/Icon/VerifyDisable";
 
 export default function Profile({ id, username, bio, avatar, coverImage, accountStatus }: User) {
   const myId = useAuthStore(state => state.profile?.id)
@@ -35,8 +36,11 @@ export default function Profile({ id, username, bio, avatar, coverImage, account
             <div className="flex items-center gap-2">
               <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">{username}</Text>
               {accountStatus? <Icon name="verified" width={24} height={24} />
-              : 
-              'ahihi'
+              :
+              <Link className="flex gap-1" href={`/profile`}>
+                <VerifyDisableIcon width={24} height={24} />
+                <span className="text-secondary">Get verified</span>
+              </Link>
               }
               
             </div>
