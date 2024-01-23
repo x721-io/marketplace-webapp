@@ -17,12 +17,15 @@ const carouselTheme: CustomFlowbiteTheme['carousel'] = {
       on: "bg-white"
     },
     base: "h-1 w-5 rounded-full",
-    wrapper: "absolute bottom-3 left-1/2 flex -translate-x-1/2 space-x-3"
+    wrapper: "absolute bottom-3 left-1/2 flex -translate-x-1/2 space-x-3 "
   },
   root: {
     leftControl: "absolute top-0 tablet:left-0 flex h-full items-center justify-center tablet:px-4 focus:outline-none",
     rightControl: "absolute top-0 right-0 flex h-full items-center justify-center tablet:px-4 focus:outline-none"
-  }
+  },
+  item: {
+    base: "absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2",
+  },
 }
 
 export default function HomePageBanner() {
@@ -34,9 +37,9 @@ export default function HomePageBanner() {
   )
 
   return (
-    <div className="w-full h-[380px] desktop:h-[500px] tablet:h-[500px] mx-auto">
+    <div className="w-full h-[530px] desktop:h-[500px] tablet:h-[500px] mx-auto p-2">
       {Array.isArray(data) && (
-        <Carousel theme={carouselTheme}  className="h-full w-full">
+        <Carousel theme={carouselTheme} >
           {data.map(project => (
             <div key={project.id}>
               <ProjectSlide project={project} />

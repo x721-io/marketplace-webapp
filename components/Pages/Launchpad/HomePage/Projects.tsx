@@ -15,7 +15,7 @@ export default function HomePageProjectTabs() {
   )
 
   const { data: comingProjects } = useSWR(
-    'comingProjects',
+    'upcomingProjects',
     () => api.fetchProjects({ mode: 'UPCOMING' }),
     { revalidateOnFocus: false }
   )
@@ -27,7 +27,7 @@ export default function HomePageProjectTabs() {
   )
 
   const { data: claimableProjects } = useSWR(
-    'endedProjects',
+    'claimProjects',
     () => api.fetchProjects({ mode: 'CLAIM' }),
     { revalidateOnFocus: false }
   )

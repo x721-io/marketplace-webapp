@@ -53,9 +53,9 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
           height={308} />
       </div>
 
-      <div className="px-6 py-4 ">
+      <div className="desktop:px-6 desktop:py-4 p-2 ">
         <div className="flex items-center justify-between mb-6">
-          <Text className="font-semibold" variant="heading-sm">
+          <Text className="font-semibold desktop:text-heading-sm text-heading-xs">
             {project.name}
           </Text>
 
