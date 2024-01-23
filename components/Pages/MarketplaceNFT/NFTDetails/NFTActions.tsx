@@ -1,7 +1,7 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { useNFTMarketStatus } from '@/hooks/useMarket'
-import { useMemo, useState } from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
 import SellNFTModal from '@/components/Modal/SellNFTModal'
 import BuyNFTModal from '@/components/Modal/BuyNFTModal'
@@ -23,7 +23,8 @@ export default function NFTActions({ nft, marketData }: {
     return marketData.bidInfo?.find(bid => {
       return (!!bid.to?.publicKey && !!wallet) && bid.to?.publicKey?.toLowerCase() === wallet?.toLowerCase()
     })
-  }, [marketData])
+  }, [marketData,wallet])
+
 
   const [showSellModal, setShowSellModal] = useState(false)
   const [showBuyModal, setShowBuyModal] = useState(false)

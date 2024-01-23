@@ -71,7 +71,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image width={20} height={20} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
               {token?.symbol}
             </div>
           </Row>
@@ -105,7 +105,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image width={20} height={20} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
               {token?.symbol}
             </div>
           </Row>
@@ -124,7 +124,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
               </p>
-              <Image width={24} height={24} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image width={20} height={20} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
               <p className="text-secondary">
                 {token?.symbol}
                 {event.collection?.type === 'ERC1155' && ` each`}
@@ -147,7 +147,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={32} height={32} className="w-6 h-6 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image width={20} height={20} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
               {token?.symbol}
               {event.collection?.type === 'ERC1155' && `Each`}
             </div>
