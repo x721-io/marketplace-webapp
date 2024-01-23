@@ -11,6 +11,7 @@ import {useAuth} from '@/hooks/useAuth'
 import {emailRegex, urlRegex} from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import {FormState} from '@/types'
+import { formRulesProfileSetting } from '@/config/form/rules';
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
@@ -60,15 +61,6 @@ export default function ProfileStep() {
     setValue('shortLink', formattedValue)
   };
 
-
-  const formRules = {
-    username: {
-      required: 'Please input username',
-      minLength: {value: 6, message: 'Username must have at least 6 characters'},
-      maxLength: {value: 25, message: 'Username cannot exceed 25 characters'}
-    }
-  }
-
   return (
      <form onSubmit={handleSubmit(onSubmitProfile)}>
        <div className="flex gap-8 mb-8">
@@ -79,7 +71,7 @@ export default function ProfileStep() {
                 placeholder="Limit 6 to 25 characters"
                 error={!!errors.username}
                 type="text"
-                register={register('username', formRules.username)}
+                register={register('username', formRulesProfileSetting.username)}
              />
            </div>
            <div>

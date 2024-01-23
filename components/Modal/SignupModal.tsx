@@ -10,6 +10,7 @@ import { emailRegex } from '@/utils/regex'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { toast } from 'react-toastify'
 import { FormState } from '@/types'
+import { formRulesSigupModal } from '@/config/form/rules'
 
 interface Props extends ModalProps {
   onSignupSuccess?: () => void
@@ -29,17 +30,6 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const { onUpdateProfile } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<FormState.SignUp>()
-  const formRules = {
-    username: {
-      required: 'Please input username',
-      minLength: { value: 6, message: 'Username must have at least 6 characters' },
-      maxLength: { value: 25, message: 'Username cannot exceed 25 characters' }
-    },
-    email: {
-      required: 'Please input your email',
-      pattern: { value: emailRegex, message: 'Invalid email address' }
-    }
-  }
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [isSigningUp, setIsSigningUp] = useState(false)
 
@@ -77,12 +67,12 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
               <Input
                 error={!!errors.username}
                 placeholder="Display name"
-                register={register('username', formRules.username)}
+                register={register('username', formRulesSigupModal.username)}
               />
               <Input
                 error={!!errors.email}
                 placeholder="Enter your email"
-                register={register('email', formRules.email)}
+                register={register('email', formRulesSigupModal.email)}
               />
 
               <div className="flex gap-5 items-center">

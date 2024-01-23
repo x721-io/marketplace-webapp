@@ -23,7 +23,7 @@ import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from '@/config/constants'
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { decimalRegex, numberRegex } from "@/utils/regex";
-import { CREATE_NAME, DESCRIPTION, ROYALTIES_MAX, ROYALTIES_MIN } from "@/config/form/rules";
+import { formRulesCreateNFT } from "@/config/form/rules";
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType
@@ -63,35 +63,6 @@ export default function CreateNftPage() {
   }, [media])
 
   const formRules = {
-    media: {
-      validate: {
-        required: (v: Blob[]) => (v && v.length > 0) || 'NFT image is required',
-        audio: (values: Blob[]) => {
-          if (values && values.length > 0) {
-            const firstFileType = values[0].type.split('/')[0];
-            if (firstFileType && firstFileType !== 'audio') return true;
-            return !!values[1] || 'Cover photo is required';
-          }
-          return 'Cover photo is required';
-        }
-      }
-    },
-    name: {
-      required: 'Display name is required',
-      maxLength: { value: CREATE_NAME, message: 'Display name cannot exceed 25 characters' }
-    },
-    collection: {
-      required: 'Please choose a collection'
-    },
-    description: {
-      maxLength: { value: DESCRIPTION, message: 'Description cannot exceed 256 characters' }
-    },
-    royalties: {
-      pattern: { value: decimalRegex, message: 'Royalties are in the wrong format' },
-      required: 'Royalties is required',
-      min: { value: ROYALTIES_MIN, message: 'Royalties should be within range of 1% - 50%' },
-      max: { value: ROYALTIES_MAX, message: 'Royalties should be within range of 1% - 50%' }
-    },
     amount: {
       required: 'Number of copies is required',
       validate: (value: number) => {
@@ -252,7 +223,7 @@ export default function CreateNftPage() {
               <Controller
                 name="media"
                 control={control}
-                rules={formRules.media}
+                rules={formRulesCreateNFT.media}
                 render={({ field: { value } }) => (
                   <ImageUploader
                     maxSize={100}
@@ -289,7 +260,7 @@ export default function CreateNftPage() {
               <Controller
                 name="collection"
                 control={control}
-                rules={formRules.collection}
+                rules={formRulesCreateNFT.collection}
                 render={({ field: { onChange, value } }) => (
                   <div className="flex items-center gap-3 w-full max-h-56 overflow-y-auto flex-wrap">
                     {
@@ -334,7 +305,7 @@ export default function CreateNftPage() {
               <Text className="text-body-16 font-semibold mb-1">Display name</Text>
               <Input
                 error={!!errors.name}
-                register={register('name', formRules.name)}
+                register={register('name', formRulesCreateNFT.name)}
               />
             </div>
             {/* Description */}
@@ -343,7 +314,7 @@ export default function CreateNftPage() {
               <Textarea
                 className="h-[160px] resize-none"
                 error={!!errors.description}
-                register={register('description', formRules.description)}
+                register={register('description', formRulesCreateNFT.description)}
               />
             </div>
             {/* Royalties */}
@@ -351,7 +322,7 @@ export default function CreateNftPage() {
               <Text className="text-body-16 font-semibold mb-1">Royalties</Text>
               <Input
                 error={!!errors.royalties}
-                register={register('royalties', formRules.royalties)}
+                register={register('royalties', formRulesCreateNFT.royalties)}
                 appendIcon={(
                   <Text className="text-secondary">%</Text>
                 )}

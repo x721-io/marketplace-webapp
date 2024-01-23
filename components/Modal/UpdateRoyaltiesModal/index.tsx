@@ -66,21 +66,6 @@ export default function UpdateRoyaltiesModal({
       );
       if (isMissingValue) return 'Royalty value must be greater than Zero';
 
-      //   const isTwoDecimal = value.every(item => {
-      //     let numStr = item.value.replace(',', '.');
-
-      //     let decimalIndex = numStr.indexOf('.');
-      //     if (decimalIndex === -1) {
-      //         return true;
-      //     }
-
-      //     let decimalPart = numStr.substring(decimalIndex + 1);
-
-      //     return decimalPart.length <= 2;
-      // });
-
-      // if (!isTwoDecimal) return 'Royalty value only allow 2 decimal';
-
       const totalRoyalties = value.reduce((accumulator, current) => {
         return Number(current.value) + Number(accumulator);
       }, 0);
