@@ -115,19 +115,16 @@ export default function AccountStep() {
             <Text className="text-tertiary" variant="body-12">
               Please check email and verify your email address.
             </Text>
-            {/* {verifyEmail && */}
-              <Text className="text-tertiary flex items-center" variant="body-12">
-                Still no email?
-                <span className="text-primary ml-1 text-body-12 cursor-pointer" onClick={handleResend}>Resend</span>
-                {isCounting && <span className='text-body-12 text-tertiary ml-4'>{countdown}s</span>}
-              </Text>
-            {/* } */}
+            <Text className="text-tertiary flex items-center" variant="body-12">
+              Still no email?
+              <span className="text-primary ml-1 text-body-12 cursor-pointer" onClick={handleResend}>Resend</span>
+              {isCounting && <span className='text-body-12 text-tertiary ml-4'>{countdown}s</span>}
+            </Text>
           </div>
           <FormValidationMessages errors={errors} />
           <Button type="submit" disabled={!isDirty}>
             Update email
           </Button>
-          
         </form>
 
       </div>
