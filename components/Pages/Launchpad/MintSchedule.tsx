@@ -37,11 +37,11 @@ const RoundSchedule = ({
   const [loading, setLoading] = useState(false)
   const {onClaimNFT} = useWriteRoundContract(round, collection)
   const {data: claimableAmount} = useContractRead({
-    address: round.address,
+    address: round?.address,
     abi: getRoundAbi(round),
     functionName: 'getClaimableAmount',
     args: [address],
-    enabled: !!address,
+    enabled: !!address && !!round?.address,
     watch: true,
     select: data => data
   })
@@ -91,7 +91,7 @@ const RoundSchedule = ({
        <Collapsible
           // defaultOpen={isActive || claimable}
           className="flex-1 !px-0 !py-1"
-          header={<p className="text-body-16 font-medium">{round.name}</p>}>
+          header={<p className="text-body-16 font-medium">{round?.name}</p>}>
          <div className="rounded-2xl bg-surface-soft p-4 my-4 flex flex-col gap-2">
            <div className="flex items-center gap-1">
              <p className="text-body-16 font-medium">Minting</p>
@@ -111,7 +111,7 @@ const RoundSchedule = ({
              </p>
              <Icon name="u2u-logo" width={16} height={16}/>
              <p className="text-body-12 font-medium">
-               {formatDisplayedBalance(formatEther(round.price))} U2U
+               {formatDisplayedBalance(formatEther(round?.price || 0))} U2U
              </p>
            </div>
 
@@ -120,7 +120,7 @@ const RoundSchedule = ({
                Total mintable:
              </p>
              <p className="text-body-12 font-medium">
-               {round.totalNftt === 0 ? 'Open edition' : formatDisplayedBalance(round.totalNftt,0)}
+               {round?.totalNftt === 0 ? 'Open edition' : formatDisplayedBalance(round?.totalNftt,0)}
              </p>
            </div>
 
@@ -129,7 +129,7 @@ const RoundSchedule = ({
                Max mint:
              </p>
              <p className="text-body-12 font-medium">
-               {round.maxPerWallet === 0 ? 'Open edition' : round.maxPerWallet}
+               {round?.maxPerWallet === 0 ? 'Open edition' : round?.maxPerWallet}
              </p>
            </div>
 
@@ -166,10 +166,10 @@ export default function ProjectMintSchedule({rounds, collection}: { rounds: Roun
 
            return <RoundSchedule
               collection={collection}
-              key={round.id}
+              key={round?.id}
               round={round}
-              claimable={round.claimable}
-              status={round.status}
+              claimable={round?.claimable}
+              status={round?.status}
               isCompleted={isCompleted}
               isActive={isActive}
               showSeparator={showSeparator}
