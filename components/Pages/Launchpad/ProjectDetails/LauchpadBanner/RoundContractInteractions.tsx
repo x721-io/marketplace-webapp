@@ -243,20 +243,7 @@ export default function RoundContractInteractions({
                       ? `0${timeframe.minuteEnd}`
                       : timeframe.minuteEnd}{' '}
                    UTC{' '}
-                   {/* <span className='text-tertiary'>
-                  (Please comeback tomorrow)
-                </span> */}
                  </p>
-                 {/* {new Date().getUTCHours() < timeframe.hourStart ? (
-                <p className='text-warning font-semibold'>Upcoming</p>
-              ) : new Date().getUTCHours() > timeframe.hourEnd ? (
-                <p className='text-error font-semibold'>Ended</p>
-              ) : (
-                new Date().getMinutes() >= timeframe.minuteStart &&
-                new Date().getMinutes() <= timeframe.minuteEnd && (
-                  <p className='text-success font-semibold'>Minting</p>
-                )
-              )} */}
                </div>
             ))}
           </div>

@@ -61,22 +61,22 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
 
             <div className="flex items-center gap-2">
               {!!project.twitter && (
-                <Link href={project.twitter}>
+                <Link href={project.twitter} target="_blank">
                   <Icon name="twitter" width={24} height={24} />
                 </Link>
               )}
               {!!project.discord && (
-                <Link href={project.discord}>
+                <Link href={project.discord} target="_blank">
                   <Icon name="discord" width={24} height={24} />
                 </Link>
               )}
               {!!project.telegram && (
-                <Link href={project.telegram}>
+                <Link href={project.telegram} target="_blank">
                   <Icon name="telegram" width={24} height={24} />
                 </Link>
               )}
               {!!project.website && (
-                <Link href={project.website}>
+                <Link href={project.website} target="_blank">
                   <Icon name="website" width={24} height={24} />
                 </Link>
               )}
