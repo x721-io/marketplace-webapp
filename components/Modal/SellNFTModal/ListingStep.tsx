@@ -15,7 +15,6 @@ import FeeCalculator from '@/components/FeeCalculator'
 import { formatUnits, parseUnits } from 'ethers'
 import { findTokenByAddress } from '@/utils/token'
 import { numberRegex } from "@/utils/regex";
-import { PRICE, QUANTITY } from "@/config/form/rules";
 
 interface Props {
   onSuccess: () => void
@@ -98,8 +97,8 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
       <div>
         <label className="text-body-14 text-secondary font-semibold mb-1">Price</label>
         <Input
-          maxLength={PRICE}
-          size={PRICE}
+          maxLength={18}
+          size={18}
           error={!!errors.price}
           register={register('price', formRules.price)} />
       </div>
@@ -116,8 +115,8 @@ export default function ListingStep({ nft, onSuccess, onError, marketData }: Pro
         <div>
           <Text className="text-secondary font-semibold mb-1">Quantity</Text>
           <Input
-            maxLength={QUANTITY}
-            size={QUANTITY}
+            maxLength={3}
+            size={3}
             error={!!errors.quantity}
             register={register('quantity', formRules.quantity)}
             containerClass="mb-4"

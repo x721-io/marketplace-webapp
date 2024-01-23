@@ -167,7 +167,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   <Text className="text-secondary font-semibold mb-1">Estimated cost:</Text>
                   <Input
                     readOnly
-                    value={!!price && !!quantity ? (BigInt(price) * BigInt(quantity)).toString() : 0}
+                    value={Number(price) * Number(quantity) || 0}
                     appendIcon={<Text>U2U</Text>} />
                 </div>
                 <FeeCalculator
