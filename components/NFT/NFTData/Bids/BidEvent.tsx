@@ -68,7 +68,7 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
         </div>
       </div>
 
-      {isOwner && <Button onClick={() => setShowAcceptBid(true)} variant="text">Accept</Button>}
+      {(isOwner && !isBidder) && <Button onClick={() => setShowAcceptBid(true)} variant="text">Accept</Button>}
       {isBidder && <Button onClick={() => setShowCancelBid(true)} variant="text">Cancel</Button>}
 
       <AcceptBidNFTModal

@@ -7,6 +7,7 @@ import {useEffect, useMemo} from 'react'
 import { formatUnits } from 'ethers'
 import { useContractRead } from 'wagmi'
 import { getRoundAbi } from '@/utils'
+import { SPECIAL_ROUND } from '@/config/constants'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
@@ -27,10 +28,6 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     enabled: !!activeRound,
     watch: true
   })
-
-  useEffect(()=> {
-    console.log("----",roundData)
-  },[roundData])
 
   return (
     <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-row">
@@ -99,7 +96,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
         <RoundContractInteractions
           round={activeRound}
           collection={project.collection}
-          isSpecial={activeRound.address == '0xE797C47B342d7BfF7737b067e3C343925c9d2249'}
+          isSpecial={activeRound.address == SPECIAL_ROUND}
         />
       </div>
     </div>

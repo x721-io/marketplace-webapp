@@ -58,7 +58,6 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
       }
     },
     quantity: {
-      pattern: { value: numberRegex, message: 'Wrong number format' },
       validate: {
         required: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
@@ -67,8 +66,8 @@ export default function BidStep({ onSuccess, onError, nft, marketData }: Props) 
         quantity: (v: any) => {
           if (nft.collection.type === 'ERC721') return true
           return Number(v) <= Number(marketData?.totalSupply || 0) || 'Cannot bid more than total supply'
-        }, 
-      },
+        }
+      }
     }
   }
   const [price, quantity] = watch(['price', 'quantity'])

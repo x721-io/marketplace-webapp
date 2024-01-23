@@ -89,7 +89,8 @@ export const useMarketApproval = (nft: NFT) => {
     address: nft.collection.address,
     abi: (type === 'ERC721' ? contracts.erc721Base.abi : contracts.erc1155Base.abi) as any,
     functionName: 'setApprovalForAll',
-    args: [marketContract.address, true]
+    args: [marketContract.address, true],
+    value: BigInt(0) as any
   })
 
   return {
@@ -122,7 +123,8 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
     address: token,
     abi: erc20ABI,
     functionName: 'approve',
-    args: [marketContract.address, MaxInt256]
+    args: [marketContract.address, MaxInt256],
+    value: BigInt(0) as any
   })
 
   const onApproveToken = async () => {
@@ -155,7 +157,10 @@ export const useSellNFT = (nft: NFT) => {
       quoteToken,
       parseEther(String(price))
     ].filter(Boolean)
-    const { hash } = await writeAsync?.({ args })
+    const { hash } = await writeAsync?.({
+      args,
+      value: BigInt(0) as any
+    })
     updateHash(hash)
   }
 
@@ -169,7 +174,10 @@ export const useCancelSellNFT = (nft: NFT) => {
 
   const onCancelSell = async (operationId?: string) => {
     const args = type === 'ERC721' ? [nft.collection.address, nft.u2uId ?? nft.id] : [operationId]
-    const { hash } = await writeAsync?.({ args })
+    const { hash } = await writeAsync?.({
+      args,
+      value: BigInt(0) as any
+    })
     updateHash(hash)
   }
 
@@ -189,7 +197,8 @@ export const useBuyNFT = (nft: NFT) => {
 
   const onBuyERC1155 = async (operationId: string, quantity: string) => {
     const { hash } = await writeAsync?.({
-      args: [operationId, quantity]
+      args: [operationId, quantity],
+      value: BigInt(0) as any
     })
     updateHash(hash)
   }
@@ -308,13 +317,15 @@ export const useCancelBidNFT = (nft: NFT) => {
   const onCancelERC721Bid = () => writeContract({
     ...contracts.erc721Market,
     functionName: 'cancelBid',
-    args: [nft.collection.address, (nft.u2uId ?? nft.id) as any]
+    args: [nft.collection.address, (nft.u2uId ?? nft.id) as any],
+    value: BigInt(0) as any
   })
 
   const onCancelERC1155Bid = (operationId?: string) => writeContract({
     ...contracts.erc1155Market,
     functionName: 'cancelOffer',
-    args: [operationId as any]
+    args: [operationId as any],
+    value: BigInt(0) as any
   })
 
   const onCancelBid = async (operationId?: string) => {
@@ -342,7 +353,8 @@ export const useAcceptBidNFT = (nft: NFT) => {
 
   const onAcceptERC1155Bid = async (offerId: string, quantity: number) => {
     const { hash } = await writeAsync?.({
-      args: [offerId, quantity]
+      args: [offerId, quantity],
+      value: BigInt(0) as any
     })
     updateHash(hash)
   }
