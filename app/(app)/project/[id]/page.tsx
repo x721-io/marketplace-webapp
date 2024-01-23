@@ -1,8 +1,8 @@
 'use client'
 
-import ProjectPageBanner from '@/components/Pages/Launchpad/LauchpadBanner'
-import ProjectPageDescriptions from '@/components/Pages/Launchpad/LaunchpadDescriptions'
-import ProjectMintSchedule from '@/components/Pages/Launchpad/MintSchedule'
+import ProjectPageBanner from 'components/Pages/Launchpad/ProjectDetails/LauchpadBanner'
+import ProjectPageDescriptions from '@/components/Pages/Launchpad/ProjectDetails/LaunchpadDescriptions'
+import ProjectMintSchedule from '@/components/Pages/Launchpad/ProjectDetails/MintSchedule'
 import useSWR from 'swr'
 import {useParams} from 'next/navigation'
 import {useLaunchpadApi} from '@/hooks/useLaunchpadApi'

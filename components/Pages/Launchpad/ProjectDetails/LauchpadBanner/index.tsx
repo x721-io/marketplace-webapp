@@ -32,7 +32,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
   return (
     <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col">
       <Image
-        className="w-full  desktop:w-auto   rounded-2xl object-fill"
+        className="w-full tablet:min-w-[380px] desktop:min-w-[515px] desktop:w-auto rounded-2xl object-fill"
         width={512}
         height={512}
         src={project.banner}
