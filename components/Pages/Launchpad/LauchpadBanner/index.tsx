@@ -6,7 +6,7 @@ import { Project } from '@/types'
 import {useEffect, useMemo} from 'react'
 import { formatUnits } from 'ethers'
 import { useContractRead } from 'wagmi'
-import { getRoundAbi } from '@/utils'
+import {formatDisplayedBalance, getRoundAbi} from '@/utils'
 import { SPECIAL_ROUND } from '@/config/constants'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
@@ -28,10 +28,6 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     enabled: !!activeRound,
     watch: true
   })
-
-  useEffect(()=> {
-    console.log("----",roundData)
-  },[roundData])
 
   return (
     <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-row">
@@ -59,12 +55,10 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-7 w-[1px] bg-surface-hard" />
               <p className="text-secondary text-body-16">
-                Total
-                Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>
+                Total Items: <span className="text-primary font-medium">{formatDisplayedBalance(activeRound?.totalNftt,0) || 'Open Edition'}</span>
               </p>
               <p className="text-secondary text-body-16">
-                Total
-                Minted: <span className="text-primary font-medium">{formatUnits((roundData as any)?.soldAmountNFT || 0, 0)}</span>
+                Total Minted: <span className="text-primary font-medium">{formatDisplayedBalance((roundData as any)?.soldAmountNFT || 0, 0)}</span>
               </p>
             </div>
 

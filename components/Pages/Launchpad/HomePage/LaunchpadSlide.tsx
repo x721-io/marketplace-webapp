@@ -39,51 +39,51 @@ export default function LaunchpadSlide({ project }: Props) {
   }, [roundsWithStatus])
 
   return (
-    <div className="flex justify-center desktop:gap-8 m-10 flex-col tablet:flex-row desktop:flex-row">
+    <div className="flex justify-center desktop:gap-8 gap-7 flex-col tablet:flex-row desktop:flex-row">
       {/** Project Image **/}
       <Image
         width={384}
         height={384}
         src={project.banner}
-        className="desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl w-full h-auto"
+        className="desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl w-full h-full"
         alt="" />
 
       <div className="flex flex-col justify-between">
         {/** Project descriptions **/}
-        <div className="flex flex-col gap-4 mb-6 desktop:mb-0 tablet:mb-0">
-          <Text className="font-semibold" variant="heading-md">
+        <div className="flex flex-col desktop:gap-10 tablet:gap-4 gap-4 desktop:mb-0 tablet:mb-0">
+          <Text className="font-semibold desktop:text-5xl tablet:text-4xl text-3xl">
             Projects: {project.name}
           </Text>
           <div className="flex gap-3 items-center">
-            <Icon name="u2u-logo" width={24} height={24} />
+            <Icon name="u2u-logo" width={30} height={30} />
             <div className="desktop:h-full tablet:h-full h-[20px] bg-gray-500 w-[1px]" />
             <Text variant="body-16">
               <span className="text-secondary">Items:</span>
-              {" "}{activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
+              {" "}{activeRound?.totalNftt === 0 ? 'Open Edition' : formatDisplayedBalance(activeRound?.totalNftt,0) || 0}
             </Text>
           </div>
 
           {/** Sale data **/}
-          <div className="flex items-start desktop:gap-6 tablet:gap-6 gap-1 flex-col tablet:flex-row desktop:flex-row">
-            <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
-              <Text className="text-secondary" variant="body-16">
+          <div className="flex gap-10 items-center mb-6">
+            <div className="flex items-center gap-1 tablet:gap-2 desktop:gap-2 flex-col">
+              <Text className="text-secondary text-base desktop:text-xl tablet:text-xl">
                 Round Price
               </Text>
               <div className="flex items-center gap-2">
-                <Icon name="u2u-logo" width={24} height={24} />
-                <Text className="font-semibold" variant="heading-md">
-                  {formatDisplayedBalance(formatEther(activeRound?.price || 0))}
+                <Icon name="u2u-logo" width={30} height={30} />
+                <Text className="font-semibold text-xl desktop:text-3xl tablet:text-3xl">
+                  {formatDisplayedBalance(formatEther(activeRound?.price || 0),0)}
                 </Text>
-                <Text className="font-semibold text-tertiary" variant="body-16">U2U</Text>
+                <Text className="font-semibold text-tertiary text-lg desktop:text-2xl" >U2U</Text>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
-              <Text className="text-secondary" variant="body-16">
+            <div className="flex items-center gap-1 tablet:gap-2 desktop:gap-2 flex-col">
+              <Text className="text-secondary text-base desktop:text-xl tablet:text-xl">
                 Items
               </Text>
-              <Text className="font-semibold" variant="heading-md">
-                {activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
+              <Text className="font-semibold text-xl desktop:text-3xl tablet:text-3xl" >
+                {activeRound?.totalNftt === 0 ? 'Open Edition' : formatDisplayedBalance(activeRound?.totalNftt,0) || 0}
               </Text>
             </div>
           </div>
@@ -92,9 +92,9 @@ export default function LaunchpadSlide({ project }: Props) {
         {/** Project Rounds **/}
         <Stepper current={activeRoundIndex} steps={steps} />
 
-        <Link className="flex desktop:w-[300px] tablet:w-[300px] w-full desktop:justify-start tablet:justify-start justify-center "
+        <Link className="flex items-center w-full justify-center "
               href={`/project/${project.id}`}>
-          <Button className=" w-3/4 mt-12">
+          <Button className="w-full">
             Details
           </Button>
         </Link>

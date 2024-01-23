@@ -120,7 +120,7 @@ const RoundSchedule = ({
                Total mintable:
              </p>
              <p className="text-body-12 font-medium">
-               {round.totalNftt === 0 ? 'Open edition' : round.totalNftt}
+               {round.totalNftt === 0 ? 'Open edition' : formatDisplayedBalance(round.totalNftt,0)}
              </p>
            </div>
 

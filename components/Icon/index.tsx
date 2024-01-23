@@ -29,6 +29,10 @@ import CopyIcon from "@/components/Icon/Copy";
 import LogoutIcon from "@/components/Icon/Logout";
 import U2UTokenIcon from "@/components/Icon/U2UToken";
 import SettingsIcon from '@/components/Icon/Settings'
+import TwitterIcon from "@/components/Icon/Twitter";
+import DiscordIcon from "@/components/Icon/Discord";
+import WebsiteIcon from "@/components/Icon/Website";
+import TelegramIcon from "@/components/Icon/Telegram";
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -103,6 +107,14 @@ export default function Icon({name, width, height, ...rest}: IconProps & {
         return <U2UTokenIcon width={iconW} height={iconH} {...rest} />
       case 'settings':
         return <SettingsIcon width={iconW} height={iconH} {...rest} />
+      case 'twitter':
+        return <TwitterIcon width={iconW} height={iconH} {...rest} />
+      case 'discord':
+        return <DiscordIcon width={iconW} height={iconH} {...rest} />
+      case 'website':
+        return <WebsiteIcon width={iconW} height={iconH} {...rest} />
+      case 'telegram':
+        return <TelegramIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

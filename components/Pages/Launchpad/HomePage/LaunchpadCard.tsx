@@ -53,8 +53,8 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
           height={308} />
       </div>
 
-      <div className="px-6 py-4">
-        <div className="flex items-start justify-between mb-6">
+      <div className="px-6 py-4 ">
+        <div className="flex items-center justify-between mb-6">
           <Text className="font-semibold" variant="heading-sm">
             {project.name}
           </Text>
@@ -95,7 +95,7 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
 
           <div className="flex items-center gap-1 mt-[80px] desktop:mt-auto">
             <Text className="text-secondary" variant="body-12">
-              Items: {!!activeRound && activeRound.totalNftt > 0 ? activeRound.totalNftt : 'Open Edition'}
+              Items: {!!activeRound && activeRound.totalNftt > 0 ? formatDisplayedBalance(activeRound.totalNftt,0) : 'Open Edition'}
             </Text>
             <Icon name="u2u-logo" width={12} height={12} />
           </div>

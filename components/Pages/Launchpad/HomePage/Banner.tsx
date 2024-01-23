@@ -29,7 +29,7 @@ export default function HomePageBanner() {
   }
 
   return (
-    <div className="w-full h-[500px] mx-auto">
+    <div className="w-full h-[580px] desktop:h-[500px] tablet:h-[500px] mx-auto">
       {Array.isArray(data) && (
         <Carousel pauseOnHover indicators={true} className="h-full w-full">
           {data.map(project => (
