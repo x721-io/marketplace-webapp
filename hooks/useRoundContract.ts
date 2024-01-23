@@ -14,12 +14,28 @@ const getClaimFunctionName = (assetType: AssetType): ClaimFunctionName => {
 }
 
 export const useWriteRoundContract = (round: Round, collection: Collection) => {
-  const roundAbi = getRoundAbi(round)
+  const roundAbi = getRoundAbi(round);
 
   const onBuyNFT = async (amount?: number) => {
     const functionName = getBuyFunctionName(collection.type)
     const args = functionName === 'buyERC1155' ? [amount] : []
     const price = functionName === 'buyERC1155' ? BigInt(round.price) * BigInt(amount || 0) : BigInt(round.price)
+
+    const tx = await writeContract({
+      address: round.address,
+      abi: roundAbi,
+      functionName,
+      args,
+      value: price
+    })
+
+    return { hash: tx.hash, waitForTransaction: () => waitForTransaction({ hash: tx.hash }) }
+  }
+
+  const onBuyNFTCustomized = async () => {
+    const functionName = getBuyFunctionName(collection.type)
+    const args: any[] = [];
+    const price = BigInt(round.price);
 
     const tx = await writeContract({
       address: round.address,
@@ -47,6 +63,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
 
   return {
     onClaimNFT,
-    onBuyNFT
+    onBuyNFT,
+    onBuyNFTCustomized
   }
 }

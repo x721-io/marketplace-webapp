@@ -102,6 +102,11 @@ export namespace APIParams {
     userId: `0x${string}`;
     projectId: string | string[];
   }
+
+  export interface CrawlNFTInfo {
+    collectionAddress: `0x${string}`;
+    txCreation: `0x${string}`;
+  }
 }
 
 /********** =========== API Response types ========== ***********/
