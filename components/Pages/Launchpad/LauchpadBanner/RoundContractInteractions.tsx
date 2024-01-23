@@ -141,8 +141,6 @@ export default function RoundContractInteractions({
                         )}
                       </span>
                       </p>
-                      )}
-
                     </div>
                   </div>
                );
@@ -210,7 +208,10 @@ export default function RoundContractInteractions({
           <div className='desktop:flex desktop:flex-col items-center desktop:items-start gap-1'>
             <div>
               <p className='text-body-18 font-semibold'>
-                Available from {format(new Date(round?.start) || 0, 'yyyy/M/dd')} to {format(new Date(round?.end) || 0, 'yyyy/M/dd')}
+                <span className='text-secondary'>Available from </span> 
+                {format(new Date(round?.start) || 0, 'yyyy/M/dd')} 
+                <span className='text-secondary'> to </span> 
+                {format(new Date(round?.end) || 0, 'yyyy/M/dd')}
               </p>
               <div>
                 <p className='text-body-18 text-secondary font-semibold'>Time frame: </p>
@@ -226,7 +227,6 @@ export default function RoundContractInteractions({
             {timeframes?.map((timeframe) => (
                <div className='w-full flex items-center justify-between'>
                  <p className='text-primary text-body-16 font-semibold'>
-                   From:{' '}
                    {timeframe.hourStart < 10
                       ? `0${timeframe.hourStart}`
                       : timeframe.hourStart}
