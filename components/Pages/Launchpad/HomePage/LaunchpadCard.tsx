@@ -47,7 +47,7 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
       <div className="p-2">
         <Image
           className="rounded-lg w-full h-auto max-h-[308px]"
-          src="https://fakeimg.pl/612x308/?text=Project"
+          src={project.banner}
           alt=""
           width={612}
           height={308} />
@@ -61,11 +61,14 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
 
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-1">
+              <Text className="font-semibold text-secondary" variant="body-14">
+                Price:
+              </Text>
               <Icon name="u2u-logo" width={16} height={16} />
               <Text className="font-semibold" variant="body-18">
                 {formatDisplayedBalance(formatEther(activeRound?.price || 0))}
               </Text>
-              <Text className="text-secondary" variant="body-12">U2U</Text>
+              <Text className="text-secondary font-semibold" variant="body-14">U2U</Text>
             </div>
             <Text className="text-secondary" variant="body-14">
               {activeRound?.name}
@@ -97,7 +100,6 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
             <Text className="text-secondary" variant="body-12">
               Items: {!!activeRound && activeRound.totalNftt > 0 ? formatDisplayedBalance(activeRound.totalNftt,0) : 'Open Edition'}
             </Text>
-            <Icon name="u2u-logo" width={12} height={12} />
           </div>
         </div>
       </div>

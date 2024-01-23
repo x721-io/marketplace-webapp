@@ -27,7 +27,7 @@ const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
      <>
        <div
           className={classNames(
-             "w-7 h-7 rounded-full",
+             "w-7 h-7 rounded-full flex items-center justify-center",
              active ? 'bg-success' : 'bg-blue-300'
           )}
           {...rest}>
