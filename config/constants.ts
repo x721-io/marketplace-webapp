@@ -7,8 +7,6 @@ export const ZERO_COLLECTION = process.env.NEXT_PUBLIC_REQUIRED_COLLECTION
 export const SPECIAL_ROUND = process.env.NEXT_PUBLIC_SPECIAL_ROUND_CONTRACT
 export const CAMPAIGN_URL = 'https://voyage.u2nft.io/'
 export const LAUNCHPAD_APPLY_URL = 'https://forms.gle/9MaNk6gQbKccqqAeA'
-export const SPECIAL_PROJECT_ID = process.env.NEXT_PUBLIC_SPECIAL_PROJECT_ID
-
 
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) => `I want to login on U2UNFTMarket at ${time}. I accept the U2U Terms of Service https://unicornultra.xyz and I am at least 13 years old.`
