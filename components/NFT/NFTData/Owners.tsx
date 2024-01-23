@@ -40,7 +40,7 @@ export default function OwnersTab({nft, marketData}: {
     return marketData.bidInfo?.find(bid => {
       return (!!bid.to?.publicKey && !!userWallet) && bid.to?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
     })
-  }, [marketData])
+  }, [marketData,userWallet])
 
 
   return (

@@ -60,11 +60,20 @@ const modal: CustomFlowbiteTheme['modal'] = {
   }
 }
 
+const carousel: CustomFlowbiteTheme['carousel'] = {
+  root: {
+    "base": "relative h-full w-full",
+    "leftControl": "absolute top-0 left-0 flex h-full items-center justify-center px-4 focus:outline-none",
+    "rightControl": "absolute top-0 right-0 flex h-full items-center justify-center px-4 focus:outline-none"
+  },
+}
+
 const appTheme: CustomFlowbiteTheme = {
   tab,
   table,
   accordion,
-  modal
+  modal,
+  carousel
 }
 
 export default appTheme

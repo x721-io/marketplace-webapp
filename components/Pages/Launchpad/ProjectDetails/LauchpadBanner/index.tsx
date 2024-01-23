@@ -3,10 +3,10 @@ import Icon from '@/components/Icon'
 import RoundContractInteractions from './RoundContractInteractions'
 import Link from 'next/link'
 import { Project } from '@/types'
-import {useEffect, useMemo} from 'react'
+import { useEffect, useMemo } from 'react'
 import { formatUnits } from 'ethers'
 import { useContractRead } from 'wagmi'
-import { getRoundAbi } from '@/utils'
+import { formatDisplayedBalance, getRoundAbi } from '@/utils'
 import { SPECIAL_ROUND } from '@/config/constants'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
@@ -29,21 +29,14 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     watch: true
   })
 
-  useEffect(()=> {
-    console.log("----",roundData)
-  },[roundData])
-
   return (
-    <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-row">
-      <div className="flex-1">
-        <Image
-          className="w-full max-w-[600px] h-auto rounded-2xl"
-          width={512}
-          height={512}
-          src={project.banner}
-          alt="" />
-      </div>
-
+    <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col">
+      <Image
+        className="w-full tablet:min-w-[380px] desktop:min-w-[515px] desktop:w-auto rounded-2xl object-fill"
+        width={512}
+        height={512}
+        src={project.banner}
+        alt="" />
       <div className="flex-1 flex flex-col">
         <div className="flex flex-col gap-4 mb-8">
           <p className="font-semibold text-heading-lg leading-none">
@@ -59,12 +52,10 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-7 w-[1px] bg-surface-hard" />
               <p className="text-secondary text-body-16">
-                Total
-                Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>
+                Total Items: <span className="text-primary font-medium">{formatDisplayedBalance(activeRound?.totalNftt, 0) || 'Open Edition'}</span>
               </p>
               <p className="text-secondary text-body-16">
-                Total
-                Minted: <span className="text-primary font-medium">{formatUnits((roundData as any)?.soldAmountNFT || 0, 0)}</span>
+                Total Minted: <span className="text-primary font-medium">{formatDisplayedBalance((roundData as any)?.soldAmountNFT || 0, 0)}</span>
               </p>
             </div>
 
