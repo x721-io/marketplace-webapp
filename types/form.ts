@@ -56,6 +56,11 @@ export namespace FormState {
   }
 
   export interface VerifyAccount {
+    accountStatus: boolean,
+    listVerify: ListVerify
+  }
+
+  export interface ListVerify {
     email: boolean,
     username: boolean,
     shortLink: boolean,

@@ -17,14 +17,17 @@ export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
   const [showPopup, setShowPopup] = useState(false);
   const { onUpdateProfile, onVerifyAccount } = useAuth()
-  const [listVerify, setListVerify] = useState<FormState.VerifyAccount>({
-    email: false,
-    username: false,
-    shortLink: false,
-    avatar: false,
-    bio: false,
-    twitterLink: false,
-    ownerOrCreater: false
+  const [reponseVerify, setReponseVerify] = useState<FormState.VerifyAccount>({
+    accountStatus: false,
+    listVerify: {
+      email: false,
+      username: false,
+      shortLink: false,
+      avatar: false,
+      bio: false,
+      twitterLink: false,
+      ownerOrCreater: false
+    }
   })
   const { handleSubmit, register, formState: { isDirty, errors }, setValue } = useForm<FormState.UpdateProfile>({
     defaultValues: {
@@ -78,7 +81,7 @@ export default function ProfileStep() {
     try {
       let reponse = await onVerifyAccount()
       if (reponse !== undefined) {
-        setListVerify(reponse)
+        setReponseVerify(reponse)
         setShowPopup(true)
       } else {
         setShowPopup(false)
@@ -216,7 +219,7 @@ export default function ProfileStep() {
       </div>
       <VerifyAccountModal
         show={showPopup}
-        listVerify={listVerify}
+        reponseVerify={reponseVerify}
         onClose={() => setShowPopup(false)}
       />
     </div >

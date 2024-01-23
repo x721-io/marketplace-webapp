@@ -49,6 +49,12 @@ export default function AccountStep() {
     return () => clearInterval(timer);
   }, [isCounting]);
 
+  useEffect(() => {
+    if (countdown === 0) {
+      resetCountdown();
+    }
+  }, [countdown]);
+
 
   const onSubmit = async ({ email }: FormState) => {
     try {

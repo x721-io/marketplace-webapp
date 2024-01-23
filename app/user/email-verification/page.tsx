@@ -13,6 +13,24 @@ export default function EmailVerificationPage() {
 
     const router = useRouter()
     const api = useMarketplaceApi()
+    
+    // Set coutdown
+    const [countdown, setCountdown] = useState(60);
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            setCountdown((prevCountdown) => prevCountdown - 1);
+        }, 1000);
+
+        const redirectTimeout = setTimeout(() => {
+            router.push('/');
+        }, 60000);
+
+        return () => {
+            clearInterval(countdownInterval);
+            clearTimeout(redirectTimeout);
+        };
+    }, []);
+
     const { data: user, error, isLoading } = useSWR(
         token || null,
         (verifyToken) => api.fetchEmailVerify({ token: verifyToken } as APIParams.FetchEmailVerify),
@@ -40,7 +58,7 @@ export default function EmailVerificationPage() {
                             You have successfully verified your email.
                         </Text>
                         <span className='mt-4 text-tertiary'>Please click on the link <span className='underline cursor-pointer hover:text-primary' onClick={navigationHomepage}>https://nebulas.u2nft.io/</span> to return to the home page</span>
-                        <span className='text-tertiary'>Or after 5 seconds it will automatically return to the home page</span>
+                        <span className='text-tertiary'>Or after {countdown} seconds it will automatically return to the home page</span>
                     </div>
                 )
             case isLoading:
