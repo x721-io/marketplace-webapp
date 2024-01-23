@@ -14,7 +14,7 @@ import { Collection, Round } from '@/types';
 import { useRoundStatus } from '@/hooks/useRoundStatus';
 import { format } from 'date-fns';
 import { useRoundZero } from '@/hooks/useRoundZero';
-import { MARKETPLACE_URL, ZERO_COLLECTION } from '@/config/constants';
+import {MARKETPLACE_URL, SPECIAL_PROJECT_ID, ZERO_COLLECTION} from '@/config/constants';
 import { MessageRoundNotEligible } from './EligibleMessage';
 import useSWR from 'swr';
 import { useParams } from 'next/navigation';
@@ -235,7 +235,7 @@ export default function RoundAction({
                     </div>
 
                     <input
-                      readOnly={id == '2d7e9dcb-aa1a-4c9e-ba95-b4a5b94d0536' ? true : false}
+                      readOnly={id == SPECIAL_PROJECT_ID ? true : false}
                       value={amount}
                       onChange={(e) =>
                         handleInputAmount(Number(e.target.value))

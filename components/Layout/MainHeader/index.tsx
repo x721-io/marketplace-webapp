@@ -19,8 +19,8 @@ export default function MainHeader() {
   const [showMenu, setShowMenu] = useState(false)
 
   return (
-    <nav className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 px-4 tablet:px-7`}>
-      <div className="flex flex-wrap items-center justify-between mx-auto py-4">
+    <nav className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 desktop:p-4 px-4 pt-4 tablet:px-7`}>
+      <div className="flex flex-wrap items-center justify-between mx-auto ">
         <div className="flex items-center gap-6">
           <div className="hidden desktop:block tablet:block">
             <Link href="/" className="w-fit">
