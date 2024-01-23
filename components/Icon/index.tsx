@@ -37,6 +37,7 @@ import MinusIcon from './Minus'
 import AuctionIcon from './Auction'
 import CheckIcon from './Check'
 import RoundZeroIconZ from './RoundZero'
+import PlusIcon from './Plus'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -121,6 +122,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <TelegramIcon width={iconW} height={iconH} {...rest} />
       case 'minus':
         return <MinusIcon width={iconW} height={iconH} {...rest} />
+      case 'plus':
+        return <PlusIcon width={iconW} height={iconH} {...rest} />
       case 'auction':
         return <AuctionIcon width={iconW} height={iconH} {...rest} />
       case 'check':
