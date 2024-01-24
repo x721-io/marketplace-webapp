@@ -123,6 +123,9 @@ export namespace APIParams {
     collectionAddress: Address;
     txCreation: Address;
   }
+  export interface FetchEmailVerify {
+    token: string
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -201,6 +204,10 @@ export namespace APIResponse {
   export interface FetchNFTs {
     data: NFT[]
     paging: Pagination
+  }
+
+  export interface FetchEmailVerify {
+    token: string
   }
 
   export interface UsersData {

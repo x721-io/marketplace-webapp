@@ -23,5 +23,6 @@ export const API_ENDPOINTS = {
   SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
   SNAPSHOT: '/user/projects',
   SEND_VERIFY_EMAIL: '/user/send-verify-email',
-  LIST_VERIFY:'/user/list-verify'
+  LIST_VERIFY:'/user/list-verify',
+  EMAIL_VERIFICATION: '/email-verification'
 }

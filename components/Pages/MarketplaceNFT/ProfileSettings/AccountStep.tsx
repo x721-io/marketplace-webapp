@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form'
 import useAuthStore from '@/store/auth/store'
 import { toast } from 'react-toastify'
@@ -27,8 +27,32 @@ export default function AccountStep() {
     }
   })
 
+  const [isCounting, setIsCounting] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+
+  const startCountdown = () => {
+    setIsCounting(true);
+  };
+
+  const resetCountdown = () => {
+    setIsCounting(false);
+    setCountdown(10);
+  };
+
+  useEffect(() => {
+    let timer: any;
+    if (isCounting) {
+      timer = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isCounting]);
+
+
   const onSubmit = async ({ email }: FormState) => {
     try {
+      startCountdown();
       await toast.promise(onUpdateProfile({ email }), {
         pending: 'Updating email',
         success: 'Email updated successfully!',
@@ -39,6 +63,7 @@ export default function AccountStep() {
     } catch (e) {
       console.error('Error:', e)
     } finally {
+      resetCountdown();
       reset({ email })
     }
   }
@@ -79,19 +104,18 @@ export default function AccountStep() {
             <Text className="text-tertiary" variant="body-12">
               Please check email and verify your email address.
             </Text>
-            {verifyEmail &&
+            {/* {verifyEmail && */}
               <Text className="text-tertiary flex items-center" variant="body-12">
                 Still no email?
                 <span className="text-primary ml-1 text-body-12 cursor-pointer" onClick={handleResend}>Resend</span>
               </Text>
-            }
+            {/* } */}
           </div>
           <FormValidationMessages errors={errors} />
-          {verifyEmail === false &&
-            <Button type="submit" disabled={!isDirty}>
-              Update email
-            </Button>
-          }
+          <Button type="submit" disabled={!isDirty}>
+            Update email
+          </Button>
+          {isCounting && <span className='text-body-12 text-tertiary ml-4'>{countdown}s</span>}
         </form>
 
       </div>
