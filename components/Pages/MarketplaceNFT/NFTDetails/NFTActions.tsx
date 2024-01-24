@@ -50,11 +50,10 @@ export default function NFTActions({nft, marketData}: {
                 <Button className="w-full" onClick={() => setShowSellModal(true)}>
                   Put on sale
                 </Button>
-                <Button className="w-full" onClick={() => setShowTransferModal(true)}>
+                <Button variant='outlined' className="w-full" onClick={() => setShowTransferModal(true)}>
                   Transfer
                 </Button>
               </div>
-
            )}
            <SellNFTModal
               marketData={marketData}
@@ -66,7 +65,11 @@ export default function NFTActions({nft, marketData}: {
               marketData={marketData}
               show={showCancelSellModal}
               onClose={() => setShowCancelSellModal(false)}/>
-           <TransferNFTModal nft={nft} show={showTransferModal} onClose={() => setShowTransferModal(false)}/>
+           <TransferNFTModal 
+              nft={nft} 
+              marketData={marketData}
+              show={showTransferModal} 
+              onClose={() => setShowTransferModal(false)}/>
 
          </ConnectWalletButton>
        </div>
@@ -74,29 +77,29 @@ export default function NFTActions({nft, marketData}: {
   }
 
   return (
-     <ConnectWalletButton className="w-full">
-       {isOnSale ? (
-          <div className="flex items-center gap-3 mb-3">
-            <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
-              Buy Now
-            </Button>
-            <Button className="w-12 !min-w-0 !p-2" disabled>
-              <Icon name="shoppingBag" width={16} height={16}/>
-            </Button>
-          </div>
-       ) : !!myBid ? (
-          <Button className="w-full" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
-            Cancel bidding
-          </Button>
-       ) : (
-          <Button className="w-full" variant="outlined" onClick={() => setShowBidModal(true)}>
-            Place a bid
-          </Button>
-       )}
+    <ConnectWalletButton className="w-full">
+    {isOnSale ? (
+      <div className="flex items-center gap-3 mb-3">
+        <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
+          Buy Now
+        </Button>
+        <Button className="w-12 !min-w-0 !p-2" disabled>
+          <Icon name="shoppingBag" width={16} height={16} />
+        </Button>
+      </div>
+    ) : !!myBid ? (
+      <Button className="w-full" variant="outlined" onClick={() => setShowCancelBidModal(true)}>
+        Cancel bidding
+      </Button>
+    ) : (
+      <Button className="w-full" variant="outlined" onClick={() => setShowBidModal(true)}>
+        Place a bid
+      </Button>
+    )}
 
-       <BuyNFTModal saleData={saleData} nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)}/>
-       <BidNFTModal marketData={marketData} nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)}/>
-       <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)}/>
-     </ConnectWalletButton>
+    <BuyNFTModal saleData={saleData} nft={nft} show={showBuyModal} onClose={() => setShowBuyModal(false)} />
+    <BidNFTModal marketData={marketData} nft={nft} show={showBidModal} onClose={() => setShowBidModal(false)} />
+    <CancelBidNFTModal bid={myBid} nft={nft} show={showCancelBidModal} onClose={() => setShowCancelBidModal(false)} />
+  </ConnectWalletButton>
   )
 }

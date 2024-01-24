@@ -1,62 +1,99 @@
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
 import Button from '@/components/Button'
-import {useAccount} from 'wagmi'
-import {NFT} from '@/types'
-
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
+import { FormState, NFT } from '@/types'
+import useAuthStore from '@/store/auth/store'
+import { useMemo } from 'react'
+import { numberRegex } from '@/utils/regex'
+import { useForm } from 'react-hook-form'
+import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { toast } from 'react-toastify'
 interface Props {
-  onSuccess: () => void
-  onError: (error: Error) => void
   nft: NFT
+  marketData?: NFTMarketData
+  handleReset: () => void
 }
 
-export default function TransferStep({ onSuccess, onError, nft }: Props) {
-  const { address } = useAccount()
+export default function TransferStep({ nft, marketData, handleReset }: Props) {
+  const type = nft.collection.type
+  const wallet = useAuthStore(state => state.profile?.publicKey)
+  const ownerData = useMemo(() => {
+    if (!wallet || !marketData) return undefined
+    return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
+  }, [wallet, nft])
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormState.TranferToken>()
+  
+  const formRules = {
+    quantity: {
+      pattern: { value: numberRegex, message: 'Wrong number format' },
+      validate: {
+        required: (v: number) => {
+          if (type === 'ERC721') return true
+          return (!!v && !isNaN(v) && v > 0) || 'Please input quantity of item to tranfer'
+        },
+        amount: (v: number) => {
+          if (type === 'ERC721') return true
+          if (!ownerData) return 'Quantity exceeds owned amount'
+          return v <= Number(ownerData.quantity) || 'Quantity exceeds owned amount'
+        }
+      }
+    },
+    address: {
+      required: 'Address is not allowed to be empty'
+    }
+  }
 
-  // useEffect(() => {
-  //   if (error) onError(error)
-  // }, [error])
-  //
-  // useEffect(() => {
-  //   if (isSuccess) onSuccess()
-  // }, [isSuccess])
+  const onSubmit = async ({ quantity, address }: FormState.TranferToken) => {
+    try {
+      toast.success('Tranfer token successfully', { autoClose: 1000, closeButton: true })
+    } catch (e: any) {
+      toast.error(`Error report: ${e.message || e}`)
+    } finally {
+      handleReset()
+    }
 
-  return (
-    <form className="w-full flex flex-col gap-6">
-      <div className="font-bold">
-        <Text className="mb-3" variant="heading-xs">
-          Transfer NFT
-        </Text>
-      </div>
+  }
 
-      <div>
-        <label className="text-body-14 text-secondary font-semibold mb-1">Receive address</label>
-        <Input
-          maxLength={18}
-          size={18}
-          readOnly
-          appendIcon={nft.collection.type === 'ERC1155' &&
-            <Text>
-              Quantity: ???
-            </Text>
-          } />
+    return (
+    <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+      <div className='flex gap-4 flex-col'>
+        <Text className="font-semibold text-body-24">Transfer Token</Text>
+        <Text className='text-body-16'>You can transfer tokens from your address to another</Text>
       </div>
       {nft.collection.type === 'ERC1155' && (
-        <>
-          <div>
-            <Text className="text-secondary font-semibold mb-1">Quantity</Text>
-            <Input
-              maxLength={3}
-              size={3}
-            />
-          </div>
-        </>
+        <div className='flex gap-1 flex-col'>
+          <Text className="text-secondary font-semibold">Quantity</Text>
+          <Input
+            error={!!errors.quantity}
+            register={register('quantity', formRules.quantity)}
+            appendIcon={nft.collection.type === 'ERC1155' &&
+              <Text>
+                Quantity: {ownerData?.quantity}
+              </Text>
+            }
+          />
+        </div>
       )}
+      <div className='flex gap-1 flex-col'>
+        <label className="text-body-14 text-secondary font-semibold mb-1">Receive address</label>
+        <Input
+          error={!!errors.address}
+          register={register('address', formRules.address)}
+        />
+      </div>
 
-      {/*<FormValidationMessages errors={""} />*/}
-      <Button type={'submit'} className="w-full" >
-        Transfer item
-      </Button>
+      <FormValidationMessages errors={errors} />
+
+      <div className='flex gap-2 flex-col'>
+        <Button type={'submit'} className="w-full" >
+          Continue
+        </Button>
+        <Button variant='outlined' className="w-full" onClick={handleReset}>
+          Cancel
+        </Button>
+      </div>
     </form>
   )
 }

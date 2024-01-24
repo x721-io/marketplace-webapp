@@ -4,9 +4,12 @@ import Text from '@/components/Text'
 import Button from '@/components/Button'
 import {NFT} from '@/types'
 import TransferStep from "@/components/Modal/TransferNFT/TransferStep";
+import { APIResponse } from '@/services/api/types'
+import NFTMarketData = APIResponse.NFTMarketData
 
 interface Props extends ModalProps {
-  nft: NFT
+  nft: NFT,
+  marketData?: NFTMarketData
 }
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
@@ -19,37 +22,14 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
   }
 }
 
-export default function TransferNFTModal({nft, show, onClose}: Props) {
+export default function TransferNFTModal({nft, show, onClose, marketData}: Props) {
   const [error, setError] = useState<Error>()
-  const [step, setStep] = useState(2)
 
   const handleReset = () => {
     onClose?.()
-    setStep(2)
     setError(undefined)
   }
 
-  const renderContent = () => {
-    switch (step) {
-       // case 1:
-       //   return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError}/>
-      case 2:
-        return <TransferStep nft={nft} onError={setError} onSuccess={() => setStep(3)}/>
-      case 3:
-        return (
-           <>
-             <Text className="font-semibold text-success" variant="heading-sm">
-               Success
-             </Text>
-             <Text className="text-secondary">
-               Item has been successfully transfer!
-             </Text>
-           </>
-        )
-      default:
-        return <></>
-    }
-  }
   return (
      <Modal
         theme={modalTheme}
@@ -70,12 +50,13 @@ export default function TransferNFTModal({nft, show, onClose}: Props) {
                       {error?.message}
                     </Text>
                   </Tooltip>
-
                   <Button className="w-full" variant="secondary" onClick={handleReset}>
                     Close
                   </Button>
                 </>
-             ) : renderContent()
+                ) 
+             : 
+             <TransferStep nft={nft} marketData={marketData} handleReset={handleReset} />
            }
          </div>
        </Modal.Body>

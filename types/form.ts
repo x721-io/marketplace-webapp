@@ -54,5 +54,10 @@ export namespace FormState {
   export interface AcceptBidNFT {
     quantity: number
   }
+
+  export interface TranferToken {
+    quantity: number
+    address: Address
+  }
 }
 
