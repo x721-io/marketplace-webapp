@@ -7,6 +7,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
 import React, { Suspense } from 'react'
 import LoadingPage from './loading'
+import MaintenancePage from "@/components/MaintenancePage";
 
 export const metadata: Metadata = {
   title: 'U2U NFT Marketplace',
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ErrorBoundary>
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          {children}
+          <MaintenancePage/>
         </Suspense>
         <ToastContainer autoClose={5000} />
       </Providers>
