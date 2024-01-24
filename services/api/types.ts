@@ -1,7 +1,7 @@
 import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/entitites'
 import { Address } from 'wagmi'
 import { MarketEvent, MarketEventType } from '@/types/market'
-import {Project, RoundStatus} from "@/types";
+import { Project, RoundStatus } from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
@@ -85,6 +85,15 @@ export namespace APIParams {
     collectionId?: string
   }
 
+  export interface VerifyAcc {
+    email: string
+    username: string
+    shortLink: string
+    bio: string
+    twitterLink: string
+    avatar: string
+  }
+
   export interface FetchNFTDetails {
     collectionAddress: string,
     id: string
@@ -98,18 +107,20 @@ export namespace APIParams {
   export interface FetchProjects {
     mode?: RoundStatus
   }
+
   export interface SubscribeRoundZero {
     projectId: string
     walletAddress: Address
   }
+
   export interface FetchSnapshot {
-    userId: `0x${string}`;
+    userId: Address;
     projectId: string | string[];
   }
 
   export interface CrawlNFTInfo {
-    collectionAddress: `0x${string}`;
-    txCreation: `0x${string}`;
+    collectionAddress: Address;
+    txCreation: Address;
   }
 }
 

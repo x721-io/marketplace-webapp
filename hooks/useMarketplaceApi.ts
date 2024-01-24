@@ -104,7 +104,9 @@ export const useMarketplaceApi = () => {
 
       viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
-      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params)),
+
+      verifyAccount: (params: APIParams.VerifyAcc): Promise<boolean> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, params)
     }
   }, [authHeader])
 }
