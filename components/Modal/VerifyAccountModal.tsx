@@ -5,11 +5,11 @@ import VerifyIcon from '../Icon/Verify'
 import { useRouter } from 'next/navigation'
 import Icon from '../Icon'
 
-interface FromState extends ModalProps {
+interface FormState extends ModalProps {
   verifyData?: Record<string, any>;
 }
 
-export default function VerifyAccountModal({ show, onClose, verifyData }: FromState) {
+export default function VerifyAccountModal({ show, onClose, verifyData }: FormState) {
   const router = useRouter()
 
   const handleVerifyAccount = () => {

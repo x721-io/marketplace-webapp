@@ -23,11 +23,11 @@ export namespace APIParams {
     'acceptedTerms' | 'email' | 'username' | 'bio' | 'facebookLink' | 'twitterLink' | 'telegramLink' | 'discordLink' | 'webURL' | 'coverImage' | 'avatar' | 'shortLink'
   >>
 
-  export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
-
   export interface ResendVerifyMail {
     email: string | undefined
   }
+
+  export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
 
   export type CreateCollection = Partial<Pick<
     Collection,
@@ -103,6 +103,9 @@ export namespace APIParams {
   export interface FetchNFTMarketData extends FetchNFTDetails {
     bidListPage: number
     bidListLimit: number
+  }
+  export interface FetchEmailVerify {
+    token: string
   }
 
   export interface FetchProjects {
@@ -240,6 +243,5 @@ export namespace APIResponse {
 
   export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
 
-
-  export type VerifyAccount = FormState.VerifyAccount
-}
+    export type VerifyAccount = FormState.VerifyAccount
+  }

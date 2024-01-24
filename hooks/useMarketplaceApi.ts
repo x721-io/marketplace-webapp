@@ -20,6 +20,7 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
+      resendEmail: (params: APIParams.ResendVerifyMail) :  Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
       search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
