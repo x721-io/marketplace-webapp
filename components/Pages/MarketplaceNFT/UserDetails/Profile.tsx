@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { User } from '@/types'
 import { getUserAvatarImage, getUserCoverImage } from "@/utils/string";
 
-export default function Profile({ id, username, bio, avatar, coverImage }: User) {
+export default function Profile({ id, username, bio, avatar, coverImage, accountStatus }: User) {
   const myId = useAuthStore(state => state.profile?.id)
   return (
     <div className="">
@@ -34,7 +34,11 @@ export default function Profile({ id, username, bio, avatar, coverImage }: User)
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-2">
               <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">{username}</Text>
-              {/* <Icon name="verified" width={24} height={24} /> */}
+              {accountStatus? <Icon name="verified" width={24} height={24} />
+              : 
+              'ahihi'
+              }
+              
             </div>
             <div>
               <Text className="text-secondary text-sm">{bio ? bio : 'Nothing to show'}</Text>
