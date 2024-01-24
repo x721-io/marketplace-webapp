@@ -8,6 +8,9 @@ import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks/useAuth'
 import { emailRegex } from '@/utils/regex'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
+import { useParams } from 'next/navigation';
+import useSWR from 'swr';
 
 interface FormState {
   email: string
@@ -16,6 +19,8 @@ interface FormState {
 export default function AccountStep() {
   const { onUpdateProfile, onResendEmail } = useAuth()
   const email = useAuthStore(state => state.profile?.email)
+  const verifyEmail = useAuthStore(state => state.profile?.verifyEmail)
+
   const { register, handleSubmit, reset, formState: { isDirty, errors }, getValues } = useForm<FormState>({
     defaultValues: {
       email: email || ''
@@ -41,7 +46,7 @@ export default function AccountStep() {
   const handleResend = async () => {
     const toastId = toast.loading('Uploading send email...', { type: 'info' })
     try {
-      await onResendEmail ({email: getValues('email')})
+      await onResendEmail({ email: getValues('email') })
       toast.update(toastId, {
         render: 'Send email successfully',
         type: 'success',
@@ -51,7 +56,7 @@ export default function AccountStep() {
     } catch (e) {
       console.error('Error:', e)
     } finally {
-      
+
     }
   }
 
@@ -74,16 +79,19 @@ export default function AccountStep() {
             <Text className="text-tertiary" variant="body-12">
               Please check email and verify your email address.
             </Text>
-            <Text className="text-tertiary flex items-center" variant="body-12">
-              Still no email? 
-              <Button type='button' onClick={handleResend}>Resend</Button>
-              {/* <span className="text-primary ml-1 text-body-12" onClick={() => onResend}>Resend</span> */}
-            </Text>
+            {verifyEmail &&
+              <Text className="text-tertiary flex items-center" variant="body-12">
+                Still no email?
+                <span className="text-primary ml-1 text-body-12 cursor-pointer" onClick={handleResend}>Resend</span>
+              </Text>
+            }
           </div>
-          <FormValidationMessages errors={errors}/>
-          <Button type="submit" disabled={!isDirty}>
-            Update email
-          </Button>
+          <FormValidationMessages errors={errors} />
+          {verifyEmail === false &&
+            <Button type="submit" disabled={!isDirty}>
+              Update email
+            </Button>
+          }
         </form>
 
       </div>
