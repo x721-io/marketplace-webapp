@@ -3,6 +3,7 @@ import Text from '../Text'
 import Button from '../Button'
 import VerifyIcon from '../Icon/Verify'
 import { useRouter } from 'next/navigation'
+import Icon from '../Icon'
 
 interface FromState extends ModalProps {
   reponseVerify?: Record<string, any>;
@@ -42,7 +43,7 @@ export default function VerifyAccountModal({ show, onClose, reponseVerify }: Fro
               <div>
                 {reponseVerify?.listVerify && Object.entries(reponseVerify?.listVerify).map(([key, value]) => (
                   <li key={key} className='flex gap-2 items-center'>
-                    <VerifyIcon width={16} height={16} />
+                    <Icon name="verify-active" width={16} height={16} />
                     <Text>{`${key} is required`}</Text>
                   </li>
                 ))}

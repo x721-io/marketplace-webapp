@@ -39,6 +39,7 @@ import CheckIcon from './Check'
 import RoundZeroIconZ from './RoundZero'
 import PlusIcon from './Plus'
 import VerifyDisableIcon from './VerifyDisable'
+import VerifyIcon from './Verify'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -133,6 +134,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <RoundZeroIconZ width={iconW} height={iconH} {...rest} />
       case 'verify-disable':
         return<VerifyDisableIcon width={iconW} height={iconH} {...rest} /> 
+      case 'verify-active':
+        return<VerifyIcon width={iconW} height={iconH} {...rest} /> 
       default:
         return null
     }

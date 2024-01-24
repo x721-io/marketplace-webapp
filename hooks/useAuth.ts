@@ -43,7 +43,6 @@ export const useAuth = () => {
   const onResendEmail = useCallback(async (params: APIParams.ResendVerifyMail) => {
     if (!bearerToken) return
     const email = await api.resendEmail(params)
-    console.log('email: ', email)
     
   }, [bearerToken, address])
 

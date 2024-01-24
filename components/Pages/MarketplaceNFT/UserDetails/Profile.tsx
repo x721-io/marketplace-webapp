@@ -38,7 +38,7 @@ export default function Profile({ id, username, bio, avatar, coverImage, account
               {accountStatus? <Icon name="verified" width={24} height={24} />
               :
               <Link className="flex gap-1" href={`/profile`}>
-                <VerifyDisableIcon width={24} height={24} />
+                <Icon name="verify-disable" width={24} height={24} />
                 <span className="text-secondary">Get verified</span>
               </Link>
               }
