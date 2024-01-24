@@ -7,6 +7,7 @@ import Input from '@/components/Form/Input'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { NFT, MarketEvent, FormState } from '@/types'
 import FeeCalculator from '@/components/FeeCalculator'
+import { numberRegex } from '@/utils/regex'
 
 interface Props {
   nft: NFT,
