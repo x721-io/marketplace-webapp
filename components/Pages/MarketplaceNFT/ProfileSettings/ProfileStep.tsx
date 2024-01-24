@@ -79,7 +79,7 @@ export default function ProfileStep() {
       }
 
     } catch (e: any) {
-      console.log('e', e)
+      toast.error(`Error report: ${e.message || e}`, { autoClose: 1000, closeButton: true })
     }
   }
 
