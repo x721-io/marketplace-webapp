@@ -24,6 +24,10 @@ export namespace APIParams {
 
   export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
 
+  export interface ResendVerifyMail {
+    email: string | undefined
+  }
+
   export type CreateCollection = Partial<Pick<
     Collection,
     'txCreationHash' | 'name' | 'symbol' | 'description' | 'type' | 'categoryId' | 'shortUrl' | 'metadata' | 'avatar'
@@ -134,6 +138,10 @@ export namespace APIResponse {
   }
 
   export type ProfileDetails = User
+
+  export interface ResendEmail {
+    status: boolean
+  }
 
   export interface UploadImage {
     fileHashes: string[],
