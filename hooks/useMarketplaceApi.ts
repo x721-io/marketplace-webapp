@@ -38,8 +38,6 @@ export const useMarketplaceApi = () => {
         text
       }),
 
-      resendEmail: (params: APIParams.ResendVerifyMail) :  Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
-
       uploadFile: (files: Blob[] | Blob, metadata?: Record<string, any>): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
         if (Array.isArray(files)) {

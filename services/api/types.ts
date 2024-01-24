@@ -126,9 +126,6 @@ export namespace APIParams {
     collectionAddress: Address;
     txCreation: Address;
   }
-  export interface FetchEmailVerify {
-    token: string
-  }
 }
 
 /********** =========== API Response types ========== ***********/

@@ -24,8 +24,5 @@ export const API_ENDPOINTS = {
   LAUNCHPAD : '/launchpad',
   CHECK_IS_SUBSCRIBED: '/launchpad/isSubscribed',
   SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
-  SNAPSHOT: '/user/projects',
-  SEND_VERIFY_EMAIL: '/user/send-verify-email',
-  LIST_VERIFY:'/user/list-verify',
-  VERIFY_EMAIL: '/user/verify-email'
+  SNAPSHOT: '/user/projects'
 }

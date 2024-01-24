@@ -190,7 +190,7 @@ export default function ProfileStep() {
 
       <VerifyAccountModal
         show={showPopup}
-        verifyData={listVerify}
+        reponseVerify={listVerify}
         onClose={() => setShowPopup(false)}
       />
     </div>
