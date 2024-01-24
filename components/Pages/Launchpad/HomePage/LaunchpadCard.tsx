@@ -46,16 +46,16 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
       {...rest}>
       <div className="p-2">
         <Image
-          className="rounded-lg w-full h-auto max-h-[308px]"
+          className="rounded-lg w-full tablet:h-[515px] max-h-[308px] object-fit"
           src={project.banner}
           alt=""
           width={612}
           height={308} />
       </div>
 
-      <div className="px-6 py-4 ">
+      <div className="desktop:px-6 desktop:py-4 p-2 ">
         <div className="flex items-center justify-between mb-6">
-          <Text className="font-semibold" variant="heading-sm">
+          <Text className="font-semibold desktop:text-heading-sm text-heading-xs">
             {project.name}
           </Text>
 

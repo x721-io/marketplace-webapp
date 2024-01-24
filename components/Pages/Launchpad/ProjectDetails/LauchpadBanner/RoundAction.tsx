@@ -145,7 +145,10 @@ export default function RoundAction({
     }
   };
 
-  const { onBuyNFT, onBuyNFTCustomized } = useWriteRoundContract(round, collection);
+  const { onBuyNFT, onBuyNFTCustomized } = useWriteRoundContract(
+    round,
+    collection
+  );
   const handleBuyNFT = async () => {
     if (
       !balanceInfo ||
@@ -186,7 +189,9 @@ export default function RoundAction({
   }, [round, amount]);
 
   const handleAddAmount = (num: number) => {
-    handleInputAmount(amount + num);
+    if (!isSpecial) {
+      handleInputAmount(amount + num);
+    }
   };
 
   const handleInputAmount = (value: number) => {
@@ -222,7 +227,7 @@ export default function RoundAction({
               <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
             )}
             <div className='flex w-full gap-2 flex-col tablet:flex-row justify-between items-start'>
-              {(collection.type === 'ERC1155') ? (
+              {collection.type === 'ERC1155' ? (
                 <div className='flex-1 flex items-center gap-3'>
                   <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg'>
                     <div onClick={() => handleAddAmount(-1)}>
@@ -235,6 +240,7 @@ export default function RoundAction({
                     </div>
 
                     <input
+                      disabled={isSpecial ? true : false}
                       value={amount}
                       onChange={(e) =>
                         handleInputAmount(Number(e.target.value))
@@ -278,10 +284,11 @@ export default function RoundAction({
                       Number(price) == 0
                         ? false
                         : (Number(amountBought) === round.maxPerWallet &&
-                          round.maxPerWallet != 0) ||
-                        (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
-                        !eligibleStatus ||
-                        (!isInTimeframe && hasTimeframe)
+                            round.maxPerWallet != 0) ||
+                          (maxAmountNFT == soldAmountNFT &&
+                            maxAmountNFT != 0) ||
+                          !eligibleStatus ||
+                          (!isInTimeframe && hasTimeframe)
                     }
                     scale='lg'
                     className='w-full'
@@ -295,7 +302,6 @@ export default function RoundAction({
                   </Button>
                 </ConnectWalletButton>
               </div>
-
             </div>
           </>
         );

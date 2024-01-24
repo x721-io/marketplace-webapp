@@ -12,6 +12,7 @@ import { emailRegex, nameRegex, urlRegex, usernameRegex } from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import { FormState } from '@/types';
 import VerifyAccountModal from '@/components/Modal/VerifyAccountModal';
+import { formRulesProfile } from '@/config/form/rules';
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
@@ -67,16 +68,6 @@ export default function ProfileStep() {
     }
   };
 
-  const formRules = {
-    username: {
-      required: 'Please input username',
-      pattern: { value: usernameRegex, message: 'Invalid username' },
-    },
-    shortLink: {
-      pattern: { value: nameRegex, message: 'Invalid short link' },
-    },
-  };
-
   const handleGetVerify = async () => {
     try {
       let reponse = await onVerifyAccount()
@@ -105,7 +96,7 @@ export default function ProfileStep() {
                 placeholder='Limit 6 to 25 characters'
                 error={!!errors.username}
                 type='text'
-                register={register('username', formRules.username)}
+                register={register('username', formRulesProfile.username)}
               />
             </div>
             <div>
@@ -116,7 +107,7 @@ export default function ProfileStep() {
                 prependIcon='@'
                 placeholder='shortlink'
                 error={!!errors.shortLink}
-                register={register('shortLink', formRules.shortLink)}
+                register={register('shortLink', formRulesProfile.shortLink)}
               />
               <Text className='text-tertiary mt-1' variant='body-12'>
                 Your profile will be available on

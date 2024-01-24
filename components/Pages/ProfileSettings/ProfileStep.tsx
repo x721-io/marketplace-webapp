@@ -12,7 +12,7 @@ import { urlRegex } from '@/utils/regex';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import VerifyAccountModal from '@/components/Modal/VerifyAccountModal';
 import { FormState } from '@/types'
-
+import { formRulesProfileSetting } from '@/config/form/rules';
 
 export default function ProfileStep() {
   const profile = useAuthStore(state => state.profile)
@@ -33,13 +33,16 @@ export default function ProfileStep() {
   })
 
   const [listVerify, setListVerify] = useState<FormState.VerifyAccount>({
-    email: false,
-    username: false,
-    shortLink: false,
-    avatar: false,
-    bio: false,
-    twitterLink: false,
-    ownerOrCreater: false
+    accountStatus: false,
+    listVerify: {
+      email: false,
+      username: false,
+      shortLink: false,
+      avatar: false,
+      bio: false,
+      twitterLink: false,
+      ownerOrCreater: false
+    }
   })
 
   const onSubmitProfile = async (params: FormState.UpdateProfile) => {
@@ -90,7 +93,7 @@ export default function ProfileStep() {
               <label className="block mb-2 font-semibold text-primary">Username</label>
               <Input
                 type="text"
-                register={register('username')}
+                register={register('username', formRulesProfileSetting.username)}
               />
             </div>
             <div>
@@ -187,7 +190,7 @@ export default function ProfileStep() {
 
       <VerifyAccountModal
         show={showPopup}
-        listVerify={listVerify}
+        reponseVerify={listVerify}
         onClose={() => setShowPopup(false)}
       />
     </div>
