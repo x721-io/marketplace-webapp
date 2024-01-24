@@ -60,6 +60,21 @@ export default function ProfileStep() {
     }
   };
 
+  const handleGetVerify = async () => {
+    try {
+      let reponse = await onVerifyAccount()
+      if (reponse !== undefined) {
+        setReponseVerify(reponse)
+        setShowPopup(true)
+      } else {
+        setShowPopup(false)
+      }
+
+    } catch (e: any) {
+      toast.error(`Error report: ${e.message || e}`, { autoClose: 1000, closeButton: true })
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmitProfile)}>
       <div className='flex gap-8 mb-8'>

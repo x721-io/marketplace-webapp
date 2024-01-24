@@ -34,11 +34,11 @@ export default function VerifyAccountModal({ show, onClose, reponseVerify }: Fro
     <Modal dismissible onClose={onClose} position="center" show={show} size="sm">
       <Modal.Body>
         <div className='flex flex-col gap-4 p-3'>
-          <Text className='text-body-24 font-bold'>Oops</Text>
           {reponseVerify?.accountStatus ?
-            <Text className='text-body-16 font-medium'>You have successfully verified your account</Text>
+            <Text className='text-body-24 font-normal text-success'>You have successfully verified your account</Text>
             :
             <>
+              <Text className='text-body-24 font-bold'>Oops</Text>
               <Text className='text-body-16 font-medium'>To begin your verification process you must add following data</Text>
               <div>
                 {reponseVerify?.listVerify && Object.entries(reponseVerify?.listVerify).map(([key, value]) => (
