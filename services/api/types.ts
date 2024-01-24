@@ -2,6 +2,7 @@ import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/en
 import { Address } from 'wagmi'
 import { MarketEvent, MarketEventType } from '@/types/market'
 import { Project, RoundStatus } from "@/types";
+import { FormState } from '@/types'
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
@@ -232,4 +233,6 @@ export namespace APIResponse {
 
   export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
 
+
+  export type VerifyAccount = FormState.VerifyAccount
 }
