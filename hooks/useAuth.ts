@@ -34,6 +34,19 @@ export const useAuth = () => {
     setProfile(profile)
   }, [bearerToken, address])
 
+  const onVerifyAccount = useCallback(async () => {
+    if (!bearerToken) return
+     const verify = await api.verifyAccount()
+     return verify
+  }, [bearerToken, address])
+
+  const onResendEmail = useCallback(async (params: APIParams.ResendVerifyMail) => {
+    if (!bearerToken) return
+    const email = await api.resendEmail(params)
+    
+  }, [bearerToken, address])
+
+
   const onLogout = async () => {
     await disconnect()
     clearProfile()
@@ -44,6 +57,8 @@ export const useAuth = () => {
     onAuth,
     onUpdateProfile,
     bearerToken,
-    onLogout
+    onLogout,
+    onResendEmail, 
+    onVerifyAccount
   }
 }

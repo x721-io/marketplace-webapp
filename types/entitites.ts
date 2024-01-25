@@ -59,6 +59,8 @@ export interface User {
   discordLink?: string
   webURL?: string
   shortLink?: string
+  accountStatus?: boolean
+  verifyEmail?: boolean
 }
 
 export interface NFT {

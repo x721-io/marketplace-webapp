@@ -59,5 +59,20 @@ export namespace FormState {
     quantity: number
     address: Address
   }
+  
+  export interface VerifyAccount {
+    accountStatus: boolean,
+    listVerify: ListVerify
+  }
+
+  export interface ListVerify {
+    email: boolean,
+    username: boolean,
+    shortLink: boolean,
+    avatar: boolean,
+    bio: boolean,
+    twitterLink: boolean,
+    ownerOrCreater: boolean
+  }
 }
 

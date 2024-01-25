@@ -18,8 +18,11 @@ export const API_ENDPOINTS = {
   USER_ACTIVITIES: '/user/activity',
   SEARCH: '/common/search-all',
   VALIDATE_INPUT: '/validator',
+  SEND_VERIFY_EMAIL: '/user/send-verify-email',
+  LIST_VERIFY:'/user/list-verify',
+  VERIFY_EMAIL: '/user/verify-email',
   LAUNCHPAD : '/launchpad',
   CHECK_IS_SUBSCRIBED: '/launchpad/isSubscribed',
   SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
-  SNAPSHOT: '/user/projects',
+  SNAPSHOT: '/user/projects'
 }
