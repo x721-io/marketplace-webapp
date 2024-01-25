@@ -40,7 +40,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
       <div className="flex-1 flex flex-col">
         <div className="flex flex-col gap-4 mb-8">
           <p className="font-semibold text-heading-lg leading-none">
-            Projects: {project.name}
+            Project: {project.name}
           </p>
 
           <p className="text-secondary text-body-16">
