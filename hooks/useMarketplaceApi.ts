@@ -20,6 +20,7 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
+      resendEmail: (params: APIParams.ResendVerifyMail) :  Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
       search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
@@ -102,7 +103,11 @@ export const useMarketplaceApi = () => {
 
       viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
 
-      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params))
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params)),
+
+      verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {},authHeader),
+
+      fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader),
     }
   }, [authHeader])
 }

@@ -12,7 +12,6 @@ import { redirect } from 'next/navigation'
 
 export default function ProfilePage() {
   const { isLoggedIn } = useAuth()
-
   useEffect(() => {
     if (!isLoggedIn) return redirect('/')
   }, [isLoggedIn]);
@@ -22,21 +21,21 @@ export default function ProfilePage() {
       <BannerSection />
 
       <div className="w-full block desktop:mt-[78px] tablet:mt-[78px] mt-[86px] desktop:px-24 px-0">
-        <Tabs.Group style="underline">
-          <Tabs.Item active title="Profile">
-            <ProfileStep />
-          </Tabs.Item>
-          <Tabs.Item active title="Account">
-            <AccountStep />
-          </Tabs.Item>
-          <Tabs.Item active title="Wallet">
-            <WalletStep />
-          </Tabs.Item>
-          {/* <Tabs.Item active title="Notification">
+          <Tabs.Group style="underline">
+            <Tabs.Item active title="Profile">
+              <ProfileStep />
+            </Tabs.Item>
+            <Tabs.Item active title="Account">
+              <AccountStep />
+            </Tabs.Item>
+            <Tabs.Item active title="Wallet">
+              <WalletStep />
+            </Tabs.Item>
+            {/* <Tabs.Item active title="Notification">
             <NotificationStep />
           </Tabs.Item> */}
-        </Tabs.Group>
-      </div>
+          </Tabs.Group>
+        </div>
     </div>
   )
 }

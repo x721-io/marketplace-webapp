@@ -1,7 +1,8 @@
 import { AssetType, Trait, Collection, NFT, User, NFTMetadata } from '@/types/entitites'
 import { Address } from 'wagmi'
 import { MarketEvent, MarketEventType } from '@/types/market'
-import {Project, RoundStatus} from "@/types";
+import { Project, RoundStatus } from "@/types";
+import { FormState } from '@/types'
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
@@ -21,6 +22,10 @@ export namespace APIParams {
     User,
     'acceptedTerms' | 'email' | 'username' | 'bio' | 'facebookLink' | 'twitterLink' | 'telegramLink' | 'discordLink' | 'webURL' | 'coverImage' | 'avatar' | 'shortLink'
   >>
+
+  export interface ResendVerifyMail {
+    email: string | undefined
+  }
 
   export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
 
@@ -81,6 +86,15 @@ export namespace APIParams {
     collectionId?: string
   }
 
+  export interface VerifyAcc {
+    email: string
+    username: string
+    shortLink: string
+    bio: string
+    twitterLink: string
+    avatar: string
+  }
+
   export interface FetchNFTDetails {
     collectionAddress: string,
     id: string
@@ -90,22 +104,27 @@ export namespace APIParams {
     bidListPage: number
     bidListLimit: number
   }
+  export interface FetchEmailVerify {
+    token: string
+  }
 
   export interface FetchProjects {
     mode?: RoundStatus
   }
+
   export interface SubscribeRoundZero {
     projectId: string
     walletAddress: Address
   }
+
   export interface FetchSnapshot {
-    userId: `0x${string}`;
+    userId: Address;
     projectId: string | string[];
   }
 
   export interface CrawlNFTInfo {
-    collectionAddress: `0x${string}`;
-    txCreation: `0x${string}`;
+    collectionAddress: Address;
+    txCreation: Address;
   }
 }
 
@@ -134,6 +153,10 @@ export namespace APIResponse {
   }
 
   export type ProfileDetails = User
+
+  export interface ResendEmail {
+    status: boolean
+  }
 
   export interface UploadImage {
     fileHashes: string[],
@@ -183,6 +206,10 @@ export namespace APIResponse {
     paging: Pagination
   }
 
+  export interface FetchEmailVerify {
+    token: string
+  }
+
   export interface UsersData {
     data: User[],
     paging: Pagination
@@ -213,4 +240,5 @@ export namespace APIResponse {
 
   export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
 
-}
+    export type VerifyAccount = FormState.VerifyAccount
+  }
