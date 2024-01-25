@@ -214,7 +214,7 @@ export default function RoundContractInteractions({
                 {format(new Date(round?.end) || 0, 'yyyy/M/dd')}
               </p>
               <div>
-                <p className='text-body-18 text-secondary font-semibold'>Time frame: </p>
+                <p className='text-body-18 text-secondary font-semibold'>Timeframes: </p>
                 {isSpecial && (
                    <p className='text-secondary text-body-14 font-semibold'>
                      (Timeframes can be changed)
