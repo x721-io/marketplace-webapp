@@ -9,6 +9,7 @@ import VerifyDisableIcon from "@/components/Icon/VerifyDisable";
 import { getUserCoverImage } from "@/utils/string";
 import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
 import { formatDisplayedNumber } from "@/utils";
+import Icon from "@/components/Icon";
 
 
 export default function Profile({
