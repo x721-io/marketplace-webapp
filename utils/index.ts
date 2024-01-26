@@ -35,3 +35,19 @@ export const getRoundAbi = (round: Round) => {
   const { type: roundType } = round
   return abis[roundType]
 }
+
+export const formatDisplayedNumber = (value: string | number, digits = 10) => {
+  if (!value) return '0'
+  const lookup = [
+    { value: 1, symbol: "" },
+    { value: 1e3, symbol: "K" },
+    { value: 1e6, symbol: "M" },
+    { value: 1e9, symbol: "G" },
+    { value: 1e12, symbol: "T" },
+    { value: 1e15, symbol: "P" },
+    { value: 1e18, symbol: "E" }
+  ];
+  const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
+  const item = lookup.findLast(item => value >= item.value);
+  return item ? (value / item.value).toFixed(digits).replace(regexp, "").concat(item.symbol) : "0";
+}
