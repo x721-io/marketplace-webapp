@@ -55,7 +55,7 @@ export namespace FormState {
     quantity: number
   }
 
-  export interface TranferToken {
+  export interface TransferToken {
     quantity: number
     address: Address
   }
