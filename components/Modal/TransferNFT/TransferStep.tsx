@@ -10,8 +10,9 @@ import { numberRegex } from '@/utils/regex'
 import { useForm } from 'react-hook-form'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { toast } from 'react-toastify'
-import { useAccount, erc721ABI, erc1155ABI} from 'wagmi';
+import { useAccount, erc721ABI, } from 'wagmi';
 import { writeContract } from '@wagmi/core'
+import ERC1155 from '@/abi/ERC1155'
 interface Props {
   nft: NFT
   marketData?: NFTMarketData
@@ -26,8 +27,6 @@ export default function TransferStep({ nft, marketData, handleReset }: Props) {
     return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
   const { register, handleSubmit, formState: { errors } } = useForm<FormState.TransferToken>()
-
-  const { address } = useAccount();
 
   const formRules = {
     quantity: {
@@ -57,19 +56,19 @@ const onSubmit = async ({ quantity, address }: FormState.TransferToken) => {
         address: nft.collection.address,
         abi: erc721ABI,
         functionName: 'safeTransferFrom',
-        args: [wallet, address, (nft.u2uId ?? nft.id) as any], 
+        args: [wallet as `0x${string}`, address, (nft.u2uId ?? nft.id) as any], 
       });
     } else if (type === 'ERC1155') {
       await writeContract({
         address: nft.collection.address,
-        abi: erc1155ABI,
+        abi: ERC1155,
         functionName: 'safeTransferFrom',
-        args: [wallet, address,(nft.u2uId ?? nft.id) as any, quantity, '0x'], 
+        args: [wallet as `0x${string}`, address,(nft.u2uId ?? nft.id) as any, BigInt(quantity), '0x'], 
       });
     }
 
     toast.success('Transfer token successfully', { autoClose: 1000, closeButton: true });
-  } catch (e) {
+  } catch (e:any) {
     toast.error(`Error report: ${e.message || e}`);
   } finally {
     handleReset();
