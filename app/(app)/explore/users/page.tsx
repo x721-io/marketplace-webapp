@@ -15,6 +15,7 @@ import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow
 import { formatDisplayedNumber } from "@/utils";
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
+import { useAuth } from "@/hooks/useAuth";
 
 
 export default function ExploreUsersPage() {
@@ -22,6 +23,8 @@ export default function ExploreUsersPage() {
   const { queryString } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
   const myId = useAuthStore(state => state.profile?.id)
+  const { isLoggedIn } = useAuth()
+
 
 
   const [activePagination, setActivePagination] = useState<APIParams.FetchUsers>({
@@ -35,7 +38,7 @@ export default function ExploreUsersPage() {
         search: queryString[searchKey]
       },
       params => api.fetchUsers(params),
-      { refreshInterval: 100 }
+      { refreshInterval: 5000 }
   )
 
   const totalPage = useMemo(() => {
@@ -80,10 +83,6 @@ export default function ExploreUsersPage() {
         </div>
     )
   }
-  const handleLinkClick = (e) => {
-    e.preventDefault();
-  };
-
   return (
       <>
         <div
@@ -93,26 +92,17 @@ export default function ExploreUsersPage() {
                 <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
                   <div className="relative">
                     <Image
-                        className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
+                        className="cursor-pointer w-full h-24 rounded-tl-xl rounded-tr-xl object-cover"
                         src={getUserCoverImage(user)}
                         alt="Cover"
                         width={1200} height={256}
-                        style={{ width: '100%', height: '100px' }}
                     />
-                    <div className="absolute rounded-full"
-                         style={{
-                           width: '56px',
-                           height: '56px',
-                           top: '60px',
-                           left: '16.3px',
-                           border: '2px solid #fff'
-                         }}>
+                    <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white ">
                       <Image
                           className="cursor-pointer rounded-full object-fill"
                           src={user.avatar || getUserAvatarImage(user)}
                           alt="Avatar"
                           width={60} height={60}
-                          style={{ width: '100%', height: '100%' }}
                       />
                     </div>
                   </div>
@@ -120,22 +110,19 @@ export default function ExploreUsersPage() {
                     <div className="flex flex-col gap-1">
                       <div className="flex gap-2 items-center">
                         <Text className="font-medium">{user.username}</Text>
-                        {user.accountStatus ? <Icon name='verify-active'  width={16} height={16} /> : <Icon name="verify-disable" width={16} height={16} />}
+                        {user.accountStatus ? <Icon name='verify-active' width={16} height={16}/> :
+                            <Icon name="verify-disable" width={16} height={16}/>}
                       </div>
                       <div className="flex gap-2">
                         <Text className="text-body-12 font-medium">{formatDisplayedNumber(user.followers, 1)}</Text>
                         <Text className="text-body-12 text-secondary">Followers</Text>
                       </div>
                     </div>
-                    <a onClick={handleLinkClick} className="no-underline">
-                      {myId === user.id ?
-                          ("")
-                          :
-                          (
-                              <UserFollow userId={user.id} isFollowed={user.isFollowed}/>
-                          )
+                    <Link href={isLoggedIn ? "#" : "/connect"} className="no-underline">
+                      {myId !== user.id &&
+                          <UserFollow userId={user.id} isFollowed={user.isFollowed}/>
                       }
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </Link>

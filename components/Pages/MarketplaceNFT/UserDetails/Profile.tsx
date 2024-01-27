@@ -5,8 +5,7 @@ import useAuthStore from '@/store/auth/store'
 import Button from '@/components/Button'
 import Link from 'next/link'
 import { User } from '@/types'
-import VerifyDisableIcon from "@/components/Icon/VerifyDisable";
-import { getUserCoverImage } from "@/utils/string";
+import { getUserAvatarImage, getUserCoverImage } from "@/utils/string";
 import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
 import { formatDisplayedNumber } from "@/utils";
 import Icon from "@/components/Icon";
@@ -37,7 +36,7 @@ export default function Profile({
           <div className="absolute border-white rounded-2xl desktop:pl-[80px] tablet:pl-[80px] pl-4"
                style={{ bottom: '0', transform: 'translateY(50%)' }}>
             <Image
-                src={avatar || `https://avatar.vercel.sh/${username}`}
+                src={avatar || getUserAvatarImage()}
                 alt="user-detail-bg"
                 width={120} height={120}
                 className="rounded-2xl w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px]"/>
