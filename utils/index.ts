@@ -48,6 +48,6 @@ export const formatDisplayedNumber = (value: string | number, digits = 10) => {
     { value: 1e18, symbol: "E" }
   ];
   const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
-  const item = lookup.findLast(item => value >= item.value);
-  return item ? (value / item.value).toFixed(digits).replace(regexp, "").concat(item.symbol) : "0";
+  const item = lookup.findLast((item) => Number(value) >= item.value);
+  return item ? (Number(value) / item.value).toFixed(digits).replace(regexp, "").concat(item.symbol) : "0";
 }
