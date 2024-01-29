@@ -9,6 +9,7 @@ import { getUserAvatarImage, getUserCoverImage } from "@/utils/string";
 import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
 import { formatDisplayedNumber } from "@/utils";
 import Icon from "@/components/Icon";
+import CollapsibleText from '@/components/Text/CollapsibleText'
 
 interface Props {
   user: User
@@ -51,7 +52,11 @@ export default function Profile({ user, onRefresh }: Props) {
               }
             </div>
             <div>
-              <Text className="text-secondary text-sm">{user.bio || 'Nothing to show'}</Text>
+              <CollapsibleText
+                text={user.bio || 'Nothing to show'}
+                maxLength={500}
+                mainTextClass="text-secondary text-body-14"
+              />
             </div>
             {
               myId === user.id ?
