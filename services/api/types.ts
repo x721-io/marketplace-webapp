@@ -4,12 +4,15 @@ import { MarketEvent, MarketEventType } from '@/types/market'
 import { Project, RoundStatus } from "@/types";
 import { FormState } from '@/types'
 
-
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
   interface PaginationParams {
     page?: number
     limit?: number
+  }
+
+  interface WithAuth {
+    accessToken?: string
   }
 
   export interface Connect {
@@ -20,7 +23,7 @@ export namespace APIParams {
   }
 
   export type UpdateProfile = Partial<Pick<User,
-      'acceptedTerms' | 'email' | 'username' | 'bio' | 'facebookLink' | 'twitterLink' | 'telegramLink' | 'discordLink' | 'webURL' | 'coverImage' | 'avatar' | 'shortLink'>>
+    'acceptedTerms' | 'email' | 'username' | 'bio' | 'facebookLink' | 'twitterLink' | 'telegramLink' | 'discordLink' | 'webURL' | 'coverImage' | 'avatar' | 'shortLink'>>
 
   export interface ResendVerifyMail {
     email: string | undefined
@@ -29,12 +32,12 @@ export namespace APIParams {
   export type UpdateCollection = Partial<Pick<Collection, 'coverImage' | 'id'>>
 
   export type CreateCollection =
-      Partial<Pick<Collection,
-          'txCreationHash' | 'name' | 'symbol' | 'description' | 'type' | 'categoryId' | 'shortUrl' | 'metadata' | 'avatar'>>
-      & { creator: string }
+    Partial<Pick<Collection,
+      'txCreationHash' | 'name' | 'symbol' | 'description' | 'type' | 'categoryId' | 'shortUrl' | 'metadata' | 'avatar'>>
+    & { creator: string }
 
   export type CreateNFT = Partial<Pick<NFT,
-      'id' | 'u2uId' | 'name' | 'image' | 'tokenUri' | 'collectionId' | 'txCreationHash' | 'creatorId' | 'traits'>>
+    'id' | 'u2uId' | 'name' | 'image' | 'tokenUri' | 'collectionId' | 'txCreationHash' | 'creatorId' | 'traits'>>
 
   export interface FetchUsers extends PaginationParams {
     search?: string
@@ -125,7 +128,7 @@ export namespace APIParams {
     txCreation: Address;
   }
 
-  export interface FollowUser {
+  export interface FollowUser extends WithAuth {
     userId: string
   }
 }
@@ -231,10 +234,10 @@ export namespace APIResponse {
   export type FetchNFTMetadata = NFTMetadata
 
   export type SearchNFTs = Pick<NFT,
-      'id' | 'u2uId' | 'name' | 'image' | 'animationUrl' | 'createdAt' | 'updatedAt' | 'status' | 'tokenUri' | 'txCreationHash' | 'creatorId' | 'collectionId' | 'collection'>[]
+    'id' | 'u2uId' | 'name' | 'image' | 'animationUrl' | 'createdAt' | 'updatedAt' | 'status' | 'tokenUri' | 'txCreationHash' | 'creatorId' | 'collectionId' | 'collection'>[]
 
   export type SearchCollections = Pick<Collection,
-      'id' | 'txCreationHash' | 'name' | 'symbol' | 'description' | 'address' | 'shortUrl' | 'metadata' | 'status' | 'type' | 'categoryId' | 'createdAt' | 'updatedAt' | 'coverImage' | 'avatar'>[]
+    'id' | 'txCreationHash' | 'name' | 'symbol' | 'description' | 'address' | 'shortUrl' | 'metadata' | 'status' | 'type' | 'categoryId' | 'createdAt' | 'updatedAt' | 'coverImage' | 'avatar'>[]
 
   export type SearchUsers = Pick<User, 'id' | 'signer' | 'username' | 'avatar'>[]
 

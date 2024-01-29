@@ -11,10 +11,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { redirect } from 'next/navigation'
 
 export default function ProfilePage() {
-  const { isLoggedIn } = useAuth()
+  const { isValidSession } = useAuth()
   useEffect(() => {
-    if (!isLoggedIn) return redirect('/')
-  }, [isLoggedIn]);
+    if (!isValidSession) return redirect('/')
+  }, [isValidSession]);
 
   return (
     <div className="w-full relative flex flex-col items-center desktop:py-10 tablet:p-10 py-16 px-4">
