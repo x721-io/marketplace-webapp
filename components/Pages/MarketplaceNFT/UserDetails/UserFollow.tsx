@@ -64,6 +64,5 @@ export default function UserFollow({ isFollowed, userId }: Props) {
           {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
         </Button>
       </div>
-
   );
 }
