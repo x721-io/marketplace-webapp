@@ -1,18 +1,28 @@
-import Text from '@/components/Text'
-import React, { useEffect, useMemo } from 'react'
-import { NFT, NFTMetadata, Royalty } from '@/types'
-import { useReadNFTRoyalties } from '@/hooks/useRoyalties'
-import { classNames, shortenAddress } from '@/utils/string'
-import Image from 'next/image'
+import Text from "@/components/Text";
+import React, { useEffect, useMemo } from "react";
+import { NFT, NFTMetadata, Royalty } from "@/types";
+import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
+import { classNames, shortenAddress } from "@/utils/string";
+import Image from "next/image";
 
-export default function OverviewTab({ metaData, nft }: { metaData?: NFTMetadata, nft: NFT }) {
-  const { data: royalties } = useReadNFTRoyalties(nft)
+export default function OverviewTab({
+  metaData,
+  nft,
+}: {
+  metaData?: NFTMetadata;
+  nft: NFT;
+}) {
+  const { data: royalties } = useReadNFTRoyalties(nft);
   const totalRoyalties = useMemo(() => {
-    if (!royalties?.length) return 0
+    if (!royalties?.length) return 0;
 
-    const totalRoyaltiesValue = royalties.reduce((accumulator: bigint, current: Royalty) => BigInt(current.value) + BigInt(accumulator), BigInt(0))
-    return Number(totalRoyaltiesValue) / 100
-  }, [royalties])
+    const totalRoyaltiesValue = royalties.reduce(
+      (accumulator: bigint, current: Royalty) =>
+        BigInt(current.value) + BigInt(accumulator),
+      BigInt(0),
+    );
+    return Number(totalRoyaltiesValue) / 100;
+  }, [royalties]);
 
   return (
     <div className="py-7 flex flex-col gap-8">
@@ -43,11 +53,11 @@ export default function OverviewTab({ metaData, nft }: { metaData?: NFTMetadata,
           </div>
         </div>
 
-        {(royalties && royalties.length > 0) && (
+        {royalties && royalties.length > 0 && (
           <div className="p-3 tablet:p-7 flex flex-col gap-4 rounded-2xl border border-disabled border-dashed whitespace-normal h-auto max-h-[400px] overflow-auto">
             {royalties.map((royalty, index) => {
-              const royaltyValue = Number(royalty.value) / 100
-              const royaltyPercent = royaltyValue / totalRoyalties * 100
+              const royaltyValue = Number(royalty.value) / 100;
+              const royaltyPercent = (royaltyValue / totalRoyalties) * 100;
               return (
                 <div key={index} className="flex items-center gap-3">
                   <Image
@@ -55,22 +65,26 @@ export default function OverviewTab({ metaData, nft }: { metaData?: NFTMetadata,
                     width={40}
                     height={40}
                     src={`https://avatar.vercel.sh/${royalty.account}`}
-                    alt="" />
+                    alt=""
+                  />
                   <div className="flex-1 gap-4">
                     <div className="flex items-center gap-3 justify-between">
                       <Text>{shortenAddress(royalty.account)}</Text>
                       <Text>{royaltyPercent.toFixed(2)}%</Text>
                     </div>
                     <div className="h-2 p-0.5 w-full bg-surface-medium shadow-sm rounded">
-                      <div className={`h-full bg-white shadow-sm rounded`} style={{ width: `${royaltyPercent}%` }} />
+                      <div
+                        className={`h-full bg-white shadow-sm rounded`}
+                        style={{ width: `${royaltyPercent}%` }}
+                      />
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

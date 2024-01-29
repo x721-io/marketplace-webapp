@@ -1,37 +1,37 @@
-import Image from 'next/image'
-import brandingSvg from '@/assets/branding.svg'
-import Link from 'next/link'
-import Text from '@/components/Text'
-import SunIcon from '@/assets/svg/sun-icon'
-import MoonIcon from '@/assets/svg/moon'
+import Image from "next/image";
+import brandingSvg from "@/assets/branding.svg";
+import Link from "next/link";
+import Text from "@/components/Text";
+import SunIcon from "@/assets/svg/sun-icon";
+import MoonIcon from "@/assets/svg/moon";
 
 export default function MainFooter() {
   const links = [
     {
-      title: 'Marketplace',
+      title: "Marketplace",
       items: [
-        { label: 'Explore', href: '/explore/items' },
-        { label: 'Create', href: '/create/collection' },
-        { label: 'Artists', href: '/explore/users' }
-      ]
+        { label: "Explore", href: "/explore/items" },
+        { label: "Create", href: "/create/collection" },
+        { label: "Artists", href: "/explore/users" },
+      ],
     },
     {
-      title: 'Links',
+      title: "Links",
       items: [
-        { label: 'API', href: '#' },
-        { label: 'Token', href: '#' },
-        { label: 'Branding', href: '#' }
-      ]
+        { label: "API", href: "#" },
+        { label: "Token", href: "#" },
+        { label: "Branding", href: "#" },
+      ],
     },
     {
-      title: 'Socials',
+      title: "Socials",
       items: [
-        { label: 'Facebook', href: '#' },
-        { label: 'Instagram', href: '#' },
-        { label: 'Discord', href: '#' }
-      ]
-    }
-  ]
+        { label: "Facebook", href: "#" },
+        { label: "Instagram", href: "#" },
+        { label: "Discord", href: "#" },
+      ],
+    },
+  ];
   return (
     <footer className="px-4 tablet:px-7 tablet:py-10 py-8 flex flex-col gap-10 shadow desktop:mt-20 tablet:mt-20 mt-10">
       <div className="flex justify-between flex-col gap-10 tablet:flex-row desktop:flex-row tablet:gap-0 desktop:gap-0">
@@ -40,10 +40,8 @@ export default function MainFooter() {
         </Link>
 
         <div className="gap-10 tablet:mr-24 desktop:mr-24 grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-3">
-          {links.map(group => (
-            <div
-              key={group.title}
-              className="flex flex-col gap-3">
+          {links.map((group) => (
+            <div key={group.title} className="flex flex-col gap-3">
               <Text className="text-primary font-semibold" variant="body-16">
                 {group.title}
               </Text>
@@ -96,12 +94,16 @@ export default function MainFooter() {
         </div>
 
         <div className="flex-1 self-center tablet:self-end desktop:self-end flex justify-end">
-          <div className='bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end'>
-            <span className='p-2 bg-white rounded-xl'><SunIcon width={16} height={16}/></span>
-            <span className='p-2'><MoonIcon width={16} height={16}/></span>
+          <div className="bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end">
+            <span className="p-2 bg-white rounded-xl">
+              <SunIcon width={16} height={16} />
+            </span>
+            <span className="p-2">
+              <MoonIcon width={16} height={16} />
+            </span>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

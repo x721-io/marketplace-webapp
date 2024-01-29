@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import React, { useEffect } from 'react';
-import { Tabs } from 'flowbite-react';
-import AccountStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/AccountStep';
-import ProfileStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/ProfileStep';
-import WalletStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/WalletStep';
-import NotificationStep from '@/components/Pages/MarketplaceNFT/ProfileSettings/NotificationStep';
-import BannerSection from '@/components/Pages/MarketplaceNFT/ProfileSettings/BannerSection';
-import { useAuth } from '@/hooks/useAuth'
-import { redirect } from 'next/navigation'
+import React, { useEffect } from "react";
+import { Tabs } from "flowbite-react";
+import AccountStep from "@/components/Pages/MarketplaceNFT/ProfileSettings/AccountStep";
+import ProfileStep from "@/components/Pages/MarketplaceNFT/ProfileSettings/ProfileStep";
+import WalletStep from "@/components/Pages/MarketplaceNFT/ProfileSettings/WalletStep";
+import NotificationStep from "@/components/Pages/MarketplaceNFT/ProfileSettings/NotificationStep";
+import BannerSection from "@/components/Pages/MarketplaceNFT/ProfileSettings/BannerSection";
+import { useAuth } from "@/hooks/useAuth";
+import { redirect } from "next/navigation";
 
 export default function ProfilePage() {
-  const { isValidSession } = useAuth()
+  const { isValidSession } = useAuth();
   useEffect(() => {
-    if (!isValidSession) return redirect('/')
+    if (!isValidSession) return redirect("/");
   }, [isValidSession]);
 
   return (
@@ -21,21 +21,21 @@ export default function ProfilePage() {
       <BannerSection />
 
       <div className="w-full block desktop:mt-[78px] tablet:mt-[78px] mt-[86px] desktop:px-24 px-0">
-          <Tabs.Group style="underline">
-            <Tabs.Item active title="Profile">
-              <ProfileStep />
-            </Tabs.Item>
-            <Tabs.Item active title="Account">
-              <AccountStep />
-            </Tabs.Item>
-            <Tabs.Item active title="Wallet">
-              <WalletStep />
-            </Tabs.Item>
-            {/* <Tabs.Item active title="Notification">
+        <Tabs.Group style="underline">
+          <Tabs.Item active title="Profile">
+            <ProfileStep />
+          </Tabs.Item>
+          <Tabs.Item active title="Account">
+            <AccountStep />
+          </Tabs.Item>
+          <Tabs.Item active title="Wallet">
+            <WalletStep />
+          </Tabs.Item>
+          {/* <Tabs.Item active title="Notification">
             <NotificationStep />
           </Tabs.Item> */}
-          </Tabs.Group>
-        </div>
+        </Tabs.Group>
+      </div>
     </div>
-  )
+  );
 }

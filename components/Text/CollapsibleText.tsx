@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import Text from './index';
+import React, { useState } from "react";
+import Text from "./index";
 
 interface ShowMoreProps {
   text: string;
   maxLength: number;
-  containerClass?: string
+  containerClass?: string;
   mainTextClass?: string;
   toggleClass?: string;
 }
 
-export default function CollapsibleText({ text, maxLength, mainTextClass = '', containerClass = '', toggleClass = 'cursor-pointer text-sm hover:underline' }: ShowMoreProps) {
+export default function CollapsibleText({
+  text,
+  maxLength,
+  mainTextClass = "",
+  containerClass = "",
+  toggleClass = "cursor-pointer text-sm hover:underline",
+}: ShowMoreProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleText = () => {
@@ -21,15 +27,15 @@ export default function CollapsibleText({ text, maxLength, mainTextClass = '', c
   return (
     <div className={containerClass}>
       <Text className={mainTextClass}>
-        {displayText}{!isExpanded && text.length > maxLength && '...'}
+        {displayText}
+        {!isExpanded && text.length > maxLength && "..."}
       </Text>
 
       {text.length > maxLength && (
         <Text className={toggleClass} onClick={toggleText}>
-          {isExpanded ? 'Show Less' : 'Show More'}
+          {isExpanded ? "Show Less" : "Show More"}
         </Text>
       )}
     </div>
   );
-};
-
+}

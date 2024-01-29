@@ -1,17 +1,17 @@
-import { formatEther, formatUnits } from 'ethers';
-import Button from '@/components/Button';
-import { Collection, Round } from '@/types';
-import { MessageRoundNotEligible } from '../EligibleMessage';
-import Icon from '@/components/Icon';
-import ConnectWalletButton from '@/components/Button/ConnectWalletButton';
-import useTimeframeStore from '@/store/timeframe/store';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { formatDisplayedBalance, getRoundAbi } from '@/utils';
-import { useWriteRoundContract } from '@/hooks/useRoundContract';
-import { toast } from 'react-toastify';
-import { useAccount, useBalance, useContractReads } from 'wagmi';
-import { useLaunchpadApi } from '@/hooks/useLaunchpadApi';
-import useLaunchpadStore from '@/store/launchpad/store';
+import { formatEther, formatUnits } from "ethers";
+import Button from "@/components/Button";
+import { Collection, Round } from "@/types";
+import { MessageRoundNotEligible } from "../EligibleMessage";
+import Icon from "@/components/Icon";
+import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
+import useTimeframeStore from "@/store/timeframe/store";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { useWriteRoundContract } from "@/hooks/useRoundContract";
+import { toast } from "react-toastify";
+import { useAccount, useBalance, useContractReads } from "wagmi";
+import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
+import useLaunchpadStore from "@/store/launchpad/store";
 
 interface Props {
   eligibleStatus: boolean;
@@ -35,7 +35,7 @@ export default function RoundActionMinting({
   });
   const { onBuyNFT, onBuyNFTCustomized } = useWriteRoundContract(
     round,
-    collection
+    collection,
   );
   const [amount, setAmount] = useState(1);
   const hasTimeframe = useTimeframeStore((state) => state.hasTimeframe);
@@ -46,13 +46,13 @@ export default function RoundActionMinting({
       {
         address: round.address,
         abi: getRoundAbi(round),
-        functionName: 'getAmountBought',
+        functionName: "getAmountBought",
         args: [address],
       },
       {
         address: round.address,
         abi: getRoundAbi(round),
-        functionName: 'getRound',
+        functionName: "getRound",
       },
     ],
     watch: true,
@@ -84,7 +84,7 @@ export default function RoundActionMinting({
 
   const handleInputAmount = (value: number) => {
     if (!address) {
-      toast.warning('Please connect your wallet first');
+      toast.warning("Please connect your wallet first");
       return;
     }
 
@@ -96,7 +96,7 @@ export default function RoundActionMinting({
         !balanceInfo?.value ||
         balanceInfo.value < BigInt(round.price) * BigInt(value)
       ) {
-        toast.error('Not enough U2U balance');
+        toast.error("Not enough U2U balance");
         return;
       }
     }
@@ -109,7 +109,7 @@ export default function RoundActionMinting({
       !balanceInfo?.value ||
       balanceInfo.value < BigInt(round.price)
     ) {
-      toast.error('Not enough U2U balance');
+      toast.error("Not enough U2U balance");
       return;
     }
 
@@ -117,11 +117,11 @@ export default function RoundActionMinting({
       setLoading(true);
       const { waitForTransaction, hash } = isSpecial
         ? await onBuyNFTCustomized()
-        : collection.type === 'ERC721'
-        ? await onBuyNFT()
-        : await onBuyNFT(amount);
+        : collection.type === "ERC721"
+          ? await onBuyNFT()
+          : await onBuyNFT(amount);
       await waitForTransaction();
-      toast.success('Your item has been successfully purchased!');
+      toast.success("Your item has been successfully purchased!");
       api.crawlNFTInfo({
         txCreation: hash,
         collectionAddress: collection.address,
@@ -136,7 +136,7 @@ export default function RoundActionMinting({
 
   const disableMint = useMemo(() => {
     if (
-      roundType == '2' &&
+      roundType == "2" &&
       Number(maxAmountNFT) == 0 &&
       Number(maxAmountNFTPerWallet) == 0 &&
       Number(startClaim) == 0 &&
@@ -167,18 +167,18 @@ export default function RoundActionMinting({
 
   return (
     <>
-      {round.type != 'U2UPremintRoundFCFS' &&
-        round.type != 'U2UMintRoundFCFS' && (
+      {round.type != "U2UPremintRoundFCFS" &&
+        round.type != "U2UMintRoundFCFS" && (
           <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
         )}
-      <div className='flex w-full gap-2 flex-col tablet:flex-row justify-between items-start'>
-        {collection.type === 'ERC1155' ? (
-          <div className='flex-1 flex items-center gap-3'>
-            <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg'>
+      <div className="flex w-full gap-2 flex-col tablet:flex-row justify-between items-start">
+        {collection.type === "ERC1155" ? (
+          <div className="flex-1 flex items-center gap-3">
+            <div className="flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg">
               <div onClick={() => handleAddAmount(-1)}>
                 <Icon
-                  className='cursor-pointer text-secondary'
-                  name='minus'
+                  className="cursor-pointer text-secondary"
+                  name="minus"
                   width={24}
                   height={24}
                 />
@@ -188,36 +188,36 @@ export default function RoundActionMinting({
                 disabled={isSpecial ? true : false}
                 value={amount}
                 onChange={(e) => handleInputAmount(Number(e.target.value))}
-                className='border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium'
+                className="border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium"
               />
               <div onClick={() => handleAddAmount(1)}>
                 <Icon
-                  className='cursor-pointer text-secondary'
-                  name='plus'
+                  className="cursor-pointer text-secondary"
+                  name="plus"
                   width={24}
                   height={24}
                 />
               </div>
             </div>
-            <p className='text-body-16 text-secondary'>
-              Total:{' '}
-              <span className='text-primary font-semibold'>
+            <p className="text-body-16 text-secondary">
+              Total:{" "}
+              <span className="text-primary font-semibold">
                 {estimatedCost} U2U
               </span>
             </p>
           </div>
         ) : (
-          <div className='flex-1'>
-            <p className='text-body-12 text-secondary'>
+          <div className="flex-1">
+            <p className="text-body-12 text-secondary">
               Minted: {amountBought}
-              <span className='text-primary font-semibold'>
+              <span className="text-primary font-semibold">
                 /{round.maxPerWallet}
               </span>
             </p>
           </div>
         )}
-        <div className='flex-1 w-full'>
-          <ConnectWalletButton scale='lg' className='w-full'>
+        <div className="flex-1 w-full">
+          <ConnectWalletButton scale="lg" className="w-full">
             <Button
               disabled={
                 // roundType == '2' &&
@@ -233,15 +233,15 @@ export default function RoundActionMinting({
                 //     (!isInTimeframe && hasTimeframe)
                 disableMint
               }
-              scale='lg'
-              className='w-full'
+              scale="lg"
+              className="w-full"
               onClick={handleBuyNFT}
               loading={loading}
             >
               {Number(amountBought) > 0 &&
               Number(amountBought) < round.maxPerWallet
-                ? 'Mint another'
-                : 'Mint Now'}
+                ? "Mint another"
+                : "Mint Now"}
             </Button>
           </ConnectWalletButton>
         </div>
