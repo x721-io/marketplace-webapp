@@ -23,7 +23,6 @@ export default function Profile({
                                   following
                                 }: User) {
   const myId = useAuthStore(state => state.profile?.id)
-
   return (
       <div className="">
         <div className="w-full relative">
@@ -88,7 +87,7 @@ export default function Profile({
           {/* <button className="bg-button-secondary h-10 w-10 rounded-xl flex justify-center items-center ">
           <Icon name="moreVertical" width={20} height={20} />
         </button> */}
-        </div>
       </div>
+    </div>
   )
 }

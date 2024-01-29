@@ -14,9 +14,11 @@ import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserC
 import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 
+
 export default function ProfilePage() {
   const api = useMarketplaceApi();
   const { id } = useParams();
+
   const {
     data: user,
     isLoading,
