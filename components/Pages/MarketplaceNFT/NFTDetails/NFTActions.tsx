@@ -11,7 +11,7 @@ import CancelBidNFTModal from '@/components/Modal/CancelBidNFTModal'
 import useAuthStore from '@/store/auth/store'
 import {NFT} from '@/types'
 import {APIResponse} from '@/services/api/types'
-import TransferNFTModal from "@/components/Modal/TransferNFT";
+import TransferNFTModal from "@/components/Modal/TransferNFT/__index";
 
 export default function NFTActions({nft, marketData}: {
   nft: NFT,
