@@ -23,6 +23,7 @@ export default function Profile({
                                   following
                                 }: User) {
   const myId = useAuthStore(state => state.profile?.id)
+
   return (
       <div className="">
         <div className="w-full relative">
