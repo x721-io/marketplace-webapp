@@ -5,15 +5,13 @@ import { useAccount, useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/config/constants'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
 import useAuthStore from '@/store/auth/store'
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
 import { signMessage } from '@wagmi/core'
-import { isMobile } from 'react-device-detect'
 
 interface Props extends ModalProps {
+  onConnectSuccess?: (accessToken?: string) => void
   onSignup: () => void
-  mode?: 'link' | 'modal'
 }
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
@@ -26,9 +24,8 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
   }
 }
 
-export default function SignConnectMessageModal({ show, onClose, onSignup, mode = 'modal' }: Props) {
+export default function SignConnectMessageModal({ show, onConnectSuccess, onClose, onSignup }: Props) {
   const api = useMarketplaceApi()
-  const router = useRouter()
   const { address } = useAccount()
   const { isError, isLoading, signMessageAsync, error } = useSignMessage()
   const { setProfile } = useAuthStore()
@@ -51,25 +48,22 @@ export default function SignConnectMessageModal({ show, onClose, onSignup, mode 
         params: [SIGN_MESSAGE.CONNECT(date), address]
       }) : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) })
 
-      await onAuth(date, signature)
+      const credentials = await onAuth(date, signature)
       const profile = await api.viewProfile(address)
 
       if (!profile.acceptedTerms) { // Not registered
         onSignup()
       } else {
         setProfile(profile)
-        if (mode === 'link') {
-          router.back()
-        } else {
-          onClose?.()
-        }
+        onConnectSuccess?.(credentials?.accessToken)
+        onClose?.()
       }
-
-      setIsAuthenticating(false)
     } catch (e: any) {
       setAuthError(e.message)
       setIsAuthenticating(false)
       console.error('Error signing connect message:', e)
+    } finally {
+      setIsAuthenticating(false)
     }
   }
 

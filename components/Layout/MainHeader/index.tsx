@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Icon from '@/components/Icon'
 import Dropdown from '@/components/Dropdown'
-import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
+import ConnectWalletButton from '@/components/Button/ConnectWalletButtonV2'
 import { navs } from '@/config/nav'
 import useAuthStore from '@/store/auth/store'
 import SearchInput from '@/components/Layout/MainHeader/SearchInput'
@@ -15,7 +15,7 @@ import { getUserAvatarImage } from '@/utils/string'
 export const HEADER_HEIGHT = 88
 
 export default function MainHeader() {
-  const avatar = useAuthStore(state => state.profile?.avatar)
+  const user = useAuthStore(state => state.profile)
   const [showMenu, setShowMenu] = useState(false)
 
   return (
@@ -81,11 +81,10 @@ export default function MainHeader() {
 
         <div className="flex gap-4 items-center">
           <div className="hidden tablet:block">
-            <ConnectWalletButton mode="link">
+            <ConnectWalletButton showConnectButton action={() => setShowMenu(true)}>
               <Image
-                onClick={() => setShowMenu(true)}
                 className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
-                src={avatar || getUserAvatarImage()}
+                src={getUserAvatarImage(user)}
                 alt="Avatar"
                 width={35}
                 height={35}
