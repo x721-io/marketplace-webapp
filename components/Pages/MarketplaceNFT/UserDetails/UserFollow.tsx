@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Button from '@/components/Button'
 import Icon from "@/components/Icon";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
@@ -17,10 +17,12 @@ export default function UserFollow({ isFollowed, userId }: Props) {
   const api = useMarketplaceApi()
   const { isLoggedIn } = useAuth()
   const [loading, setLoading] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(isFollowed);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter()
 
+  const isFollowing = useMemo(() => {
+    return isLoggedIn ? isFollowed : false;
+  }, [isLoggedIn, isFollowed]);
 
   const handleFollow = async () => {
     if (isLoggedIn) {
@@ -29,7 +31,6 @@ export default function UserFollow({ isFollowed, userId }: Props) {
         await api.followUser({
           userId: userId,
         });
-        setIsFollowing(!isFollowing);
         toast.success(`User ${isFollowing ? "unfollowed" : "followed"} successfully`);
       } catch (e: any) {
         console.error(e);
@@ -41,13 +42,7 @@ export default function UserFollow({ isFollowed, userId }: Props) {
       router.push('/connect')
     }
   };
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setIsFollowing(false)
-    } else {
-      setIsFollowing(isFollowed)
-    }
-  }, [isLoggedIn, isFollowed])
+
 
   return (
       <div>
