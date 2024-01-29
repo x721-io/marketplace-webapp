@@ -55,6 +55,11 @@ export namespace FormState {
     quantity: number
   }
 
+  export interface TransferToken {
+    quantity: number
+    recipient: Address
+  }
+  
   export interface VerifyAccount {
     accountStatus: boolean,
     listVerify: ListVerify

@@ -32,7 +32,7 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
 }
 
 export default function MenuModal({ onClose, show }: ModalProps) {
-  const { isLoggedIn } = useAuth()
+  const { isValidSession } = useAuth()
 
   return (
     <Modal
@@ -74,7 +74,7 @@ export default function MenuModal({ onClose, show }: ModalProps) {
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-4">
-          {isLoggedIn ? <MenuAccountInformation onClose={onClose} /> : (
+          {isValidSession ? <MenuAccountInformation onClose={onClose} /> : (
             <>
               {navs.map(nav => {
                 if (nav.items?.length) {

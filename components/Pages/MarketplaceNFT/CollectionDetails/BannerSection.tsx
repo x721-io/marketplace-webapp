@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function BannerSectionCollection({ collectionId, cover, avatar, creators }: Props) {
-  const { isLoggedIn } = useAuth()
+  const { isValidSession } = useAuth()
   const coverImageRef = useRef<HTMLInputElement>(null)
   const wallet = useAuthStore(state => state.profile?.publicKey)
   const isOwner = useMemo(() => {
@@ -73,7 +73,7 @@ export default function BannerSectionCollection({ collectionId, cover, avatar, c
       </div>
 
       {
-        isOwner && isLoggedIn && (
+        isOwner && isValidSession && (
           <div className="absolute right-2 top-2 bg-button-secondary rounded-xl w-12 h-12">
             <div className="absolute top-[33%] left-[31%]">
               <UploadIcon width={16} height={16} />

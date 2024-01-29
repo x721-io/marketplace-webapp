@@ -24,5 +24,7 @@ export const API_ENDPOINTS = {
   LAUNCHPAD : '/launchpad',
   CHECK_IS_SUBSCRIBED: '/launchpad/isSubscribed',
   SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
-  SNAPSHOT: '/user/projects'
+  SNAPSHOT: '/user/projects',
+  FOLLOW: '/user/follow',
+
 }
