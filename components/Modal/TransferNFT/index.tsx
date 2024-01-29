@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
 import { FormState, NFT } from '@/types'
-import TransferStep from "@/components/Modal/TransferNFT/TransferStep";
 import { APIResponse } from '@/services/api/types'
 import NFTMarketData = APIResponse.NFTMarketData
 import Input from '@/components/Form/Input'
