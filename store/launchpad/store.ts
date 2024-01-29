@@ -61,6 +61,9 @@ const DEFAULT_STATE: LaunchpadStoreState = {
           discordLink: '',
           webURL: '',
           shortLink: '',
+          isFollowed: false,
+          following: '0',
+          followers: '0'
         },
       },
     ],
