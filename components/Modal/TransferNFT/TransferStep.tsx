@@ -10,9 +10,11 @@ import { numberRegex } from '@/utils/regex'
 import { useForm } from 'react-hook-form'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { toast } from 'react-toastify'
-import { useAccount, erc721ABI, } from 'wagmi';
+import { erc721ABI, Address } from 'wagmi';
 import { writeContract } from '@wagmi/core'
 import ERC1155 from '@/abi/ERC1155'
+import { isAddress, ZeroAddress } from 'ethers'
+
 interface Props {
   nft: NFT
   marketData?: NFTMarketData
@@ -44,46 +46,47 @@ export default function TransferStep({ nft, marketData, handleReset }: Props) {
       }
     },
     address: {
-      required: 'Address is not allowed to be empty'
+      required: 'Address is not allowed to be empty',
+      validate: {
+        valid: (v: string) => (isAddress(v) && v !== ZeroAddress) || 'Invalid address'
+      }
     }
   }
 
+  const onSubmit = async ({ quantity, recipient }: FormState.TransferToken) => {
+    try {
+      if (type === 'ERC721') {
+        await writeContract({
+          address: nft.collection.address,
+          abi: erc721ABI,
+          functionName: 'safeTransferFrom',
+          args: [wallet as Address, recipient, (nft.u2uId ?? nft.id) as any]
+        });
+      } else if (type === 'ERC1155') {
+        await writeContract({
+          address: nft.collection.address,
+          abi: ERC1155,
+          functionName: 'safeTransferFrom',
+          args: [wallet as `0x${string}`, recipient, (nft.u2uId ?? nft.id) as any, BigInt(quantity), '0x']
+        });
+      }
 
-const onSubmit = async ({ quantity, address }: FormState.TransferToken) => {
-  try {
-    if (type === 'ERC721') {
-      await writeContract({
-        address: nft.collection.address,
-        abi: erc721ABI,
-        functionName: 'safeTransferFrom',
-        args: [wallet as `0x${string}`, address, (nft.u2uId ?? nft.id) as any], 
-      });
-    } else if (type === 'ERC1155') {
-      await writeContract({
-        address: nft.collection.address,
-        abi: ERC1155,
-        functionName: 'safeTransferFrom',
-        args: [wallet as `0x${string}`, address,(nft.u2uId ?? nft.id) as any, BigInt(quantity), '0x'], 
-      });
+      toast.success('Transfer token successfully', { autoClose: 1000, closeButton: true });
+    } catch (e: any) {
+      toast.error(`Error report: ${e.message || e}`);
+    } finally {
+      handleReset();
     }
+  };
 
-    toast.success('Transfer token successfully', { autoClose: 1000, closeButton: true });
-  } catch (e:any) {
-    toast.error(`Error report: ${e.message || e}`);
-  } finally {
-    handleReset();
-  }
-};
-
-
-    return (
+  return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <div className='flex gap-4 flex-col'>
+      <div className="flex gap-4 flex-col">
         <Text className="font-semibold text-body-24">Transfer Token</Text>
-        <Text className='text-body-16'>You can transfer tokens from your address to another</Text>
+        <Text className="text-body-16">You can transfer tokens from your address to another</Text>
       </div>
       {nft.collection.type === 'ERC1155' && (
-        <div className='flex gap-1 flex-col'>
+        <div className="flex gap-1 flex-col">
           <Text className="text-secondary font-semibold">Quantity</Text>
           <Input
             error={!!errors.quantity}
@@ -96,21 +99,21 @@ const onSubmit = async ({ quantity, address }: FormState.TransferToken) => {
           />
         </div>
       )}
-      <div className='flex gap-1 flex-col'>
+      <div className="flex gap-1 flex-col">
         <label className="text-body-14 text-secondary font-semibold mb-1">Receive address</label>
         <Input
-          error={!!errors.address}
-          register={register('address', formRules.address)}
+          error={!!errors.recipient}
+          register={register('recipient', formRules.address)}
         />
       </div>
 
       <FormValidationMessages errors={errors} />
 
-      <div className='flex gap-2 flex-col'>
-        <Button type={'submit'} className="w-full" >
+      <div className="flex gap-2 flex-col">
+        <Button type={'submit'} className="w-full">
           Continue
         </Button>
-        <Button variant='outlined' className="w-full" onClick={handleReset}>
+        <Button variant="outlined" className="w-full" onClick={handleReset}>
           Cancel
         </Button>
       </div>

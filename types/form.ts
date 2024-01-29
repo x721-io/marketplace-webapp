@@ -57,7 +57,7 @@ export namespace FormState {
 
   export interface TransferToken {
     quantity: number
-    address: Address
+    recipient: Address
   }
   
   export interface VerifyAccount {
