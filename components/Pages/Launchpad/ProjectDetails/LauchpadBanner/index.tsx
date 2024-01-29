@@ -34,8 +34,8 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
   });
 
   return (
-    <div className='flex items-center desktop:items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col'>
-      <div className='flex-shrink-0 w-full tablet:w-[380px] desktop:w-[515px]'>
+    <div className='flex w-full desktop:items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col'>
+      <div className='flex-shrink-0 w-full tablet:w-[380px] self-center desktop:self-start desktop:w-[515px]'>
         <Image
           className='w-full tablet:min-w-[380px] desktop:min-w-[515px] desktop:w-auto rounded-2xl object-fill'
           width={512}
@@ -57,7 +57,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
             </span>
           </p>
 
-          <div className='w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row'>
+          <div className='w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row tablet:flex-row'>
             <div className='flex items-center gap-2'>
               <Icon name='u2u-logo' width={24} height={24} />
               <div className='h-7 w-[1px] bg-surface-hard' />
@@ -106,8 +106,8 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           <p className='text-secondary text-body-14'>{project.description}</p>
         </div>
 
-        <div className='mb-10 w-full rounded-lg bg-surface-soft flex gap-4 desktop:gap-20 p-4 flex-col desktop:flex-row'>
-          <div className='flex gap-20'>
+        <div className='mb-10 w-full rounded-lg bg-surface-soft flex gap-4 desktop:gap-20 p-4 flex-col desktop:flex-row tablet:flex-row gap-x-10'>
+          <div className='flex justify-between desktop:gap-20 tablet:gap-x-10'>
             <div className='flex flex-col'>
               <p className='text-lg text-secondary font-medium'>
                 Available From

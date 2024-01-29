@@ -47,7 +47,6 @@ export default function TimeframeDropdown() {
     }
     return current;
   }, [timeframes]);
-  console.log('currentTimeframe: ',currentTimeframe);
 
   const formatTimeframe = (timeframe: Timeframe) => {
     return (

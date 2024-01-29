@@ -101,7 +101,7 @@ export default function RoundContractInteractions({
 
   return (
     <div className='w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4'>
-      <div className='flex items-start justify-between flex-col desktop:flex-row gap-4 desktop:gap-0'>
+      <div className='flex items-start justify-between flex-col tablet:flex-row desktop:flex-row gap-4 desktop:gap-0'>
         <p className='text-heading-sm font-semibold'>{round?.name}</p>
 
         {(() => {
@@ -172,7 +172,7 @@ export default function RoundContractInteractions({
       <div className='flex px-0 desktop:p-0 justify-between desktop:gap-10 gap-4 desktop:flex-row'>
         <div className='flex flex-col desktop:flex-col items-center desktop:items-start gap-2'>
           <p className='text-body-16 text-secondary font-medium '>Items</p>
-          <p className='text-primary desktop:text-heading-sm tablet:text-heading-sm text-heading-xs  font-semibold'>
+          <p className='text-primary desktop:text-heading-sm text-xl text-heading-xs font-semibold'>
             {round?.totalNftt === 0
               ? 'Open edition'
               : formatDisplayedBalance(round?.totalNftt, 0)}
