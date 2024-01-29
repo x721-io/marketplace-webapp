@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner, Tabs } from 'flowbite-react';
 import { useParams } from 'next/navigation';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import Text from '@/components/Text';
 import { formatDisplayedNumber } from '@/utils';
@@ -14,17 +14,15 @@ import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserC
 import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 
-
 export default function ProfilePage() {
   const api = useMarketplaceApi();
   const { id } = useParams();
-
   const {
     data: user,
     isLoading,
     error,
   } = useSWR([id], (userId) => api.viewProfile(userId.toString()),
-      { refreshInterval: 5000 , refreshWhenHidden: true});
+      { refreshInterval: 5000 });
 
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
@@ -87,7 +85,7 @@ export default function ProfilePage() {
             <Tabs.Item
                 title={
                   <div className='min-w-fit whitespace-nowrap'>
-                    On Sale ({formatDisplayedNumber(saleAmount, 1)})
+                    {/*On Sale ({formatDisplayedNumber(saleAmount, 1)})*/}
                   </div>
                 }
             >
