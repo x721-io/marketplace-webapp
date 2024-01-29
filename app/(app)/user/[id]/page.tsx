@@ -86,7 +86,8 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className='min-w-fit whitespace-nowrap'>
-                On Sale ({formatDisplayedBalance(saleAmount, 0)})
+                {/* On Sale ({formatDisplayedBalance(saleAmount, 0)}) */}
+                On Sale
               </div>
             }
           >
