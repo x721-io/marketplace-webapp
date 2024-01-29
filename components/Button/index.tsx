@@ -79,7 +79,7 @@ export default function Button({
       className={classNames(baseClass, scaleClass, variantClass, loadingClass, className)}
       {...rest}
     >
-      <div className="flex justify-center items-center gap-3">
+      <div className="flex justify-center items-center gap-1">
         {loading ? (
           <>
             <Spinner size="sm" />

@@ -3,14 +3,16 @@ import { APIParams, APIResponse } from '@/services/api/types'
 import { marketplaceApi } from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api'
 import { Address } from 'wagmi'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { parseQueries } from '@/utils'
 
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
-  const authHeader = useMemo(
-    () => ({ headers: { 'Authorization': `Bearer ${bearerToken}` } }),
+
+  // Bearer token - Support directly passing token via function call or getting from auth store
+  const authHeader = useCallback(
+    (accessToken?: string) => ({ headers: { 'Authorization': `Bearer ${accessToken || bearerToken}` } }),
     [bearerToken]
   )
 
@@ -18,9 +20,9 @@ export const useMarketplaceApi = () => {
     return {
       connect: (params: APIParams.Connect): Promise<APIResponse.Connect> => marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
 
-      updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
+      updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader()),
 
-      resendEmail: (params: APIParams.ResendVerifyMail) :  Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
+      resendEmail: (params: APIParams.ResendVerifyMail): Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader()),
       search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
@@ -60,14 +62,14 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form)
       },
 
-      createCollection: (params: APIParams.CreateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
+      createCollection: (params: APIParams.CreateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader()),
 
       updateCollection: ({
         coverImage,
         id
-      }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader),
+      }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader()),
 
-      createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
+      createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader()),
 
       fetchNFTs: (params: APIParams.FetchNFTs): Promise<APIResponse.FetchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
 
@@ -89,7 +91,7 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest))
       },
 
-      generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader),
+      generateTokenId: async (collectionAddress: Address): Promise<APIResponse.GenerateTokenId> => marketplaceApi.get(API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`, authHeader()),
 
       fetchNFTById: (params: APIParams.FetchNFTDetails): Promise<APIResponse.NFTDetails> => {
         return marketplaceApi.get(API_ENDPOINTS.NFT + parseQueries(params))
@@ -101,13 +103,15 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)
       },
 
-      viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
+      viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`, authHeader()),
 
-      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params)),
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params), authHeader()),
 
-      verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {},authHeader),
+      verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {}, authHeader()),
 
-      fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader),
+      fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader()),
+
+      followUser: ({ userId, accessToken }: APIParams.FollowUser): Promise<APIResponse.FollowUser> => marketplaceApi.post(API_ENDPOINTS.FOLLOW + `/${userId}`, {}, authHeader(accessToken))
     }
   }, [authHeader])
 }

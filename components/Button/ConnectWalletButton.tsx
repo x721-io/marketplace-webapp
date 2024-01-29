@@ -56,7 +56,6 @@ export default function ConnectWalletButton({ className, mode = 'modal', childre
             onClose={() => setShowWalletConnect(false)} />
 
           <SignConnectMessageModal
-            mode={mode}
             show={showSignMessage}
             onSignup={() => setShowSignup(true)}
             onClose={() => setShowSignMessage(false)} />

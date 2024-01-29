@@ -1,26 +1,25 @@
-import {Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps} from 'flowbite-react'
+import { Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps } from 'flowbite-react'
 import Text from '@/components/Text'
 import Input from '@/components/Form/Input'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import { useAuth } from '@/hooks/useAuth'
 import { sleep } from '@/utils'
 import { useForm } from 'react-hook-form'
-import { emailRegex } from '@/utils/regex'
 import FormValidationMessages from '@/components/Form/ValidationMessages'
 import { toast } from 'react-toastify'
 import { FormState } from '@/types'
 import { formRulesSigupModal } from '@/config/form/rules'
+import useAuthStore from '@/store/auth/store'
 
 interface Props extends ModalProps {
-  onSignupSuccess?: () => void
+  onSignupSuccess?: (accessToken?: string) => void
 }
-
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
     inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 "
   },
   body: {
     base: "p-0 flex-1 overflow-auto"
@@ -28,6 +27,7 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
 }
 
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
+  const { credentials } = useAuthStore()
   const { onUpdateProfile } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<FormState.SignUp>()
   const [acceptedTerms, setAcceptedTerms] = useState(false)
@@ -40,7 +40,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
       await onUpdateProfile({ ...data, acceptedTerms })
       await sleep(500)
       toast.success('Signed up successfully', { autoClose: 1000, closeButton: true })
-      onSignupSuccess && onSignupSuccess()
+      onSignupSuccess?.(credentials?.accessToken)
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`)
       console.error('Error signing up:', e)
