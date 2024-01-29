@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { User } from '@/types'
 import { getUserAvatarImage, getUserCoverImage } from "@/utils/string";
 import VerifyDisableIcon from "@/components/Icon/VerifyDisable";
+import ShowMore from "@/components/Form/ShowMore";
 
 export default function Profile({ id, username, bio, avatar, coverImage, accountStatus }: User) {
   const myId = useAuthStore(state => state.profile?.id)
@@ -45,7 +46,7 @@ export default function Profile({ id, username, bio, avatar, coverImage, account
               
             </div>
             <div>
-              <Text className="text-secondary text-sm">{bio ? bio : 'Nothing to show'}</Text>
+              <ShowMore text={bio ? bio : 'Nothing to show'} maxLength={500} displayName="text-secondary text-sm" displayToggleText="cursor-pointer text-sm hover:underline"/>
             </div>
             {
               myId === id && (
