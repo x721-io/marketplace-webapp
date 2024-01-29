@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Spinner, Tabs } from 'flowbite-react';
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import Text from '@/components/Text';
-import { formatDisplayedBalance } from '@/utils';
+import {formatDisplayedBalance, formatDisplayedNumber} from '@/utils';
 import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
 import OnSaleNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OnSaleNFTs";
 import CreatedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/CreatedNFTs";
@@ -22,7 +22,7 @@ export default function ProfilePage() {
     isLoading,
     error,
   } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
-    refreshInterval: 600000,
+    refreshInterval: 10000,
   });
 
   const [ownedAmount, setOwnedAmount] = useState(0);
@@ -74,7 +74,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className='min-w-fit whitespace-nowrap'>
-                Owned ({formatDisplayedBalance(ownedAmount, 0)})
+                Owned ({formatDisplayedNumber(ownedAmount, 1)})
               </div>
             }
           >
@@ -86,8 +86,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className='min-w-fit whitespace-nowrap'>
-                {/* On Sale ({formatDisplayedBalance(saleAmount, 0)}) */}
-                On Sale
+                On Sale ({formatDisplayedNumber(saleAmount, 1)})
               </div>
             }
           >
@@ -99,7 +98,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className='min-w-fit whitespace-nowrap'>
-                Created ({formatDisplayedBalance(createdAmount, 0)})
+                Created ({formatDisplayedNumber(createdAmount, 0)})
               </div>
             }
           >
@@ -113,7 +112,7 @@ export default function ProfilePage() {
             title={
               <div className='min-w-fit whitespace-nowrap'>
                 Collections (
-                {formatDisplayedBalance(createdCollectionAmount, 0)})
+                {formatDisplayedNumber(createdCollectionAmount, 0)})
               </div>
             }
           >

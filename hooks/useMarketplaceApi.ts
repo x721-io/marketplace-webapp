@@ -6,12 +6,13 @@ import { Address } from 'wagmi'
 import { useMemo } from 'react'
 import { parseQueries } from '@/utils'
 
+
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore()
   const bearerToken = credentials?.accessToken
   const authHeader = useMemo(
-    () => ({ headers: { 'Authorization': `Bearer ${bearerToken}` } }),
-    [bearerToken]
+      () => ({ headers: { 'Authorization': `Bearer ${bearerToken}` } }),
+      [bearerToken]
   )
 
   return useMemo(() => {
@@ -20,7 +21,7 @@ export const useMarketplaceApi = () => {
 
       updateProfile: (params: APIParams.UpdateProfile): Promise<APIResponse.ProfileDetails> => marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader),
 
-      resendEmail: (params: APIParams.ResendVerifyMail) :  Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
+      resendEmail: (params: APIParams.ResendVerifyMail): Promise<APIResponse.ResendEmail> => marketplaceApi.post(API_ENDPOINTS.SEND_VERIFY_EMAIL, params, authHeader),
       search: (params: APIParams.Search): Promise<any> => marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> => marketplaceApi.post(API_ENDPOINTS.SEARCH, {
@@ -63,9 +64,9 @@ export const useMarketplaceApi = () => {
       createCollection: (params: APIParams.CreateCollection) => marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader),
 
       updateCollection: ({
-        coverImage,
-        id
-      }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader),
+                           coverImage,
+                           id
+                         }: APIParams.UpdateCollection) => marketplaceApi.put(API_ENDPOINTS.COLLECTIONS + `/${id}`, { coverImage }, authHeader),
 
       createNFT: (params: APIParams.CreateNFT): Promise<APIResponse.CreateNFT> => marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader),
 
@@ -83,9 +84,9 @@ export const useMarketplaceApi = () => {
       fetchCollectionById: (id: string | Address): Promise<APIResponse.CollectionDetails> => marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
       fetchCollectionsByUser: async ({
-        userId,
-        ...rest
-      }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
+                                       userId,
+                                       ...rest
+                                     }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
         return marketplaceApi.get(API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest))
       },
 
@@ -101,13 +102,15 @@ export const useMarketplaceApi = () => {
         return marketplaceApi.get(API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`)
       },
 
-      viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`),
+      viewProfile: (id: Address | string): Promise<APIResponse.ProfileDetails> => marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`, authHeader),
 
-      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params)),
+      fetchUsers: async (params: APIParams.FetchUsers): Promise<APIResponse.UsersData> => marketplaceApi.get(API_ENDPOINTS.USER + parseQueries(params), authHeader),
 
-      verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {},authHeader),
+      verifyAccount: (): Promise<APIResponse.VerifyAccount> => marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {}, authHeader),
 
       fetchEmailVerify: (params: APIParams.FetchEmailVerify): Promise<APIResponse.FetchEmailVerify> => marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader),
+      followUser: ({ userId }: APIParams.FollowUser): Promise<APIResponse.FollowUser> => marketplaceApi.post(API_ENDPOINTS.FOLLOW + `/${userId}`, {}, authHeader),
+
     }
   }, [authHeader])
 }
