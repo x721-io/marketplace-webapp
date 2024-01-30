@@ -1,60 +1,70 @@
-import { useMemo, useState } from 'react'
-import SignupModal from '@/components/Modal/SignupModal'
-import WalletConnectModal from '@/components/Modal/WalletConnectModal'
-import { useAccount } from 'wagmi'
-import SignConnectMessageModal from '@/components/Modal/SignConnectMessageModal'
-import useAuthStore from '@/store/auth/store'
-import Button from '@/components/Button/index'
-import { useAuth } from '@/hooks/useAuth'
+import { useMemo, useState } from "react";
+import SignupModal from "@/components/Modal/SignupModal";
+import WalletConnectModal from "@/components/Modal/WalletConnectModal";
+import { useAccount } from "wagmi";
+import SignConnectMessageModal from "@/components/Modal/SignConnectMessageModal";
+import useAuthStore from "@/store/auth/store";
+import Button from "@/components/Button/index";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
-  className?: string
-  children?: React.ReactNode
-  action?: (accessToken?: string) => void
-  showConnectButton?: boolean
+  className?: string;
+  children?: React.ReactNode;
+  action?: (accessToken?: string) => void;
+  showConnectButton?: boolean;
 }
 
-export default function ConnectWalletButton({ action, className, showConnectButton, children }: Props) {
-  const [showWalletConnect, setShowWalletConnect] = useState(false)
-  const [showSignMessage, setShowSignMessage] = useState(false)
-  const [showSignup, setShowSignup] = useState(false)
+export default function ConnectWalletButton({
+  action,
+  className,
+  showConnectButton,
+  children,
+}: Props) {
+  const [showWalletConnect, setShowWalletConnect] = useState(false);
+  const [showSignMessage, setShowSignMessage] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
 
-  const { isValidSession } = useAuth()
+  const { isValidSession } = useAuth();
 
   const handleConnectWallet = () => {
     if (!isValidSession) {
-      setShowWalletConnect(true)
+      setShowWalletConnect(true);
     } else {
       // Access Token has been saved in auth store
-      action?.()
+      action?.();
     }
-  }
+  };
 
   return (
     <>
       <div className={className} onClick={handleConnectWallet}>
-        {(showConnectButton && !isValidSession) ? (
+        {showConnectButton && !isValidSession ? (
           <Button type="button" onClick={handleConnectWallet}>
             Connect Wallet
           </Button>
-        ) : children}
+        ) : (
+          children
+        )}
       </div>
 
       <WalletConnectModal
         show={showWalletConnect}
         onSignMessage={() => setShowSignMessage(true)}
-        onClose={() => setShowWalletConnect(false)} />
+        onClose={() => setShowWalletConnect(false)}
+      />
 
       <SignConnectMessageModal
         show={showSignMessage}
-        onConnectSuccess={accessToken => action?.(accessToken)}
+        onConnectSuccess={(accessToken) => action?.(accessToken)}
         onSignup={() => setShowSignup(true)}
-        onClose={() => setShowSignMessage(false)} />
+        onClose={() => setShowSignMessage(false)}
+      />
 
       <SignupModal
         show={showSignup}
         onClose={() => setShowSignup(false)}
-        onSignupSuccess={accessToken => action?.(accessToken)} />
+        onSignupSuccess={(accessToken) => action?.(accessToken)}
+      />
     </>
-  )
+  );
 }

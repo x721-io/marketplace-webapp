@@ -1,4 +1,4 @@
-import { Collection, Round } from '@/types';
+import { Collection, Round } from "@/types";
 
 export interface LaunchpadStoreState {
   round: Round;

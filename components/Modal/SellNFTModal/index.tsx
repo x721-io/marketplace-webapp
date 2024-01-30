@@ -1,44 +1,68 @@
-import { CustomFlowbiteTheme, Modal, ModalProps, Tooltip } from 'flowbite-react'
-import { useState } from 'react'
-import Text from '@/components/Text'
-import Button from '@/components/Button'
-import ApprovalStep from '@/components/Modal/SellNFTModal/ApprovalStep'
+import {
+  CustomFlowbiteTheme,
+  Modal,
+  ModalProps,
+  Tooltip,
+} from "flowbite-react";
+import { useState } from "react";
+import Text from "@/components/Text";
+import Button from "@/components/Button";
+import ApprovalStep from "@/components/Modal/SellNFTModal/ApprovalStep";
 import ListingStep from "@/components/Modal/SellNFTModal/ListingStep";
-import { NFT } from '@/types'
-import { APIResponse } from '@/services/api/types'
-import NFTMarketData = APIResponse.NFTMarketData
+import { NFT } from "@/types";
+import { APIResponse } from "@/services/api/types";
+import NFTMarketData = APIResponse.NFTMarketData;
 
 interface Props extends ModalProps {
-  nft: NFT,
-  marketData?: NFTMarketData
+  nft: NFT;
+  marketData?: NFTMarketData;
 }
 
-const modalTheme: CustomFlowbiteTheme['modal'] = {
+const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
-    inner: "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    inner:
+      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
     base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
   },
   body: {
-    base: "p-0 flex-1 overflow-auto"
-  }
-}
+    base: "p-0 flex-1 overflow-auto",
+  },
+};
 
-export default function SellNFTModal({ nft, show, marketData, onClose }: Props) {
-  const [error, setError] = useState<Error>()
-  const [step, setStep] = useState(1)
+export default function SellNFTModal({
+  nft,
+  show,
+  marketData,
+  onClose,
+}: Props) {
+  const [error, setError] = useState<Error>();
+  const [step, setStep] = useState(1);
 
   const handleReset = () => {
-    onClose?.()
-    setStep(1)
-    setError(undefined)
-  }
+    onClose?.();
+    setStep(1);
+    setError(undefined);
+  };
 
   const renderContent = () => {
     switch (step) {
       case 1:
-        return <ApprovalStep nft={nft} onNext={() => setStep(2)} onError={setError} />
+        return (
+          <ApprovalStep
+            nft={nft}
+            onNext={() => setStep(2)}
+            onError={setError}
+          />
+        );
       case 2:
-        return <ListingStep marketData={marketData} nft={nft} onError={setError} onSuccess={() => setStep(3)} />
+        return (
+          <ListingStep
+            marketData={marketData}
+            nft={nft}
+            onError={setError}
+            onSuccess={() => setStep(3)}
+          />
+        );
       case 3:
         return (
           <>
@@ -48,22 +72,27 @@ export default function SellNFTModal({ nft, show, marketData, onClose }: Props) 
             <Text className="text-secondary">
               Your NFT has been put on sale!
             </Text>
-            <Button className="w-full" variant="secondary" onClick={handleReset}>
+            <Button
+              className="w-full"
+              variant="secondary"
+              onClick={handleReset}
+            >
               Close and continue
             </Button>
           </>
-        )
+        );
       default:
-        return <></>
+        return <></>;
     }
-  }
+  };
   return (
     <Modal
       theme={modalTheme}
       dismissible
       size="lg"
       show={show}
-      onClose={handleReset}>
+      onClose={handleReset}
+    >
       <Modal.Body className="p-10">
         <div className="flex flex-col justify-center items-center gap-4">
           {!!error ? (
@@ -72,18 +101,27 @@ export default function SellNFTModal({ nft, show, marketData, onClose }: Props) 
                 Error report
               </Text>
               <Tooltip content={error?.message} placement="bottom">
-                <Text className="max-w-full text-secondary text-center text-ellipsis" variant="body-18">
+                <Text
+                  className="max-w-full text-secondary text-center text-ellipsis"
+                  variant="body-18"
+                >
                   {error?.message}
                 </Text>
               </Tooltip>
 
-              <Button className="w-full" variant="secondary" onClick={handleReset}>
+              <Button
+                className="w-full"
+                variant="secondary"
+                onClick={handleReset}
+              >
                 Close
               </Button>
             </>
-          ) : renderContent()}
+          ) : (
+            renderContent()
+          )}
         </div>
       </Modal.Body>
     </Modal>
-  )
+  );
 }

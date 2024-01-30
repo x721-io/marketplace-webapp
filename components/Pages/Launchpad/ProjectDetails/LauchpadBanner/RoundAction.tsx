@@ -1,17 +1,17 @@
-import { Address, erc721ABI, useAccount, useContractRead } from 'wagmi';
-import { useMemo, useState } from 'react';
-import { formatUnits } from 'ethers';
-import { Collection, Round } from '@/types';
-import { useRoundStatus } from '@/hooks/useRoundStatus';
-import useSWR from 'swr';
-import { useParams } from 'next/navigation';
-import { useLaunchpadApi } from '@/hooks/useLaunchpadApi';
-import { getRoundAbi } from '@/utils';
-import RoundActionMinting from './RoundActions/RoundActionMinting';
-import RoundActionUpcoming from './RoundActions/RoundActionUpcoming';
-import RoundActionEnded from './RoundActions/RoundActionEnded';
-import { ZERO_COLLECTION } from '@/config/constants';
-import useLaunchpadStore from '@/store/launchpad/store';
+import { Address, erc721ABI, useAccount, useContractRead } from "wagmi";
+import { useMemo, useState } from "react";
+import { formatUnits } from "ethers";
+import { Collection, Round } from "@/types";
+import { useRoundStatus } from "@/hooks/useRoundStatus";
+import useSWR from "swr";
+import { useParams } from "next/navigation";
+import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
+import { getRoundAbi } from "@/utils";
+import RoundActionMinting from "./RoundActions/RoundActionMinting";
+import RoundActionUpcoming from "./RoundActions/RoundActionUpcoming";
+import RoundActionEnded from "./RoundActions/RoundActionEnded";
+import { ZERO_COLLECTION } from "@/config/constants";
+import useLaunchpadStore from "@/store/launchpad/store";
 
 export default function RoundAction() {
   const { round, collection } = useLaunchpadStore((state) => state);
@@ -22,17 +22,17 @@ export default function RoundAction() {
   const { data: snapshot } = useSWR(
     address && id ? { userId: address, projectId: id } : null,
     (params) => api.fetchSnapshot(params),
-    { refreshInterval: 3000 }
+    { refreshInterval: 3000 },
   );
   const { data: isWhitelisted } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
-    functionName: 'checkIsUserWhitelisted',
+    functionName: "checkIsUserWhitelisted",
     args: [address],
     enabled:
       !!address &&
-      round.type !== 'U2UPremintRoundFCFS' &&
-      round.type !== 'U2UMintRoundFCFS',
+      round.type !== "U2UPremintRoundFCFS" &&
+      round.type !== "U2UMintRoundFCFS",
     watch: true,
   });
   const hasStaked = useMemo(() => {
@@ -43,11 +43,11 @@ export default function RoundAction() {
   const { data: balanceNFT } = useContractRead({
     address: ZERO_COLLECTION as Address,
     abi: erc721ABI,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as Address],
     enabled:
       !!address &&
-      (round.type == 'U2UMintRoundZero' || round.type == 'U2UPremintRoundZero'),
+      (round.type == "U2UMintRoundZero" || round.type == "U2UPremintRoundZero"),
     watch: true,
     select: (data) => formatUnits(String(data), 0),
   });
@@ -57,15 +57,15 @@ export default function RoundAction() {
 
   const eligibleStatus = useMemo(() => {
     if (
-      round.type === 'U2UPremintRoundZero' ||
-      round.type === 'U2UMintRoundZero'
+      round.type === "U2UPremintRoundZero" ||
+      round.type === "U2UMintRoundZero"
     ) {
       return hasStaked || isHolder;
     }
 
     if (
-      round.type === 'U2UMintRoundFCFS' ||
-      round.type === 'U2UPremintRoundFCFS'
+      round.type === "U2UMintRoundFCFS" ||
+      round.type === "U2UPremintRoundFCFS"
     ) {
       return true;
     }
@@ -77,7 +77,7 @@ export default function RoundAction() {
 
   const renderRoundAction = () => {
     switch (status) {
-      case 'MINTING':
+      case "MINTING":
         return (
           <RoundActionMinting
             eligibleStatus={!!eligibleStatus}
@@ -85,7 +85,7 @@ export default function RoundAction() {
             loading={loading}
           />
         );
-      case 'UPCOMING':
+      case "UPCOMING":
         return (
           <RoundActionUpcoming
             setLoading={setLoading}
@@ -97,7 +97,7 @@ export default function RoundAction() {
             isHolder={isHolder}
           />
         );
-      case 'ENDED':
+      case "ENDED":
         return <RoundActionEnded collection={collection} />;
       default:
         return null;
