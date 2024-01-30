@@ -2,7 +2,7 @@
 import Icon from "@/components/Icon";
 import InputDropdown from "@/components/Form/InputDropdown";
 import Button from "@/components/Button";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CustomFlowbiteTheme, Tabs, TabsRef } from "flowbite-react";
 import SearchUserTab from "./UserTab";
 import SearchCollectionTab from "./CollectionTab";
@@ -94,6 +94,7 @@ export default function SearchInput() {
     // Lazy search
     const timeOutId = setTimeout(handleSearch, 200);
     return () => clearTimeout(timeOutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString]);
 
   return (

@@ -26,11 +26,11 @@ export default function NFTMarketData({
 }) {
   const type = nft.collection.type;
 
+  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
+
   if (!marketData) {
     return null;
   }
-
-  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
 
   return (
     <div className="flex flex-col gap-10 justify-between w-full">

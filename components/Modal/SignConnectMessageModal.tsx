@@ -9,7 +9,7 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { useAccount, useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/config/constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
@@ -45,7 +45,7 @@ export default function SignConnectMessageModal({
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
 
-  const handleSignMessage = async () => {
+  const handleSignMessage = useCallback(async () => {
     setAuthError("");
 
     if (!address) return;
@@ -80,7 +80,8 @@ export default function SignConnectMessageModal({
     } finally {
       setIsAuthenticating(false);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   const renderContent = () => {
     switch (true) {
@@ -150,6 +151,7 @@ export default function SignConnectMessageModal({
     } else {
       setAuthError("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
   return (

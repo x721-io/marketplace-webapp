@@ -43,7 +43,6 @@ export default function ApprovalStep({
       console.error(e);
     }
   };
-
   const renderContent = useMemo(() => {
     switch (true) {
       case !isFetchingApproval && !isTokenApproved:
@@ -82,18 +81,22 @@ export default function ApprovalStep({
           </>
         );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isTokenApproved]);
 
   useEffect(() => {
     if (isTokenApproved || isSuccess) onNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTokenApproved, isSuccess]);
 
   useEffect(() => {
     if (error) onError(error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
     if (writeError) onError(writeError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [writeError]);
 
   return (

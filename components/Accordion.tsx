@@ -18,7 +18,7 @@ export default function Accordion({
   ...rest
 }: Props) {
   const [open, setOpen] = useState(false);
-  const expanded = useMemo(() => isOpen ?? open, []);
+  const expanded = useMemo(() => isOpen ?? open, [isOpen, open]);
 
   const handleToggle = () => {
     if (onToggle) onToggle();

@@ -1,7 +1,7 @@
 import Text from "@/components/Text";
 import { Spinner } from "flowbite-react";
 import { useMarketApproval } from "@/hooks/useMarket";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWaitForTransaction } from "wagmi";
 import Button from "@/components/Button";
 import { NFT } from "@/types";
@@ -31,6 +31,7 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
     enabled: !!txHash,
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleApproveMarketContract = async () => {
     try {
       const { hash } = await onApproveMarketContract?.();
@@ -70,18 +71,26 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           </Text>
         );
     }
-  }, [isFetchingApproval, isMarketContractApproved, isApproving]);
+  }, [
+    isFetchingApproval,
+    isMarketContractApproved,
+    isApproving,
+    handleApproveMarketContract,
+  ]);
 
   useEffect(() => {
     if (isMarketContractApproved || approvalCompleted) onNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMarketContractApproved, approvalCompleted]);
 
   useEffect(() => {
     if (contractCallError) onError(contractCallError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractCallError]);
 
   useEffect(() => {
     if (errorApproving) onError(errorApproving);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorApproving]);
 
   return (

@@ -92,10 +92,12 @@ export default function BidStep({
 
   useEffect(() => {
     if (error) onError(error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   return (

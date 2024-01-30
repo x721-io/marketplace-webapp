@@ -29,7 +29,7 @@ export default function EmailVerificationPage() {
       clearInterval(countdownInterval);
       clearTimeout(redirectTimeout);
     };
-  }, []);
+  }, [router]);
 
   const {
     data: user,

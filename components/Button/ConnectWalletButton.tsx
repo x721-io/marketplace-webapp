@@ -32,7 +32,7 @@ export default function ConnectWalletButton({
   const isCorrectWallet = useMemo(() => {
     if (!userWallet || !address) return false;
     return userWallet.toLowerCase() === address.toLowerCase();
-  }, [userWallet, address, isConnected]);
+  }, [userWallet, address]);
   const isExpired = useMemo(() => {
     return !!expiredDate && expiredDate < Date.now();
   }, [expiredDate]);

@@ -50,7 +50,8 @@ export default function TransferNFTModal({
     return marketData.owners.find(
       (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
     );
-  }, [wallet, nft]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet]);
   const {
     register,
     handleSubmit,

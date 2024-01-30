@@ -72,18 +72,22 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           </Text>
         );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetchingApproval, isMarketContractApproved, isApproving]);
 
   useEffect(() => {
     if (isMarketContractApproved || approvalCompleted) onNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMarketContractApproved, approvalCompleted]);
 
   useEffect(() => {
     if (contractCallError) onError(contractCallError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractCallError]);
 
   useEffect(() => {
     if (errorApproving) onError(errorApproving);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorApproving]);
 
   return (

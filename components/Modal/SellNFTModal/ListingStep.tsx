@@ -36,7 +36,7 @@ export default function ListingStep({
     return marketData.owners.find(
       (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
     );
-  }, [wallet, nft]);
+  }, [wallet, marketData]);
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft);
 
   const {
@@ -102,10 +102,12 @@ export default function ListingStep({
 
   useEffect(() => {
     if (error) onError(error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   return (

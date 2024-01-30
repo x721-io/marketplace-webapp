@@ -43,7 +43,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   const totalPriceBN = useMemo(() => {
     if (!quantity) return BigInt(0);
     return BigInt(saleData?.price || "0") * BigInt(quantity);
-  }, [quantity]);
+  }, [quantity, saleData]);
 
   const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
     if (!saleData) return;
@@ -60,10 +60,12 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
 
   useEffect(() => {
     if (error) onError(error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   return (

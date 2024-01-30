@@ -54,7 +54,7 @@ export default function Input({
           !!appendIcon && "pe-10",
         );
     }
-  }, [scale, prependIcon]);
+  }, [scale, prependIcon, appendIcon]);
 
   const colorClass = useMemo(() => {
     switch (true) {

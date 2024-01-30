@@ -213,6 +213,7 @@ export default function CreateNftPage() {
       handleValidateInput(name, value);
     });
     return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch]);
 
   useEffect(() => {

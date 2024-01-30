@@ -18,7 +18,7 @@ export default function FiltersSectionCollection({
 
   useEffect(() => {
     setQueryString("collection", "");
-  }, []);
+  }, [setQueryString]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">
