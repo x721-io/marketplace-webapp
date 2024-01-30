@@ -131,7 +131,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               </p>
             </div>
             <div className='text-body-16 text-secondary font-medium'>
-              <TimeframeDropdown />
+              <TimeframeDropdown round={activeRound}/>
             </div>
           </div>
         </div>

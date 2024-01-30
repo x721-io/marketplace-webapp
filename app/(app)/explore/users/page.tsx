@@ -7,26 +7,31 @@ import useSWR from 'swr'
 import Text from '@/components/Text'
 import Link from 'next/link'
 import Image from 'next/image'
-import VerifyIcon from '@/components/Icon/Verify'
 import React, { useMemo, useState } from 'react'
 import { APIParams } from '@/services/api/types'
 import { Pagination, Spinner } from 'flowbite-react'
-import { getUserAvatarImage, getUserCoverImage } from '@/utils/string'
-import VerifyDisableIcon from '@/components/Icon/VerifyDisable'
-import Icon from '@/components/Icon'
+import { getUserAvatarImage, getUserCoverImage, getUserLink } from '@/utils/string'
+import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
+import { formatDisplayedNumber } from "@/utils";
+import useAuthStore from "@/store/auth/store";
+import Icon from "@/components/Icon";
 
 export default function ExploreUsersPage() {
   const api = useMarketplaceApi()
   const { queryString } = useUIStore(state => state)
   const { searchKey } = useExploreSectionFilters()
+  const myId = useAuthStore(state => state.profile?.id)
 
   const [activePagination, setActivePagination] = useState<APIParams.FetchUsers>({
     page: 1,
     limit: 20
   })
 
-  const { data: users, isLoading, error } = useSWR(
-    !!queryString[searchKey] ? { ...activePagination, search: queryString[searchKey] , page: 1 } : {...activePagination, search: queryString[searchKey] },
+  const { data: users, isLoading, error, mutate } = useSWR(
+    !!queryString[searchKey] ? { ...activePagination, search: queryString[searchKey], page: 1 } : {
+      ...activePagination,
+      search: queryString[searchKey]
+    },
     params => api.fetchUsers(params),
     { refreshInterval: 10000 }
   )
@@ -54,7 +59,8 @@ export default function ExploreUsersPage() {
 
   if (error && !users) {
     return (
-      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+      <div
+        className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text variant="heading-xs" className="text-center">
           Network Error!
           <br />
@@ -66,65 +72,59 @@ export default function ExploreUsersPage() {
 
   if (!users?.data || !users?.data.length) {
     return (
-      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+      <div
+        className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">Nothing to show</Text>
       </div>
     )
   }
-
   return (
     <>
-      <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
+      <div
+        className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
         {users?.data?.map((user: any, index: number) => (
-          <Link key={user.username} href={`/user/${user.id}`}>
-            <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
+          <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all"
+               key={user.id}>
+            <Link key={user.username} href={getUserLink(user)}>
               <div className="relative">
                 <Image
-                  className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
+                  className="cursor-pointer w-full h-24 rounded-tl-xl rounded-tr-xl object-cover"
                   src={getUserCoverImage(user)}
                   alt="Cover"
                   width={1200} height={256}
-                  style={{ width: '100%', height: '100px' }}
                 />
-                <div className="absolute rounded-full"
-                     style={{ width: '56px', height: '56px', top: '60px', left: '16.3px', border: '2px solid #fff' }}>
+                <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white ">
                   <Image
                     className="cursor-pointer rounded-full object-fill"
-                    src={user.avatar || getUserAvatarImage(user)}
+                    src={getUserAvatarImage(user)}
                     alt="Avatar"
                     width={60} height={60}
-                    style={{ width: '100%', height: '100%' }}
                   />
                 </div>
               </div>
-              <div className="pt-6 px-3 pb-4 flex justify-between">
-                <div className="flex flex-col gap-2">
-                  <div className="flex gap-2 items-center">
-                    <Text className="font-medium">{user.username}</Text>
-                    {user.accountStatus ? <Icon name='verify-active'  width={16} height={16} /> : <Icon name="verify-disable" width={16} height={16} />}
-                    
-                  </div>
-                  {/*<div className="flex gap-3">*/}
-                  {/*  <div className="flex gap-2">*/}
-                  {/*    <Text className="text-body-12 font-medium">2k</Text>*/}
-                  {/*    <Text className="text-body-12 text-secondary">Followers</Text>*/}
-                  {/*  </div>*/}
-                  {/*  <div className="flex gap-2">*/}
-                  {/*    <Text className="text-body-12 font-medium">2k</Text>*/}
-                  {/*    <Text className="text-body-12 text-secondary">Followers</Text>*/}
-                  {/*  </div>*/}
-                  {/*</div>*/}
-                </div>
+            </Link>
 
-                {/*<button className="p-2 rounded-lg">*/}
-                {/*  <PlusIcon width={36} height={36} />*/}
-                {/*</button>*/}
+            <div className="px-4 pt-5 pb-2 flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-2 items-center">
+                  <Text className="font-medium">{user.username}</Text>
+                  {user.accountStatus ? <Icon name="verify-active" width={16} height={16} /> :
+                    <Icon name="verify-disable" width={16} height={16} />}
+                </div>
+                <div className="flex gap-2">
+                  <Text className="text-body-12 font-medium">{formatDisplayedNumber(user.followers, 1)}</Text>
+                  <Text className="text-body-12 text-secondary">Followers</Text>
+                </div>
               </div>
+              {myId !== user.id ? <UserFollow userId={user.id} isFollowed={user.isFollowed} onRefresh={mutate} /> : (
+                <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[120px] text-center">
+                  This is me
+                </div>
+              )}
             </div>
-          </Link>
+          </div>
         ))}
       </div>
-
       <div className="flex justify-end">
         <Pagination currentPage={users.paging?.page ?? 1} totalPages={totalPage} onPageChange={handleChangePage} />
       </div>

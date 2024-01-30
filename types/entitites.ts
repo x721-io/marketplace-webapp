@@ -59,6 +59,9 @@ export interface User {
   discordLink?: string
   webURL?: string
   shortLink?: string
+  isFollowed: boolean
+  followers: string
+  following: string
   accountStatus?: boolean
   verifyEmail?: boolean
 }
