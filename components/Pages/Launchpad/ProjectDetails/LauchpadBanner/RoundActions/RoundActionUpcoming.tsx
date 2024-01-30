@@ -1,16 +1,16 @@
-import Button from '@/components/Button';
-import ConnectWalletButton from '@/components/Button/ConnectWalletButton';
-import { format } from 'date-fns';
-import { MessageRoundNotEligible } from '../EligibleMessage';
-import Link from 'next/link';
-import { Round } from '@/types';
-import { Dispatch, SetStateAction } from 'react';
-import { toast } from 'react-toastify';
-import { useRoundZero } from '@/hooks/useRoundZero';
-import { APIResponse } from '@/services/api/types';
-import RoundZeroConditionStaking from './RoundZeroConditionStaking';
-import RoundZeroConditionHoldNFT from './RoundZeroConditionHoldNFT';
-import useLaunchpadStore from '@/store/launchpad/store';
+import Button from "@/components/Button";
+import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
+import { format } from "date-fns";
+import { MessageRoundNotEligible } from "../EligibleMessage";
+import Link from "next/link";
+import { Round } from "@/types";
+import { Dispatch, SetStateAction } from "react";
+import { toast } from "react-toastify";
+import { useRoundZero } from "@/hooks/useRoundZero";
+import { APIResponse } from "@/services/api/types";
+import RoundZeroConditionStaking from "./RoundZeroConditionStaking";
+import RoundZeroConditionHoldNFT from "./RoundZeroConditionHoldNFT";
+import useLaunchpadStore from "@/store/launchpad/store";
 
 interface Props {
   eligibleStatus: boolean;
@@ -37,7 +37,7 @@ export default function RoundActionUpcoming({
     try {
       setLoading(true);
       await onSubscribe();
-      toast.success('Subscribed to this project');
+      toast.success("Subscribed to this project");
     } catch (e: any) {
       toast.error(`Error report: ${e?.message || e}`);
     } finally {
@@ -46,34 +46,34 @@ export default function RoundActionUpcoming({
   };
 
   return (
-    <div className='flex flex-col gap-4 tablet:flex-col justify-between'>
-      <div className='tablet:flex flex-row justify-between desktop:flex flex-row justify-between'>
-        <p className='text-body-14 text-secondary'>
-          Minting starts:{' '}
-          <span className='text-primary font-semibold'>
-            {format(new Date(round.start || 0), 'yyyy/M/dd - hh:mm a')}
+    <div className="flex flex-col gap-4 tablet:flex-col justify-between">
+      <div className="tablet:flex flex-row justify-between desktop:flex flex-row justify-between">
+        <p className="text-body-14 text-secondary">
+          Minting starts:{" "}
+          <span className="text-primary font-semibold">
+            {format(new Date(round.start || 0), "yyyy/M/dd - hh:mm a")}
           </span>
         </p>
         <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
       </div>
 
-      {round.type === 'U2UPremintRoundZero' ||
-      round.type === 'U2UMintRoundZero' ? (
-        <ConnectWalletButton scale='lg' className='w-full'>
+      {round.type === "U2UPremintRoundZero" ||
+      round.type === "U2UMintRoundZero" ? (
+        <ConnectWalletButton scale="lg" className="w-full">
           {!isSubscribed ? (
             <Button
-              scale='lg'
-              className='w-full'
+              scale="lg"
+              className="w-full"
               onClick={handleSubscribe}
               loading={loading}
             >
               Subscribe now
             </Button>
           ) : (
-            <div className='flex flex-col gap-3'>
+            <div className="flex flex-col gap-3">
               {/* <MessageRoundNotEligible eligibleStatus={eligibleStatus} /> */}
 
-              <div className='flex flex-col desktop:flex-row gap-2 items-stretch tablet:flex-row'>
+              <div className="flex flex-col desktop:flex-row gap-2 items-stretch tablet:flex-row">
                 <RoundZeroConditionStaking
                   hasStaked={hasStaked}
                   snapshot={snapshot}
@@ -85,33 +85,33 @@ export default function RoundActionUpcoming({
                 />
               </div>
 
-              <Button scale='lg' disabled className='w-full'>
+              <Button scale="lg" disabled className="w-full">
                 You have already subscribed!
               </Button>
             </div>
           )}
         </ConnectWalletButton>
-      ) : round.type === 'U2UPremintRoundWhitelist' ||
-        round.type === 'U2UMintRoundWhitelist' ? (
+      ) : round.type === "U2UPremintRoundWhitelist" ||
+        round.type === "U2UMintRoundWhitelist" ? (
         <div>
           {/* <MessageRoundNotEligible eligibleStatus={eligibleStatus} /> */}
           {!eligibleStatus && (
-            <p className='text-secondary italic text-body-12'>
-              Follow these{' '}
+            <p className="text-secondary italic text-body-12">
+              Follow these{" "}
               <Link
-                className='font-semibold text-primary hover:underline'
+                className="font-semibold text-primary hover:underline"
                 href={round.instruction}
-                target='_blank'
+                target="_blank"
               >
                 instructions
-              </Link>{' '}
+              </Link>{" "}
               to get whitelisted.
             </p>
           )}
         </div>
       ) : (
-        <ConnectWalletButton scale='lg' className='w-full'>
-          <Button disabled scale='lg' className='w-full'>
+        <ConnectWalletButton scale="lg" className="w-full">
+          <Button disabled scale="lg" className="w-full">
             Mint now
           </Button>
         </ConnectWalletButton>

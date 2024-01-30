@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { TimeframeStoreAction, TimeframeStoreState } from './types';
+import { create } from "zustand";
+import { TimeframeStoreAction, TimeframeStoreState } from "./types";
 
 const DEFAULT_STATE: TimeframeStoreState = {
   hasTimeframe: false,
@@ -22,7 +22,7 @@ const useTimeframeStore = create<TimeframeStoreState & TimeframeStoreAction>(
     setIsInTimeframe: (isInTimeframe) =>
       set(() => ({ isInTimeframe: isInTimeframe })),
     setTimeframes: (timeframes) => set(() => ({ timeframes: timeframes })),
-  })
+  }),
 );
 
 export default useTimeframeStore;

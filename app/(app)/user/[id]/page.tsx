@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Spinner, Tabs } from 'flowbite-react';
-import { useParams } from 'next/navigation';
-import useSWR, { mutate } from 'swr';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import Text from '@/components/Text';
-import { formatDisplayedNumber } from '@/utils';
+import React, { useEffect, useState } from "react";
+import { Spinner, Tabs } from "flowbite-react";
+import { useParams } from "next/navigation";
+import useSWR, { mutate } from "swr";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import Text from "@/components/Text";
+import { formatDisplayedNumber } from "@/utils";
 import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
 import OnSaleNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OnSaleNFTs";
 import CreatedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/CreatedNFTs";
@@ -22,9 +22,10 @@ export default function ProfilePage() {
     data: user,
     isLoading,
     error,
-    mutate
-  } = useSWR([id], (userId) => api.viewProfile(userId.toString()),
-    { revalidateOnFocus: false });
+    mutate,
+  } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
+    revalidateOnFocus: false,
+  });
 
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
@@ -112,8 +113,8 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Collections (
-                {formatDisplayedNumber(createdCollectionAmount, 0)})
+                Collections ({formatDisplayedNumber(createdCollectionAmount, 0)}
+                )
               </div>
             }
           >

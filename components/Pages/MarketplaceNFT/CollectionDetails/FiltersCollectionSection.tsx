@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react'
-import SliderIcon from '@/components/Icon/Sliders'
-import Button from '@/components/Button'
-import CommandIcon from '@/components/Icon/Command'
-import Input from '@/components/Form/Input'
-import { useExploreSectionFilters } from '@/hooks/useFilters'
+import React, { useEffect } from "react";
+import SliderIcon from "@/components/Icon/Sliders";
+import Button from "@/components/Button";
+import CommandIcon from "@/components/Icon/Command";
+import Input from "@/components/Form/Input";
+import { useExploreSectionFilters } from "@/hooks/useFilters";
 
 interface Props {
-  showFilters: boolean
-  setShowFilters: () => void
+  showFilters: boolean;
+  setShowFilters: () => void;
 }
 
-export default function FiltersSectionCollection({ showFilters, setShowFilters }: Props) {
-  const { setQueryString, query } = useExploreSectionFilters()
+export default function FiltersSectionCollection({
+  showFilters,
+  setShowFilters,
+}: Props) {
+  const { setQueryString, query } = useExploreSectionFilters();
 
   useEffect(() => {
-    setQueryString('collection', '')
+    setQueryString("collection", "");
   }, []);
 
   return (
@@ -22,22 +25,28 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
       <div className="order-3 desktop:order-1">
         <Button
           onClick={setShowFilters}
-          className={showFilters ? 'bg-white shadow h-[56px]' : `bg-surface-soft h-[56px]`}
+          className={
+            showFilters
+              ? "bg-white shadow h-[56px]"
+              : `bg-surface-soft h-[56px]`
+          }
           scale="lg"
-          variant="secondary">
+          variant="secondary"
+        >
           Filters
           <span className="p-1 bg-surface-medium rounded-lg">
-              <SliderIcon width={14} height={14} />
+            <SliderIcon width={14} height={14} />
           </span>
         </Button>
       </div>
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
           value={query}
-          onChange={e => setQueryString('collection', e.target.value)}
+          onChange={(e) => setQueryString("collection", e.target.value)}
           className="py-4 h-14 w-full"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
-          appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5" />
+          appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
+        />
       </div>
       {/* <div className="order-4">
        <Dropdown
@@ -58,5 +67,5 @@ export default function FiltersSectionCollection({ showFilters, setShowFilters }
        </Dropdown>
        </div> */}
     </div>
-  )
+  );
 }

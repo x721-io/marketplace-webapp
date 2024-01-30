@@ -1,4 +1,4 @@
-import { Timeframe } from '@/types';
+import { Timeframe } from "@/types";
 
 export interface TimeframeStoreState {
   hasTimeframe: boolean;

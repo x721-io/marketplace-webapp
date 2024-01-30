@@ -4,8 +4,8 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import { classNames } from '@/utils/string';
+} from "react";
+import { classNames } from "@/utils/string";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   activator: React.ReactNode;
@@ -36,13 +36,13 @@ export default function DropdownCustomized({
   };
 
   useEffect(() => {
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   });
 
   return (
     <div
-      className={classNames('relative', className)}
+      className={classNames("relative", className)}
       onBlur={() => {
         setOpen(false);
         setShowDropdown(false);
@@ -51,7 +51,7 @@ export default function DropdownCustomized({
       {...rest}
     >
       <div
-        className='cursor-pointer select-none'
+        className="cursor-pointer select-none"
         onClick={() => {
           setOpen(!open);
           setShowDropdown(!showDropdown);
@@ -67,9 +67,9 @@ export default function DropdownCustomized({
             setShowDropdown(false);
           }}
           className={classNames(
-            'w-full min-w-fit px-5 py-3 rounded-lg absolute z-50 border-[0.5px] shadow-sm mt-1 transition-all bg-white max-h-96 overflow-auto',
-            showDropdown ? 'block' : 'hidden',
-            dropdownContainerClass
+            "w-full min-w-fit px-5 py-3 rounded-lg absolute z-50 border-[0.5px] shadow-sm mt-1 transition-all bg-white max-h-96 overflow-auto",
+            showDropdown ? "block" : "hidden",
+            dropdownContainerClass,
           )}
         >
           {dropdown}

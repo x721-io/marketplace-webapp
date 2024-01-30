@@ -1,19 +1,19 @@
-import Text from '@/components/Text'
-import { Spinner } from 'flowbite-react'
-import { useMarketTokenApproval } from '@/hooks/useMarket'
-import { useEffect, useMemo } from 'react'
-import Button from '@/components/Button'
-import { tokens } from '@/config/tokens'
-import { NFT } from '@/types'
+import Text from "@/components/Text";
+import { Spinner } from "flowbite-react";
+import { useMarketTokenApproval } from "@/hooks/useMarket";
+import { useEffect, useMemo } from "react";
+import Button from "@/components/Button";
+import { tokens } from "@/config/tokens";
+import { NFT } from "@/types";
 
 interface Props {
-  onNext: () => void
-  onError: (error: Error) => void
-  nft: NFT
+  onNext: () => void;
+  onError: (error: Error) => void;
+  nft: NFT;
 }
 
 export default function ApprovalStep({ nft, onNext, onError }: Props) {
-  const quoteToken = tokens.wu2u.address
+  const quoteToken = tokens.wu2u.address;
   const {
     isTokenApproved,
     isFetchingApproval,
@@ -21,16 +21,16 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
     isLoading,
     isSuccess,
     error,
-    writeError
-  } = useMarketTokenApproval(quoteToken, nft.collection.type)
+    writeError,
+  } = useMarketTokenApproval(quoteToken, nft.collection.type);
 
   const handleApproveMarketToken = async () => {
     try {
-      await onApproveToken()
+      await onApproveToken();
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
+  };
 
   const renderContent = useMemo(() => {
     switch (true) {
@@ -40,9 +40,15 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
             <Text className="text-secondary text-center" variant="body-18">
               Contract not approved. Please approve before proceed ...
             </Text>
-            <Button loading={isLoading} className="w-full" onClick={handleApproveMarketToken}>Approve</Button>
+            <Button
+              loading={isLoading}
+              className="w-full"
+              onClick={handleApproveMarketToken}
+            >
+              Approve
+            </Button>
           </>
-        )
+        );
       case isTokenApproved:
         return (
           <>
@@ -51,20 +57,20 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
             </Text>
             <Spinner size="xl" />
           </>
-        )
+        );
     }
-  }, [isLoading, isTokenApproved])
+  }, [isLoading, isTokenApproved]);
 
   useEffect(() => {
-    if (isTokenApproved || isSuccess) onNext()
+    if (isTokenApproved || isSuccess) onNext();
   }, [isTokenApproved, isSuccess]);
 
   useEffect(() => {
-    if (error) onError(error)
+    if (error) onError(error);
   }, [error]);
 
   useEffect(() => {
-    if (writeError) onError(writeError)
+    if (writeError) onError(writeError);
   }, [writeError]);
 
   return (
@@ -74,5 +80,5 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
       </Text>
       {renderContent}
     </>
-  )
+  );
 }

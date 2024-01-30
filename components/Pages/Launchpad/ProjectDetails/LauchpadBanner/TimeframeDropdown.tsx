@@ -1,12 +1,12 @@
-import Collapsible from '@/components/Collapsible';
-import useTimeframeStore from '@/store/timeframe/store';
-import { Round, Timeframe } from '@/types';
-import { useMemo, useState } from 'react';
-import { classNames } from '@/utils/string';
-import Icon from '@/components/Icon';
-import DropdownCustomized from './DropdownCustomized';
-import { useContractRead, useContractReads } from 'wagmi';
-import { getRoundAbi } from '@/utils';
+import Collapsible from "@/components/Collapsible";
+import useTimeframeStore from "@/store/timeframe/store";
+import { Round, Timeframe } from "@/types";
+import { useMemo, useState } from "react";
+import { classNames } from "@/utils/string";
+import Icon from "@/components/Icon";
+import DropdownCustomized from "./DropdownCustomized";
+import { useContractRead, useContractReads } from "wagmi";
+import { getRoundAbi } from "@/utils";
 
 interface Props {
   round: Round;
@@ -17,19 +17,19 @@ export default function TimeframeDropdown({ round }: Props) {
   const { data: timeframesLength } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
-    functionName: 'getTimeframesLength',
+    functionName: "getTimeframesLength",
     watch: true,
   });
 
   const { data: timeframes } = useContractReads({
     contracts: Array.from(
       { length: Number(timeframesLength) },
-      (_, index) => index
+      (_, index) => index,
     ).map((timeframeIndex) => {
       return {
         address: round.address,
         abi: getRoundAbi(round),
-        functionName: 'getTimeframes',
+        functionName: "getTimeframes",
         args: [timeframeIndex],
       };
     }),
@@ -81,19 +81,19 @@ export default function TimeframeDropdown({ round }: Props) {
 
   const formatTimeframe = (timeframe: Timeframe) => {
     return (
-      <span className='flex-1'>
+      <span className="flex-1">
         {timeframe.hourStart < 10
           ? `0${timeframe.hourStart}`
           : timeframe.hourStart}
         :
         {timeframe.minuteStart < 10
           ? `0${timeframe.minuteStart}`
-          : timeframe.minuteStart}{' '}
+          : timeframe.minuteStart}{" "}
         - {timeframe.hourEnd < 10 ? `0${timeframe.hourEnd}` : timeframe.hourEnd}
         :
         {timeframe.minuteEnd < 10
           ? `0${timeframe.minuteEnd}`
-          : timeframe.minuteEnd}{' '}
+          : timeframe.minuteEnd}{" "}
         UTC
       </span>
     );
@@ -132,44 +132,44 @@ export default function TimeframeDropdown({ round }: Props) {
     // </Collapsible>
     <DropdownCustomized
       activator={
-        <div className='flex items-center gap-4 pt-3 pl-4 pr-4'>
+        <div className="flex items-center gap-4 pt-3 pl-4 pr-4">
           {currentTimeframe?.isInTimeframe && (
-            <div className='w-2 h-2 rounded-full bg-success' />
+            <div className="w-2 h-2 rounded-full bg-success" />
           )}
           {formatTimeframe(
             timeframes
               ? timeframes[currentTimeframe.index]
-              : { hourStart: 0, minuteStart: 0, hourEnd: 0, minuteEnd: 0 }
+              : { hourStart: 0, minuteStart: 0, hourEnd: 0, minuteEnd: 0 },
           )}
           <div
             className={classNames(
-              'rounded-lg p-1 bg-surface-medium transition-transform',
-              open && 'rotate-180'
+              "rounded-lg p-1 bg-surface-medium transition-transform",
+              open && "rotate-180",
             )}
           >
-            <Icon name='chevronDown' width={14} height={14} className='grow' />
+            <Icon name="chevronDown" width={14} height={14} className="grow" />
           </div>
         </div>
       }
       dropdown={timeframes?.map((timeframe, index) =>
         currentTimeframe?.index == index && currentTimeframe.isInTimeframe ? (
-          <div className='flex items-center gap-4' key={index}>
-            <div className='w-2 h-2 rounded-full bg-success' />
+          <div className="flex items-center gap-4" key={index}>
+            <div className="w-2 h-2 rounded-full bg-success" />
             <p key={index}>{formatTimeframe(timeframe)}</p>
           </div>
         ) : currentTimeframe.index >= index ? (
-          <div className='flex items-center gap-4' key={index}>
-            <div className='w-2 h-2 rounded-full bg-disabled' />
+          <div className="flex items-center gap-4" key={index}>
+            <div className="w-2 h-2 rounded-full bg-disabled" />
             <p key={index}>{formatTimeframe(timeframe)}</p>
           </div>
         ) : (
-          <div className='flex items-center gap-4' key={index}>
-            <div className='w-2 h-2 rounded-full bg-warning' />
+          <div className="flex items-center gap-4" key={index}>
+            <div className="w-2 h-2 rounded-full bg-warning" />
             <p key={index}>{formatTimeframe(timeframe)}</p>
           </div>
-        )
+        ),
       )}
-      className='bg-white rounded-2xl h-12'
+      className="bg-white rounded-2xl h-12"
       open={open}
       setOpen={setOpen}
     />
