@@ -36,7 +36,7 @@ export default function ListingStep({
     return marketData.owners.find(
       (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
     );
-  }, [wallet,marketData]);
+  }, [wallet, marketData]);
   const { onSellNFT, isLoading, isError, error, isSuccess } = useSellNFT(nft);
 
   const {

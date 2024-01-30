@@ -52,8 +52,12 @@ export default function TransferNFTModal({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet]);
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormState.TransferToken>()
-
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormState.TransferToken>();
 
   const formRules = {
     quantity: {
@@ -116,7 +120,7 @@ export default function TransferNFTModal({
       toast.error(`Error report: ${e.message || e}`);
     } finally {
       onClose?.();
-      reset()
+      reset();
     }
   };
 

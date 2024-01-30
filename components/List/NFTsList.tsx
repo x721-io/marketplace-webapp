@@ -128,7 +128,16 @@ export default function NFTsList({
         </div>
       </div>
     );
-  }, [items, loading, error,dataCollectionType,myId,showCreateNFT,showFilters,userId]);
+  }, [
+    items,
+    loading,
+    error,
+    dataCollectionType,
+    myId,
+    showCreateNFT,
+    showFilters,
+    userId,
+  ]);
 
   return (
     <div className="w-full">

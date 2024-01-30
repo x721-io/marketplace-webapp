@@ -80,7 +80,7 @@ export default function SearchInput() {
       case "user":
         return searchUsers();
     }
-  }
+  };
 
   const handleTextInput = async (value: string) => {
     if (!searchKey) return;

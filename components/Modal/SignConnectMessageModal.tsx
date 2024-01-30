@@ -45,7 +45,7 @@ export default function SignConnectMessageModal({
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
 
-  const handleSignMessage = useCallback( async () => {
+  const handleSignMessage = useCallback(async () => {
     setAuthError("");
 
     if (!address) return;
@@ -56,11 +56,11 @@ export default function SignConnectMessageModal({
 
       // @ts-ignore
       const signature = window.ReactNativeWebView
-          ? await (window as any).ethereum.request({
+        ? await (window as any).ethereum.request({
             method: "personal_sign",
             params: [SIGN_MESSAGE.CONNECT(date), address],
           })
-          : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
+        : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
 
       const credentials = await onAuth(date, signature);
       const profile = await api.viewProfile(address);
@@ -81,7 +81,7 @@ export default function SignConnectMessageModal({
       setIsAuthenticating(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[address]);
+  }, [address]);
 
   const renderContent = () => {
     switch (true) {

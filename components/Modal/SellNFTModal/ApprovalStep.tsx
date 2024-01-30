@@ -71,7 +71,12 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           </Text>
         );
     }
-  }, [isFetchingApproval, isMarketContractApproved, isApproving,handleApproveMarketContract]);
+  }, [
+    isFetchingApproval,
+    isMarketContractApproved,
+    isApproving,
+    handleApproveMarketContract,
+  ]);
 
   useEffect(() => {
     if (isMarketContractApproved || approvalCompleted) onNext();

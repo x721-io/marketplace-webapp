@@ -59,7 +59,7 @@ export default function Timeframes({ round, isSpecial }: Props) {
     }
     setHasTimeframe(true);
     return true;
-  }, [timeframes,setHasTimeframe]);
+  }, [timeframes, setHasTimeframe]);
 
   // const isInTimeframe = useMemo(() => {
   //   let result = false;
