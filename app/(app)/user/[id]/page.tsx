@@ -65,7 +65,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-4 desktop:mt-0">
       <Profile onRefresh={mutate} user={user} />
 
       <div className="desktop:px-20 tablet:px-20 px-4">

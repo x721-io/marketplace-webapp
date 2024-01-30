@@ -54,6 +54,7 @@ export default function TransferNFTModal({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormState.TransferToken>();
 
@@ -118,6 +119,7 @@ export default function TransferNFTModal({
       toast.error(`Error report: ${e.message || e}`);
     } finally {
       onClose?.();
+      reset()
     }
   };
 
