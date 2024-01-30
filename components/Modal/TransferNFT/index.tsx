@@ -38,7 +38,7 @@ export default function TransferNFTModal({nft, show, onClose, marketData}: Props
     if (!wallet || !marketData) return undefined
     return marketData.owners.find(owner => owner.publicKey.toLowerCase() === wallet.toLowerCase())
   }, [wallet, nft])
-  const { register, handleSubmit, formState: { errors } } = useForm<FormState.TransferToken>()
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormState.TransferToken>()
 
   const formRules = {
     quantity: {
@@ -86,6 +86,7 @@ export default function TransferNFTModal({nft, show, onClose, marketData}: Props
       toast.error(`Error report: ${e.message || e}`);
     } finally {
       onClose?.();
+      reset()
     }
   };
 
