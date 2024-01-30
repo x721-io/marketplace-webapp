@@ -80,11 +80,11 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
 
   useEffect(() => {
     if (contractCallError) onError(contractCallError);
-  }, [contractCallError]);
+  }, [contractCallError,onError]);
 
   useEffect(() => {
     if (errorApproving) onError(errorApproving);
-  }, [errorApproving]);
+  }, [errorApproving,onError]);
 
   return (
     <>

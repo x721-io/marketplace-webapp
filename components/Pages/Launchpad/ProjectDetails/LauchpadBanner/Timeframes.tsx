@@ -59,27 +59,27 @@ export default function Timeframes({ round, isSpecial }: Props) {
     }
     setHasTimeframe(true);
     return true;
-  }, [timeframes]);
+  }, [timeframes,setHasTimeframe]);
 
-  const isInTimeframe = useMemo(() => {
-    let result = false;
-    if (hasTimeframe && timeframes && Array.isArray(timeframes)) {
-      for (let timeframe of timeframes) {
-        const start = timeframe.hourStart * 3600 + timeframe.minuteStart * 60;
-        const end = timeframe.hourEnd * 3600 + timeframe.minuteEnd * 60;
-        const currentTime =
-          new Date().getUTCHours() * 3600 + new Date().getMinutes() * 60;
-        if (currentTime > start && currentTime < end) {
-          result = true;
-          break;
-        }
-      }
-    } else {
-      result = false;
-    }
-    setIsInTimeframe(result);
-    return result;
-  }, [hasTimeframe, timeframes]);
+  // const isInTimeframe = useMemo(() => {
+  //   let result = false;
+  //   if (hasTimeframe && timeframes && Array.isArray(timeframes)) {
+  //     for (let timeframe of timeframes) {
+  //       const start = timeframe.hourStart * 3600 + timeframe.minuteStart * 60;
+  //       const end = timeframe.hourEnd * 3600 + timeframe.minuteEnd * 60;
+  //       const currentTime =
+  //         new Date().getUTCHours() * 3600 + new Date().getMinutes() * 60;
+  //       if (currentTime > start && currentTime < end) {
+  //         result = true;
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     result = false;
+  //   }
+  //   setIsInTimeframe(result);
+  //   return result;
+  // }, [hasTimeframe, timeframes]);
 
   return (
     <>

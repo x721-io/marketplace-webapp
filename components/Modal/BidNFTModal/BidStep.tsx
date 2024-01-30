@@ -92,11 +92,11 @@ export default function BidStep({
 
   useEffect(() => {
     if (error) onError(error);
-  }, [error]);
+  }, [error,onError]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
-  }, [isSuccess]);
+  }, [isSuccess,onSuccess]);
 
   return (
     <form

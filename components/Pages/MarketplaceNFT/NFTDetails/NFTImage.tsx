@@ -27,7 +27,7 @@ export default function NFTImage({ item }: { item: NFT }) {
       default:
         return "image";
     }
-  }, [displayMedia, fileExtension]);
+  }, [fileExtension]);
 
   const renderMedia = () => {
     if (!displayMedia) return null;

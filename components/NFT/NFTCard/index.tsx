@@ -40,7 +40,7 @@ export default function NFTCard({
       default:
         return "image";
     }
-  }, [displayMedia, fileExtension]);
+  }, [fileExtension]);
 
   const renderMedia = () => {
     switch (fileType) {

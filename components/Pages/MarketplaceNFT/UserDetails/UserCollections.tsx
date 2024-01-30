@@ -37,7 +37,7 @@ export default function UserCollections({
     if (collections?.paging.total) {
       onUpdateAmount(collections?.paging.total);
     }
-  }, [collections]);
+  }, [collections,onUpdateAmount]);
 
   return (
     <div className="w-full py-7 overflow-x-auto">

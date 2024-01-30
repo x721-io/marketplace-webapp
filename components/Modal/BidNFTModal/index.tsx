@@ -122,7 +122,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         closeButton: true,
       });
     }
-  }, [isSuccess]);
+  }, [isSuccess,onClose]);
 
   return (
     <Modal

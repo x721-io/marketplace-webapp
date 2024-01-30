@@ -56,7 +56,7 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
       });
       onClose?.();
     }
-  }, [isSuccess]);
+  }, [isSuccess,onClose]);
 
   return (
     <Modal

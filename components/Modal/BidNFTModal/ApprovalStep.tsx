@@ -63,15 +63,15 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
 
   useEffect(() => {
     if (isTokenApproved || isSuccess) onNext();
-  }, [isTokenApproved, isSuccess]);
+  }, [isTokenApproved, isSuccess,onNext]);
 
   useEffect(() => {
     if (error) onError(error);
-  }, [error]);
+  }, [error,onError]);
 
   useEffect(() => {
     if (writeError) onError(writeError);
-  }, [writeError]);
+  }, [writeError,onError]);
 
   return (
     <>

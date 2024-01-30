@@ -33,7 +33,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
     } else {
       toast.dismiss();
     }
-  }, [chain]);
+  }, [chain,switchNetwork]);
 
   return <div className="flex-1">{children}</div>;
 }

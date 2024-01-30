@@ -2,7 +2,7 @@
 import Icon from "@/components/Icon";
 import InputDropdown from "@/components/Form/InputDropdown";
 import Button from "@/components/Button";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CustomFlowbiteTheme, Tabs, TabsRef } from "flowbite-react";
 import SearchUserTab from "./UserTab";
 import SearchCollectionTab from "./CollectionTab";
@@ -70,7 +70,7 @@ export default function SearchInput() {
     isMutating: searchingUser,
   } = useSWRMutation(text.user || null, (text) => api.searchUsers(text));
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (!searchKey || !text[searchKey]) return;
     switch (searchKey) {
       case "collection":
@@ -80,7 +80,7 @@ export default function SearchInput() {
       case "user":
         return searchUsers();
     }
-  };
+  }, [searchKey, text]);
 
   const handleTextInput = async (value: string) => {
     if (!searchKey) return;

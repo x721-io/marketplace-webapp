@@ -120,7 +120,7 @@ export default function UpdateRoyaltiesModal({
       });
       setValue("royalties", parsedRoyalties);
     }
-  }, [royalties]);
+  }, [royalties,setValue]);
 
   return (
     <Modal

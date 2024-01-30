@@ -51,11 +51,11 @@ export default function AcceptBidStep({
   };
   useEffect(() => {
     if (error) onError(error);
-  }, [error]);
+  }, [error,onError]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
-  }, [isSuccess]);
+  }, [isSuccess,onSuccess,onError]);
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>

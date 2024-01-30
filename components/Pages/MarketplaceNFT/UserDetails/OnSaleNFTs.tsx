@@ -43,7 +43,7 @@ export default function OnSaleNFTs({
     if (data?.paging.total) {
       onUpdateAmount(data?.paging.total);
     }
-  }, [data]);
+  }, [data,onUpdateAmount]);
 
   return (
     <div className="w-full py-7">

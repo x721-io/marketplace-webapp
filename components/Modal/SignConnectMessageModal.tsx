@@ -9,7 +9,7 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { useAccount, useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/config/constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
@@ -45,7 +45,7 @@ export default function SignConnectMessageModal({
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
 
-  const handleSignMessage = async () => {
+  const handleSignMessage = useCallback( async () => {
     setAuthError("");
 
     if (!address) return;
@@ -56,11 +56,11 @@ export default function SignConnectMessageModal({
 
       // @ts-ignore
       const signature = window.ReactNativeWebView
-        ? await (window as any).ethereum.request({
+          ? await (window as any).ethereum.request({
             method: "personal_sign",
             params: [SIGN_MESSAGE.CONNECT(date), address],
           })
-        : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
+          : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
 
       const credentials = await onAuth(date, signature);
       const profile = await api.viewProfile(address);
@@ -80,7 +80,7 @@ export default function SignConnectMessageModal({
     } finally {
       setIsAuthenticating(false);
     }
-  };
+  },[onSignup,onConnectSuccess,onClose,address,api,onAuth,setProfile]);
 
   const renderContent = () => {
     switch (true) {

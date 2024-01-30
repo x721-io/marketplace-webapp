@@ -50,13 +50,10 @@ export default function TransferNFTModal({
     return marketData.owners.find(
       (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
     );
-  }, [wallet, nft]);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormState.TransferToken>();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet]);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormState.TransferToken>()
+
 
   const formRules = {
     quantity: {
