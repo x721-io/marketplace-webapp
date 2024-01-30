@@ -80,7 +80,8 @@ export default function SignConnectMessageModal({
     } finally {
       setIsAuthenticating(false);
     }
-  },[onSignup,onConnectSuccess,onClose,address,api,onAuth,setProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[address]);
 
   const renderContent = () => {
     switch (true) {

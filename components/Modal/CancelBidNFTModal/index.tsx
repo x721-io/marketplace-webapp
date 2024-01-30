@@ -56,7 +56,8 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
       });
       onClose?.();
     }
-  }, [isSuccess,onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   return (
     <Modal

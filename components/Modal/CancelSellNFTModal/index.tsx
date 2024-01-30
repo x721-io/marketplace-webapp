@@ -66,7 +66,8 @@ export default function CancelSellNFTModal({
       });
       onClose?.();
     }
-  }, [error, isSuccess,onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, isSuccess]);
 
   return (
     <Modal

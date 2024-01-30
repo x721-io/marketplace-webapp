@@ -61,11 +61,13 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
 
   useEffect(() => {
     if (error) onError(error);
-  }, [error,onError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
-  }, [isSuccess,onSuccess]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   return (
     <form

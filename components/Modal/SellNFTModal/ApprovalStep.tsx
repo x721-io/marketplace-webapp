@@ -31,12 +31,13 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
     enabled: !!txHash,
   });
 
-  const handleApproveMarketContract = useCallback(async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleApproveMarketContract = async () => {
     try {
       const { hash } = await onApproveMarketContract?.();
       setTxHash(hash);
     } catch (e) {}
-  },[onApproveMarketContract]);
+  };
 
   const renderContent = useMemo(() => {
     switch (true) {
@@ -74,15 +75,18 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
 
   useEffect(() => {
     if (isMarketContractApproved || approvalCompleted) onNext();
-  }, [isMarketContractApproved, approvalCompleted,onNext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMarketContractApproved, approvalCompleted]);
 
   useEffect(() => {
     if (contractCallError) onError(contractCallError);
-  }, [contractCallError,onError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractCallError]);
 
   useEffect(() => {
     if (errorApproving) onError(errorApproving);
-  }, [errorApproving,onError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorApproving]);
 
   return (
     <>

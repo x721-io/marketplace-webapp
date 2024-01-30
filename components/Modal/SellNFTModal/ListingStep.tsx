@@ -102,11 +102,13 @@ export default function ListingStep({
 
   useEffect(() => {
     if (error) onError(error);
-  }, [error,onError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   useEffect(() => {
     if (isSuccess) onSuccess();
-  }, [isSuccess,onSuccess]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   return (
     <form

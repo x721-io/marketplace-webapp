@@ -120,7 +120,8 @@ export default function UpdateRoyaltiesModal({
       });
       setValue("royalties", parsedRoyalties);
     }
-  }, [royalties,setValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [royalties]);
 
   return (
     <Modal
