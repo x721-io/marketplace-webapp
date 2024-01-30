@@ -70,7 +70,7 @@ export default function SearchInput() {
     isMutating: searchingUser,
   } = useSWRMutation(text.user || null, (text) => api.searchUsers(text));
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = () => {
     if (!searchKey || !text[searchKey]) return;
     switch (searchKey) {
       case "collection":
@@ -80,7 +80,7 @@ export default function SearchInput() {
       case "user":
         return searchUsers();
     }
-  }, [searchKey, text]);
+  }
 
   const handleTextInput = async (value: string) => {
     if (!searchKey) return;
@@ -94,6 +94,7 @@ export default function SearchInput() {
     // Lazy search
     const timeOutId = setTimeout(handleSearch, 200);
     return () => clearTimeout(timeOutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString]);
 
   return (

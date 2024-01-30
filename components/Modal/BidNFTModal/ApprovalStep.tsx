@@ -59,11 +59,13 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           </>
         );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isTokenApproved]);
 
   useEffect(() => {
     if (isTokenApproved || isSuccess) onNext();
-  }, [isTokenApproved, isSuccess,onNext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTokenApproved, isSuccess]);
 
   useEffect(() => {
     if (error) onError(error);

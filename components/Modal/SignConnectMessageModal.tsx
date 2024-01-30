@@ -150,7 +150,7 @@ export default function SignConnectMessageModal({
     } else {
       setAuthError("");
     }
-  }, [show]);
+  }, [show,handleSignMessage]);
 
   return (
     <Modal

@@ -1,7 +1,7 @@
 import Text from "@/components/Text";
 import { Spinner } from "flowbite-react";
 import { useMarketApproval } from "@/hooks/useMarket";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWaitForTransaction } from "wagmi";
 import Button from "@/components/Button";
 import { NFT } from "@/types";
@@ -31,12 +31,12 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
     enabled: !!txHash,
   });
 
-  const handleApproveMarketContract = async () => {
+  const handleApproveMarketContract = useCallback(async () => {
     try {
       const { hash } = await onApproveMarketContract?.();
       setTxHash(hash);
     } catch (e) {}
-  };
+  },[onApproveMarketContract]);
 
   const renderContent = useMemo(() => {
     switch (true) {
@@ -70,19 +70,19 @@ export default function ApprovalStep({ nft, onNext, onError }: Props) {
           </Text>
         );
     }
-  }, [isFetchingApproval, isMarketContractApproved, isApproving]);
+  }, [isFetchingApproval, isMarketContractApproved, isApproving,handleApproveMarketContract]);
 
   useEffect(() => {
     if (isMarketContractApproved || approvalCompleted) onNext();
-  }, [isMarketContractApproved, approvalCompleted]);
+  }, [isMarketContractApproved, approvalCompleted,onNext]);
 
   useEffect(() => {
     if (contractCallError) onError(contractCallError);
-  }, [contractCallError]);
+  }, [contractCallError,onError]);
 
   useEffect(() => {
     if (errorApproving) onError(errorApproving);
-  }, [errorApproving]);
+  }, [errorApproving,onError]);
 
   return (
     <>

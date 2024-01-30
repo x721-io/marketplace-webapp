@@ -66,7 +66,7 @@ export default function CancelSellNFTModal({
       });
       onClose?.();
     }
-  }, [error, isSuccess]);
+  }, [error, isSuccess,onClose]);
 
   return (
     <Modal
