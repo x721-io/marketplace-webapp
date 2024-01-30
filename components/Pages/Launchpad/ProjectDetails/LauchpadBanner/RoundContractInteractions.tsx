@@ -26,7 +26,7 @@ export default function RoundContractInteractions({
     setCollection(collection);
     setRound(round);
     setIsSpecial(isSpecial);
-  }, [round, collection, isSpecial]);
+  }, [round, collection, isSpecial, setCollection, setRound, setIsSpecial]);
   return (
     <div className="w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4">
       <div className="flex items-start justify-between flex-col tablet:flex-row desktop:flex-row gap-4 desktop:gap-0">

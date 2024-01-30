@@ -3,12 +3,13 @@ import Icon from "@/components/Icon";
 import RoundContractInteractions from "./RoundContractInteractions";
 import Link from "next/link";
 import { Project } from "@/types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useContractRead } from "wagmi";
 import { formatDisplayedBalance, getRoundAbi } from "@/utils";
 import { SPECIAL_ROUND } from "@/config/constants";
 import { format } from "date-fns";
 import TimeframeDropdown from "./TimeframeDropdown";
+import useTimeframeStore from "@/store/timeframe/store";
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
@@ -23,6 +24,26 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     });
     return active || next || project.rounds[0];
   }, [project]);
+
+  const { timeframes, setHasTimeframe, hasTimeframe } = useTimeframeStore(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    if (timeframes?.length == 1 && timeframes[0]) {
+      if (
+        timeframes[0].hourStart == 0 &&
+        timeframes[0].minuteStart == 0 &&
+        timeframes[0].hourEnd == 23 &&
+        timeframes[0].minuteEnd == 59
+      ) {
+        setHasTimeframe(false);
+        return;
+      }
+    }
+    setHasTimeframe(true);
+    return;
+  }, [timeframes, setHasTimeframe]);
 
   const { data: roundData } = useContractRead({
     address: activeRound.address,
@@ -106,35 +127,37 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           <p className="text-secondary text-body-14">{project.description}</p>
         </div>
 
-        <div className="mb-10 w-full rounded-lg bg-surface-soft flex gap-4 desktop:gap-20 p-4 flex-col desktop:flex-row tablet:flex-row gap-x-10">
-          <div className="flex justify-between desktop:gap-20 tablet:gap-x-10">
-            <div className="flex flex-col">
-              <p className="text-lg text-secondary font-medium">
-                Available From
-              </p>
-              <p className="text-lg mt-2">
-                {format(new Date(activeRound.start), "dd/MM/yyyy")}
-              </p>
+        {hasTimeframe && (
+          <div className="mb-10 w-full rounded-lg bg-surface-soft flex gap-4 desktop:gap-20 p-4 flex-col desktop:flex-row tablet:flex-row gap-x-10">
+            <div className="flex justify-between desktop:gap-20 tablet:gap-x-10">
+              <div className="flex flex-col">
+                <p className="text-lg text-secondary font-medium">
+                  Available From
+                </p>
+                <p className="text-lg mt-2">
+                  {format(new Date(activeRound.start), "dd/MM/yyyy")}
+                </p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-lg text-secondary font-medium">To</p>
+                <p className="text-lg mt-2">
+                  {format(new Date(activeRound.end), "dd/MM/yyyy")}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p className="text-lg text-secondary font-medium">To</p>
-              <p className="text-lg mt-2">
-                {format(new Date(activeRound.end), "dd/MM/yyyy")}
-              </p>
+            <div className="flex flex-col grow gap-2">
+              <div className="flex justify-between items-baseline">
+                <p className="text-lg text-primary font-bold">Timeframes</p>
+                <p className="text-sm text-tertiary font-thin">
+                  Available at these hours everyday
+                </p>
+              </div>
+              <div className="text-body-16 text-secondary font-medium">
+                <TimeframeDropdown round={activeRound} />
+              </div>
             </div>
           </div>
-          <div className="flex flex-col grow gap-2">
-            <div className="flex justify-between items-baseline">
-              <p className="text-lg text-primary font-bold">Timeframes</p>
-              <p className="text-sm text-tertiary font-thin">
-                Available at these hours everyday
-              </p>
-            </div>
-            <div className="text-body-16 text-secondary font-medium">
-              <TimeframeDropdown round={activeRound} />
-            </div>
-          </div>
-        </div>
+        )}
 
         <RoundContractInteractions
           round={activeRound}

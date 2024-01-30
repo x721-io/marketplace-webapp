@@ -1,7 +1,7 @@
 import Collapsible from "@/components/Collapsible";
 import useTimeframeStore from "@/store/timeframe/store";
 import { Round, Timeframe } from "@/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { classNames } from "@/utils/string";
 import Icon from "@/components/Icon";
 import DropdownCustomized from "./DropdownCustomized";
@@ -14,6 +14,7 @@ interface Props {
 
 export default function TimeframeDropdown({ round }: Props) {
   const [open, setOpen] = useState(false);
+  const { setTimeframes } = useTimeframeStore();
   const { data: timeframesLength } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
@@ -37,6 +38,10 @@ export default function TimeframeDropdown({ round }: Props) {
     watch: true,
     select: (data) => data.map((item) => item.result as unknown as Timeframe),
   });
+
+  useEffect(() => {
+    if (timeframes) setTimeframes(timeframes);
+  }, [timeframes, setTimeframes]);
 
   const currentTimeframe = useMemo(() => {
     let current = { index: 0, isInTimeframe: false };
