@@ -151,7 +151,8 @@ export default function SignConnectMessageModal({
     } else {
       setAuthError("");
     }
-  }, [show,handleSignMessage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
 
   return (
     <Modal
