@@ -39,7 +39,7 @@ export default function ConnectWalletButton({
     <>
       <div className={className} onClick={handleConnectWallet}>
         {showConnectButton && !isValidSession ? (
-          <Button type="button" onClick={handleConnectWallet}>
+          <Button type="button" className="w-full" onClick={handleConnectWallet}>
             Connect Wallet
           </Button>
         ) : (

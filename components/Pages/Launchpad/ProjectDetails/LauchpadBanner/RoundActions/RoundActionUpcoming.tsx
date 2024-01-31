@@ -107,7 +107,7 @@ export default function RoundActionUpcoming({
           )}
         </div>
       ) : (
-        <ConnectWalletButton className="w-full">
+        <ConnectWalletButton showConnectButton className="w-full">
           <Button disabled scale="lg" className="w-full">
             Mint now
           </Button>
