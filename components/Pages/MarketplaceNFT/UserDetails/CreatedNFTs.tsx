@@ -42,17 +42,16 @@ export default function CreatedNFTs({
   );
 
   const { data: totalCreated } = useSWR(
-      [
-        "total_creator-data",
-        { creatorAddress: String(wallet), mode: String(MODE_CREATED)},
-      ],
-      ([_, params]) =>
-          api.getTotalCountById({
-            ...params
-          }),
-      { refreshInterval: 5000 },
+    [
+      "total_creator-data",
+      { creatorAddress: String(wallet), mode: String(MODE_CREATED) },
+    ],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
   );
-
 
   useEffect(() => {
     if (totalCreated) {

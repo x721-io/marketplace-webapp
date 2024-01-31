@@ -11,7 +11,6 @@ import { APIParams, APIResponse } from "@/services/api/types";
 import { Address } from "wagmi";
 import { MODE_ON_SALES } from "@/config/constants";
 
-
 export default function OnSaleNFTs({
   wallet,
   onUpdateAmount,
@@ -42,17 +41,16 @@ export default function OnSaleNFTs({
   );
 
   const { data: totalOnSales } = useSWR(
-      [
-        "total_on_sales-data",
-        { owner: String(wallet), mode: String(MODE_ON_SALES)},
-      ],
-      ([_, params]) =>
-          api.getTotalCountById({
-            ...params
-          }),
-      { refreshInterval: 5000 },
+    [
+      "total_on_sales-data",
+      { owner: String(wallet), mode: String(MODE_ON_SALES) },
+    ],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
   );
-
 
   useEffect(() => {
     if (totalOnSales) {

@@ -21,47 +21,47 @@ export const useMarketplaceApi = () => {
   return useMemo(() => {
     return {
       connect: (params: APIParams.Connect): Promise<APIResponse.Connect> =>
-          marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
+        marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
 
       updateProfile: (
-          params: APIParams.UpdateProfile,
+        params: APIParams.UpdateProfile,
       ): Promise<APIResponse.ProfileDetails> =>
-          marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader()),
+        marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader()),
 
       resendEmail: (
-          params: APIParams.ResendVerifyMail,
+        params: APIParams.ResendVerifyMail,
       ): Promise<APIResponse.ResendEmail> =>
-          marketplaceApi.post(
-              API_ENDPOINTS.SEND_VERIFY_EMAIL,
-              params,
-              authHeader(),
-          ),
+        marketplaceApi.post(
+          API_ENDPOINTS.SEND_VERIFY_EMAIL,
+          params,
+          authHeader(),
+        ),
       search: (params: APIParams.Search): Promise<any> =>
-          marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
+        marketplaceApi.post(API_ENDPOINTS.SEARCH, params),
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> =>
-          marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-            mode: "NFT",
-            text,
-          }),
+        marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+          mode: "NFT",
+          text,
+        }),
 
       searchCollections: (
-          text: string,
+        text: string,
       ): Promise<APIResponse.SearchCollections> =>
-          marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-            mode: "COLLECTION",
-            text,
-          }),
+        marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+          mode: "COLLECTION",
+          text,
+        }),
 
       searchUsers: (text: string): Promise<APIResponse.SearchUsers> =>
-          marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-            mode: "USER",
-            text,
-          }),
+        marketplaceApi.post(API_ENDPOINTS.SEARCH, {
+          mode: "USER",
+          text,
+        }),
 
       uploadFile: (
-          files: Blob[] | Blob,
-          metadata?: Record<string, any>,
+        files: Blob[] | Blob,
+        metadata?: Record<string, any>,
       ): Promise<APIResponse.UploadImage> => {
         const form = new FormData();
         if (Array.isArray(files)) {
@@ -79,7 +79,7 @@ export const useMarketplaceApi = () => {
       },
 
       uploadMetadata: (
-          data: Record<string, any>,
+        data: Record<string, any>,
       ): Promise<APIResponse.UploadMetadata> => {
         const form = new FormData();
         form.append("metadata", JSON.stringify(data));
@@ -87,122 +87,121 @@ export const useMarketplaceApi = () => {
       },
 
       createCollection: (params: APIParams.CreateCollection) =>
-          marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader()),
+        marketplaceApi.post(API_ENDPOINTS.COLLECTIONS, params, authHeader()),
 
       updateCollection: ({ coverImage, id }: APIParams.UpdateCollection) =>
-          marketplaceApi.put(
-              API_ENDPOINTS.COLLECTIONS + `/${id}`,
-              { coverImage },
-              authHeader(),
-          ),
+        marketplaceApi.put(
+          API_ENDPOINTS.COLLECTIONS + `/${id}`,
+          { coverImage },
+          authHeader(),
+        ),
 
       createNFT: (
-          params: APIParams.CreateNFT,
+        params: APIParams.CreateNFT,
       ): Promise<APIResponse.CreateNFT> =>
-          marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader()),
+        marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader()),
 
       fetchNFTs: (
-          params: APIParams.FetchNFTs,
+        params: APIParams.FetchNFTs,
       ): Promise<APIResponse.FetchNFTs> =>
-          marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
+        marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
 
       fetchNFTEvents: (
-          params: APIParams.NFTEvents,
+        params: APIParams.NFTEvents,
       ): Promise<APIResponse.NFTEvents> =>
-          marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
+        marketplaceApi.post(API_ENDPOINTS.NFT_EVENTS, params),
 
       fetchUserActivities: (
-          params: APIParams.UserActivities,
+        params: APIParams.UserActivities,
       ): Promise<APIResponse.UserActivities> =>
-          marketplaceApi.post(API_ENDPOINTS.USER_ACTIVITIES, params),
+        marketplaceApi.post(API_ENDPOINTS.USER_ACTIVITIES, params),
 
       validateInput: (params: APIParams.ValidateInput): Promise<boolean> =>
-          marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
+        marketplaceApi.post(API_ENDPOINTS.VALIDATE_INPUT, params),
 
       /** GET **/
       fetchCollections: (
-          params: APIParams.FetchCollections,
+        params: APIParams.FetchCollections,
       ): Promise<APIResponse.CollectionsData> =>
-          marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + parseQueries(params)),
+        marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + parseQueries(params)),
 
       fetchCollectionById: (
-          id: string | Address,
+        id: string | Address,
       ): Promise<APIResponse.CollectionDetails> =>
-          marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
+        marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + `/${id}`),
 
       fetchCollectionsByUser: async ({
-                                       userId,
-                                       ...rest
-                                     }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
+        userId,
+        ...rest
+      }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
         return marketplaceApi.get(
-            API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest),
+          API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest),
         );
       },
 
       generateTokenId: async (
-          collectionAddress: Address,
+        collectionAddress: Address,
       ): Promise<APIResponse.GenerateTokenId> =>
-          marketplaceApi.get(
-              API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`,
-              authHeader(),
-          ),
+        marketplaceApi.get(
+          API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`,
+          authHeader(),
+        ),
 
       fetchNFTById: (
-          params: APIParams.FetchNFTDetails,
+        params: APIParams.FetchNFTDetails,
       ): Promise<APIResponse.NFTDetails> => {
         return marketplaceApi.get(API_ENDPOINTS.NFT + parseQueries(params));
       },
 
       fetchMarketDataByNFT: (
-          params: APIParams.FetchNFTMarketData,
+        params: APIParams.FetchNFTMarketData,
       ): Promise<APIResponse.NFTMarketData> =>
-          marketplaceApi.get(
-              API_ENDPOINTS.NFT_TRANSACTIONS + parseQueries(params),
-          ),
+        marketplaceApi.get(
+          API_ENDPOINTS.NFT_TRANSACTIONS + parseQueries(params),
+        ),
 
       getNFTMetaData: (
-          ifpsUrl: string,
+        ifpsUrl: string,
       ): Promise<APIResponse.FetchNFTMetadata> => {
         return marketplaceApi.get(
-            API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`,
+          API_ENDPOINTS.GET_METADATA + `?ipfsPath=${ifpsUrl}`,
         );
       },
 
       viewProfile: (
-          id: Address | string,
+        id: Address | string,
       ): Promise<APIResponse.ProfileDetails> =>
-          marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`, authHeader()),
+        marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`, authHeader()),
 
       fetchUsers: async (
-          params: APIParams.FetchUsers,
+        params: APIParams.FetchUsers,
       ): Promise<APIResponse.UsersData> =>
-          marketplaceApi.get(
-              API_ENDPOINTS.USER + parseQueries(params),
-              authHeader(),
-          ),
+        marketplaceApi.get(
+          API_ENDPOINTS.USER + parseQueries(params),
+          authHeader(),
+        ),
 
       verifyAccount: (): Promise<APIResponse.VerifyAccount> =>
-          marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {}, authHeader()),
+        marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {}, authHeader()),
 
       fetchEmailVerify: (
-          params: APIParams.FetchEmailVerify,
+        params: APIParams.FetchEmailVerify,
       ): Promise<APIResponse.FetchEmailVerify> =>
-          marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader()),
+        marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader()),
 
       followUser: ({
-                     userId,
-                     accessToken,
-                   }: APIParams.FollowUser): Promise<APIResponse.FollowUser> =>
-          marketplaceApi.post(
-              API_ENDPOINTS.FOLLOW + `/${userId}`,
-              {},
-              authHeader(accessToken),
-          ),
+        userId,
+        accessToken,
+      }: APIParams.FollowUser): Promise<APIResponse.FollowUser> =>
+        marketplaceApi.post(
+          API_ENDPOINTS.FOLLOW + `/${userId}`,
+          {},
+          authHeader(accessToken),
+        ),
       getTotalCountById: (
-          params: APIParams.CountNumber,
+        params: APIParams.CountNumber,
       ): Promise<APIResponse.TotalCount> =>
-          marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT , params),
-
+        marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
     };
   }, [authHeader]);
 };

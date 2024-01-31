@@ -33,4 +33,3 @@ export const MODE_OWNED = "owner";
 export const MODE_CREATED = "creator";
 export const MODE_ON_SALES = "onsales";
 export const MODE_COLLECTIONS = "collection";
-

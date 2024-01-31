@@ -41,22 +41,19 @@ export default function OwnedNFTs({
   );
 
   const { data: totalOwned } = useSWR(
-      [
-        "total_owner-data",
-        { owner: String(wallet), mode: String(MODE_OWNED)},
-      ],
-      ([_, params]) =>
-          api.getTotalCountById({
-            ...params
-          }),
-      { refreshInterval: 5000 },
+    ["total_owner-data", { owner: String(wallet), mode: String(MODE_OWNED) }],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
   );
 
   useEffect(() => {
     if (totalOwned) {
       onUpdateAmount(totalOwned);
     }
-  }, [totalOwned,onUpdateAmount]);
+  }, [totalOwned, onUpdateAmount]);
 
   return (
     <div className="w-full py-7">

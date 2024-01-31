@@ -7,11 +7,10 @@ import { MODE_COLLECTIONS } from "@/config/constants";
 import { Address } from "wagmi";
 import { APIResponse } from "@/services/api/types";
 
-
 export default function UserCollections({
   onUpdateAmount,
   userId,
-  wallet
+  wallet,
 }: {
   onUpdateAmount: (n: APIResponse.TotalCount) => void;
   userId: string;
@@ -40,15 +39,15 @@ export default function UserCollections({
   };
 
   const { data: totalCollections } = useSWR(
-      [
-        "total_collections-data",
-        { owner: String(wallet), mode: String(MODE_COLLECTIONS)},
-      ],
-      ([_, params]) =>
-          api.getTotalCountById({
-            ...params
-          }),
-      { refreshInterval: 5000 },
+    [
+      "total_collections-data",
+      { owner: String(wallet), mode: String(MODE_COLLECTIONS) },
+    ],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
   );
 
   useEffect(() => {
