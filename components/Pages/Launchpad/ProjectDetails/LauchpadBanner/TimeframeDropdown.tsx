@@ -36,7 +36,8 @@ export default function TimeframeDropdown({ round }: Props) {
     }),
     enabled: Number(timeframesLength) > 0,
     watch: true,
-    select: (data) => data.map((item) => item.result as unknown as Timeframe),
+    select: (data) => data.map((item) => {
+      return item.result as unknown as Timeframe}),
   });
 
   useEffect(() => {
@@ -47,10 +48,10 @@ export default function TimeframeDropdown({ round }: Props) {
     let current = { index: 0, isInTimeframe: false };
     if (!!timeframes) {
       const timeframesStart =
-        timeframes[0].hourStart * 3600 + timeframes[0].minuteStart * 60;
+        timeframes[0]?.hourStart * 3600 + timeframes[0]?.minuteStart * 60;
       const timeframesEnd =
-        timeframes[timeframes.length - 1].hourEnd * 3600 +
-        timeframes[timeframes.length - 1].minuteEnd * 60;
+        timeframes[timeframes.length - 1]?.hourEnd * 3600 +
+        timeframes[timeframes.length - 1]?.minuteEnd * 60;
       const currentTime =
         new Date().getUTCHours() * 3600 + new Date().getMinutes() * 60;
       if (currentTime < timeframesStart) {
@@ -59,8 +60,8 @@ export default function TimeframeDropdown({ round }: Props) {
 
       for (let i = 0; i < timeframes.length; i++) {
         const start =
-          timeframes[i].hourStart * 3600 + timeframes[i].minuteStart * 60;
-        const end = timeframes[i].hourEnd * 3600 + timeframes[i].minuteEnd * 60;
+          timeframes[i]?.hourStart * 3600 + timeframes[i]?.minuteStart * 60;
+        const end = timeframes[i]?.hourEnd * 3600 + timeframes[i]?.minuteEnd * 60;
 
         if (currentTime >= start && currentTime <= end) {
           current = { index: i, isInTimeframe: true };
@@ -68,8 +69,8 @@ export default function TimeframeDropdown({ round }: Props) {
         }
         if (i < timeframes.length - 1) {
           const startNext =
-            timeframes[i + 1].hourStart * 3600 +
-            timeframes[i + 1].minuteStart * 60;
+            timeframes[i + 1]?.hourStart * 3600 +
+            timeframes[i + 1]?.minuteStart * 60;
           if (currentTime > end && currentTime < startNext) {
             current = { index: i + 1, isInTimeframe: false };
             break;
@@ -84,7 +85,8 @@ export default function TimeframeDropdown({ round }: Props) {
     return current;
   }, [timeframes]);
 
-  const formatTimeframe = (timeframe: Timeframe) => {
+  const formatTimeframe = (timeframe?: Timeframe) => {
+    if (!timeframe) return null;
     return (
       <span className="flex-1">
         {timeframe.hourStart < 10

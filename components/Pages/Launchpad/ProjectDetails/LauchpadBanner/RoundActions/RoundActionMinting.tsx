@@ -5,7 +5,7 @@ import { MessageRoundNotEligible } from "../EligibleMessage";
 import Icon from "@/components/Icon";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import useTimeframeStore from "@/store/timeframe/store";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { formatDisplayedBalance, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
