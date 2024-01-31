@@ -53,6 +53,8 @@ export default function InformationSectionCollection({ data }: Props) {
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);
 
+  console.log(data.collection.creators[0].user.accountStatus )
+
   return (
     <>
       <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-6">
@@ -65,7 +67,7 @@ export default function InformationSectionCollection({ data }: Props) {
             >
               {data.collection.name}
             </Text>
-            {/* <Icon name="verified" width={24} height={24} /> */}
+            {(data.collection.creators[0].user.accountStatus && data.collection.creators.length > 0) ? <Icon name="verify-active" width={16} height={16} /> : <Icon name="verify-disable" width={16} height={16} />}
           </div>
           <div className="flex items-center gap-2">
             <Link
