@@ -53,11 +53,13 @@ export default function Profile({ user, onRefresh }: Props) {
               </Text>
               {user.accountStatus ? (
                 <Icon name="verified" width={24} height={24} />
-              ) : (
+              ) : myId === user.id ? (
                 <Link className="flex gap-1" href={`/profile`}>
                   <Icon name="verify-disable" width={24} height={24} />
                   <span className="text-secondary">Get verified</span>
                 </Link>
+              ) : (
+                <Icon name="verify-disable" width={24} height={24} />
               )}
             </div>
             <div>
