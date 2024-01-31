@@ -28,3 +28,9 @@ export const ALLOWED_FILE_TYPES = [
 ].join(", ");
 
 export const MAX_ROYALTIES = 2000; // 20%
+
+export const MODE_OWNED = "owner";
+export const MODE_CREATED = "creator";
+export const MODE_ON_SALES = "onsales";
+export const MODE_COLLECTIONS = "collection";
+

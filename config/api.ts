@@ -25,4 +25,8 @@ export const API_ENDPOINTS = {
   SUBSCRIBE_ROUND_ZERO: "/launchpad/subscribe",
   SNAPSHOT: "/user/projects",
   FOLLOW: "/user/follow",
+  TOTAL_COUNT: "/nft/general-count",
+
+
+
 };

@@ -182,6 +182,13 @@ export namespace APIParams {
   export interface FollowUser extends WithAuth {
     userId: string;
   }
+
+  export interface CountNumber extends PaginationParams {
+    collectionAddress?: Address;
+    creatorAddress?: Address;
+    owner?: Address;
+    mode: string;
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -331,5 +338,9 @@ export namespace APIResponse {
 
   export interface FollowUser {
     isFollowed: boolean;
+  }
+
+  export interface TotalCount {
+    total: number;
   }
 }

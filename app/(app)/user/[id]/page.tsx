@@ -120,6 +120,7 @@ export default function ProfilePage() {
           >
             <UserCollections
               userId={user.id}
+              wallet={user.publicKey}
               onUpdateAmount={setCreatedCollectionAmount}
             />
           </Tabs.Item>

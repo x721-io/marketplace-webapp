@@ -3,13 +3,19 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MODE_COLLECTIONS } from "@/config/constants";
+import { Address } from "wagmi";
+import { APIResponse } from "@/services/api/types";
+
 
 export default function UserCollections({
   onUpdateAmount,
   userId,
+  wallet
 }: {
-  onUpdateAmount: (n: number) => void;
+  onUpdateAmount: (n: APIResponse.TotalCount) => void;
   userId: string;
+  wallet: Address;
 }) {
   const { id } = useParams();
   const api = useMarketplaceApi();
@@ -33,11 +39,23 @@ export default function UserCollections({
     window.scrollTo(0, 0);
   };
 
+  const { data: totalCollections } = useSWR(
+      [
+        "total_collections-data",
+        { owner: String(wallet), mode: String(MODE_COLLECTIONS)},
+      ],
+      ([_, params]) =>
+          api.getTotalCountById({
+            ...params
+          }),
+      { refreshInterval: 5000 },
+  );
+
   useEffect(() => {
-    if (collections?.paging.total) {
-      onUpdateAmount(collections?.paging.total);
+    if (totalCollections) {
+      onUpdateAmount(totalCollections);
     }
-  }, [collections, onUpdateAmount]);
+  }, [totalCollections, onUpdateAmount]);
 
   return (
     <div className="w-full py-7 overflow-x-auto">
