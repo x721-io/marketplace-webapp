@@ -29,7 +29,7 @@ export default function Profile({ user, onRefresh }: Props) {
           className="w-full desktop:h-[220px] tablet:h-[220px] h-[160px] object-cover" />
 
         <div className="absolute border-white rounded-2xl desktop:pl-[80px] tablet:pl-[80px] pl-4"
-             style={{ bottom: '0', transform: 'translateY(50%)' }}>
+          style={{ bottom: '0', transform: 'translateY(50%)' }}>
           <Image
             src={getUserAvatarImage(user)}
             alt="user-detail-bg"
@@ -44,11 +44,12 @@ export default function Profile({ user, onRefresh }: Props) {
             <div className="flex items-center gap-2">
               <Text className="font-semibold desktop:text-body-32 tablet:text-body-32 text-body-24">{user.username}</Text>
               {user.accountStatus ? <Icon name="verified" width={24} height={24} />
-                :
-                <Link className="flex gap-1" href={`/profile`}>
-                  <Icon name="verify-disable" width={24} height={24} />
-                  <span className="text-secondary">Get verified</span>
-                </Link>
+                : myId === user.id ?
+                  <Link className="flex gap-1" href={`/profile`}>
+                    <Icon name="verify-disable" width={24} height={24} />
+                    <span className="text-secondary">Get verified</span>
+                  </Link>
+                  : <Icon name="verify-disable" width={24} height={24} />
               }
             </div>
             <div>
