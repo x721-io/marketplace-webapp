@@ -97,7 +97,7 @@ export default function NFTsList({
       );
     }
     return (
-      <div className="flex-1">
+      <div className="w-full">
         <div
           className={classNames(
             "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3",
