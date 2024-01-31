@@ -56,7 +56,7 @@ export default function RoundActionUpcoming({
 
       {round.type === "U2UPremintRoundZero" ||
       round.type === "U2UMintRoundZero" ? (
-        <ConnectWalletButton className="w-full">
+        <ConnectWalletButton showConnectButton className="w-full">
           {!isSubscribed ? (
             <Button
               scale="lg"
