@@ -29,6 +29,7 @@ export const ALLOWED_FILE_TYPES = [
 
 export const MAX_ROYALTIES = 2000; // 20%
 
+//this mode for get count total number
 export const MODE_OWNED = "owner";
 export const MODE_CREATED = "creator";
 export const MODE_ON_SALES = "onsales";
