@@ -1,38 +1,40 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Button from '@/components/Button'
+import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { toast } from "react-toastify";
 import { Spinner } from "flowbite-react";
 import { useAuth } from "@/hooks/useAuth";
-import ConnectWalletButton from '@/components/Button/ConnectWalletButtonV2'
+import ConnectWalletButton from "@/components/Button/ConnectWalletButtonV2";
 
 export interface Props {
   isFollowed?: boolean;
-  userId: string
-  onRefresh: () => void
+  userId: string;
+  onRefresh: () => void;
 }
 
 export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
-  const api = useMarketplaceApi()
-  const { isValidSession } = useAuth()
+  const api = useMarketplaceApi();
+  const { isValidSession } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const isFollowing = useMemo(() => {
-    if (!isValidSession) return false
-    return isFollowed
-  }, [isFollowed, isValidSession])
+    if (!isValidSession) return false;
+    return isFollowed;
+  }, [isFollowed, isValidSession]);
 
   const handleFollow = async (accessToken?: string) => {
     try {
       setLoading(true);
       await api.followUser({
         userId: userId,
-        accessToken
+        accessToken,
       });
-      onRefresh()
-      toast.success(`${isFollowing ? "Unfollowed" : "Followed"} artist successfully`);
+      onRefresh();
+      toast.success(
+        `${isFollowing ? "Unfollowed" : "Followed"} artist successfully`,
+      );
     } catch (e: any) {
       console.error(e);
       toast.error(`Failed to ${isFollowing ? "unfollow" : "follow"} artist`);
@@ -42,7 +44,7 @@ export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
   };
 
   return (
-    <ConnectWalletButton action={accessToken => handleFollow(accessToken)}>
+    <ConnectWalletButton action={(accessToken) => handleFollow(accessToken)}>
       <Button
         variant={isFollowing ? "secondary" : "primary"}
         scale="sm"

@@ -1,25 +1,36 @@
-import Image from 'next/image'
-import Icon from '@/components/Icon'
-import Text from '@/components/Text'
-import Button from '@/components/Button'
-import NFTActions from './NFTActions'
-import { useNFTMarketStatus } from '@/hooks/useMarket'
-import { formatUnits } from 'ethers'
-import Link from 'next/link'
-import { Tooltip } from 'flowbite-react'
-import { NFT } from '@/types'
-import { APIResponse } from '@/services/api/types'
-import { getDisplayedUserName, getUserAvatarImage, getUserLink, truncate } from '@/utils/string'
-import { formatDisplayedBalance } from '@/utils'
+import Image from "next/image";
+import Icon from "@/components/Icon";
+import Text from "@/components/Text";
+import Button from "@/components/Button";
+import NFTActions from "./NFTActions";
+import { useNFTMarketStatus } from "@/hooks/useMarket";
+import { formatUnits } from "ethers";
+import Link from "next/link";
+import { Tooltip } from "flowbite-react";
+import { NFT } from "@/types";
+import { APIResponse } from "@/services/api/types";
+import {
+  getDisplayedUserName,
+  getUserAvatarImage,
+  getUserLink,
+  truncate,
+} from "@/utils/string";
+import { formatDisplayedBalance } from "@/utils";
 
-export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketData?: APIResponse.NFTMarketData }) {
-  const type = nft.collection.type
+export default function NFTMarketData({
+  nft,
+  marketData,
+}: {
+  nft: NFT;
+  marketData?: APIResponse.NFTMarketData;
+}) {
+  const type = nft.collection.type;
+
+  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
 
   if (!marketData) {
-    return null
+    return null;
   }
-
-  const { isOnSale, saleData } = useNFTMarketStatus(type, marketData)
 
   return (
     <div className="flex flex-col gap-10 justify-between w-full">
@@ -27,18 +38,30 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
       <div className="flex flex-col gap-3">
         <div className="flex gap-1 items-center">
           {/* <Icon name="verified" width={16} height={16} /> */}
-          <Text showTooltip labelTooltip={nft.collection.name} className='w-auto max-w-[300px]'>
-            <Link href={`/collection/${nft.collection.id}`} className="text-secondary underline">
+          <Text
+            showTooltip
+            labelTooltip={nft.collection.name}
+            className="w-auto max-w-[300px]"
+          >
+            <Link
+              href={`/collection/${nft.collection.id}`}
+              className="text-secondary underline"
+            >
               {nft.collection.name}
             </Link>
           </Text>
-          
         </div>
 
         <Tooltip content={nft.name} placement="bottom">
           <div className="desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden">
-            <Text className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+            <Text
+              className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
               {nft.name}
             </Text>
           </div>
@@ -46,33 +69,36 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
 
         {!!nft.creator && (
           <Text className="text-secondary" variant="body-16">
-            Created by {' '}
-            <Link href={`/user/${nft.creator.id}`} className="text-primary underline">
+            Created by{" "}
+            <Link
+              href={`/user/${nft.creator.id}`}
+              className="text-primary underline"
+            >
               {nft.creator.username}
             </Link>
           </Text>
         )}
 
-        {
-          type === 'ERC721' && (
-            <div className="flex items-center gap-2">
-              <Text className="text-secondary" variant="body-16">
-                Current Owner:
-              </Text>
-              <Link
-                className="hover:underline flex items-center gap-1"
-                href={getUserLink(marketData.owners[0])}>
-                <Image
-                  width={56}
-                  height={56}
-                  className="w-6 h-6 rounded-full"
-                  src={getUserAvatarImage(marketData.owners[0])}
-                  alt="avatar" />
-                {getDisplayedUserName(marketData.owners[0])}
-              </Link>
-            </div>
-          )
-        }
+        {type === "ERC721" && (
+          <div className="flex items-center gap-2">
+            <Text className="text-secondary" variant="body-16">
+              Current Owner:
+            </Text>
+            <Link
+              className="hover:underline flex items-center gap-1"
+              href={getUserLink(marketData.owners[0])}
+            >
+              <Image
+                width={56}
+                height={56}
+                className="w-6 h-6 rounded-full"
+                src={getUserAvatarImage(marketData.owners[0])}
+                alt="avatar"
+              />
+              {getDisplayedUserName(marketData.owners[0])}
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="inline-flex gap-3">
@@ -94,39 +120,48 @@ export default function NFTMarketData({ nft, marketData }: { nft: NFT, marketDat
         <div className="p-4">
           <div className="flex justify-between items-start">
             <div>
-              <Text className="text-secondary mb-2 font-semibold" variant="body-16">
-                {type === 'ERC1155' && 'Best '}Price
+              <Text
+                className="text-secondary mb-2 font-semibold"
+                variant="body-16"
+              >
+                {type === "ERC1155" && "Best "}Price
               </Text>
               {isOnSale ? (
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(formatUnits(saleData?.price || 0), 3)}
-                    </span>&nbsp;
+                      {formatDisplayedBalance(
+                        formatUnits(saleData?.price || 0),
+                        3,
+                      )}
+                    </span>
+                    &nbsp;
                     <span className="text-secondary">U2U</span>
                   </Text>
                 </div>
-              ) : <Text># Not for sale</Text>}
+              ) : (
+                <Text># Not for sale</Text>
+              )}
             </div>
 
-            {
-              type === 'ERC1155' && isOnSale && (
-                <div>
-                  <Text className="text-secondary mb-2 font-semibold text-right" variant="body-16">
-                    Quantity
-                  </Text>
-                  <Text className="text-right" variant="heading-md">
-                    {saleData?.quantity}
-                  </Text>
-                </div>
-              )
-            }
+            {type === "ERC1155" && isOnSale && (
+              <div>
+                <Text
+                  className="text-secondary mb-2 font-semibold text-right"
+                  variant="body-16"
+                >
+                  Quantity
+                </Text>
+                <Text className="text-right" variant="heading-md">
+                  {saleData?.quantity}
+                </Text>
+              </div>
+            )}
           </div>
-
         </div>
 
         <NFTActions nft={nft} marketData={marketData} />
       </div>
     </div>
-  )
+  );
 }
