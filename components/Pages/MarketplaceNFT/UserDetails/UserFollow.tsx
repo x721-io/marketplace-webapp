@@ -5,7 +5,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { toast } from "react-toastify";
 import { Spinner } from "flowbite-react";
 import { useAuth } from "@/hooks/useAuth";
-import ConnectWalletButton from "@/components/Button/ConnectWalletButtonV2";
+import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 
 export interface Props {
   isFollowed?: boolean;

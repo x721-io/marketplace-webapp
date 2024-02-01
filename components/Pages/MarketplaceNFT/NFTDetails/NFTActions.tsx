@@ -49,7 +49,7 @@ export default function NFTActions({
         <p className="text-secondary text-body-16 font-medium text-center mb-2">
           You own this NFT
         </p>
-        <ConnectWalletButton className="w-full">
+        <ConnectWalletButton showConnectButton className="w-full">
           {isOnSale && isSeller ? (
             <Button
               className="w-full"
@@ -95,7 +95,7 @@ export default function NFTActions({
   }
 
   return (
-    <ConnectWalletButton className="w-full">
+    <ConnectWalletButton showConnectButton className="w-full">
       {isOnSale ? (
         <div className="flex items-center gap-3 mb-3">
           <Button className="flex-1" onClick={() => setShowBuyModal(true)}>

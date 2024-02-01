@@ -448,7 +448,7 @@ export default function CreateNftPage() {
 
             <FormValidationMessages errors={errors} />
 
-            <ConnectWalletButton>
+            <ConnectWalletButton showConnectButton>
               <Button
                 loading={loading}
                 loadingText="Creating NFT ..."

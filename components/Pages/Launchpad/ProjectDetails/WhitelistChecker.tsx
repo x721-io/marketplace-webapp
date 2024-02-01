@@ -155,7 +155,7 @@ export default function WhitelistChecker({
             )}
 
             <div className="flex-1">
-              <ConnectWalletButton scale="lg" className="w-full">
+              <ConnectWalletButton showConnectButton className="w-full">
                 <Button
                   disabled={
                     roundType == "2" &&

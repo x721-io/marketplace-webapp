@@ -272,7 +272,7 @@ export default function CreateNFTCollectionPage() {
             <FormValidationMessages errors={errors} />
 
             {/* Button finish */}
-            <ConnectWalletButton>
+            <ConnectWalletButton showConnectButton>
               <Button
                 loading={loading}
                 loadingText="Creating collection ..."

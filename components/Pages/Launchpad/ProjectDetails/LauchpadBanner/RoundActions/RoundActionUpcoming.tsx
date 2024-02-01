@@ -59,7 +59,7 @@ export default function RoundActionUpcoming({
 
       {round.type === "U2UPremintRoundZero" ||
       round.type === "U2UMintRoundZero" ? (
-        <ConnectWalletButton scale="lg" className="w-full">
+        <ConnectWalletButton showConnectButton className="w-full">
           {!isSubscribed ? (
             <Button
               scale="lg"
@@ -110,7 +110,7 @@ export default function RoundActionUpcoming({
           )}
         </div>
       ) : (
-        <ConnectWalletButton scale="lg" className="w-full">
+        <ConnectWalletButton showConnectButton className="w-full">
           <Button disabled scale="lg" className="w-full">
             Mint now
           </Button>

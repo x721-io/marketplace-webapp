@@ -216,7 +216,7 @@ export default function RoundActionMinting({
           </div>
         )}
         <div className="flex-1 w-full">
-          <ConnectWalletButton scale="lg" className="w-full">
+          <ConnectWalletButton showConnectButton className="w-full">
             <Button
               disabled={disableMint}
               scale="lg"
