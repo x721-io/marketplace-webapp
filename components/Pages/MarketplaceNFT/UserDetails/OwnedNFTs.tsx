@@ -16,7 +16,7 @@ export default function OwnedNFTs({
   onUpdateAmount,
 }: {
   wallet: Address;
-  onUpdateAmount: (n: APIResponse.TotalCount) => void;
+  onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [showFilters, setShowFilters] = useState(false);
   const api = useMarketplaceApi();
@@ -41,7 +41,7 @@ export default function OwnedNFTs({
   );
 
   const { data: totalOwned } = useSWR(
-    ["total_owner-data", { owner: String(wallet), mode: String(MODE_OWNED) }],
+    ["total_owner-data", { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) }],
     ([_, params]) =>
       api.getTotalCountById({
         ...params,

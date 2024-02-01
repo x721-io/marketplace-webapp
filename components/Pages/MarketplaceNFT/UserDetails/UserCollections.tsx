@@ -12,7 +12,7 @@ export default function UserCollections({
   userId,
   wallet,
 }: {
-  onUpdateAmount: (n: APIResponse.TotalCount) => void;
+  onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
   userId: string;
   wallet: Address;
 }) {
@@ -41,7 +41,7 @@ export default function UserCollections({
   const { data: totalCollections } = useSWR(
     [
       "total_collections-data",
-      { owner: String(wallet), mode: String(MODE_COLLECTIONS) },
+      { owner: String(wallet) as `0x${string}`, mode: String(MODE_COLLECTIONS) },
     ],
     ([_, params]) =>
       api.getTotalCountById({
