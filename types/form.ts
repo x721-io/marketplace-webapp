@@ -54,5 +54,20 @@ export namespace FormState {
   export interface AcceptBidNFT {
     quantity: number
   }
+
+  export interface VerifyAccount {
+    accountStatus: boolean,
+    listVerify: ListVerify
+  }
+
+  export interface ListVerify {
+    email: boolean,
+    username: boolean,
+    shortLink: boolean,
+    avatar: boolean,
+    bio: boolean,
+    twitterLink: boolean,
+    ownerOrCreater: boolean
+  }
 }
 
