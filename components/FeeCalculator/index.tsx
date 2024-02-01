@@ -1,5 +1,5 @@
 import { NFT, Royalty } from "@/types";
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { formatUnits } from "ethers";
 import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
 import { Address, useContractReads } from "wagmi";
@@ -14,6 +14,7 @@ interface Props {
   price?: bigint;
   nft: NFT;
   quoteToken?: Address;
+  setBuyerFeeFormatted?: Dispatch<SetStateAction<undefined>>
 }
 
 export default function FeeCalculator({
@@ -21,6 +22,7 @@ export default function FeeCalculator({
   nft,
   mode,
   quoteToken,
+  setBuyerFeeFormatted
 }: Props) {
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const feeDistributorContract = contracts.feeDistributorContract;
@@ -80,6 +82,15 @@ export default function FeeCalculator({
     );
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);
+
+  const buyerFeeFrice = formatDisplayedBalance(
+    formatUnits(price + buyerFee, 18),
+  );
+
+  useEffect(() => {
+    return setBuyerFeeFormatted(buyerFeeFrice);
+  }, [buyerFeeFrice, setBuyerFeeFormatted]);
+
 
   return (
     <div className="w-full p-4 border border-disabled rounded-2xl flex flex-col gap-3">

@@ -8,6 +8,13 @@ export const tokens = {
     address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
+  usdt: {
+    name: "USDT",
+    symbol: "USDT",
+    decimal: 18,
+    address: process.env.NEXT_PUBLIC_USDT_CONTRACT as Address,
+    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  }
 };
 
 export const tokenOptions = Object.values(tokens).map((token) => {

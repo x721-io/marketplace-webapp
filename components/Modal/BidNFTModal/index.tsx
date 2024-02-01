@@ -4,24 +4,25 @@ import {
   ModalProps,
   Tooltip,
 } from "flowbite-react";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
-import { useAccount, useBalance } from "wagmi";
+import { Address, useAccount, useBalance, useContractReads } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
-import { tokens } from "@/config/tokens";
-import { useBidUsingNative } from "@/hooks/useMarket";
+import { tokenOptions, tokens } from "@/config/tokens";
+import { useBidNFT, useBidUsingNative, useMarketTokenApproval } from "@/hooks/useMarket";
 import { useForm } from "react-hook-form";
-import { formatUnits, parseEther, parseUnits } from "ethers";
+import { MaxUint256, formatUnits, parseEther, parseUnits } from "ethers";
 import { toast } from "react-toastify";
 import Input from "@/components/Form/Input";
 import { formatDisplayedBalance } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { numberRegex } from "@/utils/regex";
+import Select from "@/components/Form/Select";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -41,21 +42,26 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { address } = useAccount();
-  const { data: tokenBalance } = useBalance({
-    address: address,
-    enabled: !!address,
-  });
-  const token = findTokenByAddress(tokens.wu2u.address);
 
-  const { onBidUsingNative, isSuccess, isLoading, error } =
-    useBidUsingNative(nft);
+  const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft);
+  const { onBidNFT } = useBidNFT(nft)
   const {
     handleSubmit,
     watch,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormState.BidNFT>();
+  const token = findTokenByAddress(watch("quoteToken"));
+  const {
+    isTokenApproved,
+    onApproveToken,
+  } = useMarketTokenApproval(token?.address as Address, nft.collection.type);
+
+  const [buyerFeeFormatted, setBuyerFeeFormatted] = useState<string>();
+
+
   const formRules = {
     price: {
       required: "Please input bid price",
@@ -93,12 +99,26 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         },
       },
     },
+    allowance: {
+      validate: {
+        // check allowance < price + fee ? 'show validation' : '' 
+      },
+    }
   };
   const [price, quantity] = watch(["price", "quantity"]);
 
+  const { data: tokenBalance } = useBalance({
+    address: address,
+    enabled: !!address,
+    token: token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? undefined : token?.address
+  });
+
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
-      await onBidUsingNative(price, quantity);
+      token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ?
+        await onBidUsingNative(price, quantity)
+        :
+        await onBidNFT(price, token?.address as `0x${string}`, quantity)
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -124,6 +144,23 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
+
+  const handleMin = () => {
+    // setValue("buyerFeeFormatted", buyerFeeFormatted);
+    setBuyerFeeFormatted(buyerFeeFormatted)
+  }
+  const handleMax = () => {
+    // setValue("buyerFeeFormatted", (MaxUint256.toString());
+    setBuyerFeeFormatted(MaxUint256.toString());
+  }
+  const handleApprove = async () => {
+    try {
+      // truyền price vào onApproveToken
+      await onApproveToken();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <Modal
@@ -169,18 +206,13 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               <label className="text-body-14 text-secondary font-semibold mb-1">
                 Bid using
               </label>
-              <Input
-                readOnly
-                value={token?.symbol}
-                appendIcon={
-                  <Text>
-                    Balance:{" "}
-                    {formatDisplayedBalance(
-                      formatUnits(tokenBalance?.value || 0, 18),
-                    )}
-                  </Text>
-                }
-              />
+              <Text>
+                Balance:{" "}
+                {formatDisplayedBalance(
+                  formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals),
+                )}
+              </Text>
+              <Select options={tokenOptions} register={register("quoteToken")} />
             </div>
 
             {nft.collection.type === "ERC1155" ? (
@@ -230,13 +262,27 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 nft={nft}
                 price={parseUnits(price || "0", token?.decimal)}
                 quoteToken={token?.address}
+                setBuyerFeeFormatted={setBuyerFeeFormatted}
               />
             )}
 
             <FormValidationMessages errors={errors} />
-            <Button type={"submit"} className="w-full" loading={isLoading}>
-              Place bid
-            </Button>
+            {isTokenApproved ?
+              <Button type={"submit"} className="w-full" loading={isLoading}>
+                Place bid
+              </Button>
+              : <>
+                <Text>Not enough allowance</Text>
+                <Text>Approve allowance</Text>
+                <Input
+                  // onChange={(e) => setValue("buyerFeeFormatted", e.target.value)}
+                  value={buyerFeeFormatted}
+                />
+                <Button onClick={handleMin} className="w-full">Min</Button>
+                <Button onClick={handleMax} className="w-full">Max</Button>
+                <Button onClick={handleApprove} className="w-full">Approve Token contract</Button>
+              </>}
+
           </form>
         </div>
       </Modal.Body>

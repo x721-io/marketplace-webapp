@@ -8,6 +8,12 @@ export const findTokenByAddress = (address?: Address) => {
       name: "Unicorn Ultra Token",
       symbol: "U2U",
     };
+  } else if (address?.toLowerCase() === tokens.usdt.address.toLowerCase()) {
+    return {
+      ...tokens.usdt,
+      name: "USDT",
+      symbol: "USDT",
+    };
   }
   return Object.values(tokens).find((token) => {
     return token.address.toLowerCase() === address?.toLowerCase();
