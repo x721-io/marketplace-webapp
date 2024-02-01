@@ -1,22 +1,27 @@
-import { MarketEvent } from '@/types'
-import { getDisplayedUserName, getUserAvatarImage, getUserLink, shortenAddress } from '@/utils/string'
-import Image from 'next/image'
-import Link from 'next/link'
-import { format } from 'date-fns'
-import { formatUnits } from 'ethers'
-import { formatDisplayedBalance } from '@/utils'
-import { findTokenByAddress } from '@/utils/token'
-import React from 'react'
+import { MarketEvent } from "@/types";
+import {
+  getDisplayedUserName,
+  getUserAvatarImage,
+  getUserLink,
+  shortenAddress,
+} from "@/utils/string";
+import Image from "next/image";
+import Link from "next/link";
+import { format } from "date-fns";
+import { formatUnits } from "ethers";
+import { formatDisplayedBalance } from "@/utils";
+import { findTokenByAddress } from "@/utils/token";
+import React from "react";
 import { Tooltip } from "flowbite-react";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
-  event: MarketEvent
+  event: MarketEvent;
 }
 
 interface RowProps {
-  children: React.ReactNode
-  maker: MarketEvent['to' | 'from']
-  timestamp: number
+  children: React.ReactNode;
+  maker: MarketEvent["to" | "from"];
+  timestamp: number;
 }
 
 const Row = ({ children, timestamp, maker }: RowProps) => {
@@ -28,148 +33,207 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
           src={getUserAvatarImage(maker)}
           alt="user"
           width={40}
-          height={40} />
+          height={40}
+        />
       </Link>
 
       <div className="flex flex-col">
         <div className="flex items-center gap-1 text-body-14">
-          <Link href={getUserLink(maker)} className="font-semibold hover:underline">
+          <Link
+            href={getUserLink(maker)}
+            className="font-semibold hover:underline"
+          >
             {getDisplayedUserName(maker)}
           </Link>
-          <div className="text-secondary">
-            {children}
-          </div>
+          <div className="text-secondary">{children}</div>
         </div>
         <p className="font-semibold text-secondary text-body-12">
-          {format((timestamp || 0) * 1000, 'yyyy/dd/M - hh:mm a')}
+          {format((timestamp || 0) * 1000, "yyyy/dd/M - hh:mm a")}
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
   const renderEvent = () => {
     if (!event) {
-      return null
+      return null;
     }
-    const token = findTokenByAddress(event.quoteToken)
+    const token = findTokenByAddress(event.quoteToken);
     switch (event.event) {
-      case 'AskNew':
+      case "AskNew":
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              Listed {event.collection?.type === 'ERC1155' && ` ${event.quantity} editions`} for
+              Listed{" "}
+              {event.collection?.type === "ERC1155" &&
+                ` ${event.quantity} editions`}{" "}
+              for
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={20} height={20} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image
+                width={20}
+                height={20}
+                className="w-5 h-5 rounded-full"
+                src={token?.logo || ""}
+                alt="logo"
+              />
               {token?.symbol}
             </div>
           </Row>
-        )
-      case 'AskCancel':
+        );
+      case "AskCancel":
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             Cancel Listing
           </Row>
-        )
-      case 'Trade':
+        );
+      case "Trade":
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1 w-full">
               Sold
-              {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s) `}
-              <Tooltip content={event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)} placement="bottom">
+              {event.collection?.type === "ERC1155" &&
+                ` ${event.quantity} edition(s) `}
+              <Tooltip
+                content={
+                  event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)
+                }
+                placement="bottom"
+              >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
                 </span>
               </Tooltip>
               to
-              <Tooltip content={getDisplayedUserName(event.to)} placement="bottom">
-                <Link className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis" href={getUserLink(event.to)}>
+              <Tooltip
+                content={getDisplayedUserName(event.to)}
+                placement="bottom"
+              >
+                <Link
+                  className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis"
+                  href={getUserLink(event.to)}
+                >
                   {getDisplayedUserName(event.to)}
                 </Link>
               </Tooltip>
               for
-              <Tooltip content={formatDisplayedBalance(formatUnits(event.price, 18))} placement="bottom">
+              <Tooltip
+                content={formatDisplayedBalance(formatUnits(event.price, 18))}
+                placement="bottom"
+              >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {formatDisplayedBalance(formatUnits(event.price, 18))}
                 </span>
               </Tooltip>
-              <Image width={20} height={20} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image
+                width={20}
+                height={20}
+                className="w-5 h-5 rounded-full"
+                src={token?.logo || ""}
+                alt="logo"
+              />
               {token?.symbol}
             </div>
           </Row>
-        )
-      case 'Bid':
+        );
+      case "Bid":
         return (
           <Row maker={event.to} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
               <p className="text-secondary">
                 Bid&nbsp;
-                {event.collection?.type === 'ERC1155' ? `${event.quantity} edition(s) for` : 'for'}
+                {event.collection?.type === "ERC1155"
+                  ? `${event.quantity} edition(s) for`
+                  : "for"}
                 <span className="font-semibold text-primary">
                   &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
                 </span>
               </p>
-              <Image width={24} height={24} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image
+                width={24}
+                height={24}
+                className="w-5 h-5 rounded-full"
+                src={token?.logo || ""}
+                alt="logo"
+              />
               <p className="text-secondary">
                 {token?.symbol}
-                {event.collection?.type === 'ERC1155' && ` each`}
+                {event.collection?.type === "ERC1155" && ` each`}
               </p>
             </div>
           </Row>
-        )
-      case 'AcceptBid':
+        );
+      case "AcceptBid":
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
               Accepted bid from
-              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
+              <Link
+                className="font-semibold text-primary hover:underline"
+                href={getUserLink(event.to)}
+              >
                 {getDisplayedUserName(event.to)}
               </Link>
-              {event.collection?.type === 'ERC1155' ? `For ${event.quantity} edition(s)` : 'For'}
+              {event.collection?.type === "ERC1155"
+                ? `For ${event.quantity} edition(s)`
+                : "For"}
               <span className="font-semibold text-primary">
                 {formatDisplayedBalance(formatUnits(event.price, 18))}
               </span>
-              <Image width={20} height={20} className="w-5 h-5 rounded-full" src={token?.logo || ''} alt="logo" />
+              <Image
+                width={20}
+                height={20}
+                className="w-5 h-5 rounded-full"
+                src={token?.logo || ""}
+                alt="logo"
+              />
               {token?.symbol}
-              {event.collection?.type === 'ERC1155' && `Each`}
+              {event.collection?.type === "ERC1155" && `Each`}
             </div>
           </Row>
-        )
-      case 'CancelBid':
+        );
+      case "CancelBid":
         return (
           <Row maker={event.to} timestamp={event.timestamp}>
             Cancelled bidding
           </Row>
-        )
-      case 'Mint':
+        );
+      case "Mint":
         return (
           <Row maker={event.to} timestamp={event.timestamp}>
-            Minted {event.collection?.type === 'ERC1155' && ` ${event.quantity} edition(s)`}
+            Minted{" "}
+            {event.collection?.type === "ERC1155" &&
+              ` ${event.quantity} edition(s)`}
           </Row>
-        )
-      case 'Transfer':
+        );
+      case "Transfer":
         return (
           <Row maker={event.from} timestamp={event.timestamp}>
             <div className="flex items-center gap-1">
-              Transferred {event.collection?.type === 'ERC1155' && `${event.quantity} edition(s)`} to
-              <Link className="font-semibold text-primary hover:underline" href={getUserLink(event.to)}>
+              Transferred{" "}
+              {event.collection?.type === "ERC1155" &&
+                `${event.quantity} edition(s)`}{" "}
+              to
+              <Link
+                className="font-semibold text-primary hover:underline"
+                href={getUserLink(event.to)}
+              >
                 {getDisplayedUserName(event.to)}
               </Link>
             </div>
           </Row>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div className="" {...rest}>
       {renderEvent()}
     </div>
-  )
+  );
 }

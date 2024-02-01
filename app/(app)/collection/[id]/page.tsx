@@ -1,46 +1,55 @@
-'use client'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi'
-import useSWR from 'swr'
-import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters'
-import { sanitizeObject } from '@/utils'
-import { APIParams } from '@/services/api/types'
-import NFTsList from '@/components/List/NFTsList'
-import BannerSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection'
-import InformationSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection'
-import FiltersSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection'
-import { Spinner } from 'flowbite-react'
-import Text from '@/components/Text'
-import Link from 'next/link'
-import Button from '@/components/Button'
-import useAuthStore from '@/store/auth/store'
-import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string'
-import { useUIStore } from '@/store/ui/store'
+"use client";
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import useSWR from "swr";
+import { useExploreSectionFilters, useNFTFilters } from "@/hooks/useFilters";
+import { sanitizeObject } from "@/utils";
+import { APIParams } from "@/services/api/types";
+import NFTsList from "@/components/List/NFTsList";
+import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
+import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection";
+import FiltersSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection";
+import { Spinner } from "flowbite-react";
+import Text from "@/components/Text";
+import Link from "next/link";
+import Button from "@/components/Button";
+import useAuthStore from "@/store/auth/store";
+import {
+  getCollectionAvatarImage,
+  getCollectionBannerImage,
+} from "@/utils/string";
+import { useUIStore } from "@/store/ui/store";
 
 export default function CollectionPage() {
-  const { id } = useParams()
-  const api = useMarketplaceApi()
-  const [showFilters, setShowFilters] = useState(false)
-  const { query } = useExploreSectionFilters()
-  const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters()
-  const myId = useAuthStore(state => state.profile?.id)
-  const { searchKey } = useExploreSectionFilters()
+  const { id } = useParams();
+  const api = useMarketplaceApi();
+  const [showFilters, setShowFilters] = useState(false);
+  const { query } = useExploreSectionFilters();
+  const { activeFilters, handleApplyFilters, handleChangePage } =
+    useNFTFilters();
+  const myId = useAuthStore((state) => state.profile?.id);
+  const { searchKey } = useExploreSectionFilters();
 
   const { data, isLoading, error } = useSWR(
     !!id ? id : null,
     (id: string) => api.fetchCollectionById(id),
-    { refreshInterval: 30000 }
-  )
+    { refreshInterval: 30000 },
+  );
 
   const { data: items, isLoading: isFetchingItems } = useSWR(
-    data?.collection.address ? [data?.collection.address, { ...activeFilters, name: query }] : null,
-    ([address, filters]) => api.fetchNFTs(sanitizeObject({
-      ...filters,
-      collectionAddress: address
-    }) as APIParams.FetchNFTs),
-    { refreshInterval: 10000 }
-  )
+    data?.collection.address
+      ? [data?.collection.address, { ...activeFilters, name: query }]
+      : null,
+    ([address, filters]) =>
+      api.fetchNFTs(
+        sanitizeObject({
+          ...filters,
+          collectionAddress: address,
+        }) as APIParams.FetchNFTs,
+      ),
+    { refreshInterval: 10000 },
+  );
 
   if (error) {
     return (
@@ -52,7 +61,7 @@ export default function CollectionPage() {
           Please try again later!
         </Text>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
@@ -60,7 +69,7 @@ export default function CollectionPage() {
       <div className="w-full h-96 p-10 flex justify-center items-center">
         <Spinner size="xl" />
       </div>
-    )
+    );
   }
 
   if (!data?.collection) {
@@ -70,7 +79,7 @@ export default function CollectionPage() {
           Collection does not exist!
         </Text>
       </div>
-    )
+    );
   }
 
   return (
@@ -79,15 +88,19 @@ export default function CollectionPage() {
         collectionId={data.collection.id}
         creators={data?.collection?.creators}
         cover={getCollectionBannerImage(data?.collection)}
-        avatar={getCollectionAvatarImage(data?.collection)} />
+        avatar={getCollectionAvatarImage(data?.collection)}
+      />
 
       <InformationSectionCollection data={data} />
 
       <div className="mt-10 desktop:px-20 tablet:px-20 px-4">
-        <FiltersSectionCollection showFilters={showFilters} setShowFilters={() => setShowFilters(!showFilters)} />
+        <FiltersSectionCollection
+          showFilters={showFilters}
+          setShowFilters={() => setShowFilters(!showFilters)}
+        />
         <div className="flex gap-4 desktop:flex-row flex-col">
           <NFTsList
-            filters={['status', 'price']}
+            filters={["status", "price"]}
             onApplyFilters={handleApplyFilters}
             onChangePage={handleChangePage}
             showFilters={showFilters}
@@ -95,12 +108,12 @@ export default function CollectionPage() {
             paging={items?.paging}
             traitFilters={data?.traitAvailable}
             onClose={() => setShowFilters(false)}
-            dataCollectionType= {data.collection.type}
-            showCreateNFT = {true}
+            dataCollectionType={data.collection.type}
+            showCreateNFT={true}
             userId={data?.collection?.creators[0].userId}
           />
         </div>
       </div>
     </div>
-  )
+  );
 }

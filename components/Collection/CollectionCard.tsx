@@ -1,17 +1,26 @@
-import Image from 'next/image'
-import Text from '@/components/Text'
-import Icon from '@/components/Icon'
-import { Collection } from '@/types'
+import Image from "next/image";
+import Text from "@/components/Text";
+import Icon from "@/components/Icon";
+import { Collection } from "@/types";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  collection: Collection
+  collection: Collection;
 }
 
 export default function CollectionCard({ collection, ...rest }: Props) {
   return (
-    <div className="flex flex-col gap-6 border border-disabled rounded-2xl p-4" {...rest}>
+    <div
+      className="flex flex-col gap-6 border border-disabled rounded-2xl p-4"
+      {...rest}
+    >
       <div className="flex items-center gap-3">
-        <Image className="rounded-xl" src="https://fakeimg.pl/300/" alt="" width={48} height={48} />
+        <Image
+          className="rounded-xl"
+          src="https://fakeimg.pl/300/"
+          alt=""
+          width={48}
+          height={48}
+        />
         <div>
           <div className="flex items-center gap-2">
             <Text className="text-primary font-semibold" variant="body-16">
@@ -70,18 +79,17 @@ export default function CollectionCard({ collection, ...rest }: Props) {
 
       {/* Highlighted NFTs */}
       <div className="flex gap-3 max-w-full overflow-y-auto">
-        {
-          Array.from(Array(20)).map((item, index) => (
-            <Image
-              className="rounded-xl"
-              key={index}
-              width={220}
-              height={200}
-              src="https://fakeimg.pl/220x200/"
-              alt="" />
-          ))
-        }
+        {Array.from(Array(20)).map((item, index) => (
+          <Image
+            className="rounded-xl"
+            key={index}
+            width={220}
+            height={200}
+            src="https://fakeimg.pl/220x200/"
+            alt=""
+          />
+        ))}
       </div>
     </div>
-  )
+  );
 }
