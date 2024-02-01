@@ -21,10 +21,8 @@ export default function RoundZeroConditionStaking({
   return (
     <div
       className={classNames(
-        "desktop:w-1/2 border-2 rounded-2xl transition-all p-4 flex flex-col gap-1",
-        hasStaked
-          ? " border-success"
-          : "border-dashed border-gray-500/70 hover:border-gray-500 hover:border-solid",
+        "desktop:w-1/2 tablet:w-1/2 border-2 rounded-2xl transition-all p-4 flex flex-col gap-1",
+        hasStaked ? "border-success bg-white" : "bg-disabled",
       )}
     >
       <p className="font-semibold text-center text-body-18">

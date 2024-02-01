@@ -12,15 +12,16 @@ export default function RoundStatusHeader({ round }: Props) {
     switch (status) {
       case "MINTING":
         return (
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 w-full tablet:w-auto">
             <div className="w-2 h-2 mt-1 rounded-full bg-success" />
 
-            <div>
-              <p className="text-body-16 font-medium leading-none">
-                Minting: <span className="text-success">Live</span>
+            <div className="flex w-full justify-between tablet:flex-col">
+              <p className="text-body-16 font-medium leading-none flex flex-col gap-2.5 tablet:flex-row">
+                <span>Minting:</span>
+                <span className="text-success">Live</span>
               </p>
-              <p className="text-body-14 text-secondary">
-                End:{" "}
+              <p className="text-body-14 text-secondary flex flex-col tablet:flex-row gap-1">
+                <span>End:</span>
                 <span className="text-secondary">
                   {format(new Date(round?.end) || 0, "yyyy/M/dd hh:mm a")}
                 </span>
@@ -31,14 +32,15 @@ export default function RoundStatusHeader({ round }: Props) {
 
       case "UPCOMING":
         return (
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 w-full tablet:w-auto">
             <div className="w-2 h-2 mt-1 rounded-full bg-warning" />
-            <div>
-              <p className="text-body-16 font-medium leading-none">
-                Minting: <span className="text-warning">Upcoming</span>
+            <div className="flex w-full justify-between tablet:flex-col">
+              <p className="text-body-16 font-medium leading-none flex flex-col gap-2.5 tablet:flex-row">
+                <span>Minting:</span>
+                <span className="text-warning">Upcoming</span>
               </p>
-              <p className="text-body-14 text-secondary">
-                Start:{" "}
+              <p className="text-body-14 text-secondary flex flex-col tablet:flex-row gap-1">
+                <span>Start:</span>
                 <span className="text-secondary">
                   {format(new Date(round?.start) || 0, "yyyy/M/dd hh:mm a")}
                 </span>
@@ -48,15 +50,16 @@ export default function RoundStatusHeader({ round }: Props) {
         );
       case "ENDED":
         return (
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 w-full tablet:w-auto">
             <div className="w-2 h-2 mt-1 rounded-full bg-error" />
 
-            <div>
-              <p className="text-body-16 font-medium leading-none">
-                Minting: <span className="text-error">Ended</span>
+            <div className="flex w-full justify-between tablet:flex-col">
+              <p className="text-body-16 font-medium leading-none flex flex-col gap-2.5 tablet:flex-row">
+                <span>Minting:</span>
+                <span className="text-error">Ended</span>
               </p>
-              <p className="text-body-14 text-secondary">
-                End:{" "}
+              <p className="text-body-14 text-secondary flex flex-col tablet:flex-row gap-1">
+                <span>End:</span>
                 <span className="text-secondary">
                   {format(new Date(round?.end) || 0, "yyyy/M/dd hh:mm a")}
                 </span>

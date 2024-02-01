@@ -5,7 +5,7 @@ import { MessageRoundNotEligible } from "../EligibleMessage";
 import Icon from "@/components/Icon";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import useTimeframeStore from "@/store/timeframe/store";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { formatDisplayedBalance, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
@@ -38,8 +38,7 @@ export default function RoundActionMinting({
     collection,
   );
   const [amount, setAmount] = useState(1);
-  const hasTimeframe = useTimeframeStore((state) => state.hasTimeframe);
-  const isInTimeframe = useTimeframeStore((state) => state.isInTimeframe);
+  const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
 
   const { data } = useContractReads({
     contracts: [
@@ -219,20 +218,7 @@ export default function RoundActionMinting({
         <div className="flex-1 w-full">
           <ConnectWalletButton scale="lg" className="w-full">
             <Button
-              disabled={
-                // roundType == '2' &&
-                // Number(maxAmountNFT) == 0 &&
-                // Number(maxAmountNFTPerWallet) == 0 &&
-                // Number(startClaim) == 0 &&
-                // Number(price) == 0
-                //   ? false
-                //   : (Number(amountBought) === round.maxPerWallet &&
-                //       round.maxPerWallet != 0) ||
-                //     (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
-                //     !eligibleStatus ||
-                //     (!isInTimeframe && hasTimeframe)
-                disableMint
-              }
+              disabled={disableMint}
               scale="lg"
               className="w-full"
               onClick={handleBuyNFT}

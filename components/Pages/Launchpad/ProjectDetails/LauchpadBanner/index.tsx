@@ -4,10 +4,12 @@ import RoundContractInteractions from "./RoundContractInteractions";
 import Link from "next/link";
 import { Project } from "@/types";
 import { useEffect, useMemo } from "react";
-import { formatUnits } from "ethers";
 import { useContractRead } from "wagmi";
 import { formatDisplayedBalance, getRoundAbi } from "@/utils";
 import { SPECIAL_ROUND } from "@/config/constants";
+import { format } from "date-fns";
+import TimeframeDropdown from "./TimeframeDropdown";
+import useTimeframeStore from "@/store/timeframe/store";
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
@@ -23,6 +25,26 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     return active || next || project.rounds[0];
   }, [project]);
 
+  const { timeframes, setHasTimeframe, hasTimeframe } = useTimeframeStore(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    if (timeframes?.length == 1 && timeframes[0]) {
+      if (
+        timeframes[0].hourStart == 0 &&
+        timeframes[0].minuteStart == 0 &&
+        timeframes[0].hourEnd == 23 &&
+        timeframes[0].minuteEnd == 59
+      ) {
+        setHasTimeframe(false);
+        return;
+      }
+    }
+    setHasTimeframe(true);
+    return;
+  }, [timeframes, setHasTimeframe]);
+
   const { data: roundData } = useContractRead({
     address: activeRound.address,
     abi: getRoundAbi(activeRound),
@@ -33,15 +55,17 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
   });
 
   return (
-    <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col">
-      <Image
-        className="w-full tablet:min-w-[380px] desktop:min-w-[515px] desktop:w-auto rounded-2xl object-fill"
-        width={512}
-        height={512}
-        src={project.banner}
-        alt=""
-      />
-      <div className="flex-1 flex flex-col">
+    <div className="flex w-full desktop:items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-col">
+      <div className="flex-shrink-0 w-full tablet:w-[380px] self-center desktop:self-start desktop:w-[515px]">
+        <Image
+          className="w-full tablet:min-w-[380px] desktop:min-w-[515px] desktop:w-auto rounded-2xl object-fill"
+          width={512}
+          height={512}
+          src={project.banner}
+          alt=""
+        />
+      </div>
+      <div className="flex-1 flex flex-col w-full">
         <div className="flex flex-col gap-4 mb-8">
           <p className="font-semibold text-heading-lg leading-none">
             Project: {project.name}
@@ -54,7 +78,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
             </span>
           </p>
 
-          <div className="w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row">
+          <div className="w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row tablet:flex-row">
             <div className="flex items-center gap-2">
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-7 w-[1px] bg-surface-hard" />
@@ -102,6 +126,38 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
 
           <p className="text-secondary text-body-14">{project.description}</p>
         </div>
+
+        {hasTimeframe && (
+          <div className="mb-10 w-full rounded-lg bg-surface-soft flex gap-4 desktop:gap-20 p-4 flex-col desktop:flex-row tablet:flex-row gap-x-10">
+            <div className="flex justify-between desktop:gap-20 tablet:gap-x-10">
+              <div className="flex flex-col">
+                <p className="text-lg text-secondary font-medium">
+                  Available From
+                </p>
+                <p className="text-lg mt-2">
+                  {format(new Date(activeRound.start), "dd/MM/yyyy")}
+                </p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-lg text-secondary font-medium">To</p>
+                <p className="text-lg mt-2">
+                  {format(new Date(activeRound.end), "dd/MM/yyyy")}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col grow gap-2">
+              <div className="flex justify-between items-baseline">
+                <p className="text-lg text-primary font-bold">Timeframes</p>
+                <p className="text-sm text-tertiary font-thin">
+                  Available at these hours everyday
+                </p>
+              </div>
+              <div className="text-body-16 text-secondary font-medium">
+                <TimeframeDropdown round={activeRound} />
+              </div>
+            </div>
+          </div>
+        )}
 
         <RoundContractInteractions
           round={activeRound}

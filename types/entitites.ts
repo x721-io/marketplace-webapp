@@ -115,3 +115,10 @@ export interface Collection {
   totalNft: number;
   floorPrice: string;
 }
+
+export interface Timeframe {
+  hourStart: number;
+  minuteStart: number;
+  hourEnd: number;
+  minuteEnd: number;
+}

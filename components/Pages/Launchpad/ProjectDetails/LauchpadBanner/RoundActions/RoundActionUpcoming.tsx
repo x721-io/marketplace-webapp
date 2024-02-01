@@ -46,13 +46,16 @@ export default function RoundActionUpcoming({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-body-14 text-secondary">
-        Minting starts:{" "}
-        <span className="text-primary font-semibold">
-          {format(new Date(round.start || 0), "yyyy/M/dd - hh:mm a")}
-        </span>
-      </p>
+    <div className="flex flex-col gap-4 tablet:flex-col justify-between">
+      <div className="tablet:flex flex-row justify-between desktop:flex flex-row justify-between">
+        <p className="text-body-14 text-secondary">
+          Minting starts:{" "}
+          <span className="text-primary font-semibold">
+            {format(new Date(round.start || 0), "yyyy/M/dd - hh:mm a")}
+          </span>
+        </p>
+        <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
+      </div>
 
       {round.type === "U2UPremintRoundZero" ||
       round.type === "U2UMintRoundZero" ? (
@@ -68,9 +71,9 @@ export default function RoundActionUpcoming({
             </Button>
           ) : (
             <div className="flex flex-col gap-3">
-              <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
+              {/* <MessageRoundNotEligible eligibleStatus={eligibleStatus} /> */}
 
-              <div className="flex flex-col desktop:flex-row gap-2 items-stretch">
+              <div className="flex flex-col desktop:flex-row gap-2 items-stretch tablet:flex-row">
                 <RoundZeroConditionStaking
                   hasStaked={hasStaked}
                   snapshot={snapshot}
@@ -91,12 +94,12 @@ export default function RoundActionUpcoming({
       ) : round.type === "U2UPremintRoundWhitelist" ||
         round.type === "U2UMintRoundWhitelist" ? (
         <div>
-          <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
+          {/* <MessageRoundNotEligible eligibleStatus={eligibleStatus} /> */}
           {!eligibleStatus && (
-            <p className="font-semibold text-secondary italic text-body-12">
+            <p className="text-secondary italic text-body-12">
               Follow these{" "}
               <Link
-                className="text-primary hover:underline"
+                className="font-semibold text-primary hover:underline"
                 href={round.instruction}
                 target="_blank"
               >

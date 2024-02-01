@@ -3,10 +3,12 @@ import { Collection, Round } from "@/types";
 import { formatEther } from "ethers";
 import { formatDisplayedBalance, getRoundAbi } from "@/utils";
 import RoundAction from "./RoundAction";
-import RoundStatusHeader from "./RoundStatusHeader";
-import Timeframes from "./Timeframes";
-import { useEffect } from "react";
+import { useRoundStatus } from "@/hooks/useRoundStatus";
+import { format } from "date-fns";
+import { useAccount, useContractRead, useContractReads } from "wagmi";
+import { useEffect, useMemo } from "react";
 import useLaunchpadStore from "@/store/launchpad/store";
+import RoundStatusHeader from "./RoundStatusHeader";
 
 interface Props {
   collection: Collection;
@@ -24,10 +26,10 @@ export default function RoundContractInteractions({
     setCollection(collection);
     setRound(round);
     setIsSpecial(isSpecial);
-  }, [round, collection, isSpecial, setRound, setIsSpecial, setCollection]);
+  }, [round, collection, isSpecial, setCollection, setRound, setIsSpecial]);
   return (
     <div className="w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4">
-      <div className="flex items-start justify-between flex-col desktop:flex-row gap-4 desktop:gap-0">
+      <div className="flex items-start justify-between flex-col tablet:flex-row desktop:flex-row gap-4 desktop:gap-0">
         <p className="text-heading-sm font-semibold">{round?.name}</p>
         <RoundStatusHeader round={round} />
       </div>
@@ -69,9 +71,6 @@ export default function RoundContractInteractions({
           </p>
         </div>
       </div>
-
-      <div className="w-full h-[1px] bg-gray-200" />
-      <Timeframes isSpecial={isSpecial} round={round} />
 
       <div className="w-full h-[1px] bg-gray-200" />
 
