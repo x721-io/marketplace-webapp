@@ -198,6 +198,10 @@ export const useMarketplaceApi = () => {
           {},
           authHeader(accessToken),
         ),
+      getTotalCountById: (
+        params: APIParams.CountNumber,
+      ): Promise<APIResponse.TotalCount> =>
+        marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
     };
   }, [authHeader]);
 };

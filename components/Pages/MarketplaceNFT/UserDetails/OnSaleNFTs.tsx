@@ -7,15 +7,16 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { useNFTFilters } from "@/hooks/useFilters";
 import useSWR from "swr";
 import { sanitizeObject } from "@/utils";
-import { APIParams } from "@/services/api/types";
+import { APIParams, APIResponse } from "@/services/api/types";
 import { Address } from "wagmi";
+import { MODE_ON_SALES } from "@/config/constants";
 
 export default function OnSaleNFTs({
   wallet,
   onUpdateAmount,
 }: {
   wallet: Address;
-  onUpdateAmount: (n: number) => void;
+  onUpdateAmount: (n: APIResponse.TotalCount) => void;
 }) {
   const [showFilters, setShowFilters] = useState(false);
   const api = useMarketplaceApi();
@@ -39,11 +40,23 @@ export default function OnSaleNFTs({
     { refreshInterval: 300000 },
   );
 
+  const { data: totalOnSales } = useSWR(
+    [
+      "total_on_sales-data",
+      { owner: String(wallet), mode: String(MODE_ON_SALES) },
+    ],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
+  );
+
   useEffect(() => {
-    if (data?.paging.total) {
-      onUpdateAmount(data?.paging.total);
+    if (totalOnSales) {
+      onUpdateAmount(totalOnSales);
     }
-  }, [data, onUpdateAmount]);
+  }, [totalOnSales, onUpdateAmount]);
 
   return (
     <div className="w-full py-7">

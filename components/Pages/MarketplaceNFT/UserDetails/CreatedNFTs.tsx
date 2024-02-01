@@ -4,11 +4,12 @@ import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
 import NFTsList from "@/components/List/NFTsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { APIParams } from "@/services/api/types";
+import { APIParams, APIResponse } from "@/services/api/types";
 import useSWR from "swr";
 import { sanitizeObject } from "@/utils";
 import { useNFTFilters } from "@/hooks/useFilters";
 import { Address } from "wagmi";
+import { MODE_CREATED } from "@/config/constants";
 
 export default function CreatedNFTs({
   wallet,
@@ -16,7 +17,7 @@ export default function CreatedNFTs({
   userId,
 }: {
   wallet: Address;
-  onUpdateAmount: (n: number) => void;
+  onUpdateAmount: (n: APIResponse.TotalCount) => void;
   userId: string;
 }) {
   const [showFilters, setShowFilters] = useState(false);
@@ -40,11 +41,23 @@ export default function CreatedNFTs({
     { refreshInterval: 300000 },
   );
 
+  const { data: totalCreated } = useSWR(
+    [
+      "total_creator-data",
+      { creatorAddress: String(wallet), mode: String(MODE_CREATED) },
+    ],
+    ([_, params]) =>
+      api.getTotalCountById({
+        ...params,
+      }),
+    { refreshInterval: 5000 },
+  );
+
   useEffect(() => {
-    if (data?.paging.total) {
-      onUpdateAmount(data?.paging.total);
+    if (totalCreated) {
+      onUpdateAmount(totalCreated);
     }
-  }, [data, onUpdateAmount]);
+  }, [totalCreated, onUpdateAmount]);
 
   return (
     <div className="w-full py-7">
