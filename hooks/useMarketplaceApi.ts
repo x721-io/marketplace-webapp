@@ -200,7 +200,7 @@ export const useMarketplaceApi = () => {
         ),
       getTotalCountById: (
         params: APIParams.CountNumber,
-      ): Promise<APIResponse.TotalCount> =>
+      ): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
     };
   }, [authHeader]);

@@ -16,7 +16,7 @@ export default function OnSaleNFTs({
   onUpdateAmount,
 }: {
   wallet: Address;
-  onUpdateAmount: (n: APIResponse.TotalCount) => void;
+  onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [showFilters, setShowFilters] = useState(false);
   const api = useMarketplaceApi();
@@ -43,7 +43,7 @@ export default function OnSaleNFTs({
   const { data: totalOnSales } = useSWR(
     [
       "total_on_sales-data",
-      { owner: String(wallet), mode: String(MODE_ON_SALES) },
+      { owner: String(wallet) as `0x${string}`, mode: String(MODE_ON_SALES) },
     ],
     ([_, params]) =>
       api.getTotalCountById({
