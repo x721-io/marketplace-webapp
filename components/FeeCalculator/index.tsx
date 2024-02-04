@@ -14,6 +14,10 @@ interface Props {
   price?: bigint;
   nft: NFT;
   quoteToken?: Address;
+  // Sửa tên props để meaningful hơn, sửa thêm type cho params:
+  // afterCalculatingFee: (totalCost: bigint) => void
+  // Type như thế này e có thể truyền vào các hàm normal do mình tự define
+  // Còn nếu type e set ở đây là Dispatch<SetStateAction<undefined>> thì ở parent component chỉ truyền vào đc các hàm setState của React
   setBuyerFeeFormatted?: Dispatch<SetStateAction<undefined>>
 }
 
@@ -47,7 +51,12 @@ export default function FeeCalculator({
         functionName: "feeRatioSellerBuyer",
       },
     ],
-    select: (data) => data.map((item) => item.result),
+    // Move logic ở useEffect phía dưới vào select, trước khi return data
+    select: (data) => {
+      const results = data.map((item) => item.result);
+      // afterCalculatingFee( Cần lấy data gì thì truyền ra ở đây )
+      return results
+    },
   });
 
   const [sellerFee, buyerFee, royaltiesFee, netReceived] = useMemo(() => {
@@ -83,11 +92,18 @@ export default function FeeCalculator({
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);
 
+  // Nếu convert ở đây, ra ngoài modal lúc approve lại phải convert lại lần nữa.
+  // Chỉ cần truyền rawValue (Bigint) ra ngoài. Sau đó ở ngoài component muốn handle display thì convert 1 lần
+  // Nếu truyền vào params thì không cần phải convert gì cả
   const buyerFeeFrice = formatDisplayedBalance(
     formatUnits(price + buyerFee, 18),
   );
 
   useEffect(() => {
+    // Move logic này vào bên trong useContractRead, phần select
+    // Viết ở đây cũng không sai, nhưng có thể tận dụng các option của wagmi
+    // Ngoài ra useEffect nếu không handle kĩ dependencies có thể gây rerender nhiều lần ngoài ý muốn => có thể send multiple request
+    // Cần lưu ý kĩ khi sử dụng useEffect
     return setBuyerFeeFormatted(buyerFeeFrice);
   }, [buyerFeeFrice, setBuyerFeeFormatted]);
 

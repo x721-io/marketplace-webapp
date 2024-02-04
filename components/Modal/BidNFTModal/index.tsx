@@ -53,6 +53,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     setValue,
     formState: { errors },
   } = useForm<FormState.BidNFT>();
+  // Phải sử dụng useMemo vì watch('quoteToken') là value có thể thay đổi
   const token = findTokenByAddress(watch("quoteToken"));
   const {
     isTokenApproved,
@@ -109,13 +110,13 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
 
   const { data: tokenBalance } = useBalance({
     address: address,
-    enabled: !!address,
-    token: token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? undefined : token?.address
+    enabled: !!address, // Thêm điều kiện !!token.address ở đây nữa
+    token: token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? undefined : token?.address // Sửa lại điều kiện: tokken?.address === tokens.wu2u.address
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
-      token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ?
+      token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? // === tokens.wu2u.address
         await onBidUsingNative(price, quantity)
         :
         await onBidNFT(price, token?.address as `0x${string}`, quantity)
@@ -126,6 +127,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     }
   };
 
+  // Sau khi sửa lại bằng sử dụng wagmi/core thì bỏ hết các hook useEffect này. Toast error & success sẽ được viết ở trong hàm onSubmit
   useEffect(() => {
     if (error)
       toast.error(`Error report: ${error.message}`, {
@@ -145,11 +147,11 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
-  const handleMin = () => {
+  const handleMin = () => { // Sửa typo: handleApproveMinAmount - Tên function/variables, ... nên ghi rõ nghĩa. Dài 1 chút cũng đc
     // setValue("buyerFeeFormatted", buyerFeeFormatted);
     setBuyerFeeFormatted(buyerFeeFormatted)
   }
-  const handleMax = () => {
+  const handleMax = () => { // Sửa typo: handleApproveMaxAmount
     // setValue("buyerFeeFormatted", (MaxUint256.toString());
     setBuyerFeeFormatted(MaxUint256.toString());
   }

@@ -140,6 +140,7 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
     return allowance > BigInt(0);
   }, [allowance]);
 
+  // Sử dụng writeContract của wagmi/core
   const { writeAsync, error: writeError } = useContractWrite({
     address: token,
     abi: erc20ABI,
@@ -150,7 +151,7 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
 
   const onApproveToken = async () => {
     const { hash } = await writeAsync();
-    updateHash(hash);
+    updateHash(hash); // Bỏ hook này đi, thay bằng await waitForTransaction({ hash }) Từ wagmi/core
   };
   return {
     isTokenApproved,
@@ -300,6 +301,11 @@ export const useBuyUsingNative = (nft: NFT) => {
 export const useBidNFT = (nft: NFT) => {
   const type = nft.collection.type;
   const { txStatus, updateHash } = useTransactionStatus();
+
+  // Đổi thành sử dụng wagmi/core
+  // Do mình thay đổi flow của modals bỏ các renderStep đi nên ko cần thiết sử dụng wagmi/react (Do không cần dùng đến các field Errors.
+  // Thay vào đó ở bên trong component, sẽ handle toast error ở trong try catch
+  // Tham khảo hook bidUsingNative ở dưới
   const { writeAsync, error: writeError } = useWriteMarketContract(
     type,
     type === "ERC721" ? "createBid" : "createOffer",
