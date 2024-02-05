@@ -11,7 +11,7 @@ import { useUIStore } from "@/store/ui/store";
 import useSWR from "swr";
 import { sanitizeObject } from "@/utils";
 import { APIParams } from "@/services/api/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
 import useSWRInfinite from "swr/infinite";
@@ -43,31 +43,40 @@ export default function ExploreCollectionsPage() {
   );
 
 
-  // const {
-  //   data,
-  //   error,
-  //   size,
-  //   setSize,
-  //   isLoading,
-  //   mutate
-  // } = useSWRInfinite(
-  //     (index) => {
-  //       const queryParams = !!queryString[searchKey]
-  //           ? { ...activeFilters, name: queryString[searchKey],page: 1}
-  //           : { ...activeFilters, name: queryString[searchKey],};
-  //
-  //       return ['fetchCollections', queryParams];
-  //
-  //     },
-  //     (key, params) =>
-  //         api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
-  //     { refreshInterval: 10000 ,parallel : true}
-  // );
-  //
-  // useEffect(()=>{
-  //   console.log("vvvvvvv",data)
-  //
-  // },[data])
+  const {
+    data,
+    size, // size là current page number
+    setSize, // Hàm setSize là để change page
+  } = useSWRInfinite(
+      (index) => { // Index này nhìn phải hiểu nó chính là page, nó map value từ biến size của hook
+        const queryParams = !!queryString[searchKey]
+            ? { ...activeFilters, name: queryString[searchKey], page: 1 } // Case này khi user gõ input để tìm kiếm thì reset page về 1
+            : {
+          ...activeFilters,
+            name: queryString[searchKey],
+            page: index + 1 // Apply next page ở đây
+        };
+
+        return ['fetchCollections', queryParams];
+
+      },
+      ([key, params]) =>
+          api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+      { refreshInterval: 10000 ,parallel : true}
+  );
+
+  useEffect(()=>{
+    console.log("vvvvvvv",data)
+    // Do trong examples data dạng array nên có thể concat trực tiếp data luôn
+    // Còn data của mình là
+    // {
+    //   data: Collection[],
+    //     paging: Paging
+    // }
+    // Nên phải map data sang data.data để concat
+    // => concat(...data.data)
+
+  },[data])
 
 
 
@@ -78,9 +87,9 @@ export default function ExploreCollectionsPage() {
 
 
 
-  // const handleFetchMore = () => {
-  //   setSize((prevSize) => prevSize + 1);
-  // };
+  const handleLoadMore = () => {
+    setSize((prevSize) => prevSize + 1);
+  };
 
   // useEffect(() => {
   // const handleFetchMore = async () => {
@@ -128,6 +137,7 @@ export default function ExploreCollectionsPage() {
           collections={collections?.data}
           paging={collections?.paging}
           onChangePage={handleChangePage}
+          // Thay onChangePage bằng cái này onLoadMore={handleLoadMore}
           showFilter={isFiltersVisible}
         />
       </div>

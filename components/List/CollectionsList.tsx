@@ -43,7 +43,7 @@ interface Props {
 export default function CollectionsList({
   collections,
   paging,
-  onChangePage,
+  onChangePage, // Thay cái này bằng onLoadMore
   id,
   loading,
   error,
@@ -55,31 +55,40 @@ export default function CollectionsList({
   const [loadMore, setLoadMore] = useState(false);
   const [data, setData] = useState([] as Collection []);
 
-
+  // Viết code để tối đa 2 dòng trắng thôi nhé
 
 
   useEffect(() => {
     if (loadMore && paging) {
         try {
           setData((prevData) => [...prevData, ...collections]);
-          onChangePage(paging.page + 1);
+          onChangePage(paging.page + 1); // Thay bằng onLoadmore
         } catch (error) {
           console.error('Error fetching data:', error);
         } finally {
+          // Tuyệt đối không set State trong use Effect như thế này.
+          // Mỗi lần set state component sẽ rerender lại.
+          // Ví dụ setLoadMore() xong ở dưới dendencies có loadMore [loadMore,collections,data] thì nó lại trigger useEffect lần nữa => rerender lần nữa
+          // => 1 vòng lặp vô tận
+          // Kể cả có conditions như ở đây: if (loadMore && paging), thì component cũng bị rerender lại thêm 1 lần nữa
+          // Càng giảm thiểu số lần rerender thì performance mới đc tối ưu hoá
           setLoadMore(false);
         }
   }
-    console.log("----",collections)
-    console.log("data",data)
+    // console.log("----",collections)
+    // console.log("data",data)
 
   }, [loadMore,collections,data]);
 
 
   useEffect(() => {
+    // Tạm thời để test chức năng loadmore thì em tạo 1 button rồi click vào loadmore thì nó load more. Khi nào handle xử lý được data thì mới viết xử lý loadmore = scroll
+
     const handleScroll = () => {
       const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
       if (scrollTop + clientHeight === scrollHeight && !loading) {
         setLoadMore(true);
+        // Sao không viết thẳng hàm load More data vào đây mà lại tạo 1 biến loadmore rồi watch nó rồi mới thực hiện load more data
       }
     };
 
@@ -89,7 +98,7 @@ export default function CollectionsList({
     };
   }, [loading]);
 
-
+// Viết code để tối đa 2 dòng trắng thôi nhé
 
 
   if (loading) {
