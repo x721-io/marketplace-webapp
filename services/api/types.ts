@@ -16,6 +16,8 @@ export namespace APIParams {
   interface PaginationParams {
     page?: number;
     limit?: number;
+    hasNext?: boolean;
+
   }
 
   interface WithAuth {
@@ -203,7 +205,7 @@ export namespace APIResponse {
   interface Pagination {
     page: number;
     limit: number;
-    total: number;
+    hasNext: boolean;
   }
 
   export interface Connect {

@@ -107,7 +107,6 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
       ...activeFilters,
       page,
     });
-    window.scrollTo(0, 0);
   };
 
   return {
@@ -124,7 +123,7 @@ export const useCollectionFilters = (
     useState<APIParams.FetchCollections>(
       defaultState ?? {
         page: 1,
-        limit: 20,
+      limit: 20,
         max: "",
         min: "",
       },
@@ -135,7 +134,6 @@ export const useCollectionFilters = (
       ...activeFilters,
       page,
     });
-    window.scrollTo(0, 0);
   };
 
   const handleApplyFilters = (params: APIParams.FetchCollections) => {

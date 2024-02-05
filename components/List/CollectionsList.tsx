@@ -2,7 +2,7 @@ import { Pagination, Spinner, Tooltip } from "flowbite-react";
 import { formatEther } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import VerifyIcon from "../Icon/Verify";
 import { formatDisplayedBalance } from "@/utils";
@@ -14,11 +14,18 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
+import useSWR from "swr";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import { useCollectionFilters, useExploreSectionFilters } from "@/hooks/useFilters";
+import { useUIStore } from "@/store/ui/store";
+import { c } from "@wagmi/connectors/dist/base-e6cfa360";
 
 interface Paging {
   page?: number;
   limit: number;
   total?: number;
+  hasNext?: boolean;
+
 }
 
 interface Props {
@@ -45,10 +52,45 @@ export default function CollectionsList({
   creator,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
-  const totalPage = useMemo(() => {
-    if (!paging?.total) return 0;
-    return Math.ceil(paging.total / paging.limit);
-  }, [paging]);
+  const [loadMore, setLoadMore] = useState(false);
+  const [data, setData] = useState([] as Collection []);
+
+
+
+
+  useEffect(() => {
+    if (loadMore && paging) {
+        try {
+          setData((prevData) => [...prevData, ...collections]);
+          onChangePage(paging.page + 1);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoadMore(false);
+        }
+  }
+    console.log("----",collections)
+    console.log("data",data)
+
+  }, [loadMore,collections,data]);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      if (scrollTop + clientHeight === scrollHeight && !loading) {
+        setLoadMore(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [loading]);
+
+
+
 
   if (loading) {
     return (
@@ -80,6 +122,10 @@ export default function CollectionsList({
     );
   }
 
+
+
+
+
   return (
     <>
       <div
@@ -98,7 +144,7 @@ export default function CollectionsList({
             )
           : ""}
         {Array.isArray(collections) &&
-          collections.map((c, index) => {
+            collections.map((c, index) => {
             let link = c.shortUrl || c.id || c.address || c.name;
             return (
               <Link key={c.id} href={`/collection/${link}`}>
@@ -185,13 +231,13 @@ export default function CollectionsList({
             );
           })}
       </div>
-      <div className="flex justify-end mt-20">
-        <Pagination
-          currentPage={paging?.page ?? 1}
-          totalPages={totalPage}
-          onPageChange={onChangePage}
-        />
-      </div>
+      {/*<div className="flex justify-end mt-20">*/}
+      {/*  <Pagination*/}
+      {/*    currentPage={paging?.page ?? 1}*/}
+      {/*    totalPages={totalPage}*/}
+      {/*    onPageChange={onChangePage}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </>
   );
 }

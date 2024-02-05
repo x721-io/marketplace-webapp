@@ -14,6 +14,7 @@ import { APIParams } from "@/services/api/types";
 import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
+import useSWRInfinite from "swr/infinite";
 
 export default function ExploreCollectionsPage() {
   const [showFilters, setShowFilters] = useState(false);
@@ -25,21 +26,83 @@ export default function ExploreCollectionsPage() {
 
   const { queryString } = useUIStore((state) => state);
   const { searchKey } = useExploreSectionFilters();
-
   const {
     data: collections,
     error,
     isLoading,
+      mutate
   } = useSWR(
     !!queryString[searchKey]
       ? { ...activeFilters, name: queryString[searchKey], page: 1 }
-      : { ...activeFilters, name: queryString[searchKey] },
+      : { ...activeFilters, name: queryString[searchKey]},
     (params) =>
       api.fetchCollections(
         sanitizeObject(params) as APIParams.FetchCollections,
       ),
     { refreshInterval: 10000 },
   );
+
+
+  // const {
+  //   data,
+  //   error,
+  //   size,
+  //   setSize,
+  //   isLoading,
+  //   mutate
+  // } = useSWRInfinite(
+  //     (index) => {
+  //       const queryParams = !!queryString[searchKey]
+  //           ? { ...activeFilters, name: queryString[searchKey],page: 1}
+  //           : { ...activeFilters, name: queryString[searchKey],};
+  //
+  //       return ['fetchCollections', queryParams];
+  //
+  //     },
+  //     (key, params) =>
+  //         api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+  //     { refreshInterval: 10000 ,parallel : true}
+  // );
+  //
+  // useEffect(()=>{
+  //   console.log("vvvvvvv",data)
+  //
+  // },[data])
+
+
+
+
+
+
+
+
+
+
+  // const handleFetchMore = () => {
+  //   setSize((prevSize) => prevSize + 1);
+  // };
+
+  // useEffect(() => {
+  // const handleFetchMore = async () => {
+  //   const nextPage = collections.paging?.page + 1; // Increment the page for the next fetch
+  //
+  //   try {
+  //     const queryParams = !!queryString[searchKey]
+  //         ? { ...activeFilters, name: queryString[searchKey], page: nextPage }
+  //         : { ...activeFilters, name: queryString[searchKey], page: nextPage };
+  //
+  //     // Update local state with the new data
+  //     await mutate(['fetchCollections', queryParams], (prevData: any) => ({
+  //       ...prevData,
+  //       data: [...(prevData?.data || []), ...(collections || [])],
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error fetching more data:', error);
+  //   }
+  //   handleFetchMore();
+  // }},[collections]);
+
+
 
   const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters();
 
@@ -68,6 +131,8 @@ export default function ExploreCollectionsPage() {
           showFilter={isFiltersVisible}
         />
       </div>
+
+        {/*<button onClick={() => setSize(size + 1)}>Load More</button>*/}
     </div>
   );
 }
