@@ -26,7 +26,7 @@ export default function CollectionPage() {
   const api = useMarketplaceApi();
   const [showFilters, setShowFilters] = useState(false);
   const { query } = useExploreSectionFilters();
-  const { activeFilters, handleApplyFilters, handleChangePage } =
+  const { activeFilters, handleApplyFilters, handleLoadMore } =
     useNFTFilters();
   const myId = useAuthStore((state) => state.profile?.id);
   const { searchKey } = useExploreSectionFilters();
@@ -102,7 +102,7 @@ export default function CollectionPage() {
           <NFTsList
             filters={["status", "price"]}
             onApplyFilters={handleApplyFilters}
-            onChangePage={handleChangePage}
+            onChangePage={handleLoadMore}
             showFilters={showFilters}
             items={items?.data}
             paging={items?.paging}

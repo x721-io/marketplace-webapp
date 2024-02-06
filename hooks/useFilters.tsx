@@ -102,7 +102,7 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
     setActiveFilters(sanitizeObject(_activeFilters));
   };
 
-  const handleChangePage = (page: number) => {
+  const handleLoadMore = (page: number) => {
     setActiveFilters({
       ...activeFilters,
       page,
@@ -111,7 +111,7 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
 
   return {
     activeFilters,
-    handleChangePage,
+    handleLoadMore,
     handleApplyFilters,
   };
 };
@@ -129,7 +129,7 @@ export const useCollectionFilters = (
       },
     );
 
-  const handleChangePage = (page: number) => {
+  const handleLoadMore = (page: number) => {
     setActiveFilters({
       ...activeFilters,
       page,
@@ -156,7 +156,7 @@ export const useCollectionFilters = (
 
   return {
     activeFilters,
-    handleChangePage,
+    handleLoadMore,
     handleApplyFilters,
   };
 };

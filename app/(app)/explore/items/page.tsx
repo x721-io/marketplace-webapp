@@ -11,7 +11,7 @@ import { useUIStore } from "@/store/ui/store";
 export default function ExploreNFTsPage() {
   const api = useMarketplaceApi();
   const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters();
-  const { activeFilters, handleApplyFilters, handleChangePage } =
+  const { activeFilters, handleApplyFilters, handleLoadMore } =
     useNFTFilters();
 
   const { queryString } = useUIStore((state) => state);
@@ -29,7 +29,7 @@ export default function ExploreNFTsPage() {
     <NFTsList
       loading={isLoading}
       onApplyFilters={handleApplyFilters}
-      onChangePage={handleChangePage}
+      onChangePage={handleLoadMore}
       showFilters={isFiltersVisible}
       items={data?.data}
       paging={data?.paging}
