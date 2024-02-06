@@ -123,7 +123,7 @@ export const useCollectionFilters = (
     useState<APIParams.FetchCollections>(
       defaultState ?? {
         page: 1,
-      limit: 20,
+        limit: 20,
         max: "",
         min: "",
       },

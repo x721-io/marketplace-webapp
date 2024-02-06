@@ -44,7 +44,10 @@ export default function CreatedNFTs({
   const { data: totalCreated } = useSWR(
     [
       "total_creator-data",
-      { creatorAddress: String(wallet) as `0x${string}`, mode: String(MODE_CREATED) },
+      {
+        creatorAddress: String(wallet) as `0x${string}`,
+        mode: String(MODE_CREATED),
+      },
     ],
     ([_, params]) =>
       api.getTotalCountById({

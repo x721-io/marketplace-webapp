@@ -41,7 +41,10 @@ export default function OwnedNFTs({
   );
 
   const { data: totalOwned } = useSWR(
-    ["total_owner-data", { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) }],
+    [
+      "total_owner-data",
+      { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) },
+    ],
     ([_, params]) =>
       api.getTotalCountById({
         ...params,

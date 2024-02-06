@@ -26,8 +26,7 @@ export default function CollectionPage() {
   const api = useMarketplaceApi();
   const [showFilters, setShowFilters] = useState(false);
   const { query } = useExploreSectionFilters();
-  const { activeFilters, handleApplyFilters, handleLoadMore } =
-    useNFTFilters();
+  const { activeFilters, handleApplyFilters, handleLoadMore } = useNFTFilters();
   const myId = useAuthStore((state) => state.profile?.id);
   const { searchKey } = useExploreSectionFilters();
 

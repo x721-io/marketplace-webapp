@@ -11,10 +11,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <SWRConfig
-          value={{
-          revalidateOnFocus : false,
-            refreshInterval : 0
-          }}>
+        value={{
+          revalidateOnFocus: false,
+          refreshInterval: 0,
+        }}
+      >
         <Flowbite theme={{ theme: appTheme }}>{children}</Flowbite>
       </SWRConfig>
     </WagmiConfig>

@@ -17,7 +17,6 @@ export namespace APIParams {
     page?: number;
     limit?: number;
     hasNext?: boolean;
-
   }
 
   interface WithAuth {
