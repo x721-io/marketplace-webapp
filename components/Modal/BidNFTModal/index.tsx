@@ -42,7 +42,6 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { address } = useAccount();
-
   const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft);
   const { onBidNFT } = useBidNFT(nft)
   const {
@@ -55,13 +54,11 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   } = useForm<FormState.BidNFT>();
   // Phải sử dụng useMemo vì watch('quoteToken') là value có thể thay đổi
   const token = findTokenByAddress(watch("quoteToken"));
+  // const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const {
     isTokenApproved,
     onApproveToken,
   } = useMarketTokenApproval(token?.address as Address, nft.collection.type);
-
-  const [buyerFeeFormatted, setBuyerFeeFormatted] = useState<string>();
-
 
   const formRules = {
     price: {
@@ -102,63 +99,78 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     },
     allowance: {
       validate: {
-        // check allowance < price + fee ? 'show validation' : '' 
-      },
+        checkTotalFee: (totalFee: number, { price, fee }: { price: number, fee: number }) => {
+          if (totalFee !== undefined && price !== undefined && fee !== undefined) {
+            return totalFee < (parseFloat(price.toString()) + parseFloat(fee.toString())) || "Total fee must be less than price + fee";
+          }
+        }
+      }
     }
   };
   const [price, quantity] = watch(["price", "quantity"]);
 
   const { data: tokenBalance } = useBalance({
     address: address,
-    enabled: !!address, // Thêm điều kiện !!token.address ở đây nữa
-    token: token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? undefined : token?.address // Sửa lại điều kiện: tokken?.address === tokens.wu2u.address
+    enabled: !!address && !!token?.address,
+    token: token?.address === tokens.wu2u.address ? undefined : token?.address
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
-      token?.address === process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT ? // === tokens.wu2u.address
-        await onBidUsingNative(price, quantity)
-        :
-        await onBidNFT(price, token?.address as `0x${string}`, quantity)
+      token?.address === tokens.wu2u.address ? await onBidUsingNative(price, quantity) : await onBidNFT(price, token?.address as `0x${string}`, quantity)
+      toast.success(`Bid placed successfully`, {
+        autoClose: 1000,
+        closeButton: true,
+      });
+      onClose?.();
     } catch (e: any) {
-      console.error(e);
+      toast.error(`Error report: ${e.message}`, {
+        autoClose: 1000,
+        closeButton: true,
+      });
+      onClose?.();
     } finally {
       reset();
     }
   };
 
-  // Sau khi sửa lại bằng sử dụng wagmi/core thì bỏ hết các hook useEffect này. Toast error & success sẽ được viết ở trong hàm onSubmit
-  useEffect(() => {
-    if (error)
-      toast.error(`Error report: ${error.message}`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-  }, [error]);
+  const [totalFee, setTotalFee] = useState();
 
-  useEffect(() => {
-    if (isSuccess) {
-      onClose?.();
-      toast.success(`Bid placed successfully`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
+  const handleAfterCalculatingFee = (results: any[], price: bigint) => {
+    if (!results || results.length === 0) {
+      console.error('Results array is empty or undefined');
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
 
-  const handleMin = () => { // Sửa typo: handleApproveMinAmount - Tên function/variables, ... nên ghi rõ nghĩa. Dài 1 chút cũng đc
-    // setValue("buyerFeeFormatted", buyerFeeFormatted);
-    setBuyerFeeFormatted(buyerFeeFormatted)
+    const subResult = results[0];
+    if (!subResult || subResult.length === 0) {
+      console.error('SubResult array is empty or undefined');
+      return;
+    }
+
+    const totalFeeInWei = subResult[0];
+    if (!totalFeeInWei || totalFeeInWei.length === 0) {
+      console.error('TotalFeeInWei array is empty or undefined');
+      return;
+    }
+
+    const formattedTotalPrice = formatDisplayedBalance(formatUnits(price + totalFeeInWei[0], 18));
+    setTotalFee(formattedTotalPrice as any);
+
+   
+  };
+
+
+  const handleApproveMinAmount = () => {
+    setValue("allowance" as any, totalFee);
   }
-  const handleMax = () => { // Sửa typo: handleApproveMaxAmount
-    // setValue("buyerFeeFormatted", (MaxUint256.toString());
-    setBuyerFeeFormatted(MaxUint256.toString());
+  const handleApproveMaxAmount = () => {
+    setValue("allowance" as any, (MaxUint256.toString()));
   }
   const handleApprove = async () => {
+    
     try {
-      // truyền price vào onApproveToken
-      await onApproveToken();
+      await onApproveToken(totalFee as any);
     } catch (e) {
       console.error(e);
     }
@@ -264,11 +276,14 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 nft={nft}
                 price={parseUnits(price || "0", token?.decimal)}
                 quoteToken={token?.address}
-                setBuyerFeeFormatted={setBuyerFeeFormatted}
+                afterCalculatingFee={(result) => handleAfterCalculatingFee([result], parseUnits(price || "0", token?.decimal))}
               />
             )}
 
             <FormValidationMessages errors={errors} />
+            {/* <Button type={"submit"} className="w-full" loading={isLoading}>
+                Place bid
+              </Button> */}
             {isTokenApproved ?
               <Button type={"submit"} className="w-full" loading={isLoading}>
                 Place bid
@@ -277,11 +292,11 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 <Text>Not enough allowance</Text>
                 <Text>Approve allowance</Text>
                 <Input
-                  // onChange={(e) => setValue("buyerFeeFormatted", e.target.value)}
-                  value={buyerFeeFormatted}
+                  register={register("allowance" as any, formRules.allowance)}
+                  value={totalFee}
                 />
-                <Button onClick={handleMin} className="w-full">Min</Button>
-                <Button onClick={handleMax} className="w-full">Max</Button>
+                <Button onClick={handleApproveMinAmount} className="w-full">Min</Button>
+                <Button onClick={handleApproveMaxAmount} className="w-full">Max</Button>
                 <Button onClick={handleApprove} className="w-full">Approve Token contract</Button>
               </>}
 

@@ -140,23 +140,18 @@ export const useMarketTokenApproval = (token: Address, type: AssetType) => {
     return allowance > BigInt(0);
   }, [allowance]);
 
-  // Sử dụng writeContract của wagmi/core
-  const { writeAsync, error: writeError } = useContractWrite({
-    address: token,
-    abi: erc20ABI,
-    functionName: "approve",
-    args: [marketContract.address, MaxInt256],
-    value: BigInt(0) as any,
-  });
-
-  const onApproveToken = async () => {
-    const { hash } = await writeAsync();
-    updateHash(hash); // Bỏ hook này đi, thay bằng await waitForTransaction({ hash }) Từ wagmi/core
+  const onApproveToken = async (price: bigint) => {
+    console.log('price: ', price);
+    await writeContract({
+      abi: erc20ABI,
+      address: token,
+      functionName: 'approve',
+      args: [marketContract.address, price],
+    })
   };
   return {
     isTokenApproved,
     onApproveToken,
-    writeError,
     isFetchingApproval,
     ...txStatus,
   };
@@ -302,32 +297,28 @@ export const useBidNFT = (nft: NFT) => {
   const type = nft.collection.type;
   const { txStatus, updateHash } = useTransactionStatus();
 
-  // Đổi thành sử dụng wagmi/core
-  // Do mình thay đổi flow của modals bỏ các renderStep đi nên ko cần thiết sử dụng wagmi/react (Do không cần dùng đến các field Errors.
-  // Thay vào đó ở bên trong component, sẽ handle toast error ở trong try catch
-  // Tham khảo hook bidUsingNative ở dưới
-  const { writeAsync, error: writeError } = useWriteMarketContract(
-    type,
-    type === "ERC721" ? "createBid" : "createOffer",
-  );
+  const onBidERC721 = (price: any, quoteToken: Address) =>
+    writeContract({
+      ...contracts.erc721Market,
+      functionName: "createBid",
+      args: [nft.collection.address, (nft.u2uId ?? nft.id) as any, quoteToken, parseEther(price)]
+    });
 
-  const onBidNFT = async (
-    price: string,
-    quoteToken: Address,
-    quantity?: string,
-  ) => {
-    const args = [
-      nft.collection.address,
-      nft.u2uId ?? nft.id,
-      type === "ERC1155" && quantity,
-      quoteToken,
-      parseEther(price),
-    ].filter(Boolean);
-
-    const { hash } = await writeAsync?.({ args });
+  const onBidERC1155 = (price: any, quoteToken: Address, quantity: string) =>
+    writeContract({
+      ...contracts.erc1155Market,
+      functionName: "createOffer",
+      args: [nft.collection.address, (nft.u2uId ?? nft.id) as any, quantity as any, quoteToken, parseEther(price)]
+    });
+                
+  const onBidNFT = async (price: string, quoteToken: Address, quantity?: string,) => {
+    const { hash } =
+      type === "ERC721"
+        ? await onBidERC721(price, quoteToken)
+        : await onBidERC1155(price, quoteToken, quantity as any);
     updateHash(hash);
   };
-  return { onBidNFT, writeError, ...txStatus };
+  return { onBidNFT, ...txStatus };
 };
 
 export const useBidUsingNative = (nft: NFT) => {
