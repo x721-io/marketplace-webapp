@@ -16,6 +16,7 @@ import {
   truncate,
 } from "@/utils/string";
 import { formatDisplayedBalance } from "@/utils";
+import React, { useMemo } from "react";
 
 export default function NFTMarketData({
   nft,
@@ -28,28 +29,36 @@ export default function NFTMarketData({
 
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
 
+  const creator = useMemo(() => {
+    if (!nft.collection.creators) return undefined;
+    return nft.collection.creators[0].user;
+  }, [nft.collection]);
+
   if (!marketData) {
     return null;
   }
-
   return (
     <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
-        <div className="flex gap-1 items-center">
-          {/* <Icon name="verified" width={16} height={16} /> */}
-          <Text
-            showTooltip
-            labelTooltip={nft.collection.name}
-            className="w-auto max-w-[300px]"
-          >
-            <Link
-              href={`/collection/${nft.collection.id}`}
-              className="text-secondary underline"
+        <div className="flex gap-2  items-center">
+            {(nft.collection.isVerified && creator?.accountStatus) ? (
+                <Icon name="verified" width={24} height={24} />
+            ):(
+                <Icon name="verify-disable" width={24} height={24} />
+            )}
+            <Text
+                showTooltip
+                labelTooltip={nft.collection.name}
+                className="w-auto max-w-[300px]"
             >
-              {nft.collection.name}
-            </Link>
-          </Text>
+              <Link
+                  href={`/collection/${nft.collection.id}`}
+                  className="text-secondary underline"
+              >
+                {nft.collection.name}
+              </Link>
+            </Text>
         </div>
 
         <Tooltip content={nft.name} placement="bottom">

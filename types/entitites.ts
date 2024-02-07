@@ -114,6 +114,7 @@ export interface Collection {
   totalOwner: number;
   totalNft: number;
   floorPrice: string;
+  isVerified: boolean;
 }
 
 export interface Timeframe {
