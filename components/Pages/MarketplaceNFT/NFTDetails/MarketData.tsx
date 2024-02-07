@@ -42,23 +42,23 @@ export default function NFTMarketData({
       {/* NFT info */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-2  items-center">
-            {(nft.collection.isVerified && creator?.accountStatus) ? (
-                <Icon name="verified" width={24} height={24} />
-            ):(
-                <Icon name="verify-disable" width={24} height={24} />
-            )}
-            <Text
-                showTooltip
-                labelTooltip={nft.collection.name}
-                className="w-auto max-w-[300px]"
+          {nft.collection.isVerified && creator?.accountStatus ? (
+            <Icon name="verified" width={24} height={24} />
+          ) : (
+            <Icon name="verify-disable" width={24} height={24} />
+          )}
+          <Text
+            showTooltip
+            labelTooltip={nft.collection.name}
+            className="w-auto max-w-[300px]"
+          >
+            <Link
+              href={`/collection/${nft.collection.id}`}
+              className="text-secondary underline"
             >
-              <Link
-                  href={`/collection/${nft.collection.id}`}
-                  className="text-secondary underline"
-              >
-                {nft.collection.name}
-              </Link>
-            </Text>
+              {nft.collection.name}
+            </Link>
+          </Text>
         </div>
 
         <Tooltip content={nft.name} placement="bottom">

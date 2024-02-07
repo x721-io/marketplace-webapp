@@ -41,7 +41,10 @@ export default function UserCollections({
   const { data: totalCollections } = useSWR(
     [
       "total_collections-data",
-      { owner: String(wallet) as `0x${string}`, mode: String(MODE_COLLECTIONS) },
+      {
+        owner: String(wallet) as `0x${string}`,
+        mode: String(MODE_COLLECTIONS),
+      },
     ],
     ([_, params]) =>
       api.getTotalCountById({
