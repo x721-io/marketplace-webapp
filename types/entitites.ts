@@ -85,6 +85,7 @@ export interface NFT {
     id: string;
     publicKey: Address;
     username: string;
+    accountStatus: boolean;
   } | null;
   collection: Collection;
   traits?: Trait[];

@@ -90,6 +90,7 @@ export default function TimeframeDropdown({ round }: Props) {
       }
     }
     return current;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeframes]);
 
   const formatTimeframe = (timeframe?: Timeframe) => {
