@@ -127,7 +127,7 @@ export default function MenuModal({ onClose, show }: ModalProps) {
           )}
         </div>
 
-        <ConnectWalletButton />
+        <ConnectWalletButton showConnectButton/>
       </Modal.Body>
     </Modal>
   );
