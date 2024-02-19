@@ -202,6 +202,12 @@ export const useMarketplaceApi = () => {
         params: APIParams.CountNumber,
       ): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
+      getFloorPrice: (params: { address: Address | string }): Promise<APIResponse.FloorPrice> => {
+        const requestData = {
+            address: params.address
+        };
+        return marketplaceApi.post(API_ENDPOINTS.FLOOR_PRICE, requestData, authHeader());
+      }
     };
   }, [authHeader]);
 };

@@ -12,6 +12,7 @@ import { NFT, MarketEvent, FormState } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
 import { formatDisplayedBalance } from "@/utils";
 import { numberRegex } from "@/utils/regex";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
 interface Props {
   onSuccess: () => void;
@@ -22,6 +23,7 @@ interface Props {
 
 export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   const { address } = useAccount();
+  const api = useMarketplaceApi();
   const { data: tokenBalance } = useBalance({
     address: address,
     enabled: !!address,
@@ -53,6 +55,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
       } else {
         await onBuyERC1155(saleData.operationId, saleData.price, quantity);
       }
+      await api.getFloorPrice({ address: nft.collection.address });
     } catch (e: any) {
       console.error(e);
     }

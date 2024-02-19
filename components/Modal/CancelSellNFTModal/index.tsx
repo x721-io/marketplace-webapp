@@ -13,6 +13,7 @@ import { NFT } from "@/types/entitites";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { toast } from "react-toastify";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -38,15 +39,17 @@ export default function CancelSellNFTModal({
 }: Props) {
   const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const api = useMarketplaceApi();
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
       (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase(),
     );
   }, [marketData, wallet]);
 
-  const handleCancelSell = () => {
+  const handleCancelSell = async () => {
     try {
-      onCancelSell(mySale?.operationId);
+      await onCancelSell(mySale?.operationId);
+      await api.getFloorPrice({ address: nft.collection.address });
     } catch (e) {
       console.error(e);
     }

@@ -15,6 +15,7 @@ import FeeCalculator from "@/components/FeeCalculator";
 import { formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { numberRegex } from "@/utils/regex";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
 interface Props {
   onSuccess: () => void;
@@ -48,6 +49,7 @@ export default function ListingStep({
   const quoteToken = findTokenByAddress(watch("quoteToken"));
   const price = watch("price");
   const quantity = watch("quantity");
+  const api = useMarketplaceApi();
 
   const formRules = {
     price: {
@@ -94,7 +96,8 @@ export default function ListingStep({
     quantity,
   }: FormState.SellNFT) => {
     try {
-      onSellNFT(price, quoteToken, quantity);
+      await onSellNFT(price, quoteToken, quantity);
+      await api.getFloorPrice({ address: nft.collection.address });
     } catch (e) {
       console.error(e);
     }
