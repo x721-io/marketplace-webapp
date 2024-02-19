@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 import { UIAction, UIState } from "@/store/ui/types";
+
 
 const DEFAULT_STATE: UIState = {
   showFilters: {

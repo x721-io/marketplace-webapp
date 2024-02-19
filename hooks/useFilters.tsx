@@ -64,7 +64,7 @@ export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
   const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>(
     defaultState ?? {
       page: 1,
-      limit: 20,
+      limit: 5,
       traits: undefined,
       collectionAddress: undefined,
       creatorAddress: undefined,

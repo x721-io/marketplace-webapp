@@ -1,24 +1,22 @@
 "use client";
 
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { useUIStore } from "@/store/ui/store";
 import { useExploreSectionFilters } from "@/hooks/useFilters";
-import useSWR from "swr";
 import Text from "@/components/Text";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
-import { APIParams } from "@/services/api/types";
-import { Pagination, Spinner } from "flowbite-react";
-import {
-  getUserAvatarImage,
-  getUserCoverImage,
-  getUserLink,
-} from "@/utils/string";
+import React, { useEffect, useMemo, useState } from "react";
+import { APIParams, APIResponse } from "@/services/api/types";
+import { Spinner } from "flowbite-react";
+import { getUserAvatarImage, getUserCoverImage, getUserLink, } from "@/utils/string";
 import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
-import { formatDisplayedNumber } from "@/utils";
+import { formatDisplayedNumber, sanitizeObject } from "@/utils";
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
+import useSWRInfinite from "swr/infinite";
+import { useUIStore } from "@/store/ui/store";
+import UsersData = APIResponse.UsersData;
+
 
 export default function ExploreUsersPage() {
   const api = useMarketplaceApi();
@@ -26,40 +24,72 @@ export default function ExploreUsersPage() {
   const { searchKey } = useExploreSectionFilters();
   const myId = useAuthStore((state) => state.profile?.id);
 
-  const [activePagination, setActivePagination] =
+  const [activePagination] =
     useState<APIParams.FetchUsers>({
       page: 1,
-      limit: 20,
+      limit: 10,
     });
 
-  const {
-    data: users,
-    isLoading,
-    error,
-    mutate,
-  } = useSWR(
-    !!queryString[searchKey]
-      ? { ...activePagination, search: queryString[searchKey], page: 1 }
-      : {
-          ...activePagination,
-          search: queryString[searchKey],
-        },
-    (params) => api.fetchUsers(params),
-    { refreshInterval: 10000 },
+  const { data , size, isLoading, setSize, mutate,error } = useSWRInfinite(
+      (index) => {
+        const queryParams = !!queryString[searchKey]
+            ? { ...activePagination, name: queryString[searchKey], page: 1 }
+            : {
+              ...activePagination,
+              name: queryString[searchKey],
+              page: index + 1,
+            };
+        return ["fetchUsers", queryParams];
+      },
+      ([key, params]) =>
+          api.fetchUsers(
+              sanitizeObject(params) as APIParams.FetchUsers,
+          ),
   );
 
-  const totalPage = useMemo(() => {
-    if (!users?.paging?.total) return 0;
-    return Math.ceil(users?.paging.total / users?.paging.limit);
-  }, [users?.paging]);
+  const users = useMemo(() => {
+    let currentHasNext = false;
+    let concatenatedData: any[] = [];
 
-  const handleChangePage = (page: number) => {
-    setActivePagination({
-      ...activePagination,
-      page,
-    });
-    window.scrollTo(0, 0);
-  };
+    if (data) {
+      concatenatedData = data.reduce(
+          (prevData: any[], currentPage: UsersData) => [
+            ...prevData,
+            ...currentPage.data,
+          ],
+          [],
+      );
+      const hasNextArray = data.map(
+          (currentPage: UsersData) => currentPage.paging,
+      );
+      currentHasNext = hasNextArray[data.length - 1].hasNext;
+    }
+
+    return { concatenatedData, currentHasNext };
+  }, [data]);
+
+
+  const isLoadingMore =
+      isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } =
+          document.documentElement;
+      if (
+          scrollTop + clientHeight === scrollHeight &&
+          !isLoadingMore &&
+          size &&
+          users.currentHasNext
+      ) {
+        setSize(size + 1).then(r => console.log(r));
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isLoadingMore, size, users.currentHasNext]);
 
   if (isLoading) {
     return (
@@ -81,7 +111,7 @@ export default function ExploreUsersPage() {
     );
   }
 
-  if (!users?.data || !users?.data.length) {
+  if (!users.concatenatedData || !users.concatenatedData.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">
@@ -93,7 +123,7 @@ export default function ExploreUsersPage() {
   return (
     <>
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
-        {users?.data?.map((user: any, index: number) => (
+        {users.concatenatedData?.map((user: any, index: number) => (
           <div
             className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all"
             key={user.id}
@@ -151,12 +181,17 @@ export default function ExploreUsersPage() {
           </div>
         ))}
       </div>
-      <div className="flex justify-end">
-        <Pagination
-          currentPage={users.paging?.page ?? 1}
-          totalPages={totalPage}
-          onPageChange={handleChangePage}
-        />
+      <div className="flex justify-center items-center">
+        {isLoadingMore && (
+            <div className="w-full h-56 flex justify-center items-center">
+              <Spinner size="xl" />
+            </div>
+        )}
+        {!users.currentHasNext && (
+            <div className="w-full h-36 flex justify-center items-center">
+              No more data
+            </div>
+        )}
       </div>
     </>
   );

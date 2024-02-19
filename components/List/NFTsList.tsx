@@ -2,8 +2,8 @@ import { APIParams, APIResponse } from "@/services/api/types";
 import NFTFilters, { FilterType } from "@/components/Filters/NFTFilters";
 import { classNames } from "@/utils/string";
 import NFTCard from "@/components/NFT/NFTCard";
-import { Pagination, Spinner } from "flowbite-react";
-import React, { useCallback, useMemo } from "react";
+import { Spinner } from "flowbite-react";
+import React, { useCallback, useEffect } from "react";
 import Text from "@/components/Text";
 import MobileNFTFiltersModal from "@/components/Modal/MobileNFTFiltersModal";
 import { isMobile } from "react-device-detect";
@@ -12,19 +12,14 @@ import Link from "next/link";
 import Button from "../Button";
 import useAuthStore from "@/store/auth/store";
 
-interface Paging {
-  page?: number;
-  limit: number;
-  total?: number;
-}
 
 interface Props {
   items?: NFT[];
   showFilters: boolean;
   filters?: FilterType[];
   onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void;
-  onChangePage: (page: number) => void;
-  paging?: Paging;
+  onLoadMore: (page: number) => void;
+  paging?: number;
   traitFilters?: APIResponse.CollectionDetails["traitAvailable"];
   onClose?: () => void; // For mobile only: Close modal filters
   loading?: boolean;
@@ -32,6 +27,8 @@ interface Props {
   dataCollectionType?: string;
   userId?: string;
   showCreateNFT?: boolean;
+  currentHasNext?: boolean | {};
+
 }
 
 export default function NFTsList({
@@ -41,28 +38,38 @@ export default function NFTsList({
   onApplyFilters,
   paging,
   traitFilters,
-  onChangePage,
+  onLoadMore,
   onClose,
   loading,
   error,
   dataCollectionType,
   userId,
   showCreateNFT,
+  currentHasNext,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
-  const totalPage = useMemo(() => {
-    if (!paging?.total) return 0;
-    return Math.ceil(paging.total / paging.limit);
-  }, [paging]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } =
+          document.documentElement;
+      if (
+          scrollTop + clientHeight === scrollHeight &&
+          !loading &&
+          paging &&
+          onLoadMore &&
+          currentHasNext
+      ) {
+        onLoadMore(paging + 1);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [loading, paging, currentHasNext]);
 
   const renderList = useCallback(() => {
-    if (loading) {
-      return (
-        <div className="w-full h-56 flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
-      );
-    }
 
     if (error && !items) {
       return (
@@ -170,13 +177,18 @@ export default function NFTsList({
         {renderList()}
       </div>
       {items?.length ? (
-        <div className="flex justify-end">
-          <Pagination
-            currentPage={paging?.page ?? 1}
-            totalPages={totalPage}
-            onPageChange={onChangePage}
-          />
-        </div>
+          <div className="flex justify-center items-center">
+            {loading && (
+                <div className="w-full h-56 flex justify-center items-center">
+                  <Spinner size="xl" />
+                </div>
+            )}
+            {!currentHasNext && (
+                <div className="w-full h-36 flex justify-center items-center">
+                  No more data
+                </div>
+            )}
+          </div>
       ) : (
         ""
       )}

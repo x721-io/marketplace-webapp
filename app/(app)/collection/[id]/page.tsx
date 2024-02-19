@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
@@ -12,14 +12,9 @@ import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/Coll
 import FiltersSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection";
 import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
-import Link from "next/link";
-import Button from "@/components/Button";
 import useAuthStore from "@/store/auth/store";
-import {
-  getCollectionAvatarImage,
-  getCollectionBannerImage,
-} from "@/utils/string";
-import { useUIStore } from "@/store/ui/store";
+import { getCollectionAvatarImage, getCollectionBannerImage, } from "@/utils/string";
+
 
 export default function CollectionPage() {
   const { id } = useParams();
