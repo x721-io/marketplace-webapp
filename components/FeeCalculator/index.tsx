@@ -55,7 +55,10 @@ export default function FeeCalculator({
       return results
       
     },
-  });
+    watch: false
+  },
+  
+  );
 
   const [sellerFee, buyerFee, royaltiesFee, netReceived] = useMemo(() => {
     return data && Array.isArray(data[0])

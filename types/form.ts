@@ -49,6 +49,7 @@ export namespace FormState {
   export interface BidNFT {
     price: string;
     quantity: string;
+    allowance: string;
   }
 
   export interface AcceptBidNFT {

@@ -97,15 +97,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         },
       },
     },
-    allowance: {
-      validate: {
-        checkTotalFee: (totalFee: number, { price, fee }: { price: number, fee: number }) => {
-          if (totalFee !== undefined && price !== undefined && fee !== undefined) {
-            return totalFee < (parseFloat(price.toString()) + parseFloat(fee.toString())) || "Total fee must be less than price + fee";
-          }
-        }
-      }
-    }
   };
   const [price, quantity] = watch(["price", "quantity"]);
 
@@ -134,9 +125,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     }
   };
 
-  const [totalFee, setTotalFee] = useState();
+  const [totalFee, setTotalFee] = useState('0');
 
-  const handleAfterCalculatingFee = (results: any[], price: bigint) => {
+  const handleAfterCalculatingFee = (results: any[]) => {
+    const priceBigint = parseUnits(price || "0", token?.decimal)
     if (!results || results.length === 0) {
       console.error('Results array is empty or undefined');
       return;
@@ -154,23 +146,22 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       return;
     }
 
-    const formattedTotalPrice = formatDisplayedBalance(formatUnits(price + totalFeeInWei[0], 18));
+    const formattedTotalPrice = formatDisplayedBalance(formatUnits(priceBigint + totalFeeInWei[0], 18));
     setTotalFee(formattedTotalPrice as any);
 
-   
+    setValue('allowance', formattedTotalPrice)
+
   };
-
-
   const handleApproveMinAmount = () => {
     setValue("allowance" as any, totalFee);
   }
   const handleApproveMaxAmount = () => {
     setValue("allowance" as any, (MaxUint256.toString()));
   }
-  const handleApprove = async () => {
-    
+  const handleApproveToken = async () => {
     try {
-      await onApproveToken(totalFee as any);
+      const totalFeeBigint = parseUnits(totalFee, token?.decimal)
+      await onApproveToken(totalFeeBigint);
     } catch (e) {
       console.error(e);
     }
@@ -276,29 +267,28 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 nft={nft}
                 price={parseUnits(price || "0", token?.decimal)}
                 quoteToken={token?.address}
-                afterCalculatingFee={(result) => handleAfterCalculatingFee([result], parseUnits(price || "0", token?.decimal))}
+                afterCalculatingFee={(result) => handleAfterCalculatingFee([result])}
               />
             )}
 
-            <FormValidationMessages errors={errors} />
-            {/* <Button type={"submit"} className="w-full" loading={isLoading}>
-                Place bid
-              </Button> */}
             {isTokenApproved ?
               <Button type={"submit"} className="w-full" loading={isLoading}>
                 Place bid
               </Button>
-              : <>
+              :
+              <>
                 <Text>Not enough allowance</Text>
                 <Text>Approve allowance</Text>
                 <Input
                   register={register("allowance" as any, formRules.allowance)}
-                  value={totalFee}
                 />
                 <Button onClick={handleApproveMinAmount} className="w-full">Min</Button>
                 <Button onClick={handleApproveMaxAmount} className="w-full">Max</Button>
-                <Button onClick={handleApprove} className="w-full">Approve Token contract</Button>
-              </>}
+                <Button onClick={handleApproveToken} className="w-full">Approve Token contract</Button>
+              </>
+            }
+
+            <FormValidationMessages errors={errors} />
 
           </form>
         </div>
