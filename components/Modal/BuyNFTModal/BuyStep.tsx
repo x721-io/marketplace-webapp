@@ -1,9 +1,9 @@
-import { useBuyUsingNative } from "@/hooks/useMarket";
+import { useBuyUsingNative, useCalculateFee } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { useForm } from "react-hook-form";
-import { formatEther, formatUnits } from "ethers";
+import { formatEther, formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { useEffect, useMemo } from "react";
 import { useAccount, useBalance } from "wagmi";
@@ -12,6 +12,8 @@ import { NFT, MarketEvent, FormState } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
 import { formatDisplayedBalance } from "@/utils";
 import { numberRegex } from "@/utils/regex";
+import Select from "@/components/Form/Select";
+import { tokenOptions, tokens } from "@/config/tokens";
 
 interface Props {
   onSuccess: () => void;
@@ -22,10 +24,7 @@ interface Props {
 
 export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   const { address } = useAccount();
-  const { data: tokenBalance } = useBalance({
-    address: address,
-    enabled: !!address,
-  });
+
   const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } =
     useBuyUsingNative(nft);
   const {
@@ -34,11 +33,35 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     register,
     formState: { errors },
   } = useForm<FormState.BuyNFT>();
-  const quantity = watch("quantity");
+  // const quantity = watch("quantity");
+  const [quantity, quoteToken] = watch([ 'quantity', 'quoteToken']);
+
   const token = useMemo(
     () => findTokenByAddress(saleData?.quoteToken),
     [saleData],
   );
+
+  const {
+    sellerFee,
+    buyerFee,
+    royaltiesFee,
+    netReceived,
+    sellerFeeRatio,
+    buyerFeeRatio
+  } = useCalculateFee({
+    collectionAddress: nft.collection.address,
+    tokenId: nft.id || nft.u2uId,
+    price: parseUnits(saleData?.price.toString() || '0', token?.decimal),
+    onSuccess: (data) => {
+      if (!saleData?.price || isNaN(Number(saleData?.price))) return;
+
+    }
+  });
+  const { data: tokenBalance } = useBalance({
+    address: address,
+    enabled: !!address,
+    token: token?.address === tokens.wu2u.address ? undefined : token?.address
+  });
 
   const totalPriceBN = useMemo(() => {
     if (!quantity) return BigInt(0);
@@ -113,7 +136,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
             <Text>
               Balance:{" "}
               {formatDisplayedBalance(
-                formatUnits(tokenBalance?.value || 0, 18),
+                formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals),
               )}
             </Text>
           }
@@ -122,12 +145,33 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
         />
       </div>
 
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="text-body-14 text-secondary font-semibold">
+          Buy using
+          </label>
+          <Text>
+            Balance:{' '}
+            {formatDisplayedBalance(
+              formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals)
+            )}
+          </Text>
+        </div>
+        <Select options={tokenOptions} register={register('quoteToken')} />
+      </div>
+
       {nft.collection.type === "ERC721" && (
         <FeeCalculator
-          quoteToken={saleData?.quoteToken}
           mode="buyer"
-          price={BigInt(saleData?.price || 0)}
           nft={nft}
+          price={BigInt(saleData?.price || 0)}
+          quoteToken={saleData?.quoteToken}
+          sellerFee={sellerFee}
+          buyerFee={buyerFee}
+          sellerFeeRatio={sellerFeeRatio}
+          buyerFeeRatio={buyerFeeRatio}
+          netReceived={netReceived}
+          royaltiesFee={royaltiesFee}
         />
       )}
 
@@ -174,9 +218,15 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
 
           <FeeCalculator
             mode="buyer"
-            price={totalPriceBN}
             nft={nft}
+            price={totalPriceBN}
             quoteToken={token?.address}
+            sellerFee={sellerFee}
+            buyerFee={buyerFee}
+            sellerFeeRatio={sellerFeeRatio}
+            buyerFeeRatio={buyerFeeRatio}
+            netReceived={netReceived}
+            royaltiesFee={royaltiesFee}
           />
         </>
       )}
