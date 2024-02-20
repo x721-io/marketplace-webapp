@@ -3,7 +3,7 @@ import {
   Modal,
   ModalProps
 } from 'flowbite-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
 import { FormState, NFT } from '@/types';
@@ -44,7 +44,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { address } = useAccount();
   const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft);
   const { onBidNFT } = useBidNFT(nft);
-
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     watch,
@@ -52,7 +52,11 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     reset,
     setValue,
     formState: { errors }
-  } = useForm<FormState.BidNFT>();
+  } = useForm<FormState.BidNFT>({
+      defaultValues: {
+        quoteToken: tokens.wu2u.address
+      }
+    });
   const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
@@ -128,7 +132,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { data: tokenBalance } = useBalance({
     address: address,
     enabled: !!address && !!token?.address,
-    token: token?.address === tokens.wu2u.address ? undefined : token?.address
+    token: token?.address === tokens.wu2u.address ? undefined : token?.address,
+    watch: true
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
@@ -173,15 +178,35 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   };
 
   const handleApproveToken = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
     try {
+      toast.update(toastId, { render: "Sending transaction", type: "info" });
       const allowanceBigint = allowance === 'UNLIMITED' ? MaxUint256 : parseUnits(allowance, token?.decimal);
       await onApproveToken(allowanceBigint);
+
+      toast.update(toastId, {
+        render: "Approve token successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+      onClose?.();
     } catch (e) {
-      toast.error('Failed to approve token');
-      console.error(e);
+      toast.update(toastId, {
+        render: "Failed to approve token",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    }finally {
+      setLoading(false);
     }
   };
-
+  
+  
   return (
     <Modal
       theme={modalTheme}
@@ -300,7 +325,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               />
             )}
 
-            {isTokenApproved ? (
+            {isTokenApproved === true ? (
               <Button disabled={!isTokenApproved} type={'submit'} className="w-full" loading={isLoading}>
                 Place bid
               </Button>
@@ -330,7 +355,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   <Button variant="secondary" onClick={handleApproveMaxAmount} className="!min-w-fit p-3">Max</Button>
                 </div>
 
-                <Button onClick={handleApproveToken} className="w-full">Approve Token contract</Button>
+                <Button loading={loading} onClick={handleApproveToken} className="w-full">Approve Token contract</Button>
               </div>
             )}
 

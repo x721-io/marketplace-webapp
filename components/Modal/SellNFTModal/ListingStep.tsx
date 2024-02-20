@@ -1,7 +1,7 @@
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import { useEffect, useMemo } from "react";
-import { useSellNFT } from "@/hooks/useMarket";
+import { useCalculateFee, useSellNFT } from "@/hooks/useMarket";
 import Button from "@/components/Button";
 import Select from "@/components/Form/Select";
 import { tokenOptions } from "@/config/tokens";
@@ -45,9 +45,24 @@ export default function ListingStep({
     watch,
     formState: { errors },
   } = useForm<FormState.SellNFT>();
-  const quoteToken = findTokenByAddress(watch("quoteToken"));
-  const price = watch("price");
-  const quantity = watch("quantity");
+  const [price, quantity, quoteToken] = watch(['price', 'quantity', 'quoteToken']);
+  const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
+
+  const {
+    sellerFee,
+    buyerFee,
+    royaltiesFee,
+    netReceived,
+    sellerFeeRatio,
+    buyerFeeRatio
+  } = useCalculateFee({
+    collectionAddress: nft.collection.address,
+    tokenId: nft.id || nft.u2uId,
+    price: parseUnits((price?.toString()) || '0', token?.decimal),
+    onSuccess: (data) => {
+      if (!price || isNaN(Number(price))) return;
+    }
+  });
 
   const formRules = {
     price: {
@@ -162,19 +177,31 @@ export default function ListingStep({
           <FeeCalculator
             mode="seller"
             nft={nft}
-            quoteToken={quoteToken?.address}
             price={parseUnits(
               String(Number(price || 0) * Number(quantity || 0)),
-              quoteToken?.decimal,
+              token?.decimal,
             )}
+            quoteToken={token?.address}
+            sellerFee={sellerFee}
+            buyerFee={buyerFee}
+            sellerFeeRatio={sellerFeeRatio}
+            buyerFeeRatio={buyerFeeRatio}
+            netReceived={netReceived}
+            royaltiesFee={royaltiesFee}
           />
         </div>
       ) : (
         <FeeCalculator
           mode="seller"
           nft={nft}
-          quoteToken={quoteToken?.address}
-          price={parseUnits(String(price || 0), quoteToken?.decimal)}
+          quoteToken={token?.address}
+          price={parseUnits(String(price || 0), token?.decimal)}
+          sellerFee={sellerFee}
+          buyerFee={buyerFee}
+          sellerFeeRatio={sellerFeeRatio}
+          buyerFeeRatio={buyerFeeRatio}
+          netReceived={netReceived}
+          royaltiesFee={royaltiesFee}
         />
       )}
       <FormValidationMessages errors={errors} />

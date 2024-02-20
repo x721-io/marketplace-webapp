@@ -44,6 +44,7 @@ export namespace FormState {
 
   export interface BuyNFT {
     quantity: number;
+    quoteToken: Address;
   }
 
   export interface BidNFT {

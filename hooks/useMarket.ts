@@ -214,7 +214,7 @@ export const useMarketTokenApproval = (token: Address, type: AssetType, totalCos
   const isTokenApproved = useMemo(() => {
     if (token === tokens.wu2u.address) return true
     if (!allowance) return false;
-    return allowance > totalCost;
+    return allowance >= totalCost;
   }, [allowance, token, totalCost]);
 
   const onApproveToken = async (allowance: bigint) => {
