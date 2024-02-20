@@ -47,6 +47,7 @@ export namespace FormState {
   }
 
   export interface BidNFT {
+    quoteToken: Address
     price: string;
     quantity: string;
     allowance: string;
