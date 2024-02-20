@@ -9,6 +9,7 @@ export const findTokenByAddress = (address?: Address) => {
       symbol: "U2U",
     };
   }
+
   return Object.values(tokens).find((token) => {
     return token?.address?.toLowerCase() === address?.toLowerCase();
   });
