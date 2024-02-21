@@ -1,12 +1,12 @@
-import { useBuyUsingNative, useCalculateFee } from "@/hooks/useMarket";
+import { useBuyNFT, useCalculateFee, useMarketTokenApproval } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { useForm } from "react-hook-form";
-import { formatEther, formatUnits, parseUnits } from "ethers";
+import { MaxUint256, formatEther, formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
-import { useEffect, useMemo } from "react";
-import { useAccount, useBalance } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import { Address, useAccount, useBalance } from "wagmi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { NFT, MarketEvent, FormState } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
@@ -14,6 +14,8 @@ import { formatDisplayedBalance } from "@/utils";
 import { numberRegex } from "@/utils/regex";
 import Select from "@/components/Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
+import Erc20ApproveToken from "@/components/Erc20ApproveToken";
+import { toast } from "react-toastify";
 
 interface Props {
   onSuccess: () => void;
@@ -25,22 +27,22 @@ interface Props {
 export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   const { address } = useAccount();
 
-  const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } =
-    useBuyUsingNative(nft);
+  const { onBuyERC721, onBuyERC1155, isSuccess, isLoading, error } = useBuyNFT(nft);
   const {
     handleSubmit,
     watch,
     register,
+    setValue,
     formState: { errors },
-  } = useForm<FormState.BuyNFT>();
-  // const quantity = watch("quantity");
-  const [quantity, quoteToken] = watch([ 'quantity', 'quoteToken']);
-
-  const token = useMemo(
-    () => findTokenByAddress(saleData?.quoteToken),
-    [saleData],
-  );
-
+  } = useForm<FormState.BuyNFT>({
+    defaultValues: {
+      quoteToken: saleData?.quoteToken
+    }
+  });
+  const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
+  const token = useMemo(() => findTokenByAddress(saleData?.quoteToken), [saleData]);
+  
+  const [loading, setLoading] = useState(false);
   const {
     sellerFee,
     buyerFee,
@@ -51,16 +53,33 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.id || nft.u2uId,
-    price: parseUnits(saleData?.price.toString() || '0', token?.decimal),
+    price: nft.collection.type === 'ERC721' ? BigInt(saleData?.price || '0') : BigInt(saleData?.price || "0") * BigInt(quantity || '0'),
     onSuccess: (data) => {
       if (!saleData?.price || isNaN(Number(saleData?.price))) return;
-
+      const priceBigint = nft.collection.type === 'ERC721' ? BigInt(saleData?.price || '0') : BigInt(saleData?.price || "0") * BigInt(quantity || '0')
+      const { buyerFee } = data;
+      const totalCostBigint = priceBigint + buyerFee;
+      setValue('allowance', formatUnits(totalCostBigint, token?.decimal));
     }
   });
+
+  const {
+    allowance: allowanceBalance,
+    isTokenApproved,
+    onApproveToken
+  } = useMarketTokenApproval(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
+  
+  const formRules = {
+    allowance: {
+      required: true
+    }
+  };
+
   const { data: tokenBalance } = useBalance({
     address: address,
-    enabled: !!address,
-    token: token?.address === tokens.wu2u.address ? undefined : token?.address
+    enabled: !!address && !!token?.address,
+    token: token?.address === tokens.wu2u.address ? undefined : token?.address,
+    watch: true
   });
 
   const totalPriceBN = useMemo(() => {
@@ -72,9 +91,9 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     if (!saleData) return;
     try {
       if (nft.collection.type === "ERC721") {
-        await onBuyERC721(saleData.price);
+        await onBuyERC721( quoteToken, BigInt(saleData.price) + BigInt(buyerFee));
       } else {
-        await onBuyERC1155(saleData.operationId, saleData.price, quantity);
+        await onBuyERC1155(saleData.operationId, quantity);
       }
     } catch (e: any) {
       console.error(e);
@@ -90,6 +109,58 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
     if (isSuccess) onSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
+
+  
+  const handleApproveMinAmount = () => {
+    if (allowanceBalance === undefined) return;
+
+    const priceBigint = parseUnits(price || '0', token?.decimal);
+    const totalCostBigint = priceBigint + buyerFee;
+    const remainingToApprove = BigInt(allowanceBalance as bigint) < totalCostBigint ? totalCostBigint - allowanceBalance : 0;
+    setValue('allowance', formatUnits(remainingToApprove, token?.decimal));
+  };
+
+  const handleApproveMaxAmount = () => {
+    setValue('allowance', 'UNLIMITED');
+  };
+
+  const handleAllowanceInput = (event: any) => {
+    const value = event.target.value
+    if (allowance === 'UNLIMITED') {
+      setValue('allowance', value.slice(-1))
+    } else {
+      setValue('allowance', value)
+    }
+  }
+
+  const handleApproveToken = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
+    try {
+      toast.update(toastId, { render: "Sending token", type: "info" });
+      const allowanceBigint = allowance === 'UNLIMITED' ? MaxUint256 : parseUnits(allowance, token?.decimal);
+      await onApproveToken(allowanceBigint);
+
+      toast.update(toastId, {
+        render: "Approve token successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    } catch (e) {
+      toast.update(toastId, {
+        render: "Failed to approve token",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    }finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <form
@@ -126,29 +197,9 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
       </div>
 
       <div>
-        <label className="text-body-14 text-secondary font-semibold mb-1">
-          Buy using
-        </label>
-        <Input
-          readOnly
-          value={token?.symbol}
-          appendIcon={
-            <Text>
-              Balance:{" "}
-              {formatDisplayedBalance(
-                formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals),
-              )}
-            </Text>
-          }
-          // @ts-ignore
-          error={tokenBalance?.value < saleData?.price}
-        />
-      </div>
-
-      <div>
         <div className="flex items-center justify-between mb-1">
           <label className="text-body-14 text-secondary font-semibold">
-          Buy using
+            Buy using
           </label>
           <Text>
             Balance:{' '}
@@ -157,15 +208,15 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
             )}
           </Text>
         </div>
-        <Select options={tokenOptions} register={register('quoteToken')} />
+        <Input readOnly value={token?.symbol}/>
       </div>
 
       {nft.collection.type === "ERC721" && (
         <FeeCalculator
           mode="buyer"
           nft={nft}
-          price={BigInt(saleData?.price || 0)}
-          quoteToken={saleData?.quoteToken}
+          price={BigInt(saleData?.price || '0')}
+          quoteToken={token?.address}
           sellerFee={sellerFee}
           buyerFee={buyerFee}
           sellerFeeRatio={sellerFeeRatio}
@@ -212,7 +263,7 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
             <Input
               readOnly
               value={formatDisplayedBalance(formatEther(totalPriceBN))}
-              appendIcon={<Text>U2U</Text>}
+              appendIcon={<Text>{token?.symbol}</Text>}
             />
           </div>
 
@@ -231,10 +282,24 @@ export default function BuyStep({ onSuccess, onError, saleData, nft }: Props) {
         </>
       )}
 
+      {isTokenApproved === true ? (
+        <Button type={"submit"} className="w-full" loading={isLoading}>
+          Purchase item
+        </Button>
+      ) : (
+        <Erc20ApproveToken
+          allowanceBalance={allowanceBalance}
+          quoteToken={quoteToken}
+          onApproveMinAmount={handleApproveMinAmount}
+          onAllowanceInput={() => handleAllowanceInput}
+          onApproveMaxAmount={handleApproveMaxAmount}
+          onApproveToken={handleApproveToken}
+          loading={loading}
+          registerAllownceInput={register('allowance', formRules.allowance)}
+        />
+      )}
       <FormValidationMessages errors={errors} />
-      <Button type={"submit"} className="w-full" loading={isLoading}>
-        Purchase item
-      </Button>
+
     </form>
   );
 }

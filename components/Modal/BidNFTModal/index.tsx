@@ -23,6 +23,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages';
 import { numberRegex } from '@/utils/regex';
 import Select from '@/components/Form/Select';
 import Image from 'next/image';
+import Erc20ApproveToken from '@/components/Erc20ApproveToken';
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -181,7 +182,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     const toastId = toast.loading("Preparing data...", { type: "info" });
     setLoading(true);
     try {
-      toast.update(toastId, { render: "Sending transaction", type: "info" });
+      toast.update(toastId, { render: "Sending token", type: "info" });
       const allowanceBigint = allowance === 'UNLIMITED' ? MaxUint256 : parseUnits(allowance, token?.decimal);
       await onApproveToken(allowanceBigint);
 
@@ -205,8 +206,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       setLoading(false);
     }
   };
-  
-  
   return (
     <Modal
       theme={modalTheme}
@@ -262,7 +261,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               <Select options={tokenOptions} register={register('quoteToken')} />
             </div>
 
-
             {nft.collection.type === 'ERC1155' ? (
               <>
                 <div>
@@ -291,7 +289,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   <Input
                     readOnly
                     value={Number(price) * Number(quantity) || 0}
-                    appendIcon={<Text>U2U</Text>}
+                    appendIcon={<Text>{token?.symbol}</Text>}
                   />
                 </div>
                 <FeeCalculator
@@ -330,35 +328,17 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 Place bid
               </Button>
             ) : (
-              <div className="w-full flex flex-col gap-2">
-                <div className="flex justify-between items-center">
-                  <Text className="font-semibold text-secondary">Current allowance:</Text>
-                  <div className="flex items-center gap-2">
-                    <Text className="font-semibol">
-                      {formatUnits(allowanceBalance || '0', token?.decimal)}
-                    </Text>
-                    <Image
-                      className="w-6 h-6 rounded-full"
-                      width={40}
-                      height={40}
-                      src={token?.logo || ''}
-                      alt={token?.symbol || ''} />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="secondary" onClick={handleApproveMinAmount} className="!min-w-fit p-3">Min</Button>
-                  <Input
-                    className="text-center"
-                    containerClass="flex-1"
-                    register={register('allowance', formRules.allowance)}
-                    onChange={handleAllowanceInput}/>
-                  <Button variant="secondary" onClick={handleApproveMaxAmount} className="!min-w-fit p-3">Max</Button>
-                </div>
-
-                <Button loading={loading} onClick={handleApproveToken} className="w-full">Approve Token contract</Button>
-              </div>
+              <Erc20ApproveToken
+                allowanceBalance={allowanceBalance}
+                quoteToken={quoteToken}
+                onApproveMinAmount={handleApproveMinAmount}
+                onAllowanceInput={() => handleAllowanceInput}
+                onApproveMaxAmount={handleApproveMaxAmount}
+                onApproveToken={handleApproveToken}
+                loading={loading}
+                registerAllownceInput={register('allowance', formRules.allowance)}
+              />
             )}
-
             <FormValidationMessages errors={errors} />
           </form>
         </div>

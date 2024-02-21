@@ -312,7 +312,7 @@ export const useBuyNFT = (nft: NFT) => {
     updateHash(hash);
   };
 
-  const onBuyERC1155 = async (operationId: string, quantity: string) => {
+  const onBuyERC1155 = async (operationId: string, quantity: number) => {
     const { hash } = await writeAsync?.({
       args: [operationId, quantity],
       value: BigInt(0) as any
