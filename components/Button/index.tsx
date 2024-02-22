@@ -23,7 +23,7 @@ export default function Button({
 }: ButtonProps) {
   const baseClass = useMemo(() => {
     return classNames(
-      `transition-all duration-500 whitespace-nowrap text-ellipsis hover:shadow`,
+      `transition-all duration-500 whitespace-nowrap text-ellipsis`,
       disabled ? "cursor-not-allowed text-disabled" : "cursor-pointer",
     );
   }, [disabled]);
@@ -64,14 +64,14 @@ export default function Button({
         return "bg-transparent text-primary outline-none !p-0 hover:underline";
       case "secondary":
         if (disabled) return "bg-gray-100 text-disabled";
-        return "text-primary bg-button-secondary";
+        return "text-primary bg-button-secondary hover:shadow";
       case "outlined":
         if (disabled) return "bg-gray-100 text-disabled";
-        return "text-primary bg-surface-soft border-hard border hover:bg-gray-200";
+        return "text-primary bg-surface-soft border-hard border hover:bg-gray-200 hover:shadow";
       case "primary":
       default:
         if (disabled) return "text-gray-0 bg-disabled";
-        return "text-gray-0 bg-button hover:bg-gray-700";
+        return "text-gray-0 bg-button hover:bg-gray-700 hover:shadow";
     }
   }, [variant, disabled]);
 

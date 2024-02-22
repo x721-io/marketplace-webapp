@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
 import {
-  useCollectionFilters,
-  useExploreSectionFilters,
-} from "@/hooks/useFilters";
-import CollectionFilters from "@/components/Filters/CollectionFilters";
-import CollectionsList from "@/components/List/CollectionsList";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { useUIStore } from "@/store/ui/store";
-import { sanitizeObject } from "@/utils";
-import { APIParams } from "@/services/api/types";
-import React, { useMemo } from "react";
-import { isMobile } from "react-device-detect";
-import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
-import useSWRInfinite from "swr/infinite";
+  useExploreSectionFilters
+} from '@/hooks/useFilters';
+import CollectionFilters from '@/components/Filters/CollectionFilters';
+import CollectionsList from '@/components/List/CollectionsList';
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
+import { useUIStore } from '@/store/ui/store';
+import { sanitizeObject } from '@/utils';
+import { APIParams } from '@/services/api/types';
+import React, { useMemo } from 'react';
+import { isMobile } from 'react-device-detect';
+import MobileCollectionFiltersModal from '@/components/Filters/MobileCollectionFiltersModal';
+import useSWRInfinite from 'swr/infinite';
+import { useCollectionsFiltersStore } from '@/store/filters/collections/store';
 
 interface Collection {
   data: any[];
@@ -21,27 +21,27 @@ interface Collection {
 }
 
 export default function ExploreCollectionsPage() {
-  const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters();
+  const {
+    showFilters,
+    toggleFilter,
+    filters,
+    updateFilters,
+    resetFilters
+  } = useCollectionsFiltersStore(state => state);
   const api = useMarketplaceApi();
-  const { activeFilters, handleApplyFilters } = useCollectionFilters();
-  const { queryString } = useUIStore((state) => state);
-  const { searchKey } = useExploreSectionFilters();
 
   const { data, size, isLoading, setSize } = useSWRInfinite(
     (index) => {
-      const queryParams = !!queryString[searchKey]
-        ? { ...activeFilters, name: queryString[searchKey], page: 1 }
-        : {
-            ...activeFilters,
-            name: queryString[searchKey],
-            page: index + 1,
-          };
-      return ["fetchCollections", queryParams];
+      const queryParams = {
+        ...filters,
+        page: index + 1
+      };
+      return ['fetchCollections', queryParams];
     },
     ([key, params]) =>
       api.fetchCollections(
-        sanitizeObject(params) as APIParams.FetchCollections,
-      ),
+        sanitizeObject(params) as APIParams.FetchCollections
+      )
   );
 
   const collections = useMemo(() => {
@@ -52,12 +52,12 @@ export default function ExploreCollectionsPage() {
       concatenatedData = data.reduce(
         (prevData: any[], currentPage: Collection) => [
           ...prevData,
-          ...currentPage.data,
+          ...currentPage.data
         ],
-        [],
+        []
       );
       const hasNextArray = data.map(
-        (currentPage: Collection) => currentPage.paging,
+        (currentPage: Collection) => currentPage.paging
       );
       currentHasNext = hasNextArray[data.length - 1].hasNext;
     }
@@ -66,31 +66,34 @@ export default function ExploreCollectionsPage() {
   }, [data]);
 
   const isLoadingMore =
-    isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+    isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">
-      {isMobile ? (
+      {isMobile ?
         <MobileCollectionFiltersModal
-          onApplyFilters={handleApplyFilters}
-          showFilter={isFiltersVisible}
-          closeFilter={handleToggleFilters}
+          onApplyFilters={updateFilters}
+          show={showFilters}
+          activeFilters={filters}
+          onResetFilters={resetFilters}
+          onClose={() => toggleFilter(false)}
         />
-      ) : (
-        isFiltersVisible && (
-          <CollectionFilters
-            visible={isFiltersVisible}
-            onApplyFilters={handleApplyFilters}
-          />
-        )
-      )}
+        :
+        <CollectionFilters
+          activeFilters={filters}
+          onApplyFilters={updateFilters}
+          showFilters={showFilters}
+          onResetFilters={resetFilters}
+        />
+      }
+
       <div className="flex-1">
         <CollectionsList
           loading={isLoadingMore}
           collections={collections.concatenatedData}
           paging={size}
           onLoadMore={setSize}
-          showFilter={isFiltersVisible}
+          showFilter={showFilters}
           currentHasNext={collections.currentHasNext}
         />
       </div>

@@ -32,7 +32,6 @@ export default function CollectionsList({
   paging,
   onLoadMore,
   currentHasNext,
-  id,
   loading,
   error,
   showFilter,
@@ -60,14 +59,6 @@ export default function CollectionsList({
       window.removeEventListener("scroll", handleScroll);
     };
   }, [loading, paging, currentHasNext]);
-
-  // if (loading) {
-  //   return (
-  //     <div className="w-full h-56 flex justify-center items-center">
-  //       <Spinner size="xl" />
-  //     </div>
-  //   );
-  // }
 
   if (error && !collections) {
     return (
