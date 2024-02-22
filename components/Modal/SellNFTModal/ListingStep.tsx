@@ -15,7 +15,8 @@ import FeeCalculator from "@/components/FeeCalculator";
 import { formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { numberRegex } from "@/utils/regex";
-
+import { useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
+import { toast } from 'react-toastify';
 interface Props {
   onSuccess: () => void;
   onError: (error: Error) => void;
@@ -110,6 +111,14 @@ export default function ListingStep({
   }: FormState.SellNFT) => {
     try {
       onSellNFT(price, quoteToken, quantity);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // if (nft.collection.type === "ERC721") { 
+      //   // eslint-disable-next-line react-hooks/rules-of-hooks
+      //   useSellURC721(nft, price, quoteToken)
+      // }else {
+      //   // eslint-disable-next-line react-hooks/rules-of-hooks
+      //   useSellURC1155(nft, price, quoteToken, quantity)
+      // }
     } catch (e) {
       console.error(e);
     }

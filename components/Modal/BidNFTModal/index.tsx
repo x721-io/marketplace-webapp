@@ -24,6 +24,7 @@ import { numberRegex } from '@/utils/regex';
 import Select from '@/components/Form/Select';
 import Image from 'next/image';
 import Erc20ApproveToken from '@/components/Erc20ApproveToken';
+import { useBidURC1155UsingNative, useBidURC1155UsingURC20, useBidURC721UsingNative, useBidURC721UsingURC20 } from '@/hooks/useBidNFT';
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -54,10 +55,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     setValue,
     formState: { errors }
   } = useForm<FormState.BidNFT>({
-      defaultValues: {
-        quoteToken: tokens.wu2u.address
-      }
-    });
+    defaultValues: {
+      quoteToken: tokens.wu2u.address
+    }
+  });
   const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
@@ -139,7 +140,34 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
     try {
-      token?.address === tokens.wu2u.address ? await onBidUsingNative(price, quantity) : await onBidNFT(price, token?.address as `0x${string}`, quantity);
+      token?.address === tokens.wu2u.address ?
+        await onBidUsingNative(price, quantity)
+        :
+        await onBidNFT(price, token?.address as `0x${string}`, quantity);
+
+      // switch (nft.collection.type) {
+      //   case "ERC721":
+      //     if (quoteToken === tokens.wu2u.address) {
+      //       // eslint-disable-next-line react-hooks/rules-of-hooks
+      //       await useBidURC721UsingNative(nft, price)
+      //     } else {
+      //       // eslint-disable-next-line react-hooks/rules-of-hooks
+      //       await useBidURC721UsingURC20(nft, price, quoteToken)
+      //     }
+      //     break;
+      //   case "ERC1155":
+      //     if (quoteToken === tokens.wu2u.address) {
+      //       // eslint-disable-next-line react-hooks/rules-of-hooks
+      //       // await useBidURC1155UsingNative(nft, price, quantity)
+      //     } else {
+      //       // eslint-disable-next-line react-hooks/rules-of-hooks
+      //       await useBidURC1155UsingURC20(nft, price, quoteToken, quantity)
+      //     }
+      //     break;
+      //   default:
+      //     break;
+      // }
+
       toast.success(`Bid placed successfully`, {
         autoClose: 1000,
         closeButton: true
@@ -189,20 +217,20 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
-        isLoading: false,
         autoClose: 5000,
         closeButton: true,
+        isLoading: false
       });
       onClose?.();
     } catch (e) {
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
-        isLoading: false,
         autoClose: 5000,
         closeButton: true,
+        isLoading: false
       });
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -324,7 +352,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
             )}
 
             {isTokenApproved === true ? (
-              <Button disabled={!isTokenApproved} type={'submit'} className="w-full" loading={isLoading}>
+              <Button disabled={!isTokenApproved} type={'submit'} className="w-full" loading={loading}>
                 Place bid
               </Button>
             ) : (

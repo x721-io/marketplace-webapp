@@ -13,6 +13,7 @@ import { NFT } from "@/types/entitites";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { toast } from "react-toastify";
+import { useCancelSellURC1155, useCancelSellURC721 } from "@/hooks/useSellNFT";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -47,6 +48,13 @@ export default function CancelSellNFTModal({
   const handleCancelSell = () => {
     try {
       onCancelSell(mySale?.operationId);
+      // if (nft.collection.type === "ERC721") { 
+      //   // eslint-disable-next-line react-hooks/rules-of-hooks
+      //   useCancelSellURC721(nft)
+      // }else {
+      //   // eslint-disable-next-line react-hooks/rules-of-hooks
+      //   useCancelSellURC1155(mySale?.operationId || '')
+      // }
     } catch (e) {
       console.error(e);
     }
