@@ -109,6 +109,7 @@ export namespace APIParams {
     priceMin?: string;
     sellStatus?: MarketEventType;
     owner?: Address;
+    name?: string
   }
 
   export interface NFTEvents extends PaginationParams {

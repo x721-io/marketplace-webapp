@@ -7,7 +7,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import Input from '@/components/Form/Input';
 import SliderIcon from '@/components/Icon/Sliders';
 import CommandIcon from '@/components/Icon/Command';
-import { useCollectionsFiltersStore } from '@/store/filters/collections/store';
+import { useCollectionFiltersStore } from '@/store/filters/collections/store';
+import { useNFTsFiltersStore } from '@/store/filters/items/store';
 
 export default function ExploreSectionNavbar() {
   const tabs = [
@@ -22,21 +23,39 @@ export default function ExploreSectionNavbar() {
 
   const {
     filters: { name: collectionSearchText },
-    showFilters: showCollectionsFilters,
-    toggleFilter: toggleCollectionsFilters,
-    updateFilters: updateCollectionsFilters
-  } = useCollectionsFiltersStore(state => state);
+    showFilters: showCollectionFilters,
+    toggleFilter: toggleCollectionFilters,
+    updateFilters: updateCollectionFilters
+  } = useCollectionFiltersStore(state => state);
+
+  const {
+    filters: { name: nftSearchText },
+    showFilters: showNFTFilters,
+    toggleFilter: toggleNFTFilters,
+    updateFilters: updateNFTFilters
+  } = useNFTsFiltersStore(state => state);
 
   const isFiltersVisible = useMemo(() => {
     switch (true) {
     case pathname.includes('collections'):
-      return showCollectionsFilters;
+      return showCollectionFilters;
     case pathname.includes('items'):
-      return false;
+      return showNFTFilters;
     default:
       return false;
     }
-  }, [showCollectionsFilters, pathname]);
+  }, [showCollectionFilters, showNFTFilters, pathname]);
+
+  const handleToggleFilters = () => {
+    switch (true) {
+    case pathname.includes('collections'):
+      return toggleCollectionFilters();
+    case pathname.includes('items'):
+      return toggleNFTFilters();
+    default:
+      return null;
+    }
+  };
 
   const searchText = useMemo(() => {
     switch (true) {
@@ -45,29 +64,18 @@ export default function ExploreSectionNavbar() {
     case pathname.includes('users'):
       return '';
     case pathname.includes('items'):
-      return '';
+      return nftSearchText;
     default:
       return '';
     }
-  }, [pathname])
-
-  const handleToggleFilters = () => {
-    switch (true) {
-    case pathname.includes('collections'):
-      return toggleCollectionsFilters();
-    case pathname.includes('items'):
-      return null;
-    default:
-      return null;
-    }
-  };
+  }, [pathname, collectionSearchText, nftSearchText])
 
   const handleInputText = (value: any) => {
     switch (true) {
     case pathname.includes('collections'):
-      return updateCollectionsFilters({ name: value });
+      return updateCollectionFilters({ name: value });
     case pathname.includes('items'):
-      return null;
+      return updateNFTFilters({ name: value });
     default:
       return null;
     }

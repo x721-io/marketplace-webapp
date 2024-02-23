@@ -5,15 +5,15 @@ import { APIParams } from '@/services/api/types';
 import { parseEther } from 'ethers';
 import { FilterKey, SearchKey } from '@/store/ui/types';
 import { sanitizeObject } from '@/utils';
-import { useCollectionsFiltersStore } from '@/store/filters/collections/store';
+import { useCollectionFiltersStore } from '@/store/filters/collections/store';
 import { toast } from 'react-toastify';
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname();
   const {
-    showFilters: showCollectionsFilters,
-    toggleFilter: toggleCollectionsFilters
-  } = useCollectionsFiltersStore(state => state);
+    showFilters: showCollectionFilters,
+    toggleFilter: toggleCollectionFilters
+  } = useCollectionFiltersStore(state => state);
   const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(
     (state) => state
   );
@@ -47,7 +47,7 @@ export const useExploreSectionFilters = () => {
   const isFiltersVisible = useMemo(() => {
     switch (true) {
     case pathname.includes('collections'):
-      return showCollectionsFilters;
+      return showCollectionFilters;
     case pathname.includes('items'):
       return false;
     default:
@@ -58,7 +58,7 @@ export const useExploreSectionFilters = () => {
   const handleToggleFilters = () => {
     switch (true) {
     case pathname.includes('collections'):
-      return toggleCollectionsFilters();
+      return toggleCollectionFilters();
     case pathname.includes('items'):
       return false;
     default:
@@ -78,79 +78,61 @@ export const useExploreSectionFilters = () => {
   };
 };
 
-export const useNFTFilters = (defaultState?: APIParams.FetchNFTs) => {
-  const [activeFilters, setActiveFilters] = useState<APIParams.FetchNFTs>(
-    defaultState ?? {
-      page: 1,
-      limit: 5,
-      traits: undefined,
-      collectionAddress: undefined,
-      creatorAddress: undefined,
-      priceMax: undefined,
-      priceMin: undefined,
-      sellStatus: undefined,
-      owner: undefined
+export const useNFTFilters = (
+  activeFilters: APIParams.FetchNFTs,
+  onApplyFilters?: (filters: APIParams.FetchNFTs) => void
+) => {
+  const [localFilters, setLocalFilters] = useState<APIParams.FetchNFTs>(activeFilters);
+
+  const handleChange = ({ updateOnChange, ...params } : Partial<APIParams.FetchNFTs> & { updateOnChange?: boolean }) => {
+    const newFilters = { ...localFilters, ...params };
+    setLocalFilters(newFilters);
+    if (updateOnChange) {
+      // Trigger immediately on input
+      onApplyFilters?.(newFilters);
     }
-  );
-
-  const handleApplyFilters = (params: APIParams.FetchNFTs) => {
-    const _activeFilters = {
-      ...activeFilters,
-      ...params,
-      page: 1,
-      limit: 20
-    };
-
-    if (params.priceMax && !isNaN(Number(params.priceMax))) {
-      _activeFilters.priceMax = parseEther(
-        params.priceMax.toString()
-      ).toString();
-    }
-    if (params.priceMin && !isNaN(Number(params.priceMin))) {
-      _activeFilters.priceMin = parseEther(
-        params.priceMin.toString()
-      ).toString();
-    }
-
-    _activeFilters.sellStatus =
-      Number(params.priceMin) || Number(params.priceMax)
-        ? 'AskNew'
-        : params.sellStatus;
-
-    setActiveFilters(sanitizeObject(_activeFilters));
   };
 
-  const handleLoadMore = (page: number) => {
-    setActiveFilters({
-      ...activeFilters,
-      page
-    });
+  const handleApplyFilters = () => {
+    const { priceMax, priceMin } = localFilters
+    if (
+      (priceMin !== '' && priceMin !== undefined) ||
+      (priceMax !== '' && priceMax !== undefined)
+    ) {
+      if (
+        (isNaN(Number(priceMin)) && !!priceMin) ||
+        (isNaN(Number(priceMax)) && !!priceMax)
+      ) {
+        return toast.error('Please input a valid number');
+      }
+
+      if (Number(priceMin) < 0 || Number(priceMax) < 0) {
+        return toast.error('Price cannot be negative');
+      }
+
+      if (Number(priceMin) > Number(priceMax) && priceMax?.trim() !== '') {
+        return toast.error('Minimum price cannot be greater than maximum one');
+      }
+    }
+    onApplyFilters?.(sanitizeObject(localFilters));
   };
+
+  useEffect(() => {
+    setLocalFilters(activeFilters);
+  }, [activeFilters]);
 
   return {
-    activeFilters,
-    handleLoadMore,
+    localFilters,
+    handleChange,
     handleApplyFilters
   };
 };
 
 export const useCollectionFilters = (
-  showFilters?: boolean,
-  activeFilters?: APIParams.FetchCollections,
+  activeFilters: APIParams.FetchCollections,
   onApplyFilters?: (filters: APIParams.FetchCollections) => void
 ) => {
-  // const { filters: activeFilters, setFilters } = useCollectionsFiltersStore(state => state);
-  //
-  // const handleLoadMore = (page: number) => setFilters({ page });
-  const [localFilters, setLocalFilters] = useState<APIParams.FetchCollections>({
-    min: activeFilters?.min,
-    max: activeFilters?.max
-  });
-  const [error, setError] = useState<boolean>(false);
-
-  const handlePriceInput = (key: keyof typeof localFilters, value: any) => {
-    setLocalFilters(prevState => ({ ...prevState, [key]: value }));
-  };
+  const [localFilters, setLocalFilters] = useState<APIParams.FetchCollections>(activeFilters);
 
   const handleApplyFilters = () => {
     const { min, max } = localFilters;
@@ -162,35 +144,28 @@ export const useCollectionFilters = (
         (isNaN(Number(min)) && !!min) ||
         (isNaN(Number(max)) && !!max)
       ) {
-        toast.warning('Please input a valid number');
-        return setError(true);
+        return toast.error('Please input a valid number');
       }
 
       if (Number(min) < 0 || Number(max) < 0) {
-        toast.warning('Price cannot be negative');
-        return setError(true);
+        return toast.error('Price cannot be negative');
       }
 
-      if (Number(min) > Number(max) && Number(max) >= 0) {
-        toast.warning('Minimum price cannot be greater than maximum one');
-        return setError(true);
+      if (Number(min) > Number(max) && max?.trim() !== '') {
+        return toast.error('Minimum price cannot be greater than maximum one');
       }
     }
 
-    setError(false);
     onApplyFilters?.(localFilters);
   };
 
   useEffect(() => {
-    console.log(activeFilters);
-    handlePriceInput('min', activeFilters?.min);
-    handlePriceInput('max', activeFilters?.max);
+    setLocalFilters(activeFilters);
   }, [activeFilters]);
 
   return {
     localFilters,
     handleApplyFilters,
-    handlePriceInput,
-    error
+    setLocalFilters
   };
 };

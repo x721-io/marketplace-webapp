@@ -104,8 +104,17 @@ export const useMarketplaceApi = () => {
 
       fetchNFTs: (
         params: APIParams.FetchNFTs
-      ): Promise<APIResponse.FetchNFTs> =>
-        marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
+      ): Promise<APIResponse.FetchNFTs> => {
+        const { priceMin, priceMax } = params;
+        const bigintMin = priceMin !== undefined ? parseUnits(priceMin, 18) : undefined;
+        const bigintMax = priceMax !== undefined ? parseUnits(priceMax, 18) : undefined;
+        return marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, sanitizeObject({
+          ...params,
+          sellStatus: Number(priceMin) || Number(priceMax)? 'AskNew' : params.sellStatus,
+          priceMin: bigintMin?.toString(),
+          priceMax: bigintMax?.toString()
+        }))
+      },
 
       fetchNFTEvents: (
         params: APIParams.NFTEvents

@@ -6,7 +6,6 @@ import Button from '@/components/Button';
 import { APIParams } from '@/services/api/types';
 import React from 'react';
 import Collapsible from '../Collapsible';
-import { BrowserView } from 'react-device-detect';
 import { classNames } from '@/utils/string';
 import { useCollectionFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
@@ -27,41 +26,37 @@ export default function CollectionFilters({
   containerClass
 }: CollectionProps) {
   const {
-    handlePriceInput,
+    setLocalFilters,
     handleApplyFilters,
-    localFilters,
-    error
-  } = useCollectionFilters(showFilters, activeFilters, onApplyFilters);
+    localFilters
+  } = useCollectionFilters(activeFilters, onApplyFilters);
 
   if (!showFilters) return null;
 
   return (
     <>
-      <div className={classNames('w-72 flex flex-col', containerClass)}>
+      <div className={classNames('w-full tablet:w-72 flex flex-col', containerClass)}>
         <Collapsible isOpen header="Floor Price" className="rounded-2xl border">
           <div className="flex items-center gap-4 mb-4">
             <Input
               value={localFilters.min}
-              onChange={(e) => handlePriceInput('min', e.target.value)}
+              onChange={(e) => setLocalFilters(state => ({ ...state, min: e.target.value }))}
               containerClass="w-24"
               scale="sm"
               placeholder="Min"
-              error={error}
             />
             <Text className="text-primary">to</Text>
             <Input
               value={localFilters.max}
-              onChange={(e) => handlePriceInput('max', e.target.value)}
+              onChange={(e) => setLocalFilters(state => ({ ...state, max: e.target.value }))}
               containerClass="w-24"
               scale="sm"
               placeholder="Max"
-              error={error}
             />
           </div>
 
           <Button variant="secondary" className="w-full" onClick={() => {
-            handlePriceInput('min', '')
-            handlePriceInput('max', '')
+            setLocalFilters({ min: '', max: '' })
             onResetFilters?.();
           }}>
             Clear Filters <Icon name="close" width={20} height={20} />

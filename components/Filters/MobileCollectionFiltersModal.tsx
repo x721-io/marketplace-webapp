@@ -35,11 +35,10 @@ export default function MobileCollectionFiltersModal({
   onResetFilters
 }: Props) {
   const {
-    handlePriceInput,
+    setLocalFilters,
     handleApplyFilters,
     localFilters,
-    error
-  } = useCollectionFilters(show, activeFilters, onApplyFilters);
+  } = useCollectionFilters(activeFilters, onApplyFilters);
 
   return (
     <Modal
@@ -59,20 +58,18 @@ export default function MobileCollectionFiltersModal({
           <Input
             name="min"
             value={localFilters.min}
-            onChange={(e) => handlePriceInput('min', e.target.value)}
+            onChange={(e) => setLocalFilters(state => ({ ...state, min: e.target.value }))}
             containerClass="w-24"
             scale="sm"
             placeholder="Min"
-            error={error}
           />
           <Text className="text-primary">to</Text>
           <Input
             value={localFilters.max}
-            onChange={(e) => handlePriceInput('max', e.target.value)}
+            onChange={(e) => setLocalFilters(state => ({ ...state, max: e.target.value }))}
             containerClass="w-24"
             scale="sm"
             placeholder="Max"
-            error={error}
           />
         </div>
 
@@ -81,8 +78,7 @@ export default function MobileCollectionFiltersModal({
             className="w-full"
             variant="text"
             onClick={() => {
-              handlePriceInput('min', '')
-              handlePriceInput('max', '')
+              setLocalFilters({ min: '', max: '' })
               onResetFilters?.();
               onClose?.();
             }}

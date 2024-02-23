@@ -1,21 +1,25 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { CollectionFilterState, CollectionsFilterActions } from './types';
+import { NFTFiltersState, NFTFiltersActions } from './types';
 
-const DEFAULT_STATE: CollectionFilterState = {
+const DEFAULT_STATE: NFTFiltersState = {
   showFilters: false,
   filters: {
+    traits: [],
+    type: undefined,
+    collectionAddress: undefined,
     creatorAddress: undefined,
-    name: '',
-    min: '',
-    max: '',
+    priceMax: '',
+    priceMin: '',
+    sellStatus: undefined,
+    owner: undefined,
     page: 1,
     limit: 20
   },
 };
 
-export const useCollectionFiltersStore = create(
-  devtools<CollectionFilterState & CollectionsFilterActions>(
+export const useNFTsFiltersStore = create(
+  devtools<NFTFiltersState & NFTFiltersActions>(
     (set, get) => ({
       ...DEFAULT_STATE,
       toggleFilter: (bool) => set((state) => ({
@@ -30,6 +34,6 @@ export const useCollectionFiltersStore = create(
       })),
       resetFilters: () => set((state) => ({ ...DEFAULT_STATE, showFilters: state.showFilters }))
     }),
-    { name: 'collection-filters' }
+    { name: 'nft-filters' }
   )
 );

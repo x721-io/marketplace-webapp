@@ -1,19 +1,15 @@
 'use client';
 
-import {
-  useExploreSectionFilters
-} from '@/hooks/useFilters';
 import CollectionFilters from '@/components/Filters/CollectionFilters';
 import CollectionsList from '@/components/List/CollectionsList';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import { useUIStore } from '@/store/ui/store';
 import { sanitizeObject } from '@/utils';
 import { APIParams } from '@/services/api/types';
 import React, { useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import MobileCollectionFiltersModal from '@/components/Filters/MobileCollectionFiltersModal';
 import useSWRInfinite from 'swr/infinite';
-import { useCollectionsFiltersStore } from '@/store/filters/collections/store';
+import { useCollectionFiltersStore } from '@/store/filters/collections/store';
 
 interface Collection {
   data: any[];
@@ -27,7 +23,7 @@ export default function ExploreCollectionsPage() {
     filters,
     updateFilters,
     resetFilters
-  } = useCollectionsFiltersStore(state => state);
+  } = useCollectionFiltersStore(state => state);
   const api = useMarketplaceApi();
 
   const { data, size, isLoading, setSize } = useSWRInfinite(

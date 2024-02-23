@@ -22,8 +22,6 @@ export default function CollectionPage() {
   const [showFilters, setShowFilters] = useState(false);
   const { query } = useExploreSectionFilters();
   const { activeFilters, handleApplyFilters, handleLoadMore } = useNFTFilters();
-  const myId = useAuthStore((state) => state.profile?.id);
-  const { searchKey } = useExploreSectionFilters();
 
   const { data, isLoading, error } = useSWR(
     !!id ? id : null,

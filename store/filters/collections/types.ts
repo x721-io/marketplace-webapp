@@ -1,12 +1,11 @@
 import { APIParams } from '@/services/api/types';
 
-export interface CollectionsFiltersState {
+export interface CollectionFilterState {
   showFilters: boolean;
   filters: APIParams.FetchCollections
-  hasNext: boolean
 }
 
-export interface CollectionsFiltersActions {
+export interface CollectionsFilterActions {
   toggleFilter: (bool?: boolean) => void;
   setFilters: (filters: APIParams.FetchCollections) => void
   updateFilters: (filters: Partial<APIParams.FetchCollections>) => void
