@@ -47,6 +47,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft);
   const { onBidNFT } = useBidNFT(nft);
   const [loading, setLoading] = useState(false);
+  const onBidURC721UsingNative = useBidURC721UsingNative(nft)
+  const onBidURC1155UsingNative = useBidURC1155UsingNative(nft)
+  const onBidURC721UsingURC20 = useBidURC721UsingURC20(nft)
+  const onBidURC1155UsingURC20 = useBidURC1155UsingURC20(nft)
   const {
     handleSubmit,
     watch,
@@ -61,7 +65,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   });
   const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
-
   const {
     sellerFee,
     buyerFee,
@@ -139,47 +142,46 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
     try {
-      token?.address === tokens.wu2u.address ?
-        await onBidUsingNative(price, quantity)
-        :
-        await onBidNFT(price, token?.address as `0x${string}`, quantity);
-
-      // switch (nft.collection.type) {
-      //   case "ERC721":
-      //     if (quoteToken === tokens.wu2u.address) {
-      //       // eslint-disable-next-line react-hooks/rules-of-hooks
-      //       await useBidURC721UsingNative(nft, price)
-      //     } else {
-      //       // eslint-disable-next-line react-hooks/rules-of-hooks
-      //       await useBidURC721UsingURC20(nft, price, quoteToken)
-      //     }
-      //     break;
-      //   case "ERC1155":
-      //     if (quoteToken === tokens.wu2u.address) {
-      //       // eslint-disable-next-line react-hooks/rules-of-hooks
-      //       // await useBidURC1155UsingNative(nft, price, quantity)
-      //     } else {
-      //       // eslint-disable-next-line react-hooks/rules-of-hooks
-      //       await useBidURC1155UsingURC20(nft, price, quoteToken, quantity)
-      //     }
-      //     break;
-      //   default:
-      //     break;
-      // }
-
-      toast.success(`Bid placed successfully`, {
+      switch (nft.collection.type) {
+        case "ERC721":
+          if (quoteToken === tokens.wu2u.address) {
+            await onBidURC721UsingNative(price)
+          } else {
+            await onBidURC721UsingURC20(price, quoteToken)
+          }
+          break;
+        case "ERC1155":
+          if (quoteToken === tokens.wu2u.address) {
+            await onBidURC1155UsingNative(price, quantity)
+          } else {
+            await onBidURC1155UsingURC20(price, quoteToken, quantity)
+          }
+          break;
+        default:
+          break;
+      }
+      toast.update(toastId, {
+        render: "Bid placed successfully",
+        type: "success",
         autoClose: 1000,
-        closeButton: true
+        closeButton: true,
+        isLoading: false
       });
       onClose?.();
     } catch (e: any) {
-      toast.error(`Error report: ${e.message}`, {
+      console.error(e);
+      toast.update(toastId, {
+        render: "Bid placed failed",
+        type: "error",
         autoClose: 1000,
-        closeButton: true
+        closeButton: true,
+        isLoading: false
       });
-      onClose?.();
     } finally {
+      setLoading(false);
       reset();
     }
   };

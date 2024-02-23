@@ -31,51 +31,47 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
   },
 };
 
-export default function CancelSellNFTModal({
-  nft,
-  show,
-  onClose,
-  marketData,
-}: Props) {
-  const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft);
+export default function CancelSellNFTModal({ nft, show, onClose, marketData }: Props) {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const [loading, setLoading] = useState(false);
+  const onCancelSellURC721 = useCancelSellURC721(nft)
+  const onCancelSellURC1155 = useCancelSellURC1155()
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
       (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase(),
     );
   }, [marketData, wallet]);
 
-  const handleCancelSell = () => {
+  const handleCancelSell = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
     try {
-      onCancelSell(mySale?.operationId);
-      // if (nft.collection.type === "ERC721") { 
-      //   // eslint-disable-next-line react-hooks/rules-of-hooks
-      //   useCancelSellURC721(nft)
-      // }else {
-      //   // eslint-disable-next-line react-hooks/rules-of-hooks
-      //   useCancelSellURC1155(mySale?.operationId || '')
-      // }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(`Error report: ${error.message}`, {
-        autoClose: 1000,
+      if (nft.collection.type === "ERC721") {
+        await onCancelSellURC721()
+      } else {
+        await onCancelSellURC1155(mySale?.operationId || '')
+      }
+      toast.update(toastId, {
+        render: "Sale cancelled successfully",
+        type: "success",
+        autoClose: 5000,
         closeButton: true,
-      });
-    }
-    if (isSuccess) {
-      toast.success(`Sale cancelled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
+        isLoading: false
       });
       onClose?.();
+    } catch (e) {
+      console.error(e);
+      toast.update(toastId, {
+        render: "Sale cancelled failed",
+        type: "error",
+        autoClose: 5000,
+        closeButton: true,
+        isLoading: false
+      });
+    } finally {
+      setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, isSuccess]);
+  };
 
   return (
     <Modal
@@ -109,7 +105,7 @@ export default function CancelSellNFTModal({
               <Button
                 className="flex-1"
                 onClick={handleCancelSell}
-                loading={isLoading}
+                loading={loading}
               >
                 Yes
               </Button>

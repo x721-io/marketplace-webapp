@@ -158,7 +158,7 @@ export const useNFTMarketStatus = (
     isSeller
   };
 };
-
+//Done
 export const useMarketApproval = (nft: NFT) => {
   const type = nft.collection.type;
   const marketContract =
