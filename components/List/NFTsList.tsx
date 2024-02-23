@@ -3,11 +3,11 @@ import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters';
 import { classNames } from '@/utils/string';
 import NFTCard from '@/components/NFT/NFTCard';
 import { Spinner } from 'flowbite-react';
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import Text from '@/components/Text';
 import MobileNFTFiltersModal from '@/components/Filters/MobileNFTFiltersModal';
 import { isMobile } from 'react-device-detect';
-import { NFT } from '@/types';
+import { AssetType, NFT } from '@/types';
 import Link from 'next/link';
 import Button from '../Button';
 import useAuthStore from '@/store/auth/store';
@@ -19,16 +19,14 @@ interface Props {
   activeFilters: APIParams.FetchNFTs;
   onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void;
   onResetFilters: () => void;
-  onLoadMore: (page: number) => void;
-  paging?: number;
   traitFilters?: APIResponse.CollectionDetails['traitAvailable'];
   onClose?: () => void; // For mobile only: Close modal filters
   loading?: boolean;
   error?: boolean;
-  dataCollectionType?: string;
+  dataCollectionType?: AssetType;
   userId?: string;
   showCreateNFT?: boolean;
-  currentHasNext?: boolean | {};
+  currentHasNext: boolean;
 }
 
 export default function NFTsList({
@@ -38,9 +36,7 @@ export default function NFTsList({
   activeFilters,
   onApplyFilters,
   onResetFilters,
-  paging,
   traitFilters,
-  onLoadMore,
   onClose,
   loading,
   error,
@@ -51,28 +47,7 @@ export default function NFTsList({
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
-      if (
-        scrollTop + clientHeight === scrollHeight &&
-        !loading &&
-        paging &&
-        onLoadMore &&
-        currentHasNext
-      ) {
-        onLoadMore(paging + 1);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [loading, paging, currentHasNext]);
-
-  const renderList = useCallback(() => {
-
+  const renderList = () => {
     if (error && !items) {
       return (
         <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
@@ -134,18 +109,24 @@ export default function NFTsList({
             </div>
           ))}
         </div>
+
+        {!!items?.length && (
+          <div className="flex justify-center items-center">
+            {loading && (
+              <div className="w-full h-56 flex justify-center items-center">
+                <Spinner size="xl" />
+              </div>
+            )}
+            {!currentHasNext && (
+              <div className="w-full h-36 flex justify-center items-center">
+                No more data
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
-  }, [
-    items,
-    loading,
-    error,
-    dataCollectionType,
-    myId,
-    showCreateNFT,
-    showFilters,
-    userId
-  ]);
+  };
 
   return (
     <div className="w-full">
@@ -154,7 +135,7 @@ export default function NFTsList({
           'w-full flex gap:4 tablet:gap-7 laptop:gap-10 desktop:gap-12 mb-7',
           showFilters
             ? 'flex-col tablet:flex-row desktop:flex-row tablet:items-start'
-            : 'flex-row'
+            : 'tablet:flex-row'
         )}
       >
         {isMobile ?
@@ -162,6 +143,7 @@ export default function NFTsList({
             show={showFilters}
             activeFilters={activeFilters}
             onClose={onClose}
+            onResetFilters={onResetFilters}
             baseFilters={filters}
             onApplyFilters={onApplyFilters}
             traitsFilter={traitFilters}
@@ -170,29 +152,16 @@ export default function NFTsList({
           <NFTFilters
             showFilters={showFilters}
             activeFilters={activeFilters}
+            onResetFilters={onResetFilters}
             baseFilters={filters}
             onApplyFilters={onApplyFilters}
             traitsFilter={traitFilters}
           />
         }
-
-        {renderList()}
-      </div>
-
-      {!!items?.length && (
-        <div className="flex justify-center items-center">
-          {loading && (
-            <div className="w-full h-56 flex justify-center items-center">
-              <Spinner size="xl" />
-            </div>
-          )}
-          {!currentHasNext && (
-            <div className="w-full h-36 flex justify-center items-center">
-              No more data
-            </div>
-          )}
+        <div className="flex-1">
+          {renderList()}
         </div>
-      )}
+      </div>
     </div>
   );
 }

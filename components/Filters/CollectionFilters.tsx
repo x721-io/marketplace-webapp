@@ -11,9 +11,9 @@ import { useCollectionFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
 
 export interface CollectionProps {
-  showFilters?: boolean;
-  onApplyFilters?: (filters: APIParams.FetchCollections) => void;
-  activeFilters?: APIParams.FetchCollections;
+  showFilters: boolean;
+  onApplyFilters: (filters: APIParams.FetchCollections) => void;
+  activeFilters: APIParams.FetchCollections;
   onResetFilters?: () => void;
   containerClass?: string;
 }
@@ -55,14 +55,15 @@ export default function CollectionFilters({
             />
           </div>
 
-          <Button variant="secondary" className="w-full" onClick={() => {
-            setLocalFilters({ min: '', max: '' })
+          <Button variant="outlined" scale="sm" className="w-full" onClick={() => {
+            setLocalFilters({ min: '', max: '' });
             onResetFilters?.();
           }}>
-            Clear Filters <Icon name="close" width={20} height={20} />
+            Reset <Icon name="refresh" width={12} height={12} />
           </Button>
 
           <Button
+            scale="sm"
             className="w-full mt-3"
             variant="primary"
             onClick={handleApplyFilters}

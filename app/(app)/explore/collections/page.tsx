@@ -10,6 +10,7 @@ import { isMobile } from 'react-device-detect';
 import MobileCollectionFiltersModal from '@/components/Filters/MobileCollectionFiltersModal';
 import useSWRInfinite from 'swr/infinite';
 import { useCollectionFiltersStore } from '@/store/filters/collections/store';
+import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 interface Collection {
   data: any[];
@@ -35,9 +36,7 @@ export default function ExploreCollectionsPage() {
       return ['fetchCollections', queryParams];
     },
     ([key, params]) =>
-      api.fetchCollections(
-        sanitizeObject(params) as APIParams.FetchCollections
-      )
+      api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections)
   );
 
   const collections = useMemo(() => {
@@ -61,8 +60,14 @@ export default function ExploreCollectionsPage() {
     return { concatenatedData, currentHasNext };
   }, [data]);
 
-  const isLoadingMore =
-    isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
+  const isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
+
+  useScrollToLoadMore({
+    loading: isLoading,
+    paging: size,
+    onLoadMore: () => setSize(size + 1),
+    currentHasNext: collections.currentHasNext
+  });
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">
@@ -88,7 +93,7 @@ export default function ExploreCollectionsPage() {
           loading={isLoadingMore}
           collections={collections.concatenatedData}
           paging={size}
-          onLoadMore={setSize}
+          onLoadMore={() => setSize(size + 1)}
           showFilter={showFilters}
           currentHasNext={collections.currentHasNext}
         />

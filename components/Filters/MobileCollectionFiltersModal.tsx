@@ -1,12 +1,9 @@
 import { CustomFlowbiteTheme, Modal, ModalProps } from 'flowbite-react';
-import React, { useEffect } from 'react';
-import CollectionFilters, {} from '@/components/Filters/CollectionFilters';
+import React from 'react';
 import Button from '@/components/Button';
 import { APIParams } from '@/services/api/types';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
-import { BrowserView } from 'react-device-detect';
-import Collapsible from '@/components/Collapsible';
 import { useCollectionFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
 
@@ -22,8 +19,8 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
 };
 
 interface Props extends ModalProps {
-  onApplyFilters?: (filters: APIParams.FetchCollections) => void;
-  activeFilters?: APIParams.FetchCollections,
+  onApplyFilters: (filters: APIParams.FetchCollections) => void;
+  activeFilters: APIParams.FetchCollections,
   onResetFilters?: () => void
 }
 
@@ -87,6 +84,7 @@ export default function MobileCollectionFiltersModal({
           </Button>
           <div className="w-full flex items-center gap-2 mt-2">
             <Button
+              scale="sm"
               className="flex-1"
               variant="secondary"
               onClick={onClose}
@@ -94,6 +92,7 @@ export default function MobileCollectionFiltersModal({
               Cancel
             </Button>
             <Button
+              scale="sm"
               className="flex-1"
               onClick={() => {
                 handleApplyFilters();

@@ -11,6 +11,7 @@ import Collapsible from '../Collapsible';
 import { classNames } from '@/utils/string';
 import { MobileView } from 'react-device-detect';
 import { useNFTFilters } from '@/hooks/useFilters';
+import Icon from '@/components/Icon';
 
 export type FilterType = 'price' | 'type' | 'status';
 
@@ -19,9 +20,9 @@ export interface FilterProps {
   showFilters?: boolean;
   baseFilters?: FilterType[];
   onApplyFilters?: (filters: APIParams.FetchNFTs) => void;
+  onResetFilters?: () => void;
   traitsFilter?: APIResponse.CollectionDetails['traitAvailable'];
   containerClass?: string;
-  onCloseModal?: () => void; // For mobile modal
 }
 
 export default function NFTFilters({
@@ -30,8 +31,8 @@ export default function NFTFilters({
   baseFilters = ['price', 'type', 'status'],
   traitsFilter,
   onApplyFilters,
-  containerClass,
-  onCloseModal
+  onResetFilters,
+  containerClass
 }: FilterProps) {
   const { handleApplyFilters, localFilters, handleChange } = useNFTFilters(activeFilters, onApplyFilters);
 
@@ -72,7 +73,7 @@ export default function NFTFilters({
       )}
     >
       {baseFilters.includes('type') && (
-        <Collapsible header="Type">
+        <Collapsible header="Type" isOpen>
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
               <Radio
@@ -136,7 +137,7 @@ export default function NFTFilters({
               scale="sm"
               placeholder="Min"
               value={localFilters.priceMin}
-              onChange={(e) => handleChange({ priceMin: e.target.value, updateOnChange: true })}
+              onChange={(e) => handleChange({ priceMin: e.target.value })}
             />
             <Text className="text-primary">to</Text>
             <Input
@@ -144,12 +145,14 @@ export default function NFTFilters({
               scale="sm"
               placeholder="Max"
               value={localFilters.priceMax}
-              onChange={(e) => handleChange({ priceMax: e.target.value, updateOnChange: true })}
+              onChange={(e) => handleChange({ priceMax: e.target.value })}
             />
           </div>
+
           <Button
             className="w-full"
             variant="secondary"
+            scale="sm"
             onClick={handleApplyFilters}
           >
             Apply
@@ -190,6 +193,12 @@ export default function NFTFilters({
           ))}
         </Collapsible>
       )}
+
+      <div className="p-4">
+        <Button className="w-full" variant="outlined" scale="sm" onClick={onResetFilters}>
+          Reset <Icon name="refresh" width={12} height={12}/>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -67,7 +67,7 @@ export default function Button({
         return "text-primary bg-button-secondary hover:shadow";
       case "outlined":
         if (disabled) return "bg-gray-100 text-disabled";
-        return "text-primary bg-surface-soft border-hard border hover:bg-gray-200 hover:shadow";
+        return "text-primary bg-surface-soft border-medium border hover:bg-gray-200 hover:shadow";
       case "primary":
       default:
         if (disabled) return "text-gray-0 bg-disabled";

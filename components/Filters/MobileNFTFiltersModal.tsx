@@ -1,14 +1,14 @@
 import { Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps, Radio } from 'flowbite-react';
-import NFTFilters, { FilterProps } from '@/components/Filters/NFTFilters';
-import React, { useCallback, useEffect } from 'react';
-import { classNames } from '@/utils/string';
+import { FilterProps } from '@/components/Filters/NFTFilters';
+import React, { useCallback } from 'react';
 import Collapsible from '@/components/Collapsible';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
-import { MobileView } from 'react-device-detect';
 import { useNFTFilters } from '@/hooks/useFilters';
 import { Trait } from '@/types';
+import Icon from '@/components/Icon';
+import { DEFAULT_NFT_FILTERS_STATE } from '@/store/filters/items/store';
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
@@ -25,6 +25,7 @@ export default function MobileNFTFiltersModal({
   baseFilters = ['price', 'type', 'status'],
   activeFilters,
   onApplyFilters,
+  onResetFilters,
   traitsFilter,
   show,
   onClose
@@ -193,11 +194,19 @@ export default function MobileNFTFiltersModal({
           </div>
         )}
 
-        <div className="flex items-center gap-2 mt-6">
-          <Button className="flex-1" variant="secondary" onClick={handleCloseModal}>
+        <Button className="w-full mb-5" variant="secondary" scale="sm" onClick={() => {
+          onResetFilters?.();
+          handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters })
+        }}>
+          Reset <Icon name="refresh" width={12} height={12}/>
+        </Button>
+
+        <div className="flex items-center gap-2">
+          <Button scale="sm" className="flex-1" variant="outlined" onClick={handleCloseModal}>
             Cancel
           </Button>
           <Button
+            scale="sm"
             className="flex-1"
             onClick={() => {
               handleApplyFilters();

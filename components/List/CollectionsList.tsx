@@ -2,7 +2,7 @@ import { Spinner, Tooltip } from "flowbite-react";
 import { formatEther } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { formatDisplayedBalance } from "@/utils";
 import Button from "../Button";
@@ -13,24 +13,23 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
+import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 interface Props {
   id?: string | string[];
   loading?: boolean;
   error?: boolean;
-  paging?: number;
+  paging: number;
   collections?: Collection[];
   showFilter?: boolean;
   showCreateCollection?: boolean;
   creator?: string;
-  onLoadMore: (size: number) => void;
-  currentHasNext?: boolean | {};
+  onLoadMore: () => void;
+  currentHasNext: boolean;
 }
 
 export default function CollectionsList({
   collections,
-  paging,
-  onLoadMore,
   currentHasNext,
   loading,
   error,
@@ -39,26 +38,6 @@ export default function CollectionsList({
   creator,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
-      if (
-        scrollTop + clientHeight === scrollHeight &&
-        !loading &&
-        paging &&
-        onLoadMore &&
-        currentHasNext
-      ) {
-        onLoadMore(paging + 1);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [loading, paging, currentHasNext]);
 
   if (error && !collections) {
     return (

@@ -202,7 +202,7 @@ export namespace APIResponse {
     lastDateRecord: Date;
   }
 
-  interface Pagination {
+  export interface Pagination {
     page: number;
     limit: number;
     hasNext: boolean;

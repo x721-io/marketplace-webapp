@@ -1,15 +1,14 @@
 'use client';
 
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import { useExploreSectionFilters, useNFTFilters } from '@/hooks/useFilters';
 import NFTsList from '@/components/List/NFTsList';
 import { APIParams, APIResponse } from '@/services/api/types';
 import { sanitizeObject } from '@/utils';
-import { useUIStore } from '@/store/ui/store';
 import useSWRInfinite from 'swr/infinite';
 import { useMemo } from 'react';
 import FetchNFTs = APIResponse.FetchNFTs;
 import { useNFTsFiltersStore } from '@/store/filters/items/store';
+import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 export default function ExploreNFTsPage() {
   const {
@@ -18,7 +17,7 @@ export default function ExploreNFTsPage() {
     filters,
     updateFilters,
     resetFilters
-  } = useNFTsFiltersStore()
+  } = useNFTsFiltersStore();
   const api = useMarketplaceApi();
 
   const { data, size, isLoading, setSize, error } = useSWRInfinite(
@@ -26,13 +25,10 @@ export default function ExploreNFTsPage() {
       const queryParams = {
         ...filters,
         page: index + 1
-      }
+      };
       return ['fetchNFTs', queryParams];
     },
-    ([key, params]) =>
-      api.fetchNFTs(
-        sanitizeObject(params) as APIParams.FetchNFTs
-      )
+    ([key, params]) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs)
   );
 
   const items = useMemo(() => {
@@ -56,18 +52,22 @@ export default function ExploreNFTsPage() {
     return { concatenatedData, currentHasNext };
   }, [data]);
 
-  const isLoadingMore =
-    isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
+  const isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
+
+  useScrollToLoadMore({
+    loading: isLoading,
+    paging: size,
+    currentHasNext: items.currentHasNext,
+    onLoadMore: () => setSize(size + 1)
+  });
 
   return (
     <NFTsList
-      paging={size}
       onClose={() => toggleFilter(false)}
       loading={isLoadingMore}
       activeFilters={filters}
       onApplyFilters={updateFilters}
       onResetFilters={resetFilters}
-      onLoadMore={setSize}
       showFilters={showFilters}
       items={items.concatenatedData}
       currentHasNext={items.currentHasNext}
