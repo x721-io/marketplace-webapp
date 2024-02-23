@@ -1,6 +1,6 @@
 'use client';
 
-import { Dropdown, Tabs, TabsRef } from 'flowbite-react';
+import { Tabs, TabsRef } from 'flowbite-react';
 import Button from '@/components/Button';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';

@@ -13,7 +13,6 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
-import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 interface Props {
   id?: string | string[];

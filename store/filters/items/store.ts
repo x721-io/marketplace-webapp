@@ -14,7 +14,7 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFiltersState = {
     sellStatus: undefined,
     owner: undefined,
     page: 1,
-    limit: 5
+    limit: 20
   },
 };
 
