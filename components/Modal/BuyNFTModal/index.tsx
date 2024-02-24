@@ -75,6 +75,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       setValue('allowance', formatUnits(totalCostBigint, token?.decimal));
     }
   });
+  const onBuyURC721UsingNative = useBuyURC721UsingNative(nft)
+  const onBuyURC1155UsingNative = useBuyURC1155UsingNative(nft)
+  const onBuyURC721UsingURC20 = useBuyURC721UsingURC20(nft)
+  const onBuyURC1155UsingURC20 = useBuyURC1155UsingURC20()
 
   const {
     allowance: allowanceBalance,
@@ -102,24 +106,21 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
 
   const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
     if (!saleData) return;
+    setLoading(true);
     try {
       switch (nft.collection.type) {
         case "ERC721":
           if (quoteToken === tokens.wu2u.address) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useBuyURC721UsingNative(nft, BigInt(saleData.price) + BigInt(buyerFee))
+            await onBuyURC721UsingNative(BigInt(saleData.price) + BigInt(buyerFee))
           } else {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useBuyURC721UsingURC20(nft, quoteToken, BigInt(saleData.price) + BigInt(buyerFee))
+            await onBuyURC721UsingURC20(quoteToken, BigInt(saleData.price) + BigInt(buyerFee))
           }
           break;
         case "ERC1155":
           if (quoteToken === tokens.wu2u.address) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useBuyURC1155UsingNative(nft, saleData?.operationId, BigInt(saleData.price) + BigInt(buyerFee), quantity)
+            await onBuyURC1155UsingNative(saleData?.operationId, BigInt(saleData.price) + BigInt(buyerFee), quantity)
           } else {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useBuyURC1155UsingURC20(saleData?.operationId, quantity)
+            await onBuyURC1155UsingURC20(saleData?.operationId, quantity)
           }
           break;
         default:
@@ -138,6 +139,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       onClose?.();
       console.error(e);
     } finally {
+      setLoading(false);
       reset();
     }
   };
@@ -175,15 +177,18 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
+        isLoading: false
       });
     } catch (e) {
+      console.error(e)
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
+        isLoading: false
       });
     } finally {
       setLoading(false);

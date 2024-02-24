@@ -20,7 +20,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
         watch: true
     });
 
-    const { data: isMarketContractApprovedFoSingle } = useContractRead({
+    const { data: isMarketContractApprovedForSingle } = useContractRead({
         address: nft.collection.address,
         abi: contracts.erc721Base.abi,
         functionName: 'getApproved',
@@ -56,6 +56,6 @@ export const useMarketApproveNFT = (nft: NFT) => {
         isMarketContractApproved,
         onApproveTokenForAll,
         onApprovalTokenForSingle,
-        isMarketContractApprovedFoSingle,
+        isMarketContractApprovedForSingle,
     };
 };

@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form";
 import { findTokenByAddress } from "@/utils/token";
 import { toast } from "react-toastify";
 import { useAcceptBidURC1155, useAcceptBidURC721 } from "@/hooks/useBidNFT";
+import ErcNFTApproveToken from "@/components/ErcNFTApproveToken";
+import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 interface Props extends ModalProps {
   nft: NFT;
   bid?: MarketEvent;
@@ -38,7 +40,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   const {
     handleSubmit,
     register,
-    watch, 
+    watch,
     reset,
     formState: { errors },
   } = useForm<FormState.AcceptBidNFT>({
@@ -52,6 +54,12 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   const type = nft?.collection.type;
   const onAcceptBidURC721 = useAcceptBidURC721(nft)
   const onAcceptBidURC1155 = useAcceptBidURC1155()
+  const { 
+    isMarketContractApproved,
+    isMarketContractApprovedForSingle,
+    onApproveTokenForAll,
+    onApprovalTokenForSingle
+  } = useMarketApproveNFT(nft);
   const {
     sellerFee,
     buyerFee,
@@ -64,11 +72,11 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     tokenId: nft.id || nft.u2uId,
     price: parseUnits((bid?.price?.toString()) || '0', token?.decimal),
     onSuccess: (data) => {
-      if (!bid?.price || isNaN(Number(bid?.price))) return;
+      if (!price || isNaN(Number(price))) return;
     }
   });
 
-  const onSubmit = async({ quantity }: FormState.AcceptBidNFT) => {
+  const onSubmit = async ({ quantity }: FormState.AcceptBidNFT) => {
     if (!bid || !bid.to?.signer) return;
     const toastId = toast.loading("Preparing data...", { type: "info" });
     setLoading(true);
@@ -100,6 +108,63 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       reset();
     }
   };
+
+  const handleApproveTokenForSingle = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
+    try {
+      toast.update(toastId, { render: "Sending token", type: "info" });
+      await onApprovalTokenForSingle()
+
+      toast.update(toastId, {
+        render: "Approve token successfully",
+        type: "success",
+        autoClose: 1000,
+        closeButton: true,
+        isLoading: false
+      });
+    } catch (e) {
+      toast.update(toastId, {
+        render: "Failed to approve token",
+        type: "error",
+        autoClose: 1000,
+        closeButton: true,
+        isLoading: false
+      });
+    } finally {
+      setLoading(false);
+      reset();
+    }
+  };
+
+  const handleApproveTokenForAll = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
+    try {
+      toast.update(toastId, { render: "Sending token", type: "info" });
+      await onApproveTokenForAll()
+      toast.update(toastId, {
+        render: "Approve token successfully",
+        type: "success",
+        autoClose: 1000,
+        closeButton: true,
+        isLoading: false
+      });
+    } catch (e) {
+      console.error(e)
+      toast.update(toastId, {
+        render: "Failed to approve token",
+        type: "error",
+        autoClose: 1000,
+        closeButton: true,
+        isLoading: false
+      });
+    } finally {
+      setLoading(false);
+      reset();
+    }
+  };
+
   return (
     <Modal
       theme={modalTheme}
@@ -177,12 +242,22 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
             <FormValidationMessages errors={errors} />
 
             <div className="flex gap-4 mt-7 w-full">
-              <Button className="flex-1" variant="secondary" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button className="flex-1" type="submit" loading={loading}>
-                Accept bid
-              </Button>
+              {isMarketContractApprovedForSingle || isMarketContractApproved ?
+                <>
+                  <Button className="flex-1" variant="secondary" onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button className="flex-1" type="submit" loading={loading}>
+                    Accept bid
+                  </Button></>
+                :
+                <ErcNFTApproveToken
+                  nft={nft}
+                  isMarketContractApprovedForSingle={isMarketContractApprovedForSingle}
+                  handleApproveTokenForAll={handleApproveTokenForAll}
+                  handleApproveTokenForSingle={handleApproveTokenForSingle}
+                />
+              }
             </div>
           </form>
         </div>

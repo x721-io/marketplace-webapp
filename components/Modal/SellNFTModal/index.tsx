@@ -24,6 +24,7 @@ import { numberRegex } from "@/utils/regex";
 import { useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
 import { toast } from 'react-toastify';
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
+import ErcNFTApproveToken from "@/components/ErcNFTApproveToken";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -61,7 +62,12 @@ export default function SellNFTModal({
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const onSellURC721 = useSellURC721(nft)
   const onSellURC1155 = useSellURC1155(nft)
-  const { isMarketContractApproved, isMarketContractApprovedFoSingle, onApproveTokenForAll, onApprovalTokenForSingle } = useMarketApproveNFT(nft);
+  const { 
+    isMarketContractApproved,
+    isMarketContractApprovedForSingle,
+    onApproveTokenForAll,
+    onApprovalTokenForSingle
+  } = useMarketApproveNFT(nft);
 
   const {
     sellerFee,
@@ -294,25 +300,17 @@ export default function SellNFTModal({
               />
             )}
             <FormValidationMessages errors={errors} />
-            {isMarketContractApprovedFoSingle ?
+            {isMarketContractApprovedForSingle || isMarketContractApproved ?
               <Button type={"submit"} className="w-full" loading={loading}>
                 Put on sale
               </Button>
               :
-              <div className="w-full flex flex-col gap-2">
-                <div className="flex justify-between items-center">
-                  <Text className="font-semibold text-secondary">Current status:</Text>
-                  <div className="flex items-center gap-2">
-                    <Text className="font-semibol">{isMarketContractApprovedFoSingle ? 'Approved' : 'Not approval'}</Text>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 justify-center">
-                  {
-                    nft.collection.type === "ERC721" ? <Button variant="secondary" onClick={handleApproveTokenForSingle} className="p-3 flex-1">Approve Token for Single</Button> : ''
-                  }
-                  <Button variant="secondary" onClick={handleApproveTokenForAll} className="p-3 flex-1">Approve Token for All</Button>
-                </div>
-              </div>
+              <ErcNFTApproveToken
+                nft={nft}
+                isMarketContractApprovedForSingle={isMarketContractApprovedForSingle}
+                handleApproveTokenForAll={handleApproveTokenForAll}
+                handleApproveTokenForSingle={handleApproveTokenForSingle}
+              />
             }
           </form>
         </div>

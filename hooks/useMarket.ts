@@ -54,31 +54,31 @@ export const useCalculateFee = ({
   };
 
   const { data } = useContractReads({
-      contracts: [
-        {
-          ...feeDistributorContract,
-          functionName: 'calculateFee',
-          args: [
-            price || BigInt(0),
-            collectionAddress,
-            tokenId as any
-          ]
-        },
-        {
-          ...feeDistributorContract,
-          functionName: 'protocolFeePercent'
-        },
-        {
-          ...feeDistributorContract,
-          functionName: 'feeRatioSellerBuyer'
-        }
-      ],
-      select: (feeResponse: any[]): FeeData => {
-        return getFeeData(feeResponse);
+    contracts: [
+      {
+        ...feeDistributorContract,
+        functionName: 'calculateFee',
+        args: [
+          price || BigInt(0),
+          collectionAddress,
+          tokenId as any
+        ]
       },
-      onSuccess: onSuccess,
-      enabled: isAddress(collectionAddress) && !!tokenId
-    }
+      {
+        ...feeDistributorContract,
+        functionName: 'protocolFeePercent'
+      },
+      {
+        ...feeDistributorContract,
+        functionName: 'feeRatioSellerBuyer'
+      }
+    ],
+    select: (feeResponse: any[]): FeeData => {
+      return getFeeData(feeResponse);
+    },
+    onSuccess: onSuccess,
+    enabled: isAddress(collectionAddress) && !!tokenId
+  }
   );
 
   return data || {
@@ -165,35 +165,58 @@ export const useMarketApproval = (nft: NFT) => {
     type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
 
-  const { data: isMarketContractApproved } = useContractRead({
+  const { data: isMarketContractApproved} = useContractRead({
     address: nft.collection.address,
     abi: (type === 'ERC721'
       ? contracts.erc721Base.abi
       : contracts.erc1155Base.abi) as any,
     functionName: 'isApprovedForAll',
     args: [wallet as Address, marketContract.address],
-    enabled: !!wallet
+    enabled: !!wallet,
+    watch: true
   });
 
-  const {
-    isLoading: isFetchingApproval,
-    writeAsync: onApproveMarketContract,
-    error: contractCallError
-  } = useContractWrite({
+  const {data: approveForAll} = useContractWrite ({
     address: nft.collection.address,
-    abi: (type === 'ERC721'
-      ? contracts.erc721Base.abi
-      : contracts.erc1155Base.abi) as any,
+    abi: contracts.erc721Base.abi,
     functionName: 'setApprovalForAll',
-    args: [marketContract.address, true],
-    value: BigInt(0) as any
-  });
+    args: [contracts.erc721Market.address, true]
+  })
 
+  const {data: approveForSingle} = useContractWrite ({
+    address: nft.collection.address,
+    abi: contracts.erc721Base.abi,
+    functionName: 'approve',
+    args: [contracts.erc721Market.address, BigInt(nft.u2uId)],
+    value: BigInt(0) as any
+  })
+
+  const isApproveSellToken = useMemo(() => {
+    if (nft.collection.address === tokens.wu2u.address) return true
+    if (type === 'ERC721') {
+      if (isMarketContractApproved) return true
+      if (approveForAll) return true
+    } else {
+      if (isMarketContractApproved) return true
+    }
+  }, [isMarketContractApproved, approveForAll, nft.collection.address, tokens.wu2u.address])
+
+  const onApproveSellToken = async () => {
+    const { hash } = await writeContract({
+      address: nft.collection.address,
+      abi: (type === 'ERC721'
+        ? contracts.erc721Base.abi
+        : contracts.erc1155Base.abi) as any,
+      functionName: 'setApprovalForAll',
+      args: [marketContract.address, true],
+      value: BigInt(0) as any
+    });
+    return waitForTransaction({ hash })
+  }
   return {
     isMarketContractApproved,
-    onApproveMarketContract,
-    isFetchingApproval,
-    contractCallError
+    isApproveSellToken,
+    onApproveSellToken
   };
 };
 
