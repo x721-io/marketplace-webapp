@@ -60,10 +60,10 @@ export default function ExploreCollectionsPage() {
     return { concatenatedData, currentHasNext };
   }, [data]);
 
-  const isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
+  const isLoadingMore = isLoading || (size > 0 && data && (data[size - 1] === undefined));
 
   useScrollToLoadMore({
-    loading: isLoading,
+    loading: isLoadingMore,
     paging: size,
     onLoadMore: () => setSize(size + 1),
     currentHasNext: collections.currentHasNext

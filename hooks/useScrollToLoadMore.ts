@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
 interface Params {
-  loading?: boolean,
+  loading: boolean | undefined,
   paging: number,
-  currentHasNext?: boolean
-  onLoadMore?: () => void
+  currentHasNext: boolean
+  onLoadMore: () => void
   offset?: number
 }
 

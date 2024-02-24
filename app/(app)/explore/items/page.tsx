@@ -55,7 +55,7 @@ export default function ExploreNFTsPage() {
   const isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
 
   useScrollToLoadMore({
-    loading: isLoading,
+    loading: isLoadingMore,
     paging: size,
     currentHasNext: items.currentHasNext,
     onLoadMore: () => setSize(size + 1)
