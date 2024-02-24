@@ -3,14 +3,14 @@ import {
   Modal,
   ModalProps,
 } from "flowbite-react";
-import { useCalculateFee, useMarketTokenApproval } from "@/hooks/useMarket";
+import { useCalculateFee } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { useForm } from "react-hook-form";
 import { MaxUint256, formatEther, formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Address, useAccount, useBalance } from "wagmi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { NFT, MarketEvent, FormState } from "@/types";
@@ -20,7 +20,8 @@ import { numberRegex } from "@/utils/regex";
 import { tokens } from "@/config/tokens";
 import Erc20ApproveToken from "@/components/Erc20ApproveToken";
 import { toast } from "react-toastify";
-import { useBuyNFT, useBuyURC1155UsingNative, useBuyURC1155UsingURC20, useBuyURC721UsingNative, useBuyURC721UsingURC20 } from "@/hooks/useBuyNFT";
+import { useBuyURC1155UsingNative, useBuyURC1155UsingURC20, useBuyURC721UsingNative, useBuyURC721UsingURC20 } from "@/hooks/useBuyNFT";
+import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -79,7 +80,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     allowance: allowanceBalance,
     isTokenApproved,
     onApproveToken
-  } = useMarketTokenApproval(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
+  } = useMarketApproveERC20(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
 
   const formRules = {
     allowance: {

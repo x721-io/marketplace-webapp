@@ -54,7 +54,7 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
       toast.update(toastId, {
         render: "Sale cancelled successfully",
         type: "success",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
@@ -64,7 +64,7 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
       toast.update(toastId, {
         render: "Sale cancelled failed",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });

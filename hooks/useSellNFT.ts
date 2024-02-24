@@ -73,64 +73,15 @@ export const useCancelSellURC1155 = () => {
     return onCancelSellURC1155
 };
 
-export const useApprovalSellForAllURC721 = (nft: NFT) => {
-
-    const onApprovalSellForAllURC721 = async () => {
-        const { hash } = await writeContract({
-            address: nft.collection.address,
-            abi: contracts.erc721Base.abi,
-            functionName: 'setApprovalForAll',
-            args: [contracts.erc721Market.address, true],
-            value: BigInt(0) as any
-        });
-        return waitForTransaction({ hash })
-    }
-    return onApprovalSellForAllURC721
-};
-
-export const useApprovalSellForAllURC1155 = (nft: NFT) => {
-    const onApprovalSellForAllURC1155 = async () => {
-        const { hash } = await writeContract({
-            address: nft.collection.address,
-            abi: contracts.erc1155Base.abi,
-            functionName: 'setApprovalForAll',
-            args: [contracts.erc1155Market.address, true],
-            value: BigInt(0) as any
-        });
-        return waitForTransaction({ hash })
-    }
-    return onApprovalSellForAllURC1155
-};
-
-export const useApprovalSellForSingleURC721 = (nft: NFT) => {
-    const onApprovalSellForSingleURC721 = async () => {
-        const { hash } = await writeContract({
-            address: nft.collection.address,
-            abi: contracts.erc721Base.abi,
-            functionName: 'approve',
-            args: [contracts.erc721Market.address, BigInt(nft.u2uId)],
-            value: BigInt(0) as any
-        });
-        return waitForTransaction({ hash })
-    }
-    return onApprovalSellForSingleURC721
-};
-
 export const useSellNFT = (nft: NFT) => {
     const sellURC721 = useSellURC721(nft)
     const sellURC1155 = useSellURC1155(nft)
     const cancelSellURC721 = useCancelSellURC721(nft)
     const cancelSellURC1155 = useCancelSellURC1155()
-    const approvalSellForAllURC721 = useApprovalSellForAllURC721(nft)
-    const approvalSellForAllURC1155 = useApprovalSellForAllURC1155(nft)
-    const approvalSellForSingleURC721 = useApprovalSellForSingleURC721(nft)
     return {
         sellURC721,
         sellURC1155,
         cancelSellURC721,
-        cancelSellURC1155,
-        approvalSellForAllURC721,
-        approvalSellForAllURC1155,
-        approvalSellForSingleURC721,
+        cancelSellURC1155
     }
 }

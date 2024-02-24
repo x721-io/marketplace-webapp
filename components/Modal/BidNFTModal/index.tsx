@@ -12,7 +12,7 @@ import NFTMarketData = APIResponse.NFTMarketData;
 import { Address, useAccount, useBalance } from 'wagmi';
 import { findTokenByAddress } from '@/utils/token';
 import { tokenOptions, tokens } from '@/config/tokens';
-import { useBidNFT, useBidUsingNative, useCalculateFee, useMarketTokenApproval } from '@/hooks/useMarket';
+import { useCalculateFee } from '@/hooks/useMarket';
 import { useForm } from 'react-hook-form';
 import { MaxUint256, formatUnits, parseEther, parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
@@ -22,9 +22,9 @@ import FeeCalculator from '@/components/FeeCalculator';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import { numberRegex } from '@/utils/regex';
 import Select from '@/components/Form/Select';
-import Image from 'next/image';
 import Erc20ApproveToken from '@/components/Erc20ApproveToken';
 import { useBidURC1155UsingNative, useBidURC1155UsingURC20, useBidURC721UsingNative, useBidURC721UsingURC20 } from '@/hooks/useBidNFT';
+import { useMarketApproveERC20 } from '@/hooks/useMarketApproveERC20';
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -44,8 +44,6 @@ const modalTheme: CustomFlowbiteTheme['modal'] = {
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { address } = useAccount();
-  const { onBidUsingNative, isSuccess, isLoading, error } = useBidUsingNative(nft);
-  const { onBidNFT } = useBidNFT(nft);
   const [loading, setLoading] = useState(false);
   const onBidURC721UsingNative = useBidURC721UsingNative(nft)
   const onBidURC1155UsingNative = useBidURC1155UsingNative(nft)
@@ -90,7 +88,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     allowance: allowanceBalance,
     isTokenApproved,
     onApproveToken
-  } = useMarketTokenApproval(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
+  } = useMarketApproveERC20(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
 
   const formRules = {
     price: {
@@ -219,16 +217,15 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
-      onClose?.();
     } catch (e) {
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });

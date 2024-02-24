@@ -58,6 +58,8 @@ export namespace FormState {
 
   export interface AcceptBidNFT {
     quantity: number;
+    price: number;
+    quoteToken: Address;
   }
 
   export interface TransferToken {

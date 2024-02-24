@@ -2,18 +2,15 @@ import {
   CustomFlowbiteTheme,
   Modal,
   ModalProps,
-  Tooltip,
 } from "flowbite-react";
 import { useState } from "react";
-import ApprovalStep from "@/components/Modal/SellNFTModal/ApprovalStep";
-import ListingStep from "@/components/Modal/SellNFTModal/ListingStep";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useEffect, useMemo } from "react";
-import { useCalculateFee, useSellNFT } from "@/hooks/useMarket";
+import { useMemo } from "react";
+import { useCalculateFee } from "@/hooks/useMarket";
 import Button from "@/components/Button";
 import Select from "@/components/Form/Select";
-import { tokenOptions, tokens } from "@/config/tokens";
+import { tokenOptions } from "@/config/tokens";
 import { useForm } from "react-hook-form";
 import useAuthStore from "@/store/auth/store";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
@@ -24,8 +21,9 @@ import FeeCalculator from "@/components/FeeCalculator";
 import { formatUnits, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { numberRegex } from "@/utils/regex";
-import { useApprovalSellForAllURC1155, useApprovalSellForAllURC721, useApprovalSellForSingleURC721, useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
+import { useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
 import { toast } from 'react-toastify';
+import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -58,19 +56,13 @@ export default function SellNFTModal({
       (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
     );
   }, [wallet, marketData]);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FormState.SellNFT>();
+  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<FormState.SellNFT>();
   const [price, quantity, quoteToken] = watch(['price', 'quantity', 'quoteToken']);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const onSellURC721 = useSellURC721(nft)
   const onSellURC1155 = useSellURC1155(nft)
-  const onApprovalSellForAllURC721 = useApprovalSellForAllURC721(nft)
-  const onApprovalSellForAllURC1155 = useApprovalSellForAllURC1155(nft)
-  const onApprovalSellForSingleURC721 = useApprovalSellForSingleURC721(nft)
+  const { isMarketContractApproved, isMarketContractApprovedFoSingle, onApproveTokenForAll, onApprovalTokenForSingle } = useMarketApproveNFT(nft);
+
   const {
     sellerFee,
     buyerFee,
@@ -138,7 +130,7 @@ export default function SellNFTModal({
       toast.update(toastId, {
         render: "Your NFT has been put on sale!",
         type: "success",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
@@ -148,12 +140,13 @@ export default function SellNFTModal({
       toast.update(toastId, {
         render: "Your NFT has been unsold",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
     } finally {
       setLoading(false);
+      reset();
     }
   };
 
@@ -162,7 +155,7 @@ export default function SellNFTModal({
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-      await onApprovalSellForSingleURC721()
+      await onApprovalTokenForSingle()
 
       toast.update(toastId, {
         render: "Approve token successfully",
@@ -181,25 +174,20 @@ export default function SellNFTModal({
       });
     } finally {
       setLoading(false);
+      reset();
     }
-  }
+  };
 
   const handleApproveTokenForAll = async () => {
     const toastId = toast.loading("Preparing data...", { type: "info" });
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-
-      if (nft.collection.type === "ERC721") {
-        console.log('12');
-        await onApprovalSellForAllURC721()
-      } else {
-        await onApprovalSellForAllURC1155()
-      }
+      await onApproveTokenForAll()
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
@@ -208,14 +196,15 @@ export default function SellNFTModal({
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false
       });
     } finally {
       setLoading(false);
+      reset();
     }
-  }
+  };
 
   return (
     <Modal
@@ -305,25 +294,26 @@ export default function SellNFTModal({
               />
             )}
             <FormValidationMessages errors={errors} />
-            <Button type={"submit"} className="w-full" loading={loading}>
-              Put on sale
-            </Button>
-
-            <div className="w-full flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <Text className="font-semibold text-secondary">Current status:</Text>
-                <div className="flex items-center gap-2">
-                  <Text className="font-semibol"> Not approval</Text>
+            {isMarketContractApprovedFoSingle ?
+              <Button type={"submit"} className="w-full" loading={loading}>
+                Put on sale
+              </Button>
+              :
+              <div className="w-full flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                  <Text className="font-semibold text-secondary">Current status:</Text>
+                  <div className="flex items-center gap-2">
+                    <Text className="font-semibol">{isMarketContractApprovedFoSingle ? 'Approved' : 'Not approval'}</Text>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 justify-center">
+                  {
+                    nft.collection.type === "ERC721" ? <Button variant="secondary" onClick={handleApproveTokenForSingle} className="p-3 flex-1">Approve Token for Single</Button> : ''
+                  }
+                  <Button variant="secondary" onClick={handleApproveTokenForAll} className="p-3 flex-1">Approve Token for All</Button>
                 </div>
               </div>
-              <div className="flex items-center gap-2 justify-center">
-                {
-                  nft.collection.type === "ERC721" ? <Button variant="secondary" onClick={handleApproveTokenForSingle} className="p-3 flex-1">Approve Token for Single</Button> : ''
-                }
-                <Button variant="secondary" onClick={handleApproveTokenForAll} className="p-3 flex-1">Approve Token for All</Button>
-              </div>
-            </div>
-
+            }
           </form>
         </div>
       </Modal.Body>
