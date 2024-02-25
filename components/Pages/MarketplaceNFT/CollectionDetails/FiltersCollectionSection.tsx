@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import SliderIcon from '@/components/Icon/Sliders';
 import Button from '@/components/Button';
 import CommandIcon from '@/components/Icon/Command';
 import Input from '@/components/Form/Input';
-import { useExploreSectionFilters } from '@/hooks/useFilters';
 import { APIParams } from '@/services/api/types';
 
 interface Props {
@@ -19,11 +18,6 @@ export default function FiltersSectionCollection({
   onSearch,
   activeFilters
 }: Props) {
-  const { setQueryString, query } = useExploreSectionFilters();
-
-  useEffect(() => {
-    setQueryString('collection', '');
-  }, [setQueryString]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">

@@ -1,83 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { useUIStore } from '@/store/ui/store';
+import { useCallback, useEffect, useState } from 'react';
 import { APIParams } from '@/services/api/types';
-import { parseEther } from 'ethers';
-import { FilterKey, SearchKey } from '@/store/ui/types';
 import { sanitizeObject } from '@/utils';
-import { useCollectionFilterStore } from '@/store/filters/collections/store';
 import { toast } from 'react-toastify';
 import { Trait } from '@/types';
-
-export const useExploreSectionFilters = () => {
-  const pathname = usePathname();
-  const {
-    showFilters: showCollectionFilters,
-    toggleFilter: toggleCollectionFilters
-  } = useCollectionFilterStore(state => state);
-  const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(
-    (state) => state
-  );
-
-  const routeKey: FilterKey = useMemo(() => {
-    switch (true) {
-    case pathname.includes('collections'):
-      return 'collections';
-    case pathname.includes('profile'):
-      return 'profile';
-    case pathname.includes('items'):
-    default:
-      return 'nfts';
-    }
-  }, [pathname]);
-
-  const searchKey: SearchKey = useMemo(() => {
-    switch (true) {
-    case pathname.includes('collection'):
-      return 'collection';
-    case pathname.includes('collections'):
-      return 'collections';
-    case pathname.includes('users'):
-      return 'users';
-    case pathname.includes('items'):
-    default:
-      return 'nfts';
-    }
-  }, [pathname]);
-
-  const isFiltersVisible = useMemo(() => {
-    switch (true) {
-    case pathname.includes('collections'):
-      return showCollectionFilters;
-    case pathname.includes('items'):
-      return false;
-    default:
-      return false;
-    }
-  }, [showFilters, routeKey]);
-
-  const handleToggleFilters = () => {
-    switch (true) {
-    case pathname.includes('collections'):
-      return toggleCollectionFilters();
-    case pathname.includes('items'):
-      return false;
-    default:
-      return null;
-    }
-  };
-
-  const query = useMemo(() => queryString[searchKey], [queryString, searchKey]);
-
-  return {
-    isFiltersVisible,
-    routeKey,
-    handleToggleFilters,
-    searchKey,
-    query,
-    setQueryString
-  };
-};
 
 export const useNFTFilters = (
   activeFilters: APIParams.FetchNFTs,

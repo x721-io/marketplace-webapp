@@ -1,21 +1,15 @@
 'use client';
 
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import { useExploreSectionFilters } from '@/hooks/useFilters';
 import Text from '@/components/Text';
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
-import { APIParams, APIResponse } from '@/services/api/types';
+import React from 'react';
 import { Spinner } from 'flowbite-react';
 import { getUserAvatarImage, getUserCoverImage, getUserLink } from '@/utils/string';
 import UserFollow from '@/components/Pages/MarketplaceNFT/UserDetails/UserFollow';
-import { formatDisplayedNumber, sanitizeObject } from '@/utils';
+import { formatDisplayedNumber } from '@/utils';
 import useAuthStore from '@/store/auth/store';
 import Icon from '@/components/Icon';
-import useSWRInfinite from 'swr/infinite';
-import { useUIStore } from '@/store/ui/store';
-import UsersData = APIResponse.UsersData;
 import { useFetchUserList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useUserFilterStore } from '@/store/filters/users/store';
 
