@@ -9,7 +9,7 @@ import React, { useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import MobileCollectionFiltersModal from '@/components/Filters/MobileCollectionFiltersModal';
 import useSWRInfinite from 'swr/infinite';
-import { useCollectionFiltersStore } from '@/store/filters/collections/store';
+import { useCollectionFilterStore } from '@/store/filters/collections/store';
 import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 interface Collection {
@@ -24,7 +24,7 @@ export default function ExploreCollectionsPage() {
     filters,
     updateFilters,
     resetFilters
-  } = useCollectionFiltersStore(state => state);
+  } = useCollectionFilterStore(state => state);
   const api = useMarketplaceApi();
 
   const { data, size, isLoading, setSize } = useSWRInfinite(

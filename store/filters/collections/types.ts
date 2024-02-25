@@ -5,7 +5,7 @@ export interface CollectionFilterState {
   filters: APIParams.FetchCollections
 }
 
-export interface CollectionsFilterActions {
+export interface CollectionFilterAction {
   toggleFilter: (bool?: boolean) => void;
   setFilters: (filters: APIParams.FetchCollections) => void
   updateFilters: (filters: Partial<APIParams.FetchCollections>) => void

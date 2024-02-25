@@ -17,34 +17,27 @@ import useSWRInfinite from 'swr/infinite';
 import { useUIStore } from '@/store/ui/store';
 import UsersData = APIResponse.UsersData;
 import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
+import { useUserFilterStore } from '@/store/filters/users/store';
 
 export default function ExploreUsersPage() {
   const api = useMarketplaceApi();
-  const { queryString } = useUIStore((state) => state);
-  const { searchKey } = useExploreSectionFilters();
+  const { filters, showFilters, updateFilters } = useUserFilterStore();
+  // const { queryString } = useUIStore((state) => state);
+  // const { searchKey } = useExploreSectionFilters();
   const myId = useAuthStore((state) => state.profile?.id);
-
-  const [activePagination] =
-    useState<APIParams.FetchUsers>({
-      page: 1,
-      limit: 10
-    });
 
   const { data, size, isLoading, setSize, mutate, error } = useSWRInfinite(
     (index) => {
-      const queryParams = !!queryString[searchKey]
-        ? { ...activePagination, name: queryString[searchKey], page: 1 }
-        : {
-          ...activePagination,
-          name: queryString[searchKey],
-          page: index + 1
-        };
+      const queryParams = {
+        ...filters,
+        page: index + 1
+      };
       return ['fetchUsers', queryParams];
     },
     ([key, params]) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers)
   );
 
-  const isLoadingMore = isLoading || (size > 0 && !!data && !!data[size - 1]);
+  const isLoadingMore = isLoading || (size > 0 && !!data && data[size - 1] === undefined);
 
   const users = useMemo(() => {
     let currentHasNext = false;

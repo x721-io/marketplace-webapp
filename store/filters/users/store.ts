@@ -1,21 +1,18 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { CollectionFilterState, CollectionFilterAction } from './types';
+import { UserFilterState, UserFilterActions } from './types';
 
-const DEFAULT_STATE: CollectionFilterState = {
+const DEFAULT_STATE: UserFilterState = {
   showFilters: false,
   filters: {
-    creatorAddress: undefined,
-    name: '',
-    min: '',
-    max: '',
+    search: '',
     page: 1,
     limit: 20
   },
 };
 
-export const useCollectionFilterStore = create(
-  devtools<CollectionFilterState & CollectionFilterAction>(
+export const useUserFilterStore = create(
+  devtools<UserFilterState & UserFilterActions>(
     (set, get) => ({
       ...DEFAULT_STATE,
       toggleFilter: (bool) => set((state) => ({
@@ -30,6 +27,6 @@ export const useCollectionFilterStore = create(
       })),
       resetFilters: () => set((state) => ({ ...DEFAULT_STATE, showFilters: state.showFilters }))
     }),
-    { name: 'collection-filter' }
+    { name: 'user-filter' }
   )
 );

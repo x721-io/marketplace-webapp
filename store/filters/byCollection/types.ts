@@ -1,7 +1,7 @@
 import { APIParams } from '@/services/api/types';
 import { Address } from 'wagmi';
 
-export type NFTFiltersByCollectionState = Record<Address, {
+export type NFTFilterByCollectionState = Record<Address, {
   showFilters: boolean;
   filters: APIParams.FetchNFTs
 }>

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { NFTFiltersState, NFTFiltersActions } from './types';
+import { NFTFilterState, NFTFilterAction } from './types';
 
-export const DEFAULT_NFT_FILTERS_STATE: NFTFiltersState = {
+export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
   showFilters: false,
   filters: {
     traits: [],
@@ -18,8 +18,8 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFiltersState = {
   },
 };
 
-export const useNFTsFiltersStore = create(
-  devtools<NFTFiltersState & NFTFiltersActions>(
+export const useNFTFilterStore = create(
+  devtools<NFTFilterState & NFTFilterAction>(
     (set, get) => ({
       ...DEFAULT_NFT_FILTERS_STATE,
       toggleFilter: (bool) => set((state) => ({
@@ -34,6 +34,6 @@ export const useNFTsFiltersStore = create(
       })),
       resetFilters: () => set((state) => ({ ...DEFAULT_NFT_FILTERS_STATE, showFilters: state.showFilters }))
     }),
-    { name: 'nft-filters' }
+    { name: 'nft-filter' }
   )
 );

@@ -7,7 +7,7 @@ import { sanitizeObject } from '@/utils';
 import useSWRInfinite from 'swr/infinite';
 import { useMemo } from 'react';
 import FetchNFTs = APIResponse.FetchNFTs;
-import { useNFTsFiltersStore } from '@/store/filters/items/store';
+import { useNFTFilterStore } from '@/store/filters/items/store';
 import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
 
 export default function ExploreNFTsPage() {
@@ -17,7 +17,7 @@ export default function ExploreNFTsPage() {
     filters,
     updateFilters,
     resetFilters
-  } = useNFTsFiltersStore();
+  } = useNFTFilterStore();
   const api = useMarketplaceApi();
 
   const { data, size, isLoading, setSize, error } = useSWRInfinite(

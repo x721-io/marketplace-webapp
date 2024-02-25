@@ -1,11 +1,11 @@
 import { APIParams } from '@/services/api/types';
 
-export interface NFTFiltersState {
+export interface NFTFilterState {
   showFilters: boolean;
   filters: APIParams.FetchNFTs
 }
 
-export interface NFTFiltersActions {
+export interface NFTFilterAction {
   toggleFilter: (bool?: boolean) => void;
   setFilters: (filters: APIParams.FetchNFTs) => void
   updateFilters: (filters: Partial<APIParams.FetchNFTs>) => void

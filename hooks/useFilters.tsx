@@ -5,7 +5,7 @@ import { APIParams } from '@/services/api/types';
 import { parseEther } from 'ethers';
 import { FilterKey, SearchKey } from '@/store/ui/types';
 import { sanitizeObject } from '@/utils';
-import { useCollectionFiltersStore } from '@/store/filters/collections/store';
+import { useCollectionFilterStore } from '@/store/filters/collections/store';
 import { toast } from 'react-toastify';
 import { Trait } from '@/types';
 
@@ -14,7 +14,7 @@ export const useExploreSectionFilters = () => {
   const {
     showFilters: showCollectionFilters,
     toggleFilter: toggleCollectionFilters
-  } = useCollectionFiltersStore(state => state);
+  } = useCollectionFilterStore(state => state);
   const { showFilters, toggleFilter, queryString, setQueryString } = useUIStore(
     (state) => state
   );

@@ -7,8 +7,9 @@ import { useEffect, useMemo, useRef } from 'react';
 import Input from '@/components/Form/Input';
 import SliderIcon from '@/components/Icon/Sliders';
 import CommandIcon from '@/components/Icon/Command';
-import { useCollectionFiltersStore } from '@/store/filters/collections/store';
-import { useNFTsFiltersStore } from '@/store/filters/items/store';
+import { useCollectionFilterStore } from '@/store/filters/collections/store';
+import { useNFTFilterStore } from '@/store/filters/items/store';
+import { useUserFilterStore } from '@/store/filters/users/store';
 
 export default function ExploreSectionNavbar() {
   const tabs = [
@@ -26,14 +27,21 @@ export default function ExploreSectionNavbar() {
     showFilters: showCollectionFilters,
     toggleFilter: toggleCollectionFilters,
     updateFilters: updateCollectionFilters
-  } = useCollectionFiltersStore(state => state);
+  } = useCollectionFilterStore(state => state);
 
   const {
     filters: { name: nftSearchText },
     showFilters: showNFTFilters,
     toggleFilter: toggleNFTFilters,
     updateFilters: updateNFTFilters
-  } = useNFTsFiltersStore(state => state);
+  } = useNFTFilterStore(state => state);
+
+  const {
+    filters: { search: userSearchText },
+    showFilters: showUserFilters,
+    toggleFilter: toggleUserFilters,
+    updateFilters: updateUserFilters
+  } = useUserFilterStore(state => state);
 
   const isFiltersVisible = useMemo(() => {
     switch (true) {
@@ -62,13 +70,13 @@ export default function ExploreSectionNavbar() {
     case pathname.includes('collections'):
       return collectionSearchText;
     case pathname.includes('users'):
-      return '';
+      return userSearchText;
     case pathname.includes('items'):
       return nftSearchText;
     default:
       return '';
     }
-  }, [pathname, collectionSearchText, nftSearchText])
+  }, [pathname, collectionSearchText, nftSearchText, userSearchText])
 
   const handleInputText = (value: any) => {
     switch (true) {
@@ -76,6 +84,8 @@ export default function ExploreSectionNavbar() {
       return updateCollectionFilters({ name: value });
     case pathname.includes('items'):
       return updateNFTFilters({ name: value });
+    case pathname.includes('users'):
+      return updateUserFilters({ search: value })
     default:
       return null;
     }

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { NFTFiltersByCollectionState, NFTFiltersByCollectionActions } from './types';
+import { NFTFilterByCollectionState, NFTFiltersByCollectionActions } from './types';
 
 const DEFAULT_FILTERS_BY_COLLECTION = {
   showFilters: false,
@@ -20,7 +20,7 @@ const DEFAULT_FILTERS_BY_COLLECTION = {
 };
 
 export const useFiltersByCollection = create(
-  devtools<NFTFiltersByCollectionState & NFTFiltersByCollectionActions>(
+  devtools<NFTFilterByCollectionState & NFTFiltersByCollectionActions>(
     (set, get) => ({
       ...{},
       createFiltersForCollection: (collectionAddress) => set((state) => {
@@ -72,6 +72,6 @@ export const useFiltersByCollection = create(
         }
       })
     }),
-    { name: 'filters-by-collection' }
+    { name: 'filter-by-collection' }
   )
 );
