@@ -1,33 +1,38 @@
-import React, { useEffect } from "react";
-import SliderIcon from "@/components/Icon/Sliders";
-import Button from "@/components/Button";
-import CommandIcon from "@/components/Icon/Command";
-import Input from "@/components/Form/Input";
-import { useExploreSectionFilters } from "@/hooks/useFilters";
+import React, { useEffect } from 'react';
+import SliderIcon from '@/components/Icon/Sliders';
+import Button from '@/components/Button';
+import CommandIcon from '@/components/Icon/Command';
+import Input from '@/components/Form/Input';
+import { useExploreSectionFilters } from '@/hooks/useFilters';
+import { APIParams } from '@/services/api/types';
 
 interface Props {
   showFilters: boolean;
-  setShowFilters: () => void;
+  toggleFilter: () => void;
+  onSearch: (text: string) => void;
+  activeFilters: APIParams.FetchNFTs;
 }
 
 export default function FiltersSectionCollection({
   showFilters,
-  setShowFilters,
+  toggleFilter,
+  onSearch,
+  activeFilters
 }: Props) {
   const { setQueryString, query } = useExploreSectionFilters();
 
   useEffect(() => {
-    setQueryString("collection", "");
+    setQueryString('collection', '');
   }, [setQueryString]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">
-      <div className="order-3 desktop:order-1">
+      <div className="order-3 laptop:order-1">
         <Button
-          onClick={setShowFilters}
+          onClick={toggleFilter}
           className={
             showFilters
-              ? "bg-white shadow h-[56px]"
+              ? 'bg-white shadow h-[56px]'
               : `bg-surface-soft h-[56px]`
           }
           scale="lg"
@@ -41,8 +46,8 @@ export default function FiltersSectionCollection({
       </div>
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
-          value={query}
-          onChange={(e) => setQueryString("collection", e.target.value)}
+          value={activeFilters.name}
+          onChange={(e) => onSearch(e.target.value)}
           className="py-4 h-14 w-full"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"

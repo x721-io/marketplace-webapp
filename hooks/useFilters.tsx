@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useUIStore } from '@/store/ui/store';
 import { APIParams } from '@/services/api/types';
@@ -7,6 +7,7 @@ import { FilterKey, SearchKey } from '@/store/ui/types';
 import { sanitizeObject } from '@/utils';
 import { useCollectionFiltersStore } from '@/store/filters/collections/store';
 import { toast } from 'react-toastify';
+import { Trait } from '@/types';
 
 export const useExploreSectionFilters = () => {
   const pathname = usePathname();
@@ -117,14 +118,43 @@ export const useNFTFilters = (
     onApplyFilters?.(sanitizeObject(localFilters));
   };
 
+  const isTraitSelected = useCallback(
+    (key: string, value: string) => {
+      const traits = activeFilters.traits;
+      return traits?.some((t: Trait) => {
+        return t.trait_type === key && t.value === value;
+      });
+    },
+    [activeFilters]
+  );
+
+  const handleSelectTrait = (key: string, value: any, updateOnChange?: boolean) => {
+    const selectedTraits = localFilters.traits ? [...localFilters.traits] : [];
+    const isExist = isTraitSelected(key, value);
+
+    if (isExist) {
+      const index = selectedTraits.findIndex((t) => t.trait_type === key);
+      selectedTraits.splice(index, 1);
+    } else {
+      selectedTraits.push({
+        trait_type: key,
+        value
+      });
+    }
+
+    handleChange({ traits: selectedTraits, updateOnChange });
+  };
+
   useEffect(() => {
     setLocalFilters(activeFilters);
   }, [activeFilters]);
 
   return {
     localFilters,
+    isTraitSelected,
     handleChange,
-    handleApplyFilters
+    handleApplyFilters,
+    handleSelectTrait
   };
 };
 

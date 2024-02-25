@@ -34,34 +34,13 @@ export default function NFTFilters({
   onResetFilters,
   containerClass
 }: FilterProps) {
-  const { handleApplyFilters, localFilters, handleChange } = useNFTFilters(activeFilters, onApplyFilters);
-
-  const isTraitSelected = useCallback(
-    (key: string, value: string) => {
-      const traits = activeFilters.traits;
-      return traits?.some((t: Trait) => {
-        return t.trait_type === key && t.value === value;
-      });
-    },
-    [activeFilters]
-  );
-
-  const handleSelectTrait = (key: string, value: any) => {
-    const selectedTraits = localFilters.traits ? [...localFilters.traits] : [];
-    const isExist = isTraitSelected(key, value);
-
-    if (isExist) {
-      const index = selectedTraits.findIndex((t) => t.trait_type === key);
-      selectedTraits.splice(index, 1);
-    } else {
-      selectedTraits.push({
-        trait_type: key,
-        value
-      });
-    }
-
-    handleChange({ traits: selectedTraits, updateOnChange: true });
-  };
+  const {
+    handleApplyFilters,
+    localFilters,
+    handleChange,
+    handleSelectTrait,
+    isTraitSelected
+  } = useNFTFilters(activeFilters, onApplyFilters);
 
   if (!showFilters) return null;
 
@@ -106,7 +85,7 @@ export default function NFTFilters({
         </Collapsible>
       )}
       {baseFilters.includes('status') && (
-        <Collapsible header="Status">
+        <Collapsible header="Status" isOpen>
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
               <Radio
@@ -162,14 +141,7 @@ export default function NFTFilters({
       {!!traitsFilter?.length && (
         <Collapsible header="Properties">
           {traitsFilter.map((item) => (
-            <Collapsible
-              key={item.key}
-              header={
-                <Text variant="body-16">
-                  {item.key}&nbsp;({item.count})
-                </Text>
-              }
-            >
+            <div key={item.key}>
               {item.traits.map((trait) => (
                 <div
                   key={trait.value}
@@ -178,25 +150,25 @@ export default function NFTFilters({
                   <Checkbox
                     id={`trait-${trait.value}`}
                     checked={isTraitSelected(item.key, trait.value)}
-                    onChange={() => handleSelectTrait(item.key, trait.value)}
+                    onChange={() => handleSelectTrait(item.key, trait.value, true)}
                   />
                   <Label
                     htmlFor={`trait-${trait.value}`}
-                    className="flex-1 text-body-16 text-secondary font-semibold"
+                    className="flex-1 text-secondary font-semibold"
                   >
-                    {trait.value}
+                    {item.key}:
                   </Label>
-                  <Text>{trait.count}</Text>
+                  <Text>{trait.value} ({trait.count})</Text>
                 </div>
               ))}
-            </Collapsible>
+            </div>
           ))}
         </Collapsible>
       )}
 
       <div className="p-4">
         <Button className="w-full" variant="outlined" scale="sm" onClick={onResetFilters}>
-          Reset <Icon name="refresh" width={12} height={12}/>
+          Reset <Icon name="refresh" width={12} height={12} />
         </Button>
       </div>
     </div>

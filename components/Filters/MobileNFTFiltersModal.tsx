@@ -30,39 +30,18 @@ export default function MobileNFTFiltersModal({
   show,
   onClose
 }: ModalProps & FilterProps) {
-  const { handleApplyFilters, localFilters, handleChange } = useNFTFilters(activeFilters, onApplyFilters);
-
-  const isTraitSelected = useCallback(
-    (key: string, value: string) => {
-      const traits = activeFilters.traits;
-      return traits?.some((t: Trait) => {
-        return t.trait_type === key && t.value === value;
-      });
-    },
-    [activeFilters]
-  );
-
-  const handleSelectTrait = (key: string, value: any) => {
-    const selectedTraits = localFilters.traits ? [...localFilters.traits] : [];
-    const isExist = isTraitSelected(key, value);
-
-    if (isExist) {
-      const index = selectedTraits.findIndex((t) => t.trait_type === key);
-      selectedTraits.splice(index, 1);
-    } else {
-      selectedTraits.push({
-        trait_type: key,
-        value
-      });
-    }
-
-    handleChange({ traits: selectedTraits });
-  };
+  const {
+    handleApplyFilters,
+    localFilters,
+    handleChange,
+    isTraitSelected,
+    handleSelectTrait
+  } = useNFTFilters(activeFilters, onApplyFilters);
 
   const handleCloseModal = () => {
-    handleChange(activeFilters) // reset to previous state
+    handleChange(activeFilters); // reset to previous state
     onClose?.();
-  }
+  };
 
   return (
     <Modal
@@ -196,9 +175,9 @@ export default function MobileNFTFiltersModal({
 
         <Button className="w-full mb-5" variant="secondary" scale="sm" onClick={() => {
           onResetFilters?.();
-          handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters })
+          handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters });
         }}>
-          Reset <Icon name="refresh" width={12} height={12}/>
+          Reset <Icon name="refresh" width={12} height={12} />
         </Button>
 
         <div className="flex items-center gap-2">
