@@ -4,12 +4,10 @@ import { Checkbox, Label, Radio } from 'flowbite-react';
 import Text from '@/components/Text';
 import Input from '@/components/Form/Input';
 import Button from '@/components/Button';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { APIParams, APIResponse } from '@/services/api/types';
-import { Trait } from '@/types';
 import Collapsible from '../Collapsible';
 import { classNames } from '@/utils/string';
-import { MobileView } from 'react-device-detect';
 import { useNFTFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
 

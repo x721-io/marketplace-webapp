@@ -1,14 +1,8 @@
 'use client';
 
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import NFTsList from '@/components/List/NFTsList';
-import { APIParams, APIResponse } from '@/services/api/types';
-import { sanitizeObject } from '@/utils';
-import useSWRInfinite from 'swr/infinite';
-import { useMemo } from 'react';
-import FetchNFTs = APIResponse.FetchNFTs;
 import { useNFTFilterStore } from '@/store/filters/items/store';
-import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
+import { useFetchNFTList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function ExploreNFTsPage() {
   const {
@@ -18,47 +12,14 @@ export default function ExploreNFTsPage() {
     updateFilters,
     resetFilters
   } = useNFTFilterStore();
-  const api = useMarketplaceApi();
 
-  const { data, size, isLoading, setSize, error } = useSWRInfinite(
-    (index) => {
-      const queryParams = {
-        ...filters,
-        page: index + 1
-      };
-      return ['fetchNFTs', queryParams];
-    },
-    ([key, params]) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs)
-  );
+  const { error, isLoading, setSize, size, data } = useFetchNFTList(filters);
 
-  const items = useMemo(() => {
-    let currentHasNext = false;
-    let concatenatedData: any[] = [];
-
-    if (data) {
-      concatenatedData = data.reduce(
-        (prevData: any[], currentPage: FetchNFTs) => [
-          ...prevData,
-          ...currentPage.data
-        ],
-        []
-      );
-      const hasNextArray = data.map(
-        (currentPage: FetchNFTs) => currentPage.paging
-      );
-      currentHasNext = hasNextArray[data.length - 1].hasNext;
-    }
-
-    return { concatenatedData, currentHasNext };
-  }, [data]);
-
-  const isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
-
-  useScrollToLoadMore({
-    loading: isLoadingMore,
-    paging: size,
-    currentHasNext: items.currentHasNext,
-    onLoadMore: () => setSize(size + 1)
+  const { isLoadingMore, list: items } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
   });
 
   return (

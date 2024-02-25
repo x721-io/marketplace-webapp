@@ -16,53 +16,19 @@ import Icon from '@/components/Icon';
 import useSWRInfinite from 'swr/infinite';
 import { useUIStore } from '@/store/ui/store';
 import UsersData = APIResponse.UsersData;
-import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
+import { useFetchUserList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useUserFilterStore } from '@/store/filters/users/store';
 
 export default function ExploreUsersPage() {
-  const api = useMarketplaceApi();
-  const { filters, showFilters, updateFilters } = useUserFilterStore();
-  // const { queryString } = useUIStore((state) => state);
-  // const { searchKey } = useExploreSectionFilters();
+  const { filters } = useUserFilterStore();
   const myId = useAuthStore((state) => state.profile?.id);
+  const { data, size, isLoading, setSize, mutate, error } = useFetchUserList(filters);
 
-  const { data, size, isLoading, setSize, mutate, error } = useSWRInfinite(
-    (index) => {
-      const queryParams = {
-        ...filters,
-        page: index + 1
-      };
-      return ['fetchUsers', queryParams];
-    },
-    ([key, params]) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers)
-  );
-
-  const isLoadingMore = isLoading || (size > 0 && !!data && data[size - 1] === undefined);
-
-  const users = useMemo(() => {
-    let currentHasNext = false;
-    let concatenatedData: any[] = [];
-
-    if (data) {
-      concatenatedData = data.reduce(
-        (prevData: any[], currentPage: UsersData) => [
-          ...prevData,
-          ...currentPage.data
-        ],
-        []
-      );
-      const hasNextArray = data.map((currentPage: UsersData) => currentPage.paging);
-      currentHasNext = hasNextArray[data.length - 1].hasNext;
-    }
-
-    return { concatenatedData, currentHasNext };
-  }, [data]);
-
-  useScrollToLoadMore({
-    loading: isLoadingMore,
-    paging: size,
-    currentHasNext: users.currentHasNext,
-    onLoadMore: () => setSize(size + 1)
+  const { isLoadingMore, list: users } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
   });
 
   if (isLoading) {

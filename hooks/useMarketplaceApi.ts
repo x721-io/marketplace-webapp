@@ -132,7 +132,7 @@ export const useMarketplaceApi = () => {
       /** GET **/
       fetchCollections: (
         params: APIParams.FetchCollections
-      ): Promise<APIResponse.CollectionsData> => {
+      ): Promise<APIResponse.FetchCollections> => {
         const { min, max } = params;
         const bigintMin = min !== undefined ? parseUnits(min, 18) : undefined;
         const bigintMax = max !== undefined ? parseUnits(max, 18) : undefined;
@@ -151,7 +151,7 @@ export const useMarketplaceApi = () => {
       fetchCollectionsByUser: async ({
         userId,
         ...rest
-      }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
+      }: APIParams.FetchCollectionById): Promise<APIResponse.FetchCollections> => {
         return marketplaceApi.get(
           API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest)
         );

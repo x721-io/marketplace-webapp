@@ -15,15 +15,12 @@ import {
 import useAuthStore from "@/store/auth/store";
 
 interface Props {
-  id?: string | string[];
   loading?: boolean;
   error?: boolean;
-  paging: number;
   collections?: Collection[];
   showFilter?: boolean;
   showCreateCollection?: boolean;
   creator?: string;
-  onLoadMore: () => void;
   currentHasNext: boolean;
 }
 

@@ -1,12 +1,11 @@
 import { Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps, Radio } from 'flowbite-react';
 import { FilterProps } from '@/components/Filters/NFTFilters';
-import React, { useCallback } from 'react';
+import React from 'react';
 import Collapsible from '@/components/Collapsible';
 import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
 import { useNFTFilters } from '@/hooks/useFilters';
-import { Trait } from '@/types';
 import Icon from '@/components/Icon';
 import { DEFAULT_NFT_FILTERS_STATE } from '@/store/filters/items/store';
 

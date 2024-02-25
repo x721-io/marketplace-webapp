@@ -6,7 +6,7 @@ export type NFTFilterByCollectionState = Record<Address, {
   filters: APIParams.FetchNFTs
 }>
 
-export interface NFTFiltersByCollectionActions {
+export interface NFTFilterByCollectionAction {
   createFiltersForCollection: (address: Address) => void;
   toggleFilter: (address: Address, bool?: boolean) => void;
   setFilters: (address: Address, filters: APIParams.FetchNFTs) => void;

@@ -13,13 +13,13 @@ import { FormState } from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
-  interface PaginationParams {
+  export interface PaginationParams {
     page?: number;
     limit?: number;
     hasNext?: boolean;
   }
 
-  interface WithAuth {
+  export interface WithAuth {
     accessToken?: string;
   }
 
@@ -249,7 +249,7 @@ export namespace APIResponse {
     };
   }
 
-  export interface CollectionsData {
+  export interface FetchCollections {
     data: Collection[];
     paging: Pagination;
   }

@@ -12,17 +12,17 @@ import FiltersSectionCollection from '@/components/Pages/MarketplaceNFT/Collecti
 import { Spinner } from 'flowbite-react';
 import Text from '@/components/Text';
 import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string';
-import { useFiltersByCollection } from '@/store/filters/byCollection/store';
+import { useFilterByCollection } from '@/store/filters/byCollection/store';
 import useSWRInfinite from 'swr/infinite';
-import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
+import { useFetchNFTList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { Address } from 'wagmi';
 
 export default function CollectionPage() {
   const { id } = useParams();
   const api = useMarketplaceApi();
-  const filterStore = useFiltersByCollection(state => state);
+  const filterStore = useFilterByCollection(state => state);
 
-  const { data: collectionData, isLoading: isLoadingCollection, error } = useSWR(
+  const { data: collectionData, isLoading: isLoadingCollection, error: collectionError } = useSWR(
     !!id ? id : null,
     (id: string) => api.fetchCollectionById(id),
     {
@@ -33,21 +33,6 @@ export default function CollectionPage() {
         filterStore.updateFilters(collectionAddress, { collectionAddress });
       }
     }
-  );
-
-  const { data: itemsByCollection, size, isLoading: isLoadingNFTList, setSize } = useSWRInfinite(
-    (index) => {
-      const collectionAddress = collectionData?.collection.address;
-      if (!collectionAddress) {
-        return null;
-      }
-      const queryParams = {
-        ...filterStore[collectionAddress].filters,
-        page: index + 1
-      };
-      return [`nfts-by-collection-${collectionData.collection.address}`, queryParams];
-    },
-    ([key, params]) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs)
   );
 
   const {
@@ -71,37 +56,16 @@ export default function CollectionPage() {
     };
   }, [filterStore, collectionData]);
 
-  const items = useMemo(() => {
-    let currentHasNext = false;
-    let concatenatedData: any[] = [];
+  const { error: listError, isLoading, setSize, size, data } = useFetchNFTList(filters);
 
-    if (itemsByCollection) {
-      concatenatedData = itemsByCollection.reduce(
-        (prevData: any[], currentPage: APIResponse.FetchNFTs) => [
-          ...prevData,
-          ...currentPage.data
-        ],
-        []
-      );
-      const hasNextArray = itemsByCollection.map(
-        (currentPage: APIResponse.FetchNFTs) => currentPage.paging
-      );
-      currentHasNext = hasNextArray[itemsByCollection.length - 1].hasNext;
-    }
-
-    return { concatenatedData, currentHasNext };
-  }, [itemsByCollection]);
-
-  const isLoadingMore = isLoadingNFTList || (size > 0 && itemsByCollection && itemsByCollection[size - 1] === undefined);
-
-  useScrollToLoadMore({
-    loading: isLoadingMore,
-    paging: size,
-    currentHasNext: items.currentHasNext,
-    onLoadMore: () => setSize(size + 1)
+  const { isLoadingMore, list: items } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
   });
 
-  if (error) {
+  if (collectionError) {
     return (
       <div className="w-full h-96 flex flex-col gap-4 justify-center items-center">
         <Text variant="heading-xs" className="text-center font-semibold">
@@ -152,6 +116,7 @@ export default function CollectionPage() {
         />
         <div className="flex gap-4 desktop:flex-row flex-col">
           <NFTsList
+            loading={isLoadingMore}
             filters={['status', 'price']}
             activeFilters={filters}
             onResetFilters={resetFilters}
@@ -164,6 +129,7 @@ export default function CollectionPage() {
             dataCollectionType={collectionData.collection.type}
             showCreateNFT
             userId={collectionData.collection?.creators[0].userId}
+            error={listError}
           />
         </div>
       </div>

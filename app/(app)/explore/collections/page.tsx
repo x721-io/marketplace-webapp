@@ -2,20 +2,12 @@
 
 import CollectionFilters from '@/components/Filters/CollectionFilters';
 import CollectionsList from '@/components/List/CollectionsList';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import { sanitizeObject } from '@/utils';
-import { APIParams } from '@/services/api/types';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { isMobile } from 'react-device-detect';
 import MobileCollectionFiltersModal from '@/components/Filters/MobileCollectionFiltersModal';
-import useSWRInfinite from 'swr/infinite';
 import { useCollectionFilterStore } from '@/store/filters/collections/store';
-import { useScrollToLoadMore } from '@/hooks/useScrollToLoadMore';
+import { useFetchCollectionList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
-interface Collection {
-  data: any[];
-  paging: any;
-}
 
 export default function ExploreCollectionsPage() {
   const {
@@ -25,48 +17,13 @@ export default function ExploreCollectionsPage() {
     updateFilters,
     resetFilters
   } = useCollectionFilterStore(state => state);
-  const api = useMarketplaceApi();
+  const { data, size, setSize, isLoading, error } = useFetchCollectionList(filters);
 
-  const { data, size, isLoading, setSize } = useSWRInfinite(
-    (index) => {
-      const queryParams = {
-        ...filters,
-        page: index + 1
-      };
-      return ['fetchCollections', queryParams];
-    },
-    ([key, params]) =>
-      api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections)
-  );
-
-  const collections = useMemo(() => {
-    let currentHasNext = false;
-    let concatenatedData: any[] = [];
-
-    if (data) {
-      concatenatedData = data.reduce(
-        (prevData: any[], currentPage: Collection) => [
-          ...prevData,
-          ...currentPage.data
-        ],
-        []
-      );
-      const hasNextArray = data.map(
-        (currentPage: Collection) => currentPage.paging
-      );
-      currentHasNext = hasNextArray[data.length - 1].hasNext;
-    }
-
-    return { concatenatedData, currentHasNext };
-  }, [data]);
-
-  const isLoadingMore = isLoading || (size > 0 && data && (data[size - 1] === undefined));
-
-  useScrollToLoadMore({
-    loading: isLoadingMore,
-    paging: size,
-    onLoadMore: () => setSize(size + 1),
-    currentHasNext: collections.currentHasNext
+  const { isLoadingMore, list: collections } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
   });
 
   return (
@@ -90,10 +47,9 @@ export default function ExploreCollectionsPage() {
 
       <div className="flex-1">
         <CollectionsList
+          error={error}
           loading={isLoadingMore}
           collections={collections.concatenatedData}
-          paging={size}
-          onLoadMore={() => setSize(size + 1)}
           showFilter={showFilters}
           currentHasNext={collections.currentHasNext}
         />
