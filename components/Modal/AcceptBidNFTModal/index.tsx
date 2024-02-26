@@ -69,11 +69,11 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.id || nft.u2uId,
-    price: parseUnits((bid?.price?.toString()) || '0', token?.decimal),
+    price: BigInt(bid?.price || 0),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
     }
-  });
+  });  
 
   const onSubmit = async ({ quantity }: FormState.AcceptBidNFT) => {
     if (!bid || !bid.to?.signer) return;
@@ -228,7 +228,11 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                   mode="seller"
                   nft={nft}
                   quoteToken={bid?.quoteToken}
-                  price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)}
+                  // price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)}
+                  price={parseUnits(
+                    String(Number(bid?.price || 0) * Number(bid?.quantity || 0)),
+                    token?.decimal,
+                  )}
                   sellerFee={sellerFee}
                   buyerFee={buyerFee}
                   sellerFeeRatio={sellerFeeRatio}

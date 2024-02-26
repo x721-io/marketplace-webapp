@@ -179,7 +179,6 @@ export default function SellNFTModal({
       });
     } finally {
       setLoading(false);
-      reset();
     }
   };
 
@@ -207,7 +206,6 @@ export default function SellNFTModal({
       });
     } finally {
       setLoading(false);
-      reset();
     }
   };  
 

@@ -16,7 +16,7 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
     owner: undefined,
     page: 1,
     limit: 20,
-    quoteToken: tokens.wu2u.address,
+    quoteToken: undefined,
   },
 };
 
