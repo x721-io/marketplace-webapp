@@ -16,14 +16,13 @@ export const tokens: Record<string, Token> = {
     address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
-  usdt: {
-    name: "ETH",
-    symbol: "ETH",
-    decimal: 18,
-    // address: process.env.NEXT_PUBLIC_FORTH_ETH_CONTRACT as Address,
-    address: '0x36c17Fd9aB448616aAC885d06a58E4B5017Ac9CA',
-    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
-  }
+  // usdt: {
+  //   name: "ETH",
+  //   symbol: "ETH",
+  //   decimal: 18,
+  //   address: '0x36c17fd9ab448616aac885d06a58e4b5017ac9ca',
+  //   logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  // }
 };
 
 export const tokenOptions = Object.values(tokens).map((token) => {

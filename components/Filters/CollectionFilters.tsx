@@ -9,6 +9,9 @@ import Collapsible from '../Collapsible';
 import { classNames } from '@/utils/string';
 import { useCollectionFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
+import Select from '../Form/Select';
+import { tokenOptions } from '@/config/tokens';
+import { Address } from 'wagmi';
 
 export interface CollectionProps {
   showFilters: boolean;
@@ -53,6 +56,12 @@ export default function CollectionFilters({
               scale="sm"
               placeholder="Max"
             />
+            {/* <Select 
+              options={tokenOptions} 
+              containerClass="w-full" scale='sm'
+              value={localFilters.quoteToken}
+              onChange={(e) => setLocalFilters(state => ({ ...state, quoteToken: e.target.value as Address }))}
+            /> */}
           </div>
 
           <Button variant="outlined" scale="sm" className="w-full" onClick={() => {

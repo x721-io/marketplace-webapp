@@ -6,6 +6,9 @@ import Input from '@/components/Form/Input';
 import Text from '@/components/Text';
 import { useCollectionFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
+import Select from '../Form/Select';
+import { tokenOptions, tokens } from '@/config/tokens';
+import { Address } from 'wagmi';
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
@@ -68,6 +71,12 @@ export default function MobileCollectionFiltersModal({
             scale="sm"
             placeholder="Max"
           />
+          {/* <Select 
+              options={tokenOptions} 
+              containerClass="w-2/3" scale='sm'
+              value={localFilters.quoteToken}
+              onChange={(e) => setLocalFilters(state => ({ ...state, quoteToken: e.target.value as Address }))}
+            /> */}
         </div>
 
         <div className="mt-6">
@@ -75,7 +84,7 @@ export default function MobileCollectionFiltersModal({
             className="w-full"
             variant="text"
             onClick={() => {
-              setLocalFilters({ min: '', max: '' })
+              setLocalFilters({ min: '', max: '', quoteToken: tokens.wu2u.address })
               onResetFilters?.();
               onClose?.();
             }}

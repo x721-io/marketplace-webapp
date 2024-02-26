@@ -10,6 +10,9 @@ import Collapsible from '../Collapsible';
 import { classNames } from '@/utils/string';
 import { useNFTFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
+import Select from '../Form/Select';
+import { tokenOptions, tokens } from '@/config/tokens';
+import { Address } from 'wagmi';
 
 export type FilterType = 'price' | 'type' | 'status';
 
@@ -41,7 +44,7 @@ export default function NFTFilters({
   } = useNFTFilters(activeFilters, onApplyFilters);
 
   if (!showFilters) return null;
-
+  
   return (
     <div
       className={classNames(
@@ -123,6 +126,12 @@ export default function NFTFilters({
               placeholder="Max"
               value={localFilters.priceMax}
               onChange={(e) => handleChange({ priceMax: e.target.value })}
+            />
+            <Select 
+              options={tokenOptions} 
+              containerClass="w-full" scale='sm'
+              value={localFilters.quoteToken}
+              onChange={(e) => handleChange({ quoteToken: e.target.value as Address })}
             />
           </div>
 

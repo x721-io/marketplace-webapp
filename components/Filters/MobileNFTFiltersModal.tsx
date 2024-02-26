@@ -8,6 +8,9 @@ import Button from '@/components/Button';
 import { useNFTFilters } from '@/hooks/useFilters';
 import Icon from '@/components/Icon';
 import { DEFAULT_NFT_FILTERS_STATE } from '@/store/filters/items/store';
+import Select from '../Form/Select';
+import { tokenOptions } from '@/config/tokens';
+import { Address } from 'wagmi';
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   content: {
@@ -131,6 +134,12 @@ export default function MobileNFTFiltersModal({
                 placeholder="Max"
                 value={localFilters.priceMax}
                 onChange={(e) => handleChange({ priceMax: e.target.value })}
+              />
+              <Select
+                options={tokenOptions}
+                containerClass="w-2/3" scale='sm'
+                value={localFilters.quoteToken}
+                onChange={(e) => handleChange({ quoteToken: e.target.value as Address })}
               />
             </div>
           </div>

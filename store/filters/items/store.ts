@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { NFTFilterState, NFTFilterAction } from './types';
+import { tokens } from '@/config/tokens';
 
 export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
   showFilters: false,
@@ -14,7 +15,8 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
     sellStatus: undefined,
     owner: undefined,
     page: 1,
-    limit: 20
+    limit: 20,
+    quoteToken: tokens.wu2u.address,
   },
 };
 
