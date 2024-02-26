@@ -1,65 +1,29 @@
-"use client";
+'use client';
 
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { useUIStore } from "@/store/ui/store";
-import { useExploreSectionFilters } from "@/hooks/useFilters";
-import useSWR from "swr";
-import Text from "@/components/Text";
-import Link from "next/link";
-import Image from "next/image";
-import React, { useMemo, useState } from "react";
-import { APIParams } from "@/services/api/types";
-import { Pagination, Spinner } from "flowbite-react";
-import {
-  getUserAvatarImage,
-  getUserCoverImage,
-  getUserLink,
-} from "@/utils/string";
-import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
-import { formatDisplayedNumber } from "@/utils";
-import useAuthStore from "@/store/auth/store";
-import Icon from "@/components/Icon";
+import Text from '@/components/Text';
+import Link from 'next/link';
+import Image from 'next/image';
+import React from 'react';
+import { Spinner } from 'flowbite-react';
+import { getUserAvatarImage, getUserCoverImage, getUserLink } from '@/utils/string';
+import UserFollow from '@/components/Pages/MarketplaceNFT/UserDetails/UserFollow';
+import { formatDisplayedNumber } from '@/utils';
+import useAuthStore from '@/store/auth/store';
+import Icon from '@/components/Icon';
+import { useFetchUserList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useUserFilterStore } from '@/store/filters/users/store';
 
 export default function ExploreUsersPage() {
-  const api = useMarketplaceApi();
-  const { queryString } = useUIStore((state) => state);
-  const { searchKey } = useExploreSectionFilters();
+  const { filters } = useUserFilterStore();
   const myId = useAuthStore((state) => state.profile?.id);
+  const { data, size, isLoading, setSize, mutate, error } = useFetchUserList(filters);
 
-  const [activePagination, setActivePagination] =
-    useState<APIParams.FetchUsers>({
-      page: 1,
-      limit: 20,
-    });
-
-  const {
-    data: users,
-    isLoading,
-    error,
-    mutate,
-  } = useSWR(
-    !!queryString[searchKey]
-      ? { ...activePagination, search: queryString[searchKey], page: 1 }
-      : {
-          ...activePagination,
-          search: queryString[searchKey],
-        },
-    (params) => api.fetchUsers(params),
-    { refreshInterval: 10000 },
-  );
-
-  const totalPage = useMemo(() => {
-    if (!users?.paging?.total) return 0;
-    return Math.ceil(users?.paging.total / users?.paging.limit);
-  }, [users?.paging]);
-
-  const handleChangePage = (page: number) => {
-    setActivePagination({
-      ...activePagination,
-      page,
-    });
-    window.scrollTo(0, 0);
-  };
+  const { isLoadingMore, list: users } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
+  });
 
   if (isLoading) {
     return (
@@ -81,7 +45,7 @@ export default function ExploreUsersPage() {
     );
   }
 
-  if (!users?.data || !users?.data.length) {
+  if (!users.concatenatedData || !users.concatenatedData.length) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">
@@ -93,7 +57,7 @@ export default function ExploreUsersPage() {
   return (
     <>
       <div className="grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:grid-cols-4 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3">
-        {users?.data?.map((user: any, index: number) => (
+        {users.concatenatedData?.map((user: any, index: number) => (
           <div
             className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all"
             key={user.id}
@@ -151,12 +115,17 @@ export default function ExploreUsersPage() {
           </div>
         ))}
       </div>
-      <div className="flex justify-end">
-        <Pagination
-          currentPage={users.paging?.page ?? 1}
-          totalPages={totalPage}
-          onPageChange={handleChangePage}
-        />
+      <div className="flex justify-center items-center">
+        {isLoadingMore && (
+          <div className="w-full h-56 flex justify-center items-center">
+            <Spinner size="xl" />
+          </div>
+        )}
+        {!users.currentHasNext && (
+          <div className="w-full h-36 flex justify-center items-center">
+            No more data
+          </div>
+        )}
       </div>
     </>
   );

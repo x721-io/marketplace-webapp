@@ -13,12 +13,13 @@ import { FormState } from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
-  interface PaginationParams {
+  export interface PaginationParams {
     page?: number;
     limit?: number;
+    hasNext?: boolean;
   }
 
-  interface WithAuth {
+  export interface WithAuth {
     accessToken?: string;
   }
 
@@ -108,6 +109,7 @@ export namespace APIParams {
     priceMin?: string;
     sellStatus?: MarketEventType;
     owner?: Address;
+    name?: string
   }
 
   export interface NFTEvents extends PaginationParams {
@@ -204,10 +206,10 @@ export namespace APIResponse {
     lastDateRecord: Date;
   }
 
-  interface Pagination {
+  export interface Pagination {
     page: number;
     limit: number;
-    total: number;
+    hasNext: boolean;
   }
 
   export interface Connect {
@@ -251,7 +253,7 @@ export namespace APIResponse {
     };
   }
 
-  export interface CollectionsData {
+  export interface FetchCollections {
     data: Collection[];
     paging: Pagination;
   }

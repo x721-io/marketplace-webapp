@@ -1,10 +1,9 @@
-import { Pagination, Spinner, Tooltip } from "flowbite-react";
+import { Spinner, Tooltip } from "flowbite-react";
 import { formatEther } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
-import React, { useMemo } from "react";
+import React from "react";
 import Image from "next/image";
-import VerifyIcon from "../Icon/Verify";
 import { formatDisplayedBalance } from "@/utils";
 import Button from "../Button";
 import { Collection } from "@/types";
@@ -15,29 +14,19 @@ import {
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
 
-interface Paging {
-  page?: number;
-  limit: number;
-  total?: number;
-}
-
 interface Props {
-  id?: string | string[];
   loading?: boolean;
   error?: boolean;
-  paging?: Paging;
   collections?: Collection[];
-  onChangePage: (page: number) => void;
   showFilter?: boolean;
   showCreateCollection?: boolean;
   creator?: string;
+  currentHasNext: boolean;
 }
 
 export default function CollectionsList({
   collections,
-  paging,
-  onChangePage,
-  id,
+  currentHasNext,
   loading,
   error,
   showFilter,
@@ -45,18 +34,6 @@ export default function CollectionsList({
   creator,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
-  const totalPage = useMemo(() => {
-    if (!paging?.total) return 0;
-    return Math.ceil(paging.total / paging.limit);
-  }, [paging]);
-
-  if (loading) {
-    return (
-      <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl" />
-      </div>
-    );
-  }
 
   if (error && !collections) {
     return (
@@ -181,12 +158,17 @@ export default function CollectionsList({
             );
           })}
       </div>
-      <div className="flex justify-end mt-20">
-        <Pagination
-          currentPage={paging?.page ?? 1}
-          totalPages={totalPage}
-          onPageChange={onChangePage}
-        />
+      <div className="flex justify-center items-center">
+        {loading && (
+          <div className="w-full h-56 flex justify-center items-center">
+            <Spinner size="xl" />
+          </div>
+        )}
+        {!currentHasNext && (
+          <div className="w-full h-36 flex justify-center items-center">
+            No more data
+          </div>
+        )}
       </div>
     </>
   );
