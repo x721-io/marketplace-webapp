@@ -14,7 +14,7 @@ interface Props {
 
 export default function TimeframeDropdown({ round }: Props) {
   const [open, setOpen] = useState(false);
-  const { setTimeframes } = useTimeframeStore();
+  const { setTimeframes, setIsInTimeframe } = useTimeframeStore();
   const { data: timeframesLength } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
@@ -36,8 +36,10 @@ export default function TimeframeDropdown({ round }: Props) {
     }),
     enabled: Number(timeframesLength) > 0,
     watch: true,
-    select: (data) => data.map((item) => {
-      return item.result as unknown as Timeframe}),
+    select: (data) =>
+      data.map((item) => {
+        return item.result as unknown as Timeframe;
+      }),
   });
 
   useEffect(() => {
@@ -55,15 +57,18 @@ export default function TimeframeDropdown({ round }: Props) {
       const currentTime =
         new Date().getUTCHours() * 3600 + new Date().getMinutes() * 60;
       if (currentTime < timeframesStart) {
+        setIsInTimeframe(false);
         return { index: 0, isInTimeframe: false };
       }
 
       for (let i = 0; i < timeframes.length; i++) {
         const start =
           timeframes[i]?.hourStart * 3600 + timeframes[i]?.minuteStart * 60;
-        const end = timeframes[i]?.hourEnd * 3600 + timeframes[i]?.minuteEnd * 60;
+        const end =
+          timeframes[i]?.hourEnd * 3600 + timeframes[i]?.minuteEnd * 60;
 
         if (currentTime >= start && currentTime <= end) {
+          setIsInTimeframe(true);
           current = { index: i, isInTimeframe: true };
           break;
         }
@@ -72,6 +77,7 @@ export default function TimeframeDropdown({ round }: Props) {
             timeframes[i + 1]?.hourStart * 3600 +
             timeframes[i + 1]?.minuteStart * 60;
           if (currentTime > end && currentTime < startNext) {
+            setIsInTimeframe(false);
             current = { index: i + 1, isInTimeframe: false };
             break;
           }
@@ -79,6 +85,7 @@ export default function TimeframeDropdown({ round }: Props) {
       }
 
       if (currentTime > timeframesEnd) {
+        setIsInTimeframe(false);
         return { index: timeframes.length - 1, isInTimeframe: false };
       }
     }
