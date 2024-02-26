@@ -62,9 +62,8 @@ export default function SellNFTModal({
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const onSellURC721 = useSellURC721(nft)
   const onSellURC1155 = useSellURC1155(nft)
-  const { 
-    isMarketContractApproved,
-    isMarketContractApprovedForSingle,
+  const {
+    isMarketContractApprovedToken,
     onApproveTokenForAll,
     onApprovalTokenForSingle
   } = useMarketApproveNFT(nft);
@@ -210,7 +209,7 @@ export default function SellNFTModal({
       setLoading(false);
       reset();
     }
-  };
+  };  
 
   return (
     <Modal
@@ -300,14 +299,14 @@ export default function SellNFTModal({
               />
             )}
             <FormValidationMessages errors={errors} />
-            {isMarketContractApprovedForSingle || isMarketContractApproved ?
+            {isMarketContractApprovedToken ?
               <Button type={"submit"} className="w-full" loading={loading}>
                 Put on sale
               </Button>
               :
               <ErcNFTApproveToken
                 nft={nft}
-                isMarketContractApprovedForSingle={isMarketContractApprovedForSingle}
+                isMarketContractApprovedToken={isMarketContractApprovedToken}
                 handleApproveTokenForAll={handleApproveTokenForAll}
                 handleApproveTokenForSingle={handleApproveTokenForSingle}
               />

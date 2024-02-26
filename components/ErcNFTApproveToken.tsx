@@ -4,14 +4,14 @@ import Text from "./Text";
 
 interface Props {
     nft: NFT;
-    isMarketContractApprovedForSingle?: boolean
+    isMarketContractApprovedToken?: boolean
     handleApproveTokenForAll: () => void
     handleApproveTokenForSingle: () => void
 }
 
 export default function ErcNFTApproveToken({
     nft,
-    isMarketContractApprovedForSingle,
+    isMarketContractApprovedToken,
     handleApproveTokenForAll,
     handleApproveTokenForSingle
 }: Props) {
@@ -21,7 +21,7 @@ export default function ErcNFTApproveToken({
             <div className="flex justify-between items-center">
                 <Text className="font-semibold text-secondary">Current status:</Text>
                 <div className="flex items-center gap-2">
-                    <Text className="font-semibol">{isMarketContractApprovedForSingle ? 'Approved' : 'Not approval'}</Text>
+                    <Text className="font-semibol">{isMarketContractApprovedToken ? 'Approved' : 'Not approval'}</Text>
                 </div>
             </div>
             <div className="flex items-center gap-2 justify-center">

@@ -3,13 +3,15 @@ import { contracts } from '@/config/contracts';
 import useAuthStore from '@/store/auth/store';
 import { NFT } from '@/types';
 import { waitForTransaction, writeContract } from '@wagmi/core';
+import { useMemo } from 'react';
+import { tokens } from '@/config/tokens';
 
 export const useMarketApproveNFT = (nft: NFT) => {
     const type = nft.collection.type;
     const marketContract = type === 'ERC721' ? contracts.erc721Market : contracts.erc1155Market;
     const wallet = useAuthStore((state) => state.profile?.publicKey);
 
-    const { data: isMarketContractApproved } = useContractRead({
+    const { data: isMarketContractApprovedForAll } = useContractRead({
         address: nft.collection.address,
         abi: (type === 'ERC721'
             ? contracts.erc721Base.abi
@@ -25,8 +27,22 @@ export const useMarketApproveNFT = (nft: NFT) => {
         abi: contracts.erc721Base.abi,
         functionName: 'getApproved',
         args: [(nft.u2uId || nft.id) as any],
-        watch: true
+        watch: true,
+        enabled: type === 'ERC721',
+        select: (data) => {return data !== '0x0000000000000000000000000000000000000000'}
     })
+    
+    const isMarketContractApprovedToken = useMemo(() => {
+        if (nft.collection.address === tokens.wu2u.address) return true
+        if (type === 'ERC721') {
+          if (isMarketContractApprovedForAll) return true
+          if (isMarketContractApprovedForSingle) return true
+        } else {
+          if (isMarketContractApprovedForAll) return true
+        }
+        return false;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isMarketContractApprovedForAll, isMarketContractApprovedForSingle, nft.collection.address, tokens.wu2u.address])
 
     const onApproveTokenForAll = async () => {
         const { hash } = await writeContract({
@@ -53,9 +69,10 @@ export const useMarketApproveNFT = (nft: NFT) => {
     }
 
     return {
-        isMarketContractApproved,
+        isMarketContractApprovedForAll,
         onApproveTokenForAll,
         onApprovalTokenForSingle,
         isMarketContractApprovedForSingle,
+        isMarketContractApprovedToken
     };
 };

@@ -199,6 +199,8 @@ export const useMarketApproval = (nft: NFT) => {
     } else {
       if (isMarketContractApproved) return true
     }
+
+    return false;
   }, [isMarketContractApproved, approveForAll, nft.collection.address, tokens.wu2u.address])
 
   const onApproveSellToken = async () => {

@@ -55,8 +55,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   const onAcceptBidURC721 = useAcceptBidURC721(nft)
   const onAcceptBidURC1155 = useAcceptBidURC1155()
   const { 
-    isMarketContractApproved,
-    isMarketContractApprovedForSingle,
+    isMarketContractApprovedToken,
     onApproveTokenForAll,
     onApprovalTokenForSingle
   } = useMarketApproveNFT(nft);
@@ -242,7 +241,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
             <FormValidationMessages errors={errors} />
 
             <div className="flex gap-4 mt-7 w-full">
-              {isMarketContractApprovedForSingle || isMarketContractApproved ?
+              {isMarketContractApprovedToken ?
                 <>
                   <Button className="flex-1" variant="secondary" onClick={onClose}>
                     Cancel
@@ -253,7 +252,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                 :
                 <ErcNFTApproveToken
                   nft={nft}
-                  isMarketContractApprovedForSingle={isMarketContractApprovedForSingle}
+                  isMarketContractApprovedToken={isMarketContractApprovedToken}
                   handleApproveTokenForAll={handleApproveTokenForAll}
                   handleApproveTokenForSingle={handleApproveTokenForSingle}
                 />
