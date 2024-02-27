@@ -1,67 +1,73 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps
-} from 'flowbite-react';
-import { useMemo, useState } from 'react';
-import Text from '@/components/Text';
-import Button from '@/components/Button';
-import { FormState, NFT } from '@/types';
-import { APIResponse } from '@/services/api/types';
+import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
+import { useMemo, useState } from "react";
+import Text from "@/components/Text";
+import Button from "@/components/Button";
+import { FormState, NFT } from "@/types";
+import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
-import { Address, useAccount, useBalance } from 'wagmi';
-import { findTokenByAddress } from '@/utils/token';
-import { tokenOptions, tokens } from '@/config/tokens';
-import { useCalculateFee } from '@/hooks/useMarket';
-import { useForm } from 'react-hook-form';
-import { MaxUint256, formatUnits, parseEther, parseUnits } from 'ethers';
-import { toast } from 'react-toastify';
-import Input from '@/components/Form/Input';
-import { formatDisplayedBalance } from '@/utils';
-import FeeCalculator from '@/components/FeeCalculator';
-import FormValidationMessages from '@/components/Form/ValidationMessages';
-import { numberRegex } from '@/utils/regex';
-import Select from '@/components/Form/Select';
-import ERC20TokenApproval from '@/components/ERC20TokenApproval';
-import { useBidURC1155UsingNative, useBidURC1155UsingURC20, useBidURC721UsingNative, useBidURC721UsingURC20 } from '@/hooks/useBidNFT';
-import { useMarketApproveERC20 } from '@/hooks/useMarketApproveERC20';
+import { Address, useAccount, useBalance } from "wagmi";
+import { findTokenByAddress } from "@/utils/token";
+import { tokenOptions, tokens } from "@/config/tokens";
+import { useCalculateFee } from "@/hooks/useMarket";
+import { useForm } from "react-hook-form";
+import { MaxUint256, formatUnits, parseEther, parseUnits } from "ethers";
+import { toast } from "react-toastify";
+import Input from "@/components/Form/Input";
+import { formatDisplayedBalance } from "@/utils";
+import FeeCalculator from "@/components/FeeCalculator";
+import FormValidationMessages from "@/components/Form/ValidationMessages";
+import { numberRegex } from "@/utils/regex";
+import Select from "@/components/Form/Select";
+import ERC20TokenApproval from "@/components/ERC20TokenApproval";
+import {
+  useBidURC1155UsingNative,
+  useBidURC1155UsingURC20,
+  useBidURC721UsingNative,
+  useBidURC721UsingURC20,
+} from "@/hooks/useBidNFT";
+import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 
 interface Props extends ModalProps {
   nft: NFT;
   marketData?: NFTMarketData;
 }
 
-const modalTheme: CustomFlowbiteTheme['modal'] = {
+const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner:
-      'relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]',
-    base: 'relative w-full desktop:p-10 tablet:p-6 p-4 '
+      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
   },
   body: {
-    base: 'p-0 flex-1 overflow-auto'
-  }
+    base: "p-0 flex-1 overflow-auto",
+  },
 };
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
-  const onBidURC721UsingNative = useBidURC721UsingNative(nft)
-  const onBidURC1155UsingNative = useBidURC1155UsingNative(nft)
-  const onBidURC721UsingURC20 = useBidURC721UsingURC20(nft)
-  const onBidURC1155UsingURC20 = useBidURC1155UsingURC20(nft)
+  const onBidURC721UsingNative = useBidURC721UsingNative(nft);
+  const onBidURC1155UsingNative = useBidURC1155UsingNative(nft);
+  const onBidURC721UsingURC20 = useBidURC721UsingURC20(nft);
+  const onBidURC1155UsingURC20 = useBidURC1155UsingURC20(nft);
   const {
     handleSubmit,
     watch,
     register,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormState.BidNFT>({
     defaultValues: {
-      quoteToken: tokens.wu2u.address
-    }
+      quoteToken: tokens.wu2u.address,
+    },
   });
-  const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
+  const [price, quantity, quoteToken, allowance] = watch([
+    "price",
+    "quantity",
+    "quoteToken",
+    "allowance",
+  ]);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const {
     sellerFee,
@@ -69,74 +75,81 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     royaltiesFee,
     netReceived,
     sellerFeeRatio,
-    buyerFeeRatio
+    buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.id || nft.u2uId,
-    price: parseUnits(price || '0', token?.decimal),
+    price: parseUnits(price || "0", token?.decimal),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
-      const priceBigint = parseUnits(!isNaN(Number(price)) ? price as string : '0', token?.decimal);
+      const priceBigint = parseUnits(
+        !isNaN(Number(price)) ? (price as string) : "0",
+        token?.decimal,
+      );
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
       // Update allowance input when price is changing
-      setValue('allowance', formatUnits(totalCostBigint, token?.decimal));
-    }
+      setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
+    },
   });
 
   const {
     allowance: allowanceBalance,
     isTokenApproved,
-    onApproveToken
-  } = useMarketApproveERC20(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
+    onApproveToken,
+  } = useMarketApproveERC20(
+    token?.address as Address,
+    nft.collection.type,
+    parseUnits(price || "0", token?.decimal) + buyerFee,
+  );
 
   const formRules = {
     price: {
-      required: 'Please input bid price',
-      min: { value: 0, message: 'Price cannot be zero' },
+      required: "Please input bid price",
+      min: { value: 0, message: "Price cannot be zero" },
       validate: {
-        isNumber: (v: any) => !isNaN(v) || 'Please input a valid number',
+        isNumber: (v: any) => !isNaN(v) || "Please input a valid number",
         balance: (v: any) => {
-          if (!tokenBalance?.value) return 'Not enough balance';
-          if (nft.collection.type === 'ERC1155') {
+          if (!tokenBalance?.value) return "Not enough balance";
+          if (nft.collection.type === "ERC1155") {
             const totalPrice = Number(price) * Number(quantity);
             const totalPriceBN = parseEther(totalPrice.toString());
-            return totalPriceBN < tokenBalance.value || 'Not enough balance';
+            return totalPriceBN < tokenBalance.value || "Not enough balance";
           }
           const priceBN = parseEther(String(v));
-          return priceBN < tokenBalance.value || 'Not enough balance';
-        }
-      }
+          return priceBN < tokenBalance.value || "Not enough balance";
+        },
+      },
     },
     quantity: {
-      pattern: { value: numberRegex, message: 'Wrong number format' },
+      pattern: { value: numberRegex, message: "Wrong number format" },
       validate: {
         required: (v: any) => {
-          if (nft.collection.type === 'ERC721') return true;
+          if (nft.collection.type === "ERC721") return true;
           return (
             (!!v && !isNaN(v) && Number(v) > 0) ||
-            'Please input a valid number of quantity'
+            "Please input a valid number of quantity"
           );
         },
         quantity: (v: any) => {
-          if (nft.collection.type === 'ERC721') return true;
+          if (nft.collection.type === "ERC721") return true;
           return (
             Number(v) <= Number(marketData?.totalSupply || 0) ||
-            'Cannot bid more than total supply'
+            "Cannot bid more than total supply"
           );
-        }
-      }
+        },
+      },
     },
     allowance: {
-      required: true
-    }
+      required: true,
+    },
   };
 
   const { data: tokenBalance } = useBalance({
     address: address,
     enabled: !!address && !!token?.address,
     token: token?.address === tokens.wu2u.address ? undefined : token?.address,
-    watch: true
+    watch: true,
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
@@ -146,16 +159,16 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       switch (nft.collection.type) {
         case "ERC721":
           if (quoteToken === tokens.wu2u.address) {
-            await onBidURC721UsingNative(price)
+            await onBidURC721UsingNative(price);
           } else {
-            await onBidURC721UsingURC20(price, quoteToken)
+            await onBidURC721UsingURC20(price, quoteToken);
           }
           break;
         case "ERC1155":
           if (quoteToken === tokens.wu2u.address) {
-            await onBidURC1155UsingNative(price, quantity)
+            await onBidURC1155UsingNative(price, quantity);
           } else {
-            await onBidURC1155UsingURC20(price, quoteToken, quantity)
+            await onBidURC1155UsingURC20(price, quoteToken, quantity);
           }
           break;
         default:
@@ -166,7 +179,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
       onClose?.();
     } catch (e: any) {
@@ -176,7 +189,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -185,25 +198,28 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   };
 
   const handleAllowanceInput = (event: any) => {
-    const value = event.target.value
-    if (allowance === 'UNLIMITED') {
-      setValue('allowance', value.slice(-1))
+    const value = event.target.value;
+    if (allowance === "UNLIMITED") {
+      setValue("allowance", value.slice(-1));
     } else {
-      setValue('allowance', value)
+      setValue("allowance", value);
     }
-  }
+  };
 
   const handleApproveMinAmount = () => {
     if (allowanceBalance === undefined) return;
 
-    const priceBigint = parseUnits(price || '0', token?.decimal);
+    const priceBigint = parseUnits(price || "0", token?.decimal);
     const totalCostBigint = priceBigint + buyerFee;
-    const remainingToApprove = BigInt(allowanceBalance as bigint) < totalCostBigint ? totalCostBigint - allowanceBalance : 0;
-    setValue('allowance', formatUnits(remainingToApprove, token?.decimal));
+    const remainingToApprove =
+      BigInt(allowanceBalance as bigint) < totalCostBigint
+        ? totalCostBigint - allowanceBalance
+        : 0;
+    setValue("allowance", formatUnits(remainingToApprove, token?.decimal));
   };
 
   const handleApproveMaxAmount = () => {
-    setValue('allowance', 'UNLIMITED');
+    setValue("allowance", "UNLIMITED");
   };
 
   const handleApproveToken = async () => {
@@ -211,7 +227,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-      const allowanceBigint = allowance === 'UNLIMITED' ? MaxUint256 : parseUnits(allowance, token?.decimal);
+      const allowanceBigint =
+        allowance === "UNLIMITED"
+          ? MaxUint256
+          : parseUnits(allowance, token?.decimal);
       await onApproveToken(allowanceBigint);
 
       toast.update(toastId, {
@@ -219,7 +238,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } catch (e) {
       toast.update(toastId, {
@@ -227,7 +246,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -252,24 +271,24 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 Place a bid
               </Text>
               <Text className="text-secondary" variant="body-16">
-                Creating bid for{' '}
-                <span className="text-primary font-bold">{nft.name}</span> from{' '}
+                Creating bid for{" "}
+                <span className="text-primary font-bold">{nft.name}</span> from{" "}
                 <span className="text-primary font-bold">
                   {nft.collection.name}
-                </span>{' '}
+                </span>{" "}
                 collection
               </Text>
             </div>
 
             <div>
               <label className="text-body-14 text-secondary font-semibold mb-1">
-                {nft.collection.type === 'ERC721' ? 'Price' : 'Price per unit'}
+                {nft.collection.type === "ERC721" ? "Price" : "Price per unit"}
               </label>
               <Input
                 maxLength={18}
                 size={18}
                 error={!!errors.price}
-                register={register('price', formRules.price)}
+                register={register("price", formRules.price)}
               />
             </div>
 
@@ -279,16 +298,22 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   Bid using
                 </label>
                 <Text>
-                  Balance:{' '}
+                  Balance:{" "}
                   {formatDisplayedBalance(
-                    formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals)
+                    formatUnits(
+                      tokenBalance?.value || 0,
+                      tokenBalance?.decimals,
+                    ),
                   )}
                 </Text>
               </div>
-              <Select options={tokenOptions} register={register('quoteToken')} />
+              <Select
+                options={tokenOptions}
+                register={register("quoteToken")}
+              />
             </div>
 
-            {nft.collection.type === 'ERC1155' ? (
+            {nft.collection.type === "ERC1155" ? (
               <>
                 <div>
                   <Text className="text-secondary font-semibold mb-1">
@@ -297,13 +322,13 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   <Input
                     maxLength={3}
                     size={3}
-                    register={register('quantity', formRules.quantity)}
+                    register={register("quantity", formRules.quantity)}
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
-                        Max:{' '}
+                        Max:{" "}
                         {formatDisplayedBalance(
                           marketData?.totalSupply || 0,
-                          0
+                          0,
                         )}
                       </Text>
                     }
@@ -324,7 +349,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   nft={nft}
                   price={parseUnits(
                     String(Number(price) * Number(quantity) || 0),
-                    token?.decimal
+                    token?.decimal,
                   )}
                   quoteToken={token?.address}
                   sellerFee={sellerFee}
@@ -339,7 +364,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
-                price={parseUnits(price || '0', token?.decimal)}
+                price={parseUnits(price || "0", token?.decimal)}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
                 buyerFee={buyerFee}
@@ -351,7 +376,12 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
             )}
 
             {isTokenApproved ? (
-              <Button disabled={!isTokenApproved} type={'submit'} className="w-full" loading={loading}>
+              <Button
+                disabled={!isTokenApproved}
+                type={"submit"}
+                className="w-full"
+                loading={loading}
+              >
                 Place bid
               </Button>
             ) : (
@@ -363,7 +393,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 onApproveMaxAmount={handleApproveMaxAmount}
                 onApproveToken={handleApproveToken}
                 loading={loading}
-                registerAllowanceInput={register('allowance', formRules.allowance)}
+                registerAllowanceInput={register(
+                  "allowance",
+                  formRules.allowance,
+                )}
               />
             )}
             <FormValidationMessages errors={errors} />

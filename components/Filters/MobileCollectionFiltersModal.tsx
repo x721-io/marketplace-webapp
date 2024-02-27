@@ -1,30 +1,30 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from 'flowbite-react';
-import React from 'react';
-import Button from '@/components/Button';
-import { APIParams } from '@/services/api/types';
-import Input from '@/components/Form/Input';
-import Text from '@/components/Text';
-import { useCollectionFilters } from '@/hooks/useFilters';
-import Icon from '@/components/Icon';
-import Select from '../Form/Select';
-import { tokenOptions, tokens } from '@/config/tokens';
-import { Address } from 'wagmi';
+import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
+import React from "react";
+import Button from "@/components/Button";
+import { APIParams } from "@/services/api/types";
+import Input from "@/components/Form/Input";
+import Text from "@/components/Text";
+import { useCollectionFilters } from "@/hooks/useFilters";
+import Icon from "@/components/Icon";
+import Select from "../Form/Select";
+import { tokenOptions, tokens } from "@/config/tokens";
+import { Address } from "wagmi";
 
-const modalTheme: CustomFlowbiteTheme['modal'] = {
+const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner:
-      'relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]',
-    base: 'relative w-full desktop:p-10 tablet:p-6 p-4 '
+      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
   },
   body: {
-    base: 'p-0 flex-1 overflow-auto'
-  }
+    base: "p-0 flex-1 overflow-auto",
+  },
 };
 
 interface Props extends ModalProps {
   onApplyFilters: (filters: APIParams.FetchCollections) => void;
-  activeFilters: APIParams.FetchCollections,
-  onResetFilters?: () => void
+  activeFilters: APIParams.FetchCollections;
+  onResetFilters?: () => void;
 }
 
 export default function MobileCollectionFiltersModal({
@@ -32,13 +32,10 @@ export default function MobileCollectionFiltersModal({
   show,
   activeFilters,
   onApplyFilters,
-  onResetFilters
+  onResetFilters,
 }: Props) {
-  const {
-    setLocalFilters,
-    handleApplyFilters,
-    localFilters,
-  } = useCollectionFilters(activeFilters, onApplyFilters);
+  const { setLocalFilters, handleApplyFilters, localFilters } =
+    useCollectionFilters(activeFilters, onApplyFilters);
 
   return (
     <Modal
@@ -51,14 +48,14 @@ export default function MobileCollectionFiltersModal({
     >
       <Modal.Header>Collections Filters</Modal.Header>
       <Modal.Body>
-        <Text className="font-semibold text-secondary mb-2">
-          Floor price
-        </Text>
+        <Text className="font-semibold text-secondary mb-2">Floor price</Text>
         <div className="flex items-center gap-4 mb-4">
           <Input
             name="min"
             value={localFilters.min}
-            onChange={(e) => setLocalFilters(state => ({ ...state, min: e.target.value }))}
+            onChange={(e) =>
+              setLocalFilters((state) => ({ ...state, min: e.target.value }))
+            }
             containerClass="w-24"
             scale="sm"
             placeholder="Min"
@@ -66,7 +63,9 @@ export default function MobileCollectionFiltersModal({
           <Text className="text-primary">to</Text>
           <Input
             value={localFilters.max}
-            onChange={(e) => setLocalFilters(state => ({ ...state, max: e.target.value }))}
+            onChange={(e) =>
+              setLocalFilters((state) => ({ ...state, max: e.target.value }))
+            }
             containerClass="w-24"
             scale="sm"
             placeholder="Max"
@@ -84,7 +83,11 @@ export default function MobileCollectionFiltersModal({
             className="w-full"
             variant="text"
             onClick={() => {
-              setLocalFilters({ min: '', max: '', quoteToken: tokens.wu2u.address })
+              setLocalFilters({
+                min: "",
+                max: "",
+                quoteToken: tokens.wu2u.address,
+              });
               onResetFilters?.();
               onClose?.();
             }}

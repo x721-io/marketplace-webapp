@@ -1,8 +1,4 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-} from "flowbite-react";
+import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import { useCalculateFee } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
@@ -20,7 +16,12 @@ import { numberRegex } from "@/utils/regex";
 import { tokens } from "@/config/tokens";
 import ERC20TokenApproval from "@/components/ERC20TokenApproval";
 import { toast } from "react-toastify";
-import { useBuyURC1155UsingNative, useBuyURC1155UsingURC20, useBuyURC721UsingNative, useBuyURC721UsingURC20 } from "@/hooks/useBuyNFT";
+import {
+  useBuyURC1155UsingNative,
+  useBuyURC1155UsingURC20,
+  useBuyURC721UsingNative,
+  useBuyURC721UsingURC20,
+} from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 
 interface Props extends ModalProps {
@@ -50,11 +51,19 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     formState: { errors },
   } = useForm<FormState.BuyNFT>({
     defaultValues: {
-      quoteToken: saleData?.quoteToken
-    }
+      quoteToken: saleData?.quoteToken,
+    },
   });
-  const [price, quantity, quoteToken, allowance] = watch(['price', 'quantity', 'quoteToken', 'allowance']);
-  const token = useMemo(() => findTokenByAddress(saleData?.quoteToken), [saleData]);
+  const [price, quantity, quoteToken, allowance] = watch([
+    "price",
+    "quantity",
+    "quoteToken",
+    "allowance",
+  ]);
+  const token = useMemo(
+    () => findTokenByAddress(saleData?.quoteToken),
+    [saleData],
+  );
   const [loading, setLoading] = useState(false);
   const {
     sellerFee,
@@ -62,41 +71,51 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     royaltiesFee,
     netReceived,
     sellerFeeRatio,
-    buyerFeeRatio
+    buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.id || nft.u2uId,
-    price: nft.collection.type === 'ERC721' ? BigInt(saleData?.price || '0') : BigInt(saleData?.price || "0") * BigInt(quantity || '0'),
+    price:
+      nft.collection.type === "ERC721"
+        ? BigInt(saleData?.price || "0")
+        : BigInt(saleData?.price || "0") * BigInt(quantity || "0"),
     onSuccess: (data) => {
       if (!saleData?.price || isNaN(Number(saleData?.price))) return;
-      const priceBigint = nft.collection.type === 'ERC721' ? BigInt(saleData?.price || '0') : BigInt(saleData?.price || "0") * BigInt(quantity || '0')
+      const priceBigint =
+        nft.collection.type === "ERC721"
+          ? BigInt(saleData?.price || "0")
+          : BigInt(saleData?.price || "0") * BigInt(quantity || "0");
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
-      setValue('allowance', formatUnits(totalCostBigint, token?.decimal));
-    }
+      setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
+    },
   });
-  const onBuyURC721UsingNative = useBuyURC721UsingNative(nft)
-  const onBuyURC1155UsingNative = useBuyURC1155UsingNative(nft)
-  const onBuyURC721UsingURC20 = useBuyURC721UsingURC20(nft)
-  const onBuyURC1155UsingURC20 = useBuyURC1155UsingURC20()
+  const onBuyURC721UsingNative = useBuyURC721UsingNative(nft);
+  const onBuyURC1155UsingNative = useBuyURC1155UsingNative(nft);
+  const onBuyURC721UsingURC20 = useBuyURC721UsingURC20(nft);
+  const onBuyURC1155UsingURC20 = useBuyURC1155UsingURC20();
 
   const {
     allowance: allowanceBalance,
     isTokenApproved,
-    onApproveToken
-  } = useMarketApproveERC20(token?.address as Address, nft.collection.type, parseUnits(price || '0', token?.decimal) + buyerFee);
+    onApproveToken,
+  } = useMarketApproveERC20(
+    token?.address as Address,
+    nft.collection.type,
+    parseUnits(price || "0", token?.decimal) + buyerFee,
+  );
 
   const formRules = {
     allowance: {
-      required: true
-    }
+      required: true,
+    },
   };
 
   const { data: tokenBalance } = useBalance({
     address: address,
     enabled: !!address && !!token?.address,
     token: token?.address === tokens.wu2u.address ? undefined : token?.address,
-    watch: true
+    watch: true,
   });
 
   const totalPriceBN = useMemo(() => {
@@ -111,16 +130,25 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       switch (nft.collection.type) {
         case "ERC721":
           if (quoteToken === tokens.wu2u.address) {
-            await onBuyURC721UsingNative(BigInt(saleData.price) + BigInt(buyerFee))
+            await onBuyURC721UsingNative(
+              BigInt(saleData.price) + BigInt(buyerFee),
+            );
           } else {
-            await onBuyURC721UsingURC20(quoteToken, BigInt(saleData.price) + BigInt(buyerFee))
+            await onBuyURC721UsingURC20(
+              quoteToken,
+              BigInt(saleData.price) + BigInt(buyerFee),
+            );
           }
           break;
         case "ERC1155":
           if (quoteToken === tokens.wu2u.address) {
-            await onBuyURC1155UsingNative(saleData?.operationId, BigInt(saleData.price) + BigInt(buyerFee), quantity)
+            await onBuyURC1155UsingNative(
+              saleData?.operationId,
+              BigInt(saleData.price) + BigInt(buyerFee),
+              quantity,
+            );
           } else {
-            await onBuyURC1155UsingURC20(saleData?.operationId, quantity)
+            await onBuyURC1155UsingURC20(saleData?.operationId, quantity);
           }
           break;
         default:
@@ -128,13 +156,13 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       }
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
-        closeButton: true
+        closeButton: true,
       });
       onClose?.();
     } catch (e: any) {
       toast.error(`Error report: ${e.message}`, {
         autoClose: 1000,
-        closeButton: true
+        closeButton: true,
       });
       onClose?.();
       console.error(e);
@@ -147,31 +175,37 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const handleApproveMinAmount = () => {
     if (allowanceBalance === undefined) return;
 
-    const priceBigint = parseUnits(price || '0', token?.decimal);
+    const priceBigint = parseUnits(price || "0", token?.decimal);
     const totalCostBigint = priceBigint + buyerFee;
-    const remainingToApprove = BigInt(allowanceBalance as bigint) < totalCostBigint ? totalCostBigint - allowanceBalance : 0;
-    setValue('allowance', formatUnits(remainingToApprove, token?.decimal));
+    const remainingToApprove =
+      BigInt(allowanceBalance as bigint) < totalCostBigint
+        ? totalCostBigint - allowanceBalance
+        : 0;
+    setValue("allowance", formatUnits(remainingToApprove, token?.decimal));
   };
 
   const handleApproveMaxAmount = () => {
-    setValue('allowance', 'UNLIMITED');
+    setValue("allowance", "UNLIMITED");
   };
 
   const handleAllowanceInput = (event: any) => {
-    const value = event.target.value
-    if (allowance === 'UNLIMITED') {
-      setValue('allowance', value.slice(-1))
+    const value = event.target.value;
+    if (allowance === "UNLIMITED") {
+      setValue("allowance", value.slice(-1));
     } else {
-      setValue('allowance', value)
+      setValue("allowance", value);
     }
-  }
+  };
 
   const handleApproveToken = async () => {
     const toastId = toast.loading("Preparing data...", { type: "info" });
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-      const allowanceBigint = allowance === 'UNLIMITED' ? MaxUint256 : parseUnits(allowance, token?.decimal);
+      const allowanceBigint =
+        allowance === "UNLIMITED"
+          ? MaxUint256
+          : parseUnits(allowance, token?.decimal);
       await onApproveToken(allowanceBigint);
 
       toast.update(toastId, {
@@ -179,16 +213,16 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } catch (e) {
-      console.error(e)
+      console.error(e);
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -216,7 +250,9 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               <Text className="text-secondary" variant="body-16">
                 Filling sell order for{" "}
                 <span className="text-primary font-bold">{nft.name}</span> from{" "}
-                <span className="text-primary font-bold">{nft.collection.name}</span>{" "}
+                <span className="text-primary font-bold">
+                  {nft.collection.name}
+                </span>{" "}
                 collection
               </Text>
             </div>
@@ -244,9 +280,12 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                   Buy using
                 </label>
                 <Text>
-                  Balance:{' '}
+                  Balance:{" "}
                   {formatDisplayedBalance(
-                    formatUnits(tokenBalance?.value || 0, tokenBalance?.decimals)
+                    formatUnits(
+                      tokenBalance?.value || 0,
+                      tokenBalance?.decimals,
+                    ),
                   )}
                 </Text>
               </div>
@@ -257,7 +296,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
-                price={BigInt(saleData?.price || '0')}
+                price={BigInt(saleData?.price || "0")}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
                 buyerFee={buyerFee}
@@ -271,13 +310,18 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
             {nft.collection.type === "ERC1155" && (
               <>
                 <div>
-                  <Text className="text-secondary font-semibold mb-1">Quantity</Text>
+                  <Text className="text-secondary font-semibold mb-1">
+                    Quantity
+                  </Text>
                   <Input
                     maxLength={3}
                     size={3}
                     error={!!errors.quantity}
                     register={register("quantity", {
-                      pattern: { value: numberRegex, message: "Wrong number format" },
+                      pattern: {
+                        value: numberRegex,
+                        message: "Wrong number format",
+                      },
                       validate: {
                         required: (v) =>
                           (!!v && !isNaN(v) && v > 0) ||
@@ -290,7 +334,8 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                           const totalPriceBN =
                             BigInt(saleData?.price || 0) * BigInt(v);
                           return (
-                            totalPriceBN < tokenBalance.value || "Not enough balance"
+                            totalPriceBN < tokenBalance.value ||
+                            "Not enough balance"
                           );
                         },
                       },
@@ -337,11 +382,13 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 onApproveMaxAmount={handleApproveMaxAmount}
                 onApproveToken={handleApproveToken}
                 loading={loading}
-                registerAllowanceInput={register('allowance', formRules.allowance)}
+                registerAllowanceInput={register(
+                  "allowance",
+                  formRules.allowance,
+                )}
               />
             )}
             <FormValidationMessages errors={errors} />
-
           </form>
         </div>
       </Modal.Body>

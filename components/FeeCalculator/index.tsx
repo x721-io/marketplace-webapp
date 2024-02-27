@@ -1,24 +1,24 @@
-import { NFT, Royalty } from '@/types';
-import { useMemo } from 'react';
-import { formatUnits } from 'ethers';
-import { useReadNFTRoyalties } from '@/hooks/useRoyalties';
-import { Address } from 'wagmi';
-import { findTokenByAddress } from '@/utils/token';
-import Image from 'next/image';
-import { formatDisplayedBalance } from '@/utils';
-import Text from '../Text';
+import { NFT, Royalty } from "@/types";
+import { useMemo } from "react";
+import { formatUnits } from "ethers";
+import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
+import { Address } from "wagmi";
+import { findTokenByAddress } from "@/utils/token";
+import Image from "next/image";
+import { formatDisplayedBalance } from "@/utils";
+import Text from "../Text";
 
 interface Props {
-  mode: 'buyer' | 'seller';
+  mode: "buyer" | "seller";
   price?: bigint;
   nft: NFT;
   quoteToken?: Address;
-  buyerFeeRatio: number
-  sellerFeeRatio: number,
-  buyerFee: bigint
-  sellerFee: bigint
-  royaltiesFee: bigint,
-  netReceived: bigint
+  buyerFeeRatio: number;
+  sellerFeeRatio: number;
+  buyerFee: bigint;
+  sellerFee: bigint;
+  royaltiesFee: bigint;
+  netReceived: bigint;
 }
 
 export default function FeeCalculator({
@@ -31,7 +31,7 @@ export default function FeeCalculator({
   buyerFee,
   sellerFee,
   royaltiesFee,
-  netReceived
+  netReceived,
 }: Props) {
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
@@ -43,14 +43,14 @@ export default function FeeCalculator({
     const totalRoyaltiesValue = royalties.reduce(
       (accumulator: bigint, current: Royalty) =>
         BigInt(current.value) + BigInt(accumulator),
-      BigInt(0)
+      BigInt(0),
     );
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);
 
   return (
     <div className="w-full p-4 border border-disabled rounded-2xl flex flex-col gap-3">
-      {mode === 'seller' ? (
+      {mode === "seller" ? (
         <>
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
@@ -60,7 +60,7 @@ export default function FeeCalculator({
               <Text
                 showTooltip
                 labelTooltip={formatDisplayedBalance(
-                  formatUnits(sellerFee, 18)
+                  formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
@@ -70,7 +70,7 @@ export default function FeeCalculator({
               {!!token?.logo && (
                 <Image
                   className="w-5 h-5 rounded-full"
-                  src={token?.logo || ''}
+                  src={token?.logo || ""}
                   alt=""
                   width={40}
                   height={40}
@@ -85,7 +85,7 @@ export default function FeeCalculator({
               <Text
                 showTooltip
                 labelTooltip={formatDisplayedBalance(
-                  formatUnits(sellerFee, 18)
+                  formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
@@ -95,7 +95,7 @@ export default function FeeCalculator({
               {!!token?.logo && (
                 <Image
                   className="w-5 h-5 rounded-full"
-                  src={token?.logo || ''}
+                  src={token?.logo || ""}
                   alt=""
                   width={40}
                   height={40}
@@ -110,19 +110,19 @@ export default function FeeCalculator({
               <Text
                 showTooltip
                 labelTooltip={formatDisplayedBalance(
-                  formatUnits(sellerFee, 18)
+                  formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedBalance(
-                  formatUnits(netReceived, token?.decimal)
+                  formatUnits(netReceived, token?.decimal),
                 )}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (
                 <Image
                   className="w-5 h-5 rounded-full"
-                  src={token?.logo || ''}
+                  src={token?.logo || ""}
                   alt=""
                   width={40}
                   height={40}
@@ -149,7 +149,7 @@ export default function FeeCalculator({
               {!!token?.logo && (
                 <Image
                   className="w-5 h-5 rounded-full"
-                  src={token?.logo || ''}
+                  src={token?.logo || ""}
                   alt=""
                   width={40}
                   height={40}
@@ -164,7 +164,7 @@ export default function FeeCalculator({
               <Text
                 showTooltip
                 labelTooltip={formatDisplayedBalance(
-                  formatUnits(price + buyerFee, 18)
+                  formatUnits(price + buyerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
@@ -174,7 +174,7 @@ export default function FeeCalculator({
               {!!token?.logo && (
                 <Image
                   className="w-5 h-5 rounded-full"
-                  src={token?.logo || ''}
+                  src={token?.logo || ""}
                   alt=""
                   width={40}
                   height={40}

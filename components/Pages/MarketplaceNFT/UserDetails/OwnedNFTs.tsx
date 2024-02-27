@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import SliderIcon from '@/components/Icon/Sliders';
-import Button from '@/components/Button';
-import { classNames } from '@/utils/string';
-import NFTsList from '@/components/List/NFTsList';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import useSWR from 'swr';
-import { Address } from 'wagmi';
-import { MODE_OWNED } from '@/config/constants';
-import { useFetchNFTsByUser } from '@/hooks/useFetchNFTsByUser';
+import React, { useEffect } from "react";
+import SliderIcon from "@/components/Icon/Sliders";
+import Button from "@/components/Button";
+import { classNames } from "@/utils/string";
+import NFTsList from "@/components/List/NFTsList";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import useSWR from "swr";
+import { Address } from "wagmi";
+import { MODE_OWNED } from "@/config/constants";
+import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 
 export default function OwnedNFTs({
   wallet,
-  onUpdateAmount
+  onUpdateAmount,
 }: {
   wallet: Address;
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
@@ -25,19 +25,19 @@ export default function OwnedNFTs({
     filters,
     toggleFilter,
     resetFilters,
-    updateFilters
-  } = useFetchNFTsByUser(wallet, 'owned');
+    updateFilters,
+  } = useFetchNFTsByUser(wallet, "owned");
 
   const { data: totalOwned } = useSWR(
     [
-      'total_owner-data',
-      { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) }
+      "total_owner-data",
+      { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) },
     ],
     ([_, params]) =>
       api.getTotalCountById({
-        ...params
+        ...params,
       }),
-    { refreshInterval: 5000 }
+    { refreshInterval: 5000 },
   );
 
   useEffect(() => {
@@ -51,8 +51,8 @@ export default function OwnedNFTs({
       <Button
         onClick={() => toggleFilter()}
         className={classNames(
-          showFilters ? 'bg-white shadow' : `bg-surface-soft`,
-          'mb-7'
+          showFilters ? "bg-white shadow" : `bg-surface-soft`,
+          "mb-7",
         )}
         scale="sm"
         variant="secondary"

@@ -5,7 +5,10 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { MODE_COLLECTIONS } from "@/config/constants";
 import { Address } from "wagmi";
-import { useFetchCollectionListByUser, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import {
+  useFetchCollectionListByUser,
+  useInfiniteScroll,
+} from "@/hooks/useInfiniteScroll";
 
 export default function UserCollections({
   onUpdateAmount,
@@ -19,12 +22,13 @@ export default function UserCollections({
   const { id } = useParams();
   const api = useMarketplaceApi();
 
-  const { data, isLoading, setSize, size, error } = useFetchCollectionListByUser(String(id))
+  const { data, isLoading, setSize, size, error } =
+    useFetchCollectionListByUser(String(id));
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
     loading: isLoading,
     page: size,
-    onNext: () => setSize(size + 1)
+    onNext: () => setSize(size + 1),
   });
 
   const { data: totalCollections } = useSWR(

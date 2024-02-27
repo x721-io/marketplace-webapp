@@ -48,16 +48,20 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       quantity: bid?.quantity ? Number(bid.quantity) : 0,
     },
   });
-  const [price, quantity, quoteToken] = watch(['price', 'quantity', 'quoteToken']);
+  const [price, quantity, quoteToken] = watch([
+    "price",
+    "quantity",
+    "quoteToken",
+  ]);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
   const type = nft?.collection.type;
-  const onAcceptBidURC721 = useAcceptBidURC721(nft)
-  const onAcceptBidURC1155 = useAcceptBidURC1155()
-  const { 
+  const onAcceptBidURC721 = useAcceptBidURC721(nft);
+  const onAcceptBidURC1155 = useAcceptBidURC1155();
+  const {
     isMarketContractApprovedToken,
     onApproveTokenForAll,
-    onApprovalTokenForSingle
+    onApprovalTokenForSingle,
   } = useMarketApproveNFT(nft);
   const {
     sellerFee,
@@ -65,15 +69,15 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     royaltiesFee,
     netReceived,
     sellerFeeRatio,
-    buyerFeeRatio
+    buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.id || nft.u2uId,
     price: BigInt(bid?.price || 0),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
-    }
-  });  
+    },
+  });
 
   const onSubmit = async ({ quantity }: FormState.AcceptBidNFT) => {
     if (!bid || !bid.to?.signer) return;
@@ -81,16 +85,16 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     setLoading(true);
     try {
       if (type === "ERC721") {
-        await onAcceptBidURC721(bid.to.signer, bid.quoteToken)
+        await onAcceptBidURC721(bid.to.signer, bid.quoteToken);
       } else {
-        await onAcceptBidURC1155(bid.operationId, quantity)
+        await onAcceptBidURC1155(bid.operationId, quantity);
       }
       toast.update(toastId, {
         render: "Bid order has been fulfilled successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
       onClose?.();
     } catch (e) {
@@ -100,7 +104,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -113,14 +117,14 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-      await onApprovalTokenForSingle()
+      await onApprovalTokenForSingle();
 
       toast.update(toastId, {
         render: "Approval has been updated successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } catch (e) {
       toast.update(toastId, {
@@ -128,7 +132,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -141,22 +145,22 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     setLoading(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
-      await onApproveTokenForAll()
+      await onApproveTokenForAll();
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } catch (e) {
-      console.error(e)
+      console.error(e);
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
@@ -182,7 +186,9 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
               <Text className="text-secondary" variant="body-16">
                 Filling bid order for{" "}
                 <span className="text-primary font-bold">{nft?.name}</span> from{" "}
-                <span className="text-primary font-bold">{nft?.collection.name}</span>{" "}
+                <span className="text-primary font-bold">
+                  {nft?.collection.name}
+                </span>{" "}
                 collection
               </Text>
             </div>
@@ -213,10 +219,14 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                     error={!!errors.quantity}
                     appendIcon={<Text>Available: {bid?.quantity}</Text>}
                     register={register("quantity", {
-                      pattern: { value: numberRegex, message: "Wrong number format" },
+                      pattern: {
+                        value: numberRegex,
+                        message: "Wrong number format",
+                      },
                       validate: {
                         required: (v: any) =>
-                          (!!v && v > 0 && !isNaN(v)) || "Please input quantity",
+                          (!!v && v > 0 && !isNaN(v)) ||
+                          "Please input quantity",
                         amount: (v: any) =>
                           v <= Number(bid?.quantity) ||
                           "Quantity cannot exceed bid amount",
@@ -230,7 +240,9 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                   quoteToken={bid?.quoteToken}
                   // price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)}
                   price={parseUnits(
-                    String(Number(bid?.price || 0) * Number(bid?.quantity || 0)),
+                    String(
+                      Number(bid?.price || 0) * Number(bid?.quantity || 0),
+                    ),
                     token?.decimal,
                   )}
                   sellerFee={sellerFee}
@@ -245,22 +257,27 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
             <FormValidationMessages errors={errors} />
 
             <div className="flex gap-4 mt-7 w-full">
-              {isMarketContractApprovedToken ?
+              {isMarketContractApprovedToken ? (
                 <>
-                  <Button className="flex-1" variant="secondary" onClick={onClose}>
+                  <Button
+                    className="flex-1"
+                    variant="secondary"
+                    onClick={onClose}
+                  >
                     Cancel
                   </Button>
                   <Button className="flex-1" type="submit" loading={loading}>
                     Accept bid
-                  </Button></>
-                :
+                  </Button>
+                </>
+              ) : (
                 <NFTApproval
                   nft={nft}
                   isMarketContractApprovedToken={isMarketContractApprovedToken}
                   handleApproveTokenForAll={handleApproveTokenForAll}
                   handleApproveTokenForSingle={handleApproveTokenForSingle}
                 />
-              }
+              )}
             </div>
           </form>
         </div>

@@ -31,11 +31,16 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
   },
 };
 
-export default function CancelSellNFTModal({ nft, show, onClose, marketData }: Props) {
+export default function CancelSellNFTModal({
+  nft,
+  show,
+  onClose,
+  marketData,
+}: Props) {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const [loading, setLoading] = useState(false);
-  const onCancelSellURC721 = useCancelSellURC721(nft)
-  const onCancelSellURC1155 = useCancelSellURC1155()
+  const onCancelSellURC721 = useCancelSellURC721(nft);
+  const onCancelSellURC1155 = useCancelSellURC1155();
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
       (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase(),
@@ -47,16 +52,16 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
     setLoading(true);
     try {
       if (nft.collection.type === "ERC721") {
-        await onCancelSellURC721()
+        await onCancelSellURC721();
       } else {
-        await onCancelSellURC1155(mySale?.operationId || '')
+        await onCancelSellURC1155(mySale?.operationId || "");
       }
       toast.update(toastId, {
         render: "Sale cancelled successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
       onClose?.();
     } catch (e) {
@@ -66,7 +71,7 @@ export default function CancelSellNFTModal({ nft, show, onClose, marketData }: P
         type: "error",
         autoClose: 1000,
         closeButton: true,
-        isLoading: false
+        isLoading: false,
       });
     } finally {
       setLoading(false);
