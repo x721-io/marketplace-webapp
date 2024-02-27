@@ -21,6 +21,7 @@ import { useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
 import { toast } from "react-toastify";
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 import NFTApproval from "@/components/NFTApproval";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -44,6 +45,7 @@ export default function SellNFTModal({
   marketData,
   onClose,
 }: Props) {
+  const api = useMarketplaceApi();
   const [loading, setLoading] = useState(false);
   const type = nft.collection.type;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
@@ -139,6 +141,7 @@ export default function SellNFTModal({
       } else {
         await onSellURC1155(price, quoteToken, quantity);
       }
+      await api.getFloorPrice({ address: nft.collection.address });
       toast.update(toastId, {
         render: "Your NFT has been put on sale!",
         type: "success",

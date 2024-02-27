@@ -121,8 +121,6 @@ export const useMarketplaceApi = () => {
                 : params.sellStatus,
             priceMin: bigintMin?.toString(),
             priceMax: bigintMax?.toString(),
-            quoteToken:
-              quoteToken === undefined ? tokens.wu2u.address : quoteToken,
           }),
         );
       },

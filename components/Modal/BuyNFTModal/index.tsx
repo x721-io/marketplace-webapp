@@ -23,6 +23,7 @@ import {
   useBuyURC721UsingURC20,
 } from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -41,6 +42,7 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
+  const api = useMarketplaceApi();
   const { address } = useAccount();
   const {
     handleSubmit,
@@ -154,6 +156,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         default:
           break;
       }
+      await api.getFloorPrice({ address: nft.collection.address });
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
