@@ -1,17 +1,12 @@
-'use client';
+"use client";
 
-import NFTsList from '@/components/List/NFTsList';
-import { useNFTFilterStore } from '@/store/filters/items/store';
-import { useFetchNFTList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import NFTsList from "@/components/List/NFTsList";
+import { useNFTFilterStore } from "@/store/filters/items/store";
+import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function ExploreNFTsPage() {
-  const {
-    showFilters,
-    toggleFilter,
-    filters,
-    updateFilters,
-    resetFilters
-  } = useNFTFilterStore();
+  const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
+    useNFTFilterStore();
 
   const { error, isLoading, setSize, size, data } = useFetchNFTList(filters);
 
@@ -19,7 +14,7 @@ export default function ExploreNFTsPage() {
     data,
     loading: isLoading,
     page: size,
-    onNext: () => setSize(size + 1)
+    onNext: () => setSize(size + 1),
   });
 
   return (

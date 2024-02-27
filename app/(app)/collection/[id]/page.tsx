@@ -1,68 +1,81 @@
-'use client';
-import React, { useMemo } from 'react';
-import { useParams } from 'next/navigation';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import useSWR from 'swr';
-import { sanitizeObject } from '@/utils';
-import { APIParams, APIResponse } from '@/services/api/types';
-import NFTsList from '@/components/List/NFTsList';
-import BannerSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection';
-import InformationSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection';
-import FiltersSectionCollection from '@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection';
-import { Spinner } from 'flowbite-react';
-import Text from '@/components/Text';
-import { getCollectionAvatarImage, getCollectionBannerImage } from '@/utils/string';
-import { useFilterByCollection } from '@/store/filters/byCollection/store';
-import useSWRInfinite from 'swr/infinite';
-import { useFetchNFTList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import { Address } from 'wagmi';
+"use client";
+import React, { useMemo } from "react";
+import { useParams } from "next/navigation";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import useSWR from "swr";
+import { sanitizeObject } from "@/utils";
+import { APIParams, APIResponse } from "@/services/api/types";
+import NFTsList from "@/components/List/NFTsList";
+import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
+import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection";
+import FiltersSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection";
+import { Spinner } from "flowbite-react";
+import Text from "@/components/Text";
+import {
+  getCollectionAvatarImage,
+  getCollectionBannerImage,
+} from "@/utils/string";
+import { useFilterByCollection } from "@/store/filters/byCollection/store";
+import useSWRInfinite from "swr/infinite";
+import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { Address } from "wagmi";
 
 export default function CollectionPage() {
   const { id } = useParams();
   const api = useMarketplaceApi();
-  const filterStore = useFilterByCollection(state => state);
-
-  const { data: collectionData, isLoading: isLoadingCollection, error: collectionError } = useSWR(
-    !!id ? id : null,
-    (id: string) => api.fetchCollectionById(id),
-    {
-      refreshInterval: 30000,
-      onSuccess: (data) => {
-        const collectionAddress = data?.collection.address;
-        filterStore.createFiltersForCollection(collectionAddress);
-        filterStore.updateFilters(collectionAddress, { collectionAddress });
-      }
-    }
-  );
+  const filterStore = useFilterByCollection((state) => state);
 
   const {
-    showFilters,
-    filters,
-    toggleFilter,
-    resetFilters,
-    updateFilters
-  } = useMemo(() => {
-    const collectionAddress = collectionData?.collection.address;
-    const hasCollectionFilters = !!collectionAddress && !!filterStore[collectionAddress];
+    data: collectionData,
+    isLoading: isLoadingCollection,
+    error: collectionError,
+  } = useSWR(!!id ? id : null, (id: string) => api.fetchCollectionById(id), {
+    refreshInterval: 30000,
+    onSuccess: (data) => {
+      const collectionAddress = data?.collection.address;
+      filterStore.createFiltersForCollection(collectionAddress);
+      filterStore.updateFilters(collectionAddress, { collectionAddress });
+    },
+  });
 
-    return {
-      showFilters: hasCollectionFilters ? filterStore[collectionAddress].showFilters : false,
-      filters: hasCollectionFilters ? filterStore[collectionAddress].filters : {},
-      createFiltersForCollection: filterStore.createFiltersForCollection,
-      toggleFilter: (bool?: boolean) => filterStore.toggleFilter(collectionAddress as Address, bool),
-      setFilters: (filters: APIParams.FetchNFTs) => filterStore.setFilters(collectionAddress as Address, filters),
-      updateFilters: (filters: Partial<APIParams.FetchNFTs>) => filterStore.updateFilters(collectionAddress as Address, filters),
-      resetFilters: () => filterStore.resetFilters(collectionAddress as Address)
-    };
-  }, [filterStore, collectionData]);
+  const { showFilters, filters, toggleFilter, resetFilters, updateFilters } =
+    useMemo(() => {
+      const collectionAddress = collectionData?.collection.address;
+      const hasCollectionFilters =
+        !!collectionAddress && !!filterStore[collectionAddress];
 
-  const { error: listError, isLoading, setSize, size, data } = useFetchNFTList(filters);
+      return {
+        showFilters: hasCollectionFilters
+          ? filterStore[collectionAddress].showFilters
+          : false,
+        filters: hasCollectionFilters
+          ? filterStore[collectionAddress].filters
+          : {},
+        createFiltersForCollection: filterStore.createFiltersForCollection,
+        toggleFilter: (bool?: boolean) =>
+          filterStore.toggleFilter(collectionAddress as Address, bool),
+        setFilters: (filters: APIParams.FetchNFTs) =>
+          filterStore.setFilters(collectionAddress as Address, filters),
+        updateFilters: (filters: Partial<APIParams.FetchNFTs>) =>
+          filterStore.updateFilters(collectionAddress as Address, filters),
+        resetFilters: () =>
+          filterStore.resetFilters(collectionAddress as Address),
+      };
+    }, [filterStore, collectionData]);
+
+  const {
+    error: listError,
+    isLoading,
+    setSize,
+    size,
+    data,
+  } = useFetchNFTList(filters);
 
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
     loading: isLoading,
     page: size,
-    onNext: () => setSize(size + 1)
+    onNext: () => setSize(size + 1),
   });
 
   if (collectionError) {
@@ -112,12 +125,12 @@ export default function CollectionPage() {
           showFilters={showFilters}
           toggleFilter={() => toggleFilter()}
           activeFilters={filters}
-          onSearch={name => updateFilters({ name })}
+          onSearch={(name) => updateFilters({ name })}
         />
         <div className="flex gap-4 desktop:flex-row flex-col">
           <NFTsList
             loading={isLoadingMore}
-            filters={['status', 'price']}
+            filters={["status", "price"]}
             activeFilters={filters}
             onResetFilters={resetFilters}
             onApplyFilters={updateFilters}

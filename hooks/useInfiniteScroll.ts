@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from 'react';
-import useSWRInfinite from 'swr/infinite';
-import { sanitizeObject } from '@/utils';
-import { APIParams, APIResponse } from '@/services/api/types';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import useSWR from 'swr';
+import { useEffect, useMemo } from "react";
+import useSWRInfinite from "swr/infinite";
+import { sanitizeObject } from "@/utils";
+import { APIParams, APIResponse } from "@/services/api/types";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import useSWR from "swr";
 
 interface ListData {
   data: any[];
@@ -24,9 +24,9 @@ export const useFetchCollectionList = (filters: APIParams.FetchCollections) => {
   return useSWRInfinite(
     (index) => ({
       ...filters,
-      page: index + 1
+      page: index + 1,
     }),
-    (params) => api.fetchCollections(sanitizeObject(params))
+    (params) => api.fetchCollections(sanitizeObject(params)),
   );
 };
 
@@ -34,12 +34,15 @@ export const useFetchCollectionListByUser = (id: string) => {
   const api = useMarketplaceApi();
 
   return useSWRInfinite(
-    (index) => id ? ({
-      userId: id,
-      hasBase: false,
-      page: index + 1
-    }) : null,
-    (params) => api.fetchCollectionsByUser(params)
+    (index) =>
+      id
+        ? {
+            userId: id,
+            hasBase: false,
+            page: index + 1,
+          }
+        : null,
+    (params) => api.fetchCollectionsByUser(params),
   );
 };
 
@@ -49,9 +52,9 @@ export const useFetchNFTList = (filters: APIParams.FetchNFTs) => {
   return useSWRInfinite(
     (index) => ({
       ...filters,
-      page: index + 1
+      page: index + 1,
     }),
-    (params) => api.fetchNFTs(sanitizeObject(params))
+    (params) => api.fetchNFTs(sanitizeObject(params)),
   );
 };
 
@@ -61,13 +64,19 @@ export const useFetchUserList = (filters: APIParams.FetchUsers) => {
   return useSWRInfinite(
     (index) => ({
       ...filters,
-      page: index + 1
+      page: index + 1,
     }),
-    (params) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers)
+    (params) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers),
   );
 };
 
-export const useInfiniteScroll = ({ data, loading, page, onNext, offset = 800 }: Params) => {
+export const useInfiniteScroll = ({
+  data,
+  loading,
+  page,
+  onNext,
+  offset = 800,
+}: Params) => {
   const list = useMemo(() => {
     let currentHasNext = false;
     let concatenatedData: any[] = [];
@@ -76,12 +85,12 @@ export const useInfiniteScroll = ({ data, loading, page, onNext, offset = 800 }:
       concatenatedData = data.reduce(
         (prevData: any[], currentPage: ListData) => [
           ...prevData,
-          ...currentPage.data
+          ...currentPage.data,
         ],
-        []
+        [],
       );
       const hasNextArray = data.map(
-        (currentPage: ListData) => currentPage.paging
+        (currentPage: ListData) => currentPage.paging,
       );
       currentHasNext = hasNextArray[data.length - 1].hasNext;
     }
@@ -89,11 +98,13 @@ export const useInfiniteScroll = ({ data, loading, page, onNext, offset = 800 }:
     return { concatenatedData, currentHasNext };
   }, [data]);
 
-  const isLoadingMore = loading || (page > 0 && data && (data[page - 1] === undefined));
+  const isLoadingMore =
+    loading || (page > 0 && data && data[page - 1] === undefined);
 
   useEffect(() => {
     const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
       if (
         scrollTop > scrollHeight - clientHeight - offset &&
         !loading &&
@@ -103,14 +114,14 @@ export const useInfiniteScroll = ({ data, loading, page, onNext, offset = 800 }:
         onNext();
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [loading, page, list]);
 
   return {
     list,
-    isLoadingMore
+    isLoadingMore,
   };
 };

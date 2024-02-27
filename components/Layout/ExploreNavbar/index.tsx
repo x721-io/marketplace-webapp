@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { Tabs, TabsRef } from 'flowbite-react';
-import Button from '@/components/Button';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef } from 'react';
-import Input from '@/components/Form/Input';
-import SliderIcon from '@/components/Icon/Sliders';
-import CommandIcon from '@/components/Icon/Command';
-import { useCollectionFilterStore } from '@/store/filters/collections/store';
-import { useNFTFilterStore } from '@/store/filters/items/store';
-import { useUserFilterStore } from '@/store/filters/users/store';
+import { Tabs, TabsRef } from "flowbite-react";
+import Button from "@/components/Button";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef } from "react";
+import Input from "@/components/Form/Input";
+import SliderIcon from "@/components/Icon/Sliders";
+import CommandIcon from "@/components/Icon/Command";
+import { useCollectionFilterStore } from "@/store/filters/collections/store";
+import { useNFTFilterStore } from "@/store/filters/items/store";
+import { useUserFilterStore } from "@/store/filters/users/store";
 
 export default function ExploreSectionNavbar() {
   const tabs = [
-    { label: 'NFTs', href: '/explore/items' },
-    { label: 'Collections', href: '/explore/collections' },
-    { label: 'Users', href: '/explore/users' }
+    { label: "NFTs", href: "/explore/items" },
+    { label: "Collections", href: "/explore/collections" },
+    { label: "Users", href: "/explore/users" },
   ];
 
   const pathname = usePathname();
@@ -26,70 +26,70 @@ export default function ExploreSectionNavbar() {
     filters: { name: collectionSearchText },
     showFilters: showCollectionFilters,
     toggleFilter: toggleCollectionFilters,
-    updateFilters: updateCollectionFilters
-  } = useCollectionFilterStore(state => state);
+    updateFilters: updateCollectionFilters,
+  } = useCollectionFilterStore((state) => state);
 
   const {
     filters: { name: nftSearchText },
     showFilters: showNFTFilters,
     toggleFilter: toggleNFTFilters,
-    updateFilters: updateNFTFilters
-  } = useNFTFilterStore(state => state);
+    updateFilters: updateNFTFilters,
+  } = useNFTFilterStore((state) => state);
 
   const {
     filters: { search: userSearchText },
     showFilters: showUserFilters,
     toggleFilter: toggleUserFilters,
-    updateFilters: updateUserFilters
-  } = useUserFilterStore(state => state);
+    updateFilters: updateUserFilters,
+  } = useUserFilterStore((state) => state);
 
   const isFiltersVisible = useMemo(() => {
     switch (true) {
-    case pathname.includes('collections'):
-      return showCollectionFilters;
-    case pathname.includes('items'):
-      return showNFTFilters;
-    default:
-      return false;
+      case pathname.includes("collections"):
+        return showCollectionFilters;
+      case pathname.includes("items"):
+        return showNFTFilters;
+      default:
+        return false;
     }
   }, [showCollectionFilters, showNFTFilters, pathname]);
 
   const handleToggleFilters = () => {
     switch (true) {
-    case pathname.includes('collections'):
-      return toggleCollectionFilters();
-    case pathname.includes('items'):
-      return toggleNFTFilters();
-    default:
-      return null;
+      case pathname.includes("collections"):
+        return toggleCollectionFilters();
+      case pathname.includes("items"):
+        return toggleNFTFilters();
+      default:
+        return null;
     }
   };
 
   const searchText = useMemo(() => {
     switch (true) {
-    case pathname.includes('collections'):
-      return collectionSearchText;
-    case pathname.includes('users'):
-      return userSearchText;
-    case pathname.includes('items'):
-      return nftSearchText;
-    default:
-      return '';
+      case pathname.includes("collections"):
+        return collectionSearchText;
+      case pathname.includes("users"):
+        return userSearchText;
+      case pathname.includes("items"):
+        return nftSearchText;
+      default:
+        return "";
     }
-  }, [pathname, collectionSearchText, nftSearchText, userSearchText])
+  }, [pathname, collectionSearchText, nftSearchText, userSearchText]);
 
   const handleInputText = (value: any) => {
     switch (true) {
-    case pathname.includes('collections'):
-      return updateCollectionFilters({ name: value });
-    case pathname.includes('items'):
-      return updateNFTFilters({ name: value });
-    case pathname.includes('users'):
-      return updateUserFilters({ search: value })
-    default:
-      return null;
+      case pathname.includes("collections"):
+        return updateCollectionFilters({ name: value });
+      case pathname.includes("items"):
+        return updateNFTFilters({ name: value });
+      case pathname.includes("users"):
+        return updateUserFilters({ search: value });
+      default:
+        return null;
     }
-  }
+  };
 
   const handleChangeTab = (activeTab: number) => {
     return router.push(tabs[activeTab].href);
@@ -98,15 +98,15 @@ export default function ExploreSectionNavbar() {
   useEffect(() => {
     if (tabsRef.current) {
       switch (true) {
-      case pathname.includes('items'):
-        tabsRef.current.setActiveTab(0);
-        break;
-      case pathname.includes('collections'):
-        tabsRef.current.setActiveTab(1);
-        break;
-      case pathname.includes('users'):
-        tabsRef.current.setActiveTab(2);
-        break;
+        case pathname.includes("items"):
+          tabsRef.current.setActiveTab(0);
+          break;
+        case pathname.includes("collections"):
+          tabsRef.current.setActiveTab(1);
+          break;
+        case pathname.includes("users"):
+          tabsRef.current.setActiveTab(2);
+          break;
       }
     }
   }, [tabsRef, pathname]);

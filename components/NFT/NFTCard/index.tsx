@@ -14,6 +14,7 @@ import {
 import { formatDisplayedBalance } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
+import { findTokenByAddress } from "@/utils/token";
 
 export default function NFTCard({
   name,
@@ -23,9 +24,11 @@ export default function NFTCard({
   collection,
   image,
   animationUrl,
+  quoteToken
 }: NFT) {
   const displayMedia = image || animationUrl;
   const fileExtension = displayMedia.split(".").pop();
+  const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
   const fileType = useMemo(() => {
     if (!fileExtension) return "image";
@@ -82,7 +85,7 @@ export default function NFTCard({
         );
     }
   };
-
+  
   const renderNFTData = () => {
     switch (sellStatus) {
       case "Bid":
@@ -92,7 +95,7 @@ export default function NFTCard({
             <span className="text-primary font-semibold">
               {formatDisplayedBalance(formatEther(price as string), 2)}
             </span>{" "}
-            U2U
+            {token?.symbol}
           </Text>
         );
       case "AskNew":
@@ -105,7 +108,7 @@ export default function NFTCard({
                 2,
               )}
             </span>{" "}
-            U2U
+            {token?.symbol}
           </Text>
         );
       default:

@@ -13,6 +13,7 @@ import { NFT } from "@/types/entitites";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { toast } from "react-toastify";
+import { useCancelSellURC1155, useCancelSellURC721 } from "@/hooks/useSellNFT";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -36,38 +37,46 @@ export default function CancelSellNFTModal({
   onClose,
   marketData,
 }: Props) {
-  const { onCancelSell, isLoading, error, isSuccess } = useCancelSellNFT(nft);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const [loading, setLoading] = useState(false);
+  const onCancelSellURC721 = useCancelSellURC721(nft);
+  const onCancelSellURC1155 = useCancelSellURC1155();
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
       (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase(),
     );
   }, [marketData, wallet]);
 
-  const handleCancelSell = () => {
+  const handleCancelSell = async () => {
+    const toastId = toast.loading("Preparing data...", { type: "info" });
+    setLoading(true);
     try {
-      onCancelSell(mySale?.operationId);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(`Error report: ${error.message}`, {
+      if (nft.collection.type === "ERC721") {
+        await onCancelSellURC721();
+      } else {
+        await onCancelSellURC1155(mySale?.operationId || "");
+      }
+      toast.update(toastId, {
+        render: "Sale cancelled successfully",
+        type: "success",
         autoClose: 1000,
         closeButton: true,
-      });
-    }
-    if (isSuccess) {
-      toast.success(`Sale cancelled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
+        isLoading: false,
       });
       onClose?.();
+    } catch (e) {
+      console.error(e);
+      toast.update(toastId, {
+        render: "Sale cancelled failed",
+        type: "error",
+        autoClose: 1000,
+        closeButton: true,
+        isLoading: false,
+      });
+    } finally {
+      setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, isSuccess]);
+  };
 
   return (
     <Modal
@@ -101,7 +110,7 @@ export default function CancelSellNFTModal({
               <Button
                 className="flex-1"
                 onClick={handleCancelSell}
-                loading={isLoading}
+                loading={loading}
               >
                 Yes
               </Button>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import SliderIcon from "@/components/Icon/Sliders";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
@@ -7,7 +7,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
 import { Address } from "wagmi";
 import { MODE_ON_SALES } from "@/config/constants";
-import { useFetchNFTsByUser } from '@/hooks/useFetchNFTsByUser';
+import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 
 export default function OnSaleNFTs({
   wallet,
@@ -26,8 +26,8 @@ export default function OnSaleNFTs({
     filters,
     toggleFilter,
     resetFilters,
-    updateFilters
-  } = useFetchNFTsByUser(wallet, 'onSale');
+    updateFilters,
+  } = useFetchNFTsByUser(wallet, "onSale");
 
   const { data: totalOnSales } = useSWR(
     [
@@ -46,7 +46,6 @@ export default function OnSaleNFTs({
       onUpdateAmount(totalOnSales);
     }
   }, [totalOnSales, onUpdateAmount]);
-
 
   return (
     <div className="w-full py-7">
