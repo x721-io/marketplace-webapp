@@ -16,10 +16,10 @@ interface Props {
     onApproveMaxAmount?: () => void
     onApproveToken?: () => void
     loading?: boolean
-    registerAllownceInput?: UseFormRegisterReturn
+    registerAllowanceInput?: UseFormRegisterReturn
 }
 
-export default function Erc20ApproveToken({
+export default function ERC20TokenApproval({
     allowanceBalance = BigInt(0),
     quoteToken,
     onAllowanceInput,
@@ -27,7 +27,7 @@ export default function Erc20ApproveToken({
     onApproveMaxAmount,
     onApproveToken,
     loading,
-    registerAllownceInput
+    registerAllowanceInput
 }: Props) {
 
     const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
@@ -52,7 +52,7 @@ export default function Erc20ApproveToken({
                 <Input
                     className="text-center"
                     containerClass="flex-1"
-                    register={registerAllownceInput}
+                    register={registerAllowanceInput}
                     onChange={onAllowanceInput} />
                 <Button variant="secondary" onClick={onApproveMaxAmount} className="!min-w-fit p-3">Max</Button>
             </div>

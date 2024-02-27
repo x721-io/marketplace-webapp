@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { findTokenByAddress } from "@/utils/token";
 import { toast } from "react-toastify";
 import { useAcceptBidURC1155, useAcceptBidURC721 } from "@/hooks/useBidNFT";
-import ErcNFTApproveToken from "@/components/ErcNFTApproveToken";
+import NFTApproval from "@/components/NFTApproval";
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 interface Props extends ModalProps {
   nft: NFT;
@@ -86,7 +86,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         await onAcceptBidURC1155(bid.operationId, quantity)
       }
       toast.update(toastId, {
-        render: "Accept Bid has been successful!",
+        render: "Bid order has been fulfilled successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
@@ -96,7 +96,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     } catch (e) {
       console.error(e);
       toast.update(toastId, {
-        render: "Accept Bid is failed",
+        render: "Failed to accept bid",
         type: "error",
         autoClose: 1000,
         closeButton: true,
@@ -116,7 +116,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       await onApprovalTokenForSingle()
 
       toast.update(toastId, {
-        render: "Approve token successfully",
+        render: "Approval has been updated successfully",
         type: "success",
         autoClose: 1000,
         closeButton: true,
@@ -124,7 +124,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       });
     } catch (e) {
       toast.update(toastId, {
-        render: "Failed to approve token",
+        render: "Failed to approve marketplace contract",
         type: "error",
         autoClose: 1000,
         closeButton: true,
@@ -254,7 +254,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                     Accept bid
                   </Button></>
                 :
-                <ErcNFTApproveToken
+                <NFTApproval
                   nft={nft}
                   isMarketContractApprovedToken={isMarketContractApprovedToken}
                   handleApproveTokenForAll={handleApproveTokenForAll}

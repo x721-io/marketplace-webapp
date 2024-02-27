@@ -22,7 +22,7 @@ import FeeCalculator from '@/components/FeeCalculator';
 import FormValidationMessages from '@/components/Form/ValidationMessages';
 import { numberRegex } from '@/utils/regex';
 import Select from '@/components/Form/Select';
-import Erc20ApproveToken from '@/components/Erc20ApproveToken';
+import ERC20TokenApproval from '@/components/ERC20TokenApproval';
 import { useBidURC1155UsingNative, useBidURC1155UsingURC20, useBidURC721UsingNative, useBidURC721UsingURC20 } from '@/hooks/useBidNFT';
 import { useMarketApproveERC20 } from '@/hooks/useMarketApproveERC20';
 
@@ -350,12 +350,12 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               />
             )}
 
-            {isTokenApproved === true ? (
+            {isTokenApproved ? (
               <Button disabled={!isTokenApproved} type={'submit'} className="w-full" loading={loading}>
                 Place bid
               </Button>
             ) : (
-              <Erc20ApproveToken
+              <ERC20TokenApproval
                 allowanceBalance={allowanceBalance}
                 quoteToken={quoteToken}
                 onApproveMinAmount={handleApproveMinAmount}
@@ -363,7 +363,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 onApproveMaxAmount={handleApproveMaxAmount}
                 onApproveToken={handleApproveToken}
                 loading={loading}
-                registerAllownceInput={register('allowance', formRules.allowance)}
+                registerAllowanceInput={register('allowance', formRules.allowance)}
               />
             )}
             <FormValidationMessages errors={errors} />

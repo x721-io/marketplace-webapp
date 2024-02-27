@@ -9,7 +9,7 @@ interface Props {
     handleApproveTokenForSingle: () => void
 }
 
-export default function ErcNFTApproveToken({
+export default function NFTApproval({
     nft,
     isMarketContractApprovedToken,
     handleApproveTokenForAll,

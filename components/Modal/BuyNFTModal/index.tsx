@@ -18,7 +18,7 @@ import FeeCalculator from "@/components/FeeCalculator";
 import { formatDisplayedBalance } from "@/utils";
 import { numberRegex } from "@/utils/regex";
 import { tokens } from "@/config/tokens";
-import Erc20ApproveToken from "@/components/Erc20ApproveToken";
+import ERC20TokenApproval from "@/components/ERC20TokenApproval";
 import { toast } from "react-toastify";
 import { useBuyURC1155UsingNative, useBuyURC1155UsingURC20, useBuyURC721UsingNative, useBuyURC721UsingURC20 } from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
@@ -126,7 +126,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         default:
           break;
       }
-      toast.success(`Buy NFT successfully`, {
+      toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true
       });
@@ -324,12 +324,12 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               </>
             )}
 
-            {isTokenApproved === true ? (
+            {isTokenApproved ? (
               <Button type={"submit"} className="w-full" loading={loading}>
                 Purchase item
               </Button>
             ) : (
-              <Erc20ApproveToken
+              <ERC20TokenApproval
                 allowanceBalance={allowanceBalance}
                 quoteToken={quoteToken}
                 onApproveMinAmount={handleApproveMinAmount}
@@ -337,7 +337,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 onApproveMaxAmount={handleApproveMaxAmount}
                 onApproveToken={handleApproveToken}
                 loading={loading}
-                registerAllownceInput={register('allowance', formRules.allowance)}
+                registerAllowanceInput={register('allowance', formRules.allowance)}
               />
             )}
             <FormValidationMessages errors={errors} />

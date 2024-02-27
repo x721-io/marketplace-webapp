@@ -18,13 +18,13 @@ import { FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
 import FeeCalculator from "@/components/FeeCalculator";
-import { formatUnits, parseUnits } from "ethers";
+import { parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { numberRegex } from "@/utils/regex";
 import { useSellURC1155, useSellURC721 } from "@/hooks/useSellNFT";
 import { toast } from 'react-toastify';
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
-import ErcNFTApproveToken from "@/components/ErcNFTApproveToken";
+import NFTApproval from "@/components/NFTApproval";
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -97,7 +97,7 @@ export default function SellNFTModal({
           const decimalPart = (v.toString().split(".")[1] || "").length;
           return (
             decimalPart <= 18 ||
-            "The decimal length of the price cannot exceed 18 decimal digits of the token"
+            "The decimal length cannot exceed 18"
           );
         },
       },
@@ -302,7 +302,7 @@ export default function SellNFTModal({
                 Put on sale
               </Button>
               :
-              <ErcNFTApproveToken
+              <NFTApproval
                 nft={nft}
                 isMarketContractApprovedToken={isMarketContractApprovedToken}
                 handleApproveTokenForAll={handleApproveTokenForAll}
