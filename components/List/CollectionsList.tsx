@@ -108,16 +108,15 @@ export default function CollectionsList({
                               {c.name}
                             </Text>
                           </Tooltip>
-                          {c.isVerified
-                            ? (
-                              <Icon name="verify-active" width={16} height={16} />
-                            ) : (
-                              <Icon
-                                name="verify-disable"
-                                width={16}
-                                height={16}
-                              />
-                            )}
+                          {((c.creators && c.creators.length > 0 && c.creators[0].user.accountStatus) && c.isVerified) ? (
+                            <Icon name="verify-active" width={16} height={16} />
+                          ) : (
+                            <Icon
+                              name="verify-disable"
+                              width={16}
+                              height={16}
+                            />
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Text className="text-body-12 font-medium">
