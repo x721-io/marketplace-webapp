@@ -7,7 +7,6 @@ import { format } from "date-fns";
 import { formatEther } from "ethers";
 import Link from "next/link";
 
-
 interface Props {
   round: Round;
   hasStaked: boolean;

@@ -5,14 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { Spinner } from "flowbite-react";
-import { getUserAvatarImage, getUserCoverImage, getUserLink, } from "@/utils/string";
+import {
+  getUserAvatarImage,
+  getUserCoverImage,
+  getUserLink,
+} from "@/utils/string";
 import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
 import { formatDisplayedNumber } from "@/utils";
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
 import { useFetchUserList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useUserFilterStore } from "@/store/filters/users/store";
-
 
 export default function ExploreUsersPage() {
   const { filters } = useUserFilterStore();

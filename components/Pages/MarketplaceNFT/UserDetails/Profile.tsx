@@ -11,7 +11,6 @@ import { formatDisplayedNumber } from "@/utils";
 import Icon from "@/components/Icon";
 import CollapsibleText from "@/components/Text/CollapsibleText";
 
-
 interface Props {
   user: User;
   onRefresh: () => void;

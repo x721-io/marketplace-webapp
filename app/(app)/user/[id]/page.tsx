@@ -15,7 +15,6 @@ import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 import { useFilterByUser } from "@/store/filters/byUser/store";
 
-
 export default function ProfilePage() {
   const api = useMarketplaceApi();
   const { id } = useParams();
@@ -130,8 +129,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Collections ({formatDisplayedNumber(createdCollectionAmount)}
-                )
+                Collections ({formatDisplayedNumber(createdCollectionAmount)})
               </div>
             }
           >

@@ -1,5 +1,12 @@
 import { tokens } from "@/config/tokens";
-import { Address, erc20ABI, useAccount, useBalance, useContractReads, useContractWrite, } from "wagmi";
+import {
+  Address,
+  erc20ABI,
+  useAccount,
+  useBalance,
+  useContractReads,
+  useContractWrite,
+} from "wagmi";
 import Image from "next/image";
 import { BigNumberish, formatUnits } from "ethers";
 import { formatDisplayedNumber } from "@/utils";
@@ -9,7 +16,6 @@ import { useMemo, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { toast } from "react-toastify";
 import { Tooltip } from "flowbite-react";
-
 
 export default function TokenBalances() {
   const [claiming, setClaiming] = useState(false);

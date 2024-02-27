@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import useLaunchpadStore from "@/store/launchpad/store";
 import RoundStatusHeader from "./RoundStatusHeader";
 
-
 interface Props {
   collection: Collection;
   round: Round;

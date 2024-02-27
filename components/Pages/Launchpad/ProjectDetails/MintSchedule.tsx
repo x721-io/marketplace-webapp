@@ -13,7 +13,6 @@ import { Address, useAccount, useContractRead } from "wagmi";
 import MessageClaimSuccess from "./ToastMessage";
 import { classNames } from "@/utils/string";
 
-
 interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
   round: Round;
   collection: Collection;

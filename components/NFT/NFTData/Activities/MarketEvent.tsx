@@ -1,5 +1,10 @@
 import { MarketEvent } from "@/types";
-import { getDisplayedUserName, getUserAvatarImage, getUserLink, shortenAddress, } from "@/utils/string";
+import {
+  getDisplayedUserName,
+  getUserAvatarImage,
+  getUserLink,
+  shortenAddress,
+} from "@/utils/string";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -8,7 +13,6 @@ import { formatDisplayedNumber } from "@/utils";
 import { findTokenByAddress } from "@/utils/token";
 import React from "react";
 import { Tooltip } from "flowbite-react";
-
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;

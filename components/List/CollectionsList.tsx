@@ -7,9 +7,12 @@ import Image from "next/image";
 import { formatDisplayedNumber } from "@/utils";
 import Button from "../Button";
 import { Collection } from "@/types";
-import { classNames, getCollectionAvatarImage, getCollectionBannerImage, } from "@/utils/string";
+import {
+  classNames,
+  getCollectionAvatarImage,
+  getCollectionBannerImage,
+} from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
-
 
 interface Props {
   loading?: boolean;
@@ -135,9 +138,7 @@ export default function CollectionsList({
                       <div className="flex gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Volume</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedNumber(
-                            formatEther(c.volumn || 0)
-                          )}{" "}
+                          {formatDisplayedNumber(formatEther(c.volumn || 0))}{" "}
                           U2U
                         </Text>
                       </div>
@@ -145,7 +146,7 @@ export default function CollectionsList({
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
                           {formatDisplayedNumber(
-                            formatUnits((c.floorPrice || 0),2)
+                            formatUnits(c.floorPrice || 0, 2),
                           )}{" "}
                           U2U
                         </Text>

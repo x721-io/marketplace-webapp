@@ -12,7 +12,6 @@ import { useAccount, useBalance, useContractReads } from "wagmi";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
 
-
 interface Props {
   eligibleStatus: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;

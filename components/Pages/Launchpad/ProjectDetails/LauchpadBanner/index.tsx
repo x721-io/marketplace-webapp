@@ -11,7 +11,6 @@ import { format } from "date-fns";
 import TimeframeDropdown from "./TimeframeDropdown";
 import useTimeframeStore from "@/store/timeframe/store";
 
-
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
     const active = project.rounds.find((round) => {
@@ -94,7 +93,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
                 Total Minted:{" "}
                 <span className="text-primary font-medium">
                   {formatDisplayedNumber(
-                    (roundData as any)?.soldAmountNFT || 0
+                    (roundData as any)?.soldAmountNFT || 0,
                   )}
                 </span>
               </p>

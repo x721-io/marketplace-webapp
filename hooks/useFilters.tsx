@@ -45,7 +45,12 @@ export const useNFTFilters = (
         return toast.error("Minimum price cannot be greater than maximum one");
       }
     }
-    onApplyFilters?.(sanitizeObject({...localFilters, quoteToken: quoteToken === undefined ? tokens.wu2u.address : quoteToken}));
+    onApplyFilters?.(
+      sanitizeObject({
+        ...localFilters,
+        quoteToken: quoteToken === undefined ? tokens.wu2u.address : quoteToken,
+      }),
+    );
   };
 
   const isTraitSelected = useCallback(

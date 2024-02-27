@@ -5,12 +5,15 @@ import Image from "next/image";
 import Text from "@/components/Text";
 import { formatEther } from "ethers";
 import Link from "next/link";
-import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES, } from "@/config/constants";
+import {
+  ALLOWED_AUDIO_TYPES,
+  ALLOWED_IMAGE_TYPES,
+  ALLOWED_VIDEO_TYPES,
+} from "@/config/constants";
 import { formatDisplayedNumber } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
-
 
 export default function NFTCard({
   name,
@@ -20,7 +23,7 @@ export default function NFTCard({
   collection,
   image,
   animationUrl,
-  quoteToken
+  quoteToken,
 }: NFT) {
   const displayMedia = image || animationUrl;
   const fileExtension = displayMedia.split(".").pop();
@@ -81,7 +84,7 @@ export default function NFTCard({
         );
     }
   };
-  
+
   const renderNFTData = () => {
     switch (sellStatus) {
       case "Bid":
@@ -99,9 +102,7 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedNumber(
-                formatEther(price as string).toString()
-              )}
+              {formatDisplayedNumber(formatEther(price as string).toString())}
             </span>{" "}
             {token?.symbol}
           </Text>

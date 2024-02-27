@@ -10,7 +10,6 @@ import { Royalty } from "@/types";
 import UpdateRoyaltiesModal from "@/components/Modal/UpdateRoyaltiesModal";
 import useAuthStore from "@/store/auth/store";
 
-
 interface Props {
   data: APIResponse.CollectionDetails;
 }

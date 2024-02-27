@@ -27,7 +27,6 @@ import {
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import NFTMarketData = APIResponse.NFTMarketData;
 
-
 interface Props extends ModalProps {
   nft: NFT;
   marketData?: NFTMarketData;
@@ -327,9 +326,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
                         Max:{" "}
-                        {formatDisplayedNumber(
-                          marketData?.totalSupply || 0
-                        )}
+                        {formatDisplayedNumber(marketData?.totalSupply || 0)}
                       </Text>
                     }
                   />

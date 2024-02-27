@@ -1,5 +1,9 @@
 import { MarketEvent, NFT } from "@/types";
-import { getUserAvatarImage, getUserLink, shortenAddress, } from "@/utils/string";
+import {
+  getUserAvatarImage,
+  getUserLink,
+  shortenAddress,
+} from "@/utils/string";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -11,7 +15,6 @@ import React, { useMemo, useState } from "react";
 import Button from "@/components/Button";
 import useAuthStore from "@/store/auth/store";
 import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
-
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isOwner: boolean;

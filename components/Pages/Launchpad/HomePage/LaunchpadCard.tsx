@@ -9,7 +9,6 @@ import { useMemo } from "react";
 import { formatDisplayedNumber } from "@/utils";
 import { formatEther } from "ethers";
 
-
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   project: Project;
 }

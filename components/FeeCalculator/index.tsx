@@ -8,7 +8,6 @@ import Image from "next/image";
 import { formatDisplayedNumber } from "@/utils";
 import Text from "../Text";
 
-
 interface Props {
   mode: "buyer" | "seller";
   price?: bigint;
@@ -60,9 +59,7 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(
-                  formatUnits(sellerFee, 18),
-                )}
+                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, 18))}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(formatUnits(sellerFee, 18))}
@@ -85,9 +82,7 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(
-                  formatUnits(sellerFee, 18),
-                )}
+                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, 18))}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(formatUnits(royaltiesFee, 18))}
@@ -110,9 +105,7 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(
-                  formatUnits(sellerFee, 18),
-                )}
+                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, 18))}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(

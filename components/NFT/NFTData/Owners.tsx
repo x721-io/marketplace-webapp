@@ -13,7 +13,6 @@ import { getUserAvatarImage } from "@/utils/string";
 import BidNFTModal from "@/components/Modal/BidNFTModal";
 import { findTokenByAddress } from "@/utils/token";
 
-
 export default function OwnersTab({
   nft,
   marketData,
@@ -24,7 +23,10 @@ export default function OwnersTab({
   const [modals, setModals] = useState<Record<string, any>>({});
   const userWallet = useAuthStore((state) => state.profile?.publicKey);
   const [showBidModal, setShowBidModal] = useState(false);
-  const token = useMemo(() => findTokenByAddress( marketData?.sellInfo[0]?.quoteToken), [ marketData?.sellInfo[0]?.quoteToken]);
+  const token = useMemo(
+    () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
+    [marketData?.sellInfo[0]?.quoteToken],
+  );
 
   const owners = useMemo(() => {
     if (!marketData) return [];
@@ -90,7 +92,7 @@ export default function OwnersTab({
                         <span className="text-primary">
                           {" "}
                           {formatDisplayedNumber(
-                            formatEther(owner.sellInfo.price)
+                            formatEther(owner.sellInfo.price),
                           )}{" "}
                           {token?.symbol}
                         </span>{" "}

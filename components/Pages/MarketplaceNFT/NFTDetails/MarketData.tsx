@@ -9,11 +9,14 @@ import Link from "next/link";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import { getDisplayedUserName, getUserAvatarImage, getUserLink, } from "@/utils/string";
+import {
+  getDisplayedUserName,
+  getUserAvatarImage,
+  getUserLink,
+} from "@/utils/string";
 import { formatDisplayedNumber } from "@/utils";
 import { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
-
 
 export default function NFTMarketData({
   nft,
@@ -25,13 +28,16 @@ export default function NFTMarketData({
   const type = nft.collection.type;
 
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
-  
-  const token = useMemo(() => findTokenByAddress( marketData?.sellInfo[0]?.quoteToken), [ marketData?.sellInfo[0]?.quoteToken]);
+
+  const token = useMemo(
+    () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
+    [marketData?.sellInfo[0]?.quoteToken],
+  );
 
   if (!marketData) {
     return null;
   }
-  
+
   return (
     <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
@@ -130,9 +136,7 @@ export default function NFTMarketData({
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedNumber(
-                        formatUnits(saleData?.price || 0)
-                      )}
+                      {formatDisplayedNumber(formatUnits(saleData?.price || 0))}
                     </span>
                     &nbsp;
                     <span className="text-secondary">{token?.symbol}</span>

@@ -10,7 +10,6 @@ import { useMemo } from "react";
 import { formatDisplayedNumber } from "@/utils";
 import { formatEther } from "ethers";
 
-
 interface Props {
   project: Project;
 }
@@ -81,9 +80,7 @@ export default function LaunchpadSlide({ project }: Props) {
               <div className="flex items-center gap-2">
                 <Icon name="u2u-logo" width={30} height={30} />
                 <Text className="font-semibold text-xl desktop:text-3xl tablet:text-3xl">
-                  {formatDisplayedNumber(
-                    formatEther(activeRound?.price || 0)
-                  )}
+                  {formatDisplayedNumber(formatEther(activeRound?.price || 0))}
                 </Text>
                 <Text className="font-semibold text-tertiary text-lg desktop:text-2xl">
                   U2U

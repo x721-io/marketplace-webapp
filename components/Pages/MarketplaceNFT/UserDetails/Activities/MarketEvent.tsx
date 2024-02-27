@@ -5,10 +5,13 @@ import { formatDisplayedNumber } from "@/utils";
 import { formatUnits } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import { getDisplayedUserName, getUserLink, shortenAddress, } from "@/utils/string";
+import {
+  getDisplayedUserName,
+  getUserLink,
+  shortenAddress,
+} from "@/utils/string";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import { format } from "date-fns";
-
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;

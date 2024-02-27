@@ -10,7 +10,6 @@ import { Collection, Round } from "@/types";
 import { useRoundStatus } from "@/hooks/useRoundStatus";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 
-
 interface Props {
   collection: Collection;
   round: Round;

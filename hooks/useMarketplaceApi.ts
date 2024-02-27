@@ -230,16 +230,20 @@ export const useMarketplaceApi = () => {
           {},
           authHeader(accessToken),
         ),
-      getTotalCountById: (
-        params: APIParams.CountNumber,
-      ): Promise<number> =>
+      getTotalCountById: (params: APIParams.CountNumber): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
-      getFloorPrice: (params: { address: Address | string }): Promise<APIResponse.FloorPrice> => {
+      getFloorPrice: (params: {
+        address: Address | string;
+      }): Promise<APIResponse.FloorPrice> => {
         const requestData = {
-            address: params.address
+          address: params.address,
         };
-        return marketplaceApi.post(API_ENDPOINTS.FLOOR_PRICE, requestData, authHeader());
-      }
+        return marketplaceApi.post(
+          API_ENDPOINTS.FLOOR_PRICE,
+          requestData,
+          authHeader(),
+        );
+      },
     };
   }, [authHeader]);
 };

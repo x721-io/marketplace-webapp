@@ -25,7 +25,6 @@ import {
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 
-
 interface Props extends ModalProps {
   nft: NFT;
   saleData?: MarketEvent;
