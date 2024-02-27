@@ -5,6 +5,7 @@ import useAuthStore from '@/store/auth/store';
 import { AssetType } from '@/types';
 import { waitForTransaction, writeContract } from '@wagmi/core';
 import { tokens } from '@/config/tokens';
+import { isAddress } from 'ethers';
 
 export const useMarketApproveERC20 = (token: Address, type: AssetType, totalCost: bigint) => {
     const wallet = useAuthStore((state) => state.profile?.publicKey);
@@ -16,7 +17,7 @@ export const useMarketApproveERC20 = (token: Address, type: AssetType, totalCost
         abi: erc20ABI,
         functionName: 'allowance',
         args: [wallet as Address, marketContract.address],
-        enabled: !!wallet && !!token,
+        enabled: !!isAddress,
         watch: true
     });
 

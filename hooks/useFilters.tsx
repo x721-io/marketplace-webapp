@@ -21,7 +21,7 @@ export const useNFTFilters = (
   };
 
   const handleApplyFilters = () => {
-    const { priceMax, priceMin, quoteToken } = localFilters
+    const { priceMax, priceMin} = localFilters
     if (
       (priceMin !== '' && priceMin !== undefined) ||
       (priceMax !== '' && priceMax !== undefined)
@@ -41,7 +41,7 @@ export const useNFTFilters = (
         return toast.error('Minimum price cannot be greater than maximum one');
       }
     }
-    onApplyFilters?.(sanitizeObject({...localFilters, quoteToken: quoteToken === undefined ? tokens.wu2u.address : quoteToken}));
+    onApplyFilters?.(sanitizeObject(localFilters));
   };
 
   const isTraitSelected = useCallback(

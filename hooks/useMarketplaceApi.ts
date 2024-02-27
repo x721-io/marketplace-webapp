@@ -6,6 +6,7 @@ import { Address } from 'wagmi';
 import { useCallback, useMemo } from 'react';
 import { parseQueries, sanitizeObject } from '@/utils';
 import { parseUnits } from 'ethers';
+import { tokens } from '@/config/tokens';
 
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore();
@@ -105,14 +106,15 @@ export const useMarketplaceApi = () => {
       fetchNFTs: (
         params: APIParams.FetchNFTs
       ): Promise<APIResponse.FetchNFTs> => {
-        const { priceMin, priceMax } = params;
+        const { priceMin, priceMax, quoteToken } = params;
         const bigintMin = priceMin !== undefined ? parseUnits(priceMin, 18) : undefined;
         const bigintMax = priceMax !== undefined ? parseUnits(priceMax, 18) : undefined;
         return marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, sanitizeObject({
           ...params,
           sellStatus: Number(priceMin) || Number(priceMax)? 'AskNew' : params.sellStatus,
           priceMin: bigintMin?.toString(),
-          priceMax: bigintMax?.toString()
+          priceMax: bigintMax?.toString(),
+          quoteToken: quoteToken === undefined ? tokens.wu2u.address : quoteToken
         }))
       },
 
