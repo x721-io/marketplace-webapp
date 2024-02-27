@@ -11,6 +11,7 @@ import { Royalty } from "@/types";
 import UpdateRoyaltiesModal from "@/components/Modal/UpdateRoyaltiesModal";
 import { useAccount } from "wagmi";
 import useAuthStore from "@/store/auth/store";
+import { NFT_COLLECTION_VERIFICATION_REQUEST } from "@/config/constants";
 
 interface Props {
   data: APIResponse.CollectionDetails;
@@ -68,7 +69,14 @@ export default function InformationSectionCollection({ data }: Props) {
             {creator?.accountStatus && data.collection.isVerified ? (
               <Icon name="verify-active" width={24} height={24} />
             ) : (
-              <Icon name="verify-disable" width={24} height={24} />
+              <Link
+                className="text-secondary hover:text-primary flex justify-center items-center gap-1"
+                href={NFT_COLLECTION_VERIFICATION_REQUEST}
+                target="_blank"
+              >
+                <Icon name="verify-disable" width={24} height={24} />
+                <Text className="text-body-16">Get Verified</Text>
+              </Link>
             )}
           </div>
           <div className="flex items-center gap-2">
