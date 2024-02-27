@@ -352,7 +352,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                   </Text>
                   <Input
                     readOnly
-                    value={formatDisplayedNumber(formatEther(totalPriceBN))}
+                    value={formatDisplayedNumber(formatUnits(totalPriceBN))}
                     appendIcon={<Text>{token?.symbol}</Text>}
                   />
                 </div>

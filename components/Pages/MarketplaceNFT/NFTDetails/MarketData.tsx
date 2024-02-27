@@ -28,7 +28,6 @@ export default function NFTMarketData({
   const type = nft.collection.type;
 
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
-
   const token = useMemo(
     () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
     [marketData?.sellInfo],

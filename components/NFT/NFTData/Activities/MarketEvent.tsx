@@ -71,7 +71,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 ` ${event.quantity} editions`}{" "}
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedNumber(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
               </span>
               <Image
                 width={20}
@@ -121,11 +121,11 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               </Tooltip>
               for
               <Tooltip
-                content={formatDisplayedNumber(formatUnits(event.price, 18))}
+                content={formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
                 placement="bottom"
               >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
-                  {formatDisplayedNumber(formatUnits(event.price, 18))}
+                  {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
                 </span>
               </Tooltip>
               <Image
@@ -149,7 +149,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                   ? `${event.quantity} edition(s) for`
                   : "for"}
                 <span className="font-semibold text-primary">
-                  &nbsp;{formatDisplayedNumber(formatUnits(event.price, 18))}
+                  &nbsp;{formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
                 </span>
               </p>
               <Image
@@ -181,7 +181,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 ? `For ${event.quantity} edition(s)`
                 : "For"}
               <span className="font-semibold text-primary">
-                {formatDisplayedNumber(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
               </span>
               <Image
                 width={20}

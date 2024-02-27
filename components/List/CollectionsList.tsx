@@ -138,7 +138,7 @@ export default function CollectionsList({
                       <div className="flex gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Volume</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedNumber(formatEther(c.volumn || 0))}{" "}
+                          {formatDisplayedNumber(formatUnits(c.volumn || 0))}{" "}
                           U2U
                         </Text>
                       </div>

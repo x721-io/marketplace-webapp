@@ -84,7 +84,7 @@ export default function TokenBalances() {
 
         {Object.values(tokens).map((token, index) => {
           const balance = tokenBalances
-            ? formatUnits(tokenBalances[index].result as BigNumberish, 18)
+            ? formatUnits(tokenBalances[index].result as BigNumberish, token.decimal)
             : 0;
           return (
             <div
