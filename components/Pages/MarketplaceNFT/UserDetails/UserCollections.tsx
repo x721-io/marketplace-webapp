@@ -2,10 +2,10 @@ import CollectionsList from "@/components/List/CollectionsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MODE_COLLECTIONS } from "@/config/constants";
 import { Address } from "wagmi";
-import { APIResponse } from "@/services/api/types";
+import { useFetchCollectionListByUser, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function UserCollections({
   onUpdateAmount,
@@ -19,24 +19,13 @@ export default function UserCollections({
   const { id } = useParams();
   const api = useMarketplaceApi();
 
-  const [activePagination, setActivePagination] = useState({
-    page: 1,
-    limit: 1000,
+  const { data, isLoading, setSize, size, error } = useFetchCollectionListByUser(String(id))
+  const { isLoadingMore, list: collections } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1)
   });
-
-  const { data: collections, isLoading } = useSWR(
-    !!id ? { ...activePagination, userId: String(id), hasBase: false } : null,
-    (params) => api.fetchCollectionsByUser(params),
-    { refreshInterval: 300000 },
-  );
-
-  const handleChangePage = (page: number) => {
-    setActivePagination({
-      ...activePagination,
-      page,
-    });
-    window.scrollTo(0, 0);
-  };
 
   const { data: totalCollections } = useSWR(
     [
@@ -50,7 +39,7 @@ export default function UserCollections({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 5000 },
+    { refreshInterval: 10000 },
   );
 
   useEffect(() => {
@@ -62,11 +51,10 @@ export default function UserCollections({
   return (
     <div className="w-full py-7 overflow-x-auto">
       <CollectionsList
-        loading={isLoading}
-        collections={collections?.data}
-        paging={collections?.paging}
-        onChangePage={handleChangePage}
-        id={id}
+        error={error}
+        loading={isLoadingMore}
+        collections={collections.concatenatedData}
+        currentHasNext={collections.currentHasNext}
         showCreateCollection={true}
         creator={userId}
       />
