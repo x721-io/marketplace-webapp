@@ -121,8 +121,6 @@ export const useMarketplaceApi = () => {
                 : params.sellStatus,
             priceMin: bigintMin?.toString(),
             priceMax: bigintMax?.toString(),
-            quoteToken:
-              quoteToken === undefined ? tokens.wu2u.address : quoteToken,
           }),
         );
       },
@@ -232,8 +230,16 @@ export const useMarketplaceApi = () => {
           {},
           authHeader(accessToken),
         ),
-      getTotalCountById: (params: APIParams.CountNumber): Promise<number> =>
+      getTotalCountById: (
+        params: APIParams.CountNumber,
+      ): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
+      getFloorPrice: (params: { address: Address | string }): Promise<APIResponse.FloorPrice> => {
+        const requestData = {
+            address: params.address
+        };
+        return marketplaceApi.post(API_ENDPOINTS.FLOOR_PRICE, requestData, authHeader());
+      }
     };
   }, [authHeader]);
 };

@@ -193,6 +193,10 @@ export namespace APIParams {
     owner?: Address;
     mode: string;
   }
+
+  export interface FloorPrice {
+    address?: Address
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -346,5 +350,9 @@ export namespace APIResponse {
 
   export interface TotalCount {
     total: number;
+  }
+
+  export interface FloorPrice {
+    address: string
   }
 }
