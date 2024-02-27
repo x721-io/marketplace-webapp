@@ -44,15 +44,22 @@ export namespace FormState {
 
   export interface BuyNFT {
     quantity: number;
+    quoteToken: Address;
+    allowance: string;
+    price: string;
   }
 
   export interface BidNFT {
+    quoteToken: Address
     price: string;
     quantity: string;
+    allowance: string;
   }
 
   export interface AcceptBidNFT {
     quantity: number;
+    price: number;
+    quoteToken: Address;
   }
 
   export interface TransferToken {

@@ -146,11 +146,7 @@ export default function CollectionsList({
                       <div className="flex gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedBalance(
-                            formatEther(c.floorPrice || 0),
-                            2,
-                          )}{" "}
-                          U2U
+                          {c.floorPrice}{" "}U2U
                         </Text>
                       </div>
                     </div>

@@ -17,6 +17,7 @@ import {
 } from "@/utils/string";
 import { formatDisplayedBalance } from "@/utils";
 import React, { useMemo } from "react";
+import { findTokenByAddress } from "@/utils/token";
 
 export default function NFTMarketData({
   nft,
@@ -28,10 +29,13 @@ export default function NFTMarketData({
   const type = nft.collection.type;
 
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
+  
+  const token = useMemo(() => findTokenByAddress( marketData?.sellInfo[0]?.quoteToken), [ marketData?.sellInfo[0]?.quoteToken]);
 
   if (!marketData) {
     return null;
   }
+  
   return (
     <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
@@ -140,7 +144,7 @@ export default function NFTMarketData({
                       )}
                     </span>
                     &nbsp;
-                    <span className="text-secondary">U2U</span>
+                    <span className="text-secondary">{token?.symbol}</span>
                   </Text>
                 </div>
               ) : (

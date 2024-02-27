@@ -91,6 +91,7 @@ export interface NFT {
   traits?: Trait[];
   price?: BigNumberish;
   sellStatus?: MarketEventType;
+  quoteToken?: Address;
 }
 
 export interface Collection {

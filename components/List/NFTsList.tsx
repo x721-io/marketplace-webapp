@@ -1,16 +1,16 @@
-import { APIParams, APIResponse } from '@/services/api/types';
-import NFTFilters, { FilterType } from '@/components/Filters/NFTFilters';
-import { classNames } from '@/utils/string';
-import NFTCard from '@/components/NFT/NFTCard';
-import { Spinner } from 'flowbite-react';
-import React from 'react';
-import Text from '@/components/Text';
-import MobileNFTFiltersModal from '@/components/Filters/MobileNFTFiltersModal';
-import { isMobile } from 'react-device-detect';
-import { AssetType, NFT } from '@/types';
-import Link from 'next/link';
-import Button from '../Button';
-import useAuthStore from '@/store/auth/store';
+import { APIParams, APIResponse } from "@/services/api/types";
+import NFTFilters, { FilterType } from "@/components/Filters/NFTFilters";
+import { classNames } from "@/utils/string";
+import NFTCard from "@/components/NFT/NFTCard";
+import { Spinner } from "flowbite-react";
+import React from "react";
+import Text from "@/components/Text";
+import MobileNFTFiltersModal from "@/components/Filters/MobileNFTFiltersModal";
+import { isMobile } from "react-device-detect";
+import { AssetType, NFT } from "@/types";
+import Link from "next/link";
+import Button from "../Button";
+import useAuthStore from "@/store/auth/store";
 
 interface Props {
   items?: NFT[];
@@ -19,7 +19,7 @@ interface Props {
   activeFilters: APIParams.FetchNFTs;
   onApplyFilters: (filtersParams: APIParams.FetchNFTs) => void;
   onResetFilters: () => void;
-  traitFilters?: APIResponse.CollectionDetails['traitAvailable'];
+  traitFilters?: APIResponse.CollectionDetails["traitAvailable"];
   onClose?: () => void; // For mobile only: Close modal filters
   loading?: boolean;
   error?: boolean;
@@ -43,7 +43,7 @@ export default function NFTsList({
   dataCollectionType,
   userId,
   showCreateNFT,
-  currentHasNext
+  currentHasNext,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
 
@@ -65,13 +65,13 @@ export default function NFTsList({
         <>
           {showCreateNFT
             ? myId === userId && (
-            <Link href={`/create/nft/${dataCollectionType}`}>
-              <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
-                <Button variant="primary">Create an NFT</Button>
-              </div>
-            </Link>
-          )
-            : ''}
+                <Link href={`/create/nft/${dataCollectionType}`}>
+                  <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
+                    <Button variant="primary">Create an NFT</Button>
+                  </div>
+                </Link>
+              )
+            : ""}
           <div className="w-full h-[295px] flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
             <Text className="text-secondary font-semibold text-body-18">
               Nothing to show
@@ -84,12 +84,12 @@ export default function NFTsList({
       <div className="w-full">
         <div
           className={classNames(
-            'grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3',
+            "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3",
             isMobile
-              ? 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2'
+              ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
               : showFilters
-                ? 'desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1'
-                : 'desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2'
+                ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
+                : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2",
           )}
         >
           {showCreateNFT && myId === userId && (
@@ -103,7 +103,7 @@ export default function NFTsList({
           {items.map((item) => (
             <div
               className="h-full"
-              key={item.collection.address + '-' + item.u2uId}
+              key={item.collection.address + "-" + item.u2uId}
             >
               <NFTCard {...item} />
             </div>
@@ -132,13 +132,13 @@ export default function NFTsList({
     <div className="w-full">
       <div
         className={classNames(
-          'w-full flex gap:4 tablet:gap-7 laptop:gap-10 desktop:gap-12 mb-7',
+          "w-full flex gap:4 tablet:gap-7 laptop:gap-10 desktop:gap-12 mb-7",
           showFilters
-            ? 'flex-col tablet:flex-row desktop:flex-row tablet:items-start'
-            : 'tablet:flex-row'
+            ? "flex-col tablet:flex-row desktop:flex-row tablet:items-start"
+            : "tablet:flex-row",
         )}
       >
-        {isMobile ?
+        {isMobile ? (
           <MobileNFTFiltersModal
             show={showFilters}
             activeFilters={activeFilters}
@@ -148,7 +148,7 @@ export default function NFTsList({
             onApplyFilters={onApplyFilters}
             traitsFilter={traitFilters}
           />
-          :
+        ) : (
           <NFTFilters
             showFilters={showFilters}
             activeFilters={activeFilters}
@@ -157,10 +157,8 @@ export default function NFTsList({
             onApplyFilters={onApplyFilters}
             traitsFilter={traitFilters}
           />
-        }
-        <div className="flex-1">
-          {renderList()}
-        </div>
+        )}
+        <div className="flex-1">{renderList()}</div>
       </div>
     </div>
   );

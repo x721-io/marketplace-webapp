@@ -13,7 +13,7 @@ import CreatedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/CreatedNF
 import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserCollections";
 import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
-import { useFilterByUser } from '@/store/filters/byUser/store';
+import { useFilterByUser } from "@/store/filters/byUser/store";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi();
@@ -27,7 +27,7 @@ export default function ProfilePage() {
   } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
     revalidateOnFocus: false,
   });
-  const filterStore = useFilterByUser()
+  const filterStore = useFilterByUser();
 
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
@@ -35,14 +35,16 @@ export default function ProfilePage() {
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
 
   useEffect(() => {
-    const userAddress = user?.publicKey
-    if (!userAddress) return
+    const userAddress = user?.publicKey;
+    if (!userAddress) return;
 
     if (!filterStore[userAddress]) {
       filterStore.createFiltersForUser(user?.publicKey);
-      filterStore.updateFilters('created', userAddress, { creatorAddress: userAddress })
-      filterStore.updateFilters('owned', userAddress, { owner: userAddress })
-      filterStore.updateFilters('onSale', userAddress, { owner: userAddress })
+      filterStore.updateFilters("created", userAddress, {
+        creatorAddress: userAddress,
+      });
+      filterStore.updateFilters("owned", userAddress, { owner: userAddress });
+      filterStore.updateFilters("onSale", userAddress, { owner: userAddress });
     }
   }, [filterStore, user?.publicKey]);
 
@@ -127,7 +129,8 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Collections ({formatDisplayedNumber(createdCollectionAmount, 0)})
+                Collections ({formatDisplayedNumber(createdCollectionAmount, 0)}
+                )
               </div>
             }
           >

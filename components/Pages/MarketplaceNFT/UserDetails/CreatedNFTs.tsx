@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import SliderIcon from "@/components/Icon/Sliders";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
@@ -7,7 +7,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
 import { Address } from "wagmi";
 import { MODE_CREATED } from "@/config/constants";
-import { useFetchNFTsByUser } from '@/hooks/useFetchNFTsByUser';
+import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 
 export default function CreatedNFTs({
   wallet,
@@ -28,8 +28,8 @@ export default function CreatedNFTs({
     filters,
     toggleFilter,
     resetFilters,
-    updateFilters
-  } = useFetchNFTsByUser(wallet, 'created');
+    updateFilters,
+  } = useFetchNFTsByUser(wallet, "created");
 
   const { data: totalCreated } = useSWR(
     [

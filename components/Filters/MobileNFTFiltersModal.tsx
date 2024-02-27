@@ -1,40 +1,50 @@
-import { Checkbox, CustomFlowbiteTheme, Label, Modal, ModalProps, Radio } from 'flowbite-react';
-import { FilterProps } from '@/components/Filters/NFTFilters';
-import React from 'react';
-import Collapsible from '@/components/Collapsible';
-import Input from '@/components/Form/Input';
-import Text from '@/components/Text';
-import Button from '@/components/Button';
-import { useNFTFilters } from '@/hooks/useFilters';
-import Icon from '@/components/Icon';
-import { DEFAULT_NFT_FILTERS_STATE } from '@/store/filters/items/store';
+import {
+  Checkbox,
+  CustomFlowbiteTheme,
+  Label,
+  Modal,
+  ModalProps,
+  Radio,
+} from "flowbite-react";
+import { FilterProps } from "@/components/Filters/NFTFilters";
+import React from "react";
+import Collapsible from "@/components/Collapsible";
+import Input from "@/components/Form/Input";
+import Text from "@/components/Text";
+import Button from "@/components/Button";
+import { useNFTFilters } from "@/hooks/useFilters";
+import Icon from "@/components/Icon";
+import { DEFAULT_NFT_FILTERS_STATE } from "@/store/filters/items/store";
+import Select from "../Form/Select";
+import { tokenOptions } from "@/config/tokens";
+import { Address } from "wagmi";
 
-const modalTheme: CustomFlowbiteTheme['modal'] = {
+const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner:
-      'relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]',
-    base: 'relative w-full desktop:p-10 tablet:p-6 p-4 '
+      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
+    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
   },
   body: {
-    base: 'p-0 flex-1 overflow-auto'
-  }
+    base: "p-0 flex-1 overflow-auto",
+  },
 };
 
 export default function MobileNFTFiltersModal({
-  baseFilters = ['price', 'type', 'status'],
+  baseFilters = ["price", "type", "status"],
   activeFilters,
   onApplyFilters,
   onResetFilters,
   traitsFilter,
   show,
-  onClose
+  onClose,
 }: ModalProps & FilterProps) {
   const {
     handleApplyFilters,
     localFilters,
     handleChange,
     isTraitSelected,
-    handleSelectTrait
+    handleSelectTrait,
   } = useNFTFilters(activeFilters, onApplyFilters);
 
   const handleCloseModal = () => {
@@ -53,7 +63,7 @@ export default function MobileNFTFiltersModal({
     >
       <Modal.Header>NFT Filters</Modal.Header>
       <Modal.Body>
-        {baseFilters.includes('type') && (
+        {baseFilters.includes("type") && (
           <div className="mb-5">
             <Text className="text-secondary font-semibold mb-2">Type</Text>
             <div className="flex items-center gap-7 flex-wrap">
@@ -70,8 +80,8 @@ export default function MobileNFTFiltersModal({
                 <Radio
                   id="type-single"
                   value="ERC721"
-                  checked={localFilters.type === 'ERC721'}
-                  onChange={() => handleChange({ type: 'ERC721' })}
+                  checked={localFilters.type === "ERC721"}
+                  onChange={() => handleChange({ type: "ERC721" })}
                 />
                 <Label htmlFor="type-single">Single</Label>
               </div>
@@ -79,15 +89,15 @@ export default function MobileNFTFiltersModal({
                 <Radio
                   id="type-multiple"
                   value="ERC1155"
-                  checked={localFilters.type === 'ERC1155'}
-                  onChange={() => handleChange({ type: 'ERC1155' })}
+                  checked={localFilters.type === "ERC1155"}
+                  onChange={() => handleChange({ type: "ERC1155" })}
                 />
                 <Label htmlFor="type-multiple">Multiple</Label>
               </div>
             </div>
           </div>
         )}
-        {baseFilters.includes('status') && (
+        {baseFilters.includes("status") && (
           <div className="mb-5">
             <Text className="text-secondary font-semibold mb-2">Status</Text>
             <div className="flex items-center gap-7 flex-wrap">
@@ -104,15 +114,15 @@ export default function MobileNFTFiltersModal({
                 <Radio
                   id="status-buy"
                   value="AskNew"
-                  checked={localFilters.sellStatus === 'AskNew'}
-                  onChange={() => handleChange({ sellStatus: 'AskNew' })}
+                  checked={localFilters.sellStatus === "AskNew"}
+                  onChange={() => handleChange({ sellStatus: "AskNew" })}
                 />
                 <Label htmlFor="type-buy">Buy now</Label>
               </div>
             </div>
           </div>
         )}
-        {baseFilters.includes('status') && (
+        {baseFilters.includes("status") && (
           <div className="mb-5">
             <Text className="text-secondary font-semibold mb-2">Price</Text>
 
@@ -131,6 +141,15 @@ export default function MobileNFTFiltersModal({
                 placeholder="Max"
                 value={localFilters.priceMax}
                 onChange={(e) => handleChange({ priceMax: e.target.value })}
+              />
+              <Select
+                options={tokenOptions}
+                containerClass="w-2/3"
+                scale="sm"
+                value={localFilters.quoteToken}
+                onChange={(e) =>
+                  handleChange({ quoteToken: e.target.value as Address })
+                }
               />
             </div>
           </div>
@@ -172,15 +191,25 @@ export default function MobileNFTFiltersModal({
           </div>
         )}
 
-        <Button className="w-full mb-5" variant="secondary" scale="sm" onClick={() => {
-          onResetFilters?.();
-          handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters });
-        }}>
+        <Button
+          className="w-full mb-5"
+          variant="secondary"
+          scale="sm"
+          onClick={() => {
+            onResetFilters?.();
+            handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters });
+          }}
+        >
           Reset <Icon name="refresh" width={12} height={12} />
         </Button>
 
         <div className="flex items-center gap-2">
-          <Button scale="sm" className="flex-1" variant="outlined" onClick={handleCloseModal}>
+          <Button
+            scale="sm"
+            className="flex-1"
+            variant="outlined"
+            onClick={handleCloseModal}
+          >
             Cancel
           </Button>
           <Button
