@@ -25,7 +25,7 @@ export default function OwnersTab({
   const [showBidModal, setShowBidModal] = useState(false);
   const token = useMemo(
     () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
-    [marketData?.sellInfo[0]?.quoteToken],
+    [marketData?.sellInfo],
   );
 
   const owners = useMemo(() => {

@@ -31,7 +31,7 @@ export default function NFTMarketData({
 
   const token = useMemo(
     () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
-    [marketData?.sellInfo[0]?.quoteToken],
+    [marketData?.sellInfo],
   );
 
   if (!marketData) {
