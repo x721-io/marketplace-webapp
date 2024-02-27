@@ -1,21 +1,15 @@
 import { tokens } from "@/config/tokens";
-import {
-  Address,
-  erc20ABI,
-  useAccount,
-  useBalance,
-  useContractReads,
-  useContractWrite,
-} from "wagmi";
+import { Address, erc20ABI, useAccount, useBalance, useContractReads, useContractWrite, } from "wagmi";
 import Image from "next/image";
 import { BigNumberish, formatUnits } from "ethers";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import Button from "@/components/Button";
 import WETH_ABI from "@/abi/WETH";
 import { useMemo, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { toast } from "react-toastify";
 import { Tooltip } from "flowbite-react";
+
 
 export default function TokenBalances() {
   const [claiming, setClaiming] = useState(false);
@@ -78,7 +72,7 @@ export default function TokenBalances() {
             height={24}
             className="w-6 h-6 rounded-full"
           />
-          {formatDisplayedBalance(u2uBalance?.formatted || "0")}
+          {formatDisplayedNumber(u2uBalance?.formatted || "0")}
           <span>U2U</span>
         </div>
 

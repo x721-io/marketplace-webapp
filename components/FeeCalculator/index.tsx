@@ -5,8 +5,9 @@ import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
 import { Address } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import Image from "next/image";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import Text from "../Text";
+
 
 interface Props {
   mode: "buyer" | "seller";
@@ -59,12 +60,12 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedBalance(
+                labelTooltip={formatDisplayedNumber(
                   formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedBalance(formatUnits(sellerFee, 18))}
+                {formatDisplayedNumber(formatUnits(sellerFee, 18))}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (
@@ -84,12 +85,12 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedBalance(
+                labelTooltip={formatDisplayedNumber(
                   formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedBalance(formatUnits(royaltiesFee, 18))}
+                {formatDisplayedNumber(formatUnits(royaltiesFee, 18))}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (
@@ -109,12 +110,12 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedBalance(
+                labelTooltip={formatDisplayedNumber(
                   formatUnits(sellerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedBalance(
+                {formatDisplayedNumber(
                   formatUnits(netReceived, token?.decimal),
                 )}
               </Text>
@@ -140,10 +141,10 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedBalance(formatUnits(buyerFee, 18))}
+                labelTooltip={formatDisplayedNumber(formatUnits(buyerFee, 18))}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedBalance(formatUnits(buyerFee, 18))}
+                {formatDisplayedNumber(formatUnits(buyerFee, 18))}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (
@@ -163,12 +164,12 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedBalance(
+                labelTooltip={formatDisplayedNumber(
                   formatUnits(price + buyerFee, 18),
                 )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedBalance(formatUnits(price + buyerFee, 18))}
+                {formatDisplayedNumber(formatUnits(price + buyerFee, 18))}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (

@@ -5,11 +5,12 @@ import Link from "next/link";
 import { Project } from "@/types";
 import { useEffect, useMemo } from "react";
 import { useContractRead } from "wagmi";
-import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { SPECIAL_ROUND } from "@/config/constants";
 import { format } from "date-fns";
 import TimeframeDropdown from "./TimeframeDropdown";
 import useTimeframeStore from "@/store/timeframe/store";
+
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
@@ -85,16 +86,15 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <p className="text-secondary text-body-16">
                 Total Items:{" "}
                 <span className="text-primary font-medium">
-                  {formatDisplayedBalance(activeRound?.totalNftt, 0) ||
+                  {formatDisplayedNumber(activeRound?.totalNftt) ||
                     "Open Edition"}
                 </span>
               </p>
               <p className="text-secondary text-body-16">
                 Total Minted:{" "}
                 <span className="text-primary font-medium">
-                  {formatDisplayedBalance(
-                    (roundData as any)?.soldAmountNFT || 0,
-                    0,
+                  {formatDisplayedNumber(
+                    (roundData as any)?.soldAmountNFT || 0
                   )}
                 </span>
               </p>

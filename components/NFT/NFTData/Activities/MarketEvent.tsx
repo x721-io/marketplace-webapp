@@ -1,18 +1,14 @@
 import { MarketEvent } from "@/types";
-import {
-  getDisplayedUserName,
-  getUserAvatarImage,
-  getUserLink,
-  shortenAddress,
-} from "@/utils/string";
+import { getDisplayedUserName, getUserAvatarImage, getUserLink, shortenAddress, } from "@/utils/string";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { formatUnits } from "ethers";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { findTokenByAddress } from "@/utils/token";
 import React from "react";
 import { Tooltip } from "flowbite-react";
+
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -71,7 +67,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 ` ${event.quantity} editions`}{" "}
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price, 18))}
               </span>
               <Image
                 width={20}
@@ -121,11 +117,11 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               </Tooltip>
               for
               <Tooltip
-                content={formatDisplayedBalance(formatUnits(event.price, 18))}
+                content={formatDisplayedNumber(formatUnits(event.price, 18))}
                 placement="bottom"
               >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
-                  {formatDisplayedBalance(formatUnits(event.price, 18))}
+                  {formatDisplayedNumber(formatUnits(event.price, 18))}
                 </span>
               </Tooltip>
               <Image
@@ -149,7 +145,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                   ? `${event.quantity} edition(s) for`
                   : "for"}
                 <span className="font-semibold text-primary">
-                  &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
+                  &nbsp;{formatDisplayedNumber(formatUnits(event.price, 18))}
                 </span>
               </p>
               <Image
@@ -181,7 +177,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 ? `For ${event.quantity} edition(s)`
                 : "For"}
               <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price, 18))}
               </span>
               <Image
                 width={20}

@@ -2,19 +2,15 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
 import { formatEther } from "ethers";
 import Link from "next/link";
-import {
-  ALLOWED_AUDIO_TYPES,
-  ALLOWED_IMAGE_TYPES,
-  ALLOWED_VIDEO_TYPES,
-} from "@/config/constants";
-import { formatDisplayedBalance } from "@/utils";
+import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES, } from "@/config/constants";
+import { formatDisplayedNumber } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
+
 
 export default function NFTCard({
   name,
@@ -93,7 +89,7 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             Current bid:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedBalance(formatEther(price as string), 2)}
+              {formatDisplayedNumber(formatEther(price as string))}
             </span>{" "}
             {token?.symbol}
           </Text>
@@ -103,9 +99,8 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedBalance(
-                formatEther(price as string).toString(),
-                2,
+              {formatDisplayedNumber(
+                formatEther(price as string).toString()
               )}
             </span>{" "}
             {token?.symbol}

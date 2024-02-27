@@ -1,17 +1,17 @@
 import { formatEther, formatUnits } from "ethers";
 import Button from "@/components/Button";
-import { Collection, Round } from "@/types";
 import { MessageRoundNotEligible } from "../EligibleMessage";
 import Icon from "@/components/Icon";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import useTimeframeStore from "@/store/timeframe/store";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
 import { useAccount, useBalance, useContractReads } from "wagmi";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
+
 
 interface Props {
   eligibleStatus: boolean;
@@ -72,7 +72,7 @@ export default function RoundActionMinting({
   const estimatedCost = useMemo(() => {
     const totalCostBN = BigInt(round.price || 0) * BigInt(amount || 0);
     const totalCost = formatEther(totalCostBN);
-    return formatDisplayedBalance(totalCost);
+    return formatDisplayedNumber(totalCost);
   }, [round, amount]);
 
   const handleAddAmount = (num: number) => {

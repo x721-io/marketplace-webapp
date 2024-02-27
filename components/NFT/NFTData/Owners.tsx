@@ -5,13 +5,14 @@ import { formatEther } from "ethers";
 import Link from "next/link";
 import useAuthStore from "@/store/auth/store";
 import BuyNFTModal from "@/components/Modal/BuyNFTModal";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
 import { getUserAvatarImage } from "@/utils/string";
 import BidNFTModal from "@/components/Modal/BidNFTModal";
 import { findTokenByAddress } from "@/utils/token";
+
 
 export default function OwnersTab({
   nft,
@@ -88,9 +89,8 @@ export default function OwnersTab({
                         sale for
                         <span className="text-primary">
                           {" "}
-                          {formatDisplayedBalance(
-                            formatEther(owner.sellInfo.price),
-                            2,
+                          {formatDisplayedNumber(
+                            formatEther(owner.sellInfo.price)
                           )}{" "}
                           {token?.symbol}
                         </span>{" "}
@@ -99,7 +99,7 @@ export default function OwnersTab({
                     ) : (
                       <p className="flex items-center gap-1">
                         <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
-                          {formatDisplayedBalance(owner.quantity, 0)}
+                          {formatDisplayedNumber(owner.quantity)}
                         </p>
                         <p className="text-secondary font-semibold text-body-14">
                           {" "}

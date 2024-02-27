@@ -1,17 +1,14 @@
 import React from "react";
 import { MarketEvent } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { formatUnits } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  getUserLink,
-  getDisplayedUserName,
-  shortenAddress,
-} from "@/utils/string";
+import { getDisplayedUserName, getUserLink, shortenAddress, } from "@/utils/string";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import { format } from "date-fns";
+
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -88,7 +85,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 ` ${event.quantity} editions`}{" "}
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price))}
               </span>
               <Image
                 width={20}
@@ -146,7 +143,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               </Link>
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price))}
               </span>
               <Image
                 width={20}
@@ -179,7 +176,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                   ? `${event.quantity} edition(s) for`
                   : "for"}
                 <span className="font-semibold text-primary">
-                  &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
+                  &nbsp;{formatDisplayedNumber(formatUnits(event.price))}
                 </span>
               </p>
               <Image
@@ -221,7 +218,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 ? `For ${event.quantity} edition(s)`
                 : "For"}
               <span className="font-semibold text-primary">
-                {formatDisplayedBalance(formatUnits(event.price, 18))}
+                {formatDisplayedNumber(formatUnits(event.price))}
               </span>
               <Image
                 width={20}

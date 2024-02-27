@@ -1,18 +1,15 @@
 import { Spinner, Tooltip } from "flowbite-react";
-import { formatEther } from "ethers";
+import { formatEther, formatUnits } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
 import React from "react";
 import Image from "next/image";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import Button from "../Button";
 import { Collection } from "@/types";
-import {
-  classNames,
-  getCollectionAvatarImage,
-  getCollectionBannerImage,
-} from "@/utils/string";
+import { classNames, getCollectionAvatarImage, getCollectionBannerImage, } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
+
 
 interface Props {
   loading?: boolean;
@@ -138,9 +135,8 @@ export default function CollectionsList({
                       <div className="flex gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Volume</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedBalance(
-                            formatEther(c.volumn || 0),
-                            2,
+                          {formatDisplayedNumber(
+                            formatEther(c.volumn || 0)
                           )}{" "}
                           U2U
                         </Text>
@@ -148,7 +144,10 @@ export default function CollectionsList({
                       <div className="flex gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
-                          {c.floorPrice}{" "}U2U
+                          {formatDisplayedNumber(
+                            formatUnits((c.floorPrice || 0),2)
+                          )}{" "}
+                          U2U
                         </Text>
                       </div>
                     </div>

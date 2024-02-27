@@ -9,15 +9,11 @@ import Link from "next/link";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import {
-  getDisplayedUserName,
-  getUserAvatarImage,
-  getUserLink,
-  truncate,
-} from "@/utils/string";
-import { formatDisplayedBalance } from "@/utils";
+import { getDisplayedUserName, getUserAvatarImage, getUserLink, } from "@/utils/string";
+import { formatDisplayedNumber } from "@/utils";
 import { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
+
 
 export default function NFTMarketData({
   nft,
@@ -134,9 +130,8 @@ export default function NFTMarketData({
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(
-                        formatUnits(saleData?.price || 0),
-                        3,
+                      {formatDisplayedNumber(
+                        formatUnits(saleData?.price || 0)
                       )}
                     </span>
                     &nbsp;

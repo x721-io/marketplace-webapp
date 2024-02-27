@@ -1,5 +1,5 @@
 import Collapsible from "@/components/Collapsible";
-import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import Icon from "@/components/Icon";
 import { Collection, Round, RoundStatus } from "@/types";
 import { formatEther } from "ethers";
@@ -12,6 +12,7 @@ import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { Address, useAccount, useContractRead } from "wagmi";
 import MessageClaimSuccess from "./ToastMessage";
 import { classNames } from "@/utils/string";
+
 
 interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
   round: Round;
@@ -135,7 +136,7 @@ const RoundSchedule = ({
             <p className="text-body-12 text-secondary">Price:</p>
             <Icon name="u2u-logo" width={16} height={16} />
             <p className="text-body-12 font-medium">
-              {formatDisplayedBalance(formatEther(round?.price || 0))} U2U
+              {formatDisplayedNumber(formatEther(round?.price || 0))} U2U
             </p>
           </div>
 
@@ -144,7 +145,7 @@ const RoundSchedule = ({
             <p className="text-body-12 font-medium">
               {round?.totalNftt === 0
                 ? "Open edition"
-                : formatDisplayedBalance(round?.totalNftt, 0)}
+                : formatDisplayedNumber(round?.totalNftt)}
             </p>
           </div>
 

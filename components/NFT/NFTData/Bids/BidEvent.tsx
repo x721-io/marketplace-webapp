@@ -1,13 +1,9 @@
 import { MarketEvent, NFT } from "@/types";
-import {
-  getUserAvatarImage,
-  getUserLink,
-  shortenAddress,
-} from "@/utils/string";
+import { getUserAvatarImage, getUserLink, shortenAddress, } from "@/utils/string";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { formatUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import AcceptBidNFTModal from "@/components/Modal/AcceptBidNFTModal";
@@ -15,6 +11,7 @@ import React, { useMemo, useState } from "react";
 import Button from "@/components/Button";
 import useAuthStore from "@/store/auth/store";
 import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
+
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isOwner: boolean;
@@ -64,7 +61,7 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
                 ? ` ${event.quantity} edition(s) for`
                 : " for"}
               <span className="font-semibold text-primary">
-                &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
+                &nbsp;{formatDisplayedNumber(formatUnits(event.price, 18))}
               </span>
             </p>
             <Image

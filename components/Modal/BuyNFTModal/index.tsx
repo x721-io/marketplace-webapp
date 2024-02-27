@@ -4,14 +4,14 @@ import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { useForm } from "react-hook-form";
-import { MaxUint256, formatEther, formatUnits, parseUnits } from "ethers";
+import { formatEther, formatUnits, MaxUint256, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { useMemo, useState } from "react";
 import { Address, useAccount, useBalance } from "wagmi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { NFT, MarketEvent, FormState } from "@/types";
+import { FormState, MarketEvent, NFT } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { numberRegex } from "@/utils/regex";
 import { tokens } from "@/config/tokens";
 import ERC20TokenApproval from "@/components/ERC20TokenApproval";
@@ -24,6 +24,7 @@ import {
 } from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -284,7 +285,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 </label>
                 <Text>
                   Balance:{" "}
-                  {formatDisplayedBalance(
+                  {formatDisplayedNumber(
                     formatUnits(
                       tokenBalance?.value || 0,
                       tokenBalance?.decimals,
@@ -352,7 +353,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                   </Text>
                   <Input
                     readOnly
-                    value={formatDisplayedBalance(formatEther(totalPriceBN))}
+                    value={formatDisplayedNumber(formatEther(totalPriceBN))}
                     appendIcon={<Text>{token?.symbol}</Text>}
                   />
                 </div>
