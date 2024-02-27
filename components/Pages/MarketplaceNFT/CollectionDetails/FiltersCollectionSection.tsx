@@ -1,9 +1,9 @@
-import React from 'react';
-import SliderIcon from '@/components/Icon/Sliders';
-import Button from '@/components/Button';
-import CommandIcon from '@/components/Icon/Command';
-import Input from '@/components/Form/Input';
-import { APIParams } from '@/services/api/types';
+import React from "react";
+import SliderIcon from "@/components/Icon/Sliders";
+import Button from "@/components/Button";
+import CommandIcon from "@/components/Icon/Command";
+import Input from "@/components/Form/Input";
+import { APIParams } from "@/services/api/types";
 
 interface Props {
   showFilters: boolean;
@@ -16,9 +16,8 @@ export default function FiltersSectionCollection({
   showFilters,
   toggleFilter,
   onSearch,
-  activeFilters
+  activeFilters,
 }: Props) {
-
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap mb-4 tablet:mb-8 desktop:mb-8">
       <div className="order-3 laptop:order-1">
@@ -26,7 +25,7 @@ export default function FiltersSectionCollection({
           onClick={toggleFilter}
           className={
             showFilters
-              ? 'bg-white shadow h-[56px]'
+              ? "bg-white shadow h-[56px]"
               : `bg-surface-soft h-[56px]`
           }
           scale="lg"

@@ -1,28 +1,33 @@
-'use client';
+"use client";
 
-import Text from '@/components/Text';
-import Link from 'next/link';
-import Image from 'next/image';
-import React from 'react';
-import { Spinner } from 'flowbite-react';
-import { getUserAvatarImage, getUserCoverImage, getUserLink } from '@/utils/string';
-import UserFollow from '@/components/Pages/MarketplaceNFT/UserDetails/UserFollow';
-import { formatDisplayedNumber } from '@/utils';
-import useAuthStore from '@/store/auth/store';
-import Icon from '@/components/Icon';
-import { useFetchUserList, useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import { useUserFilterStore } from '@/store/filters/users/store';
+import Text from "@/components/Text";
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
+import { Spinner } from "flowbite-react";
+import {
+  getUserAvatarImage,
+  getUserCoverImage,
+  getUserLink,
+} from "@/utils/string";
+import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow";
+import { formatDisplayedNumber } from "@/utils";
+import useAuthStore from "@/store/auth/store";
+import Icon from "@/components/Icon";
+import { useFetchUserList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useUserFilterStore } from "@/store/filters/users/store";
 
 export default function ExploreUsersPage() {
   const { filters } = useUserFilterStore();
   const myId = useAuthStore((state) => state.profile?.id);
-  const { data, size, isLoading, setSize, mutate, error } = useFetchUserList(filters);
+  const { data, size, isLoading, setSize, mutate, error } =
+    useFetchUserList(filters);
 
   const { isLoadingMore, list: users } = useInfiniteScroll({
     data,
     loading: isLoading,
     page: size,
-    onNext: () => setSize(size + 1)
+    onNext: () => setSize(size + 1),
   });
 
   if (isLoading) {

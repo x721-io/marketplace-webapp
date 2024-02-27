@@ -2,11 +2,10 @@ import { NFT, Royalty } from "@/types";
 import { useMemo } from "react";
 import { formatUnits } from "ethers";
 import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
-import { Address, useContractReads } from "wagmi";
+import { Address } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import Image from "next/image";
 import { formatDisplayedBalance } from "@/utils";
-import { contracts } from "@/config/contracts";
 import Text from "../Text";
 
 interface Props {
@@ -14,6 +13,12 @@ interface Props {
   price?: bigint;
   nft: NFT;
   quoteToken?: Address;
+  buyerFeeRatio: number;
+  sellerFeeRatio: number;
+  buyerFee: bigint;
+  sellerFee: bigint;
+  royaltiesFee: bigint;
+  netReceived: bigint;
 }
 
 export default function FeeCalculator({
@@ -21,52 +26,14 @@ export default function FeeCalculator({
   nft,
   mode,
   quoteToken,
+  buyerFeeRatio,
+  sellerFeeRatio,
+  buyerFee,
+  sellerFee,
+  royaltiesFee,
+  netReceived,
 }: Props) {
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
-  const feeDistributorContract = contracts.feeDistributorContract;
-
-  const { data } = useContractReads({
-    contracts: [
-      {
-        ...feeDistributorContract,
-        functionName: "calculateFee",
-        args: [
-          price || BigInt(0),
-          nft.collection.address,
-          (nft.u2uId || nft.id) as any,
-        ],
-      },
-      {
-        ...feeDistributorContract,
-        functionName: "protocolFeePercent",
-      },
-      {
-        ...feeDistributorContract,
-        functionName: "feeRatioSellerBuyer",
-      },
-    ],
-    select: (data) => data.map((item) => item.result),
-  });
-
-  const [sellerFee, buyerFee, royaltiesFee, netReceived] = useMemo(() => {
-    return data && Array.isArray(data[0])
-      ? data[0]
-      : [BigInt(0), BigInt(0), BigInt(0), BigInt(0)];
-  }, [data]);
-
-  const feeRatio = useMemo(() => {
-    const ratio = data ? data[2] : BigInt(0);
-    const protocolFeePercent = data ? data[1] : BigInt(0);
-
-    const sellerFeeRatio = Number(ratio) / 100;
-    const buyerFeeRatio = 100 - Number(ratio) / 100;
-    const sellerFeePercent =
-      (sellerFeeRatio * Number(protocolFeePercent)) / 10000;
-    const buyerFeePercent =
-      (buyerFeeRatio * Number(protocolFeePercent)) / 10000;
-
-    return { seller: sellerFeePercent, buyer: buyerFeePercent };
-  }, [data]);
 
   const { data: royalties } = useReadNFTRoyalties(nft);
 
@@ -87,7 +54,7 @@ export default function FeeCalculator({
         <>
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
-              Origin fee (Seller): {feeRatio.seller}%
+              Origin fee (Seller): {sellerFeeRatio}%
             </p>
             <div className="flex items-center font-bold gap-1">
               <Text
@@ -168,7 +135,7 @@ export default function FeeCalculator({
         <>
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
-              Origin fee (Buyer): {feeRatio.buyer}%
+              Origin fee (Buyer): {buyerFeeRatio}%
             </p>
             <div className="flex items-center font-bold gap-1">
               <Text

@@ -10,7 +10,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   }[];
   width?: string;
   containerClass?: string;
-  scale?: "md" | "lg";
+  scale?: "md" | "lg" | "sm";
   prependIcon?: React.ReactNode;
   prependIconContainerClass?: string;
   error?: boolean;
@@ -47,6 +47,11 @@ export default function Select({
         return classNames(
           "text-body-14 rounded-2xl min-w-72 h-12 p-3",
           !!prependIcon && "ps-10",
+        );
+      case "sm":
+        return classNames(
+          "text-body-14 rounded-xl min-w-60 h-10 px-3 py-1",
+          !!prependIcon && "ps-9",
         );
     }
   }, [scale, prependIcon]);

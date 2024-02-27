@@ -93,6 +93,7 @@ export namespace APIParams {
     min?: string;
     max?: string;
     creatorAddress?: Address;
+    quoteToken?: Address;
   }
 
   export interface FetchCollectionById extends PaginationParams {
@@ -109,7 +110,8 @@ export namespace APIParams {
     priceMin?: string;
     sellStatus?: MarketEventType;
     owner?: Address;
-    name?: string
+    name?: string;
+    quoteToken?: Address
   }
 
   export interface NFTEvents extends PaginationParams {
