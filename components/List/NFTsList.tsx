@@ -64,9 +64,9 @@ export default function NFTsList({
 
     if (isLoading) {
       return (
-          <div className="w-full h-56 flex justify-center items-center">
-            <Spinner size="xl" />
-          </div>
+        <div className="w-full h-56 flex justify-center items-center">
+          <Spinner size="xl" />
+        </div>
       );
     }
     if (!items?.length) {

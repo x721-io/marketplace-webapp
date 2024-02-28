@@ -26,7 +26,10 @@ export const useFetchCollectionList = (filters: APIParams.FetchCollections) => {
       ...filters,
       page: index + 1,
     }),
-    (params) => api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections),
+    (params) =>
+      api.fetchCollections(
+        sanitizeObject(params) as APIParams.FetchCollections,
+      ),
   );
 };
 

@@ -29,8 +29,8 @@ interface Props {
 export default function CollectionsList({
   collections,
   currentHasNext,
-                                          isLoading,
-                                          isLoadMore,
+  isLoading,
+  isLoadMore,
   error,
   showFilter,
   showCreateCollection,
@@ -40,9 +40,9 @@ export default function CollectionsList({
 
   if (isLoading) {
     return (
-        <div className="w-full h-56 flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
+      <div className="w-full h-56 flex justify-center items-center">
+        <Spinner size="xl" />
+      </div>
     );
   }
 
