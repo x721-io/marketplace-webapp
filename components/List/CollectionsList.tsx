@@ -13,6 +13,7 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
+import Icon from "@/components/Icon";
 
 interface Props {
   loading?: boolean;
@@ -67,12 +68,12 @@ export default function CollectionsList({
       >
         {showCreateCollection
           ? creator === myId && (
-              <Link href={`/create/collection`}>
-                <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
-                  <Button variant="primary">Create a collection</Button>
-                </div>
-              </Link>
-            )
+            <Link href={`/create/collection`}>
+              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
+                <Button variant="primary">Create a collection</Button>
+              </div>
+            </Link>
+          )
           : ""}
         {Array.isArray(collections) &&
           collections.map((c, index) => {
@@ -82,30 +83,19 @@ export default function CollectionsList({
                 <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
                   <div className="relative">
                     <Image
-                      className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
+                      className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover w-full h-[100px]"
                       src={getCollectionBannerImage(c)}
                       alt="Cover"
                       width={1200}
                       height={256}
-                      style={{ width: "100%", height: "100px" }}
                     />
-                    <div
-                      className="absolute rounded-full"
-                      style={{
-                        width: "56px",
-                        height: "56px",
-                        top: "60px",
-                        left: "16.3px",
-                        border: "2px solid #fff",
-                      }}
-                    >
+                    <div className="absolute rounded-full w-14 h-14 top-14 left-4 border-2 border-white">
                       <Image
-                        className="cursor-pointer rounded-full object-cover"
+                        className="cursor-pointer rounded-full object-cover w-full h-full"
                         src={getCollectionAvatarImage(c)}
                         alt="Avatar"
                         width={60}
                         height={60}
-                        style={{ width: "100%", height: "100%" }}
                       />
                     </div>
                   </div>
@@ -118,7 +108,15 @@ export default function CollectionsList({
                               {c.name}
                             </Text>
                           </Tooltip>
-                          {/* <VerifyIcon width={16} height={16} /> */}
+                          {((c.creators && c.creators.length > 0 && c.creators[0].user.accountStatus) && c.isVerified) ? (
+                            <Icon name="verify-active" width={16} height={16} />
+                          ) : (
+                            <Icon
+                              name="verify-disable"
+                              width={16}
+                              height={16}
+                            />
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Text className="text-body-12 font-medium">

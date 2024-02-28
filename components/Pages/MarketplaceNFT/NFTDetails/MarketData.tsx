@@ -16,7 +16,7 @@ import {
   truncate,
 } from "@/utils/string";
 import { formatDisplayedBalance } from "@/utils";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
 
 export default function NFTMarketData({
@@ -40,8 +40,12 @@ export default function NFTMarketData({
     <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
-        <div className="flex gap-1 items-center">
-          {/* <Icon name="verified" width={16} height={16} /> */}
+        <div className="flex gap-2  items-center">
+          {nft.collection.isVerified && nft.creator?.accountStatus ? (
+            <Icon name="verified" width={24} height={24} />
+          ) : (
+            <Icon name="verify-disable" width={24} height={24} />
+          )}
           <Text
             showTooltip
             labelTooltip={nft.collection.name}

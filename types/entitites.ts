@@ -85,6 +85,7 @@ export interface NFT {
     id: string;
     publicKey: Address;
     username: string;
+    accountStatus: boolean;
   } | null;
   collection: Collection;
   traits?: Trait[];
@@ -115,6 +116,7 @@ export interface Collection {
   totalOwner: number;
   totalNft: number;
   floorPrice: string;
+  isVerified: boolean;
 }
 
 export interface Timeframe {
