@@ -13,7 +13,7 @@ export default function Activities({ wallet }: { wallet: Address }) {
   const { data, isLoading } = useSWR(
     !!wallet ? { page, limit, user: wallet.toLowerCase() as Address } : null,
     (params) => api.fetchUserActivities(params),
-    { refreshInterval: 10000 },
+    { refreshInterval: 0 },
   );
 
   if (!data || !data?.length) {

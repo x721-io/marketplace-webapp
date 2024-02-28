@@ -129,7 +129,8 @@ export default function CollectionPage() {
         />
         <div className="flex gap-4 desktop:flex-row flex-col">
           <NFTsList
-            loading={isLoadingMore}
+            isLoading={isLoading}
+            isLoadMore={isLoadingMore}
             filters={["status", "price"]}
             activeFilters={filters}
             onResetFilters={resetFilters}

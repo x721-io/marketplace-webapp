@@ -43,7 +43,7 @@ export default function UserCollections({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 10000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -56,7 +56,8 @@ export default function UserCollections({
     <div className="w-full py-7 overflow-x-auto">
       <CollectionsList
         error={error}
-        loading={isLoadingMore}
+        isLoading={isLoading}
+        isLoadMore={isLoadingMore}
         collections={collections.concatenatedData}
         currentHasNext={collections.currentHasNext}
         showCreateCollection={true}

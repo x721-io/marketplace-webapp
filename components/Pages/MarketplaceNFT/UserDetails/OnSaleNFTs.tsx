@@ -20,6 +20,7 @@ export default function OnSaleNFTs({
 
   const {
     isLoadingMore,
+    isLoading,
     items,
     error,
     showFilters,
@@ -38,7 +39,7 @@ export default function OnSaleNFTs({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 10000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -67,7 +68,8 @@ export default function OnSaleNFTs({
       <NFTsList
         onClose={() => toggleFilter(false)}
         filters={["type", "price"]}
-        loading={isLoadingMore}
+        isLoading={isLoading}
+        isLoadMore={isLoadingMore}
         activeFilters={filters}
         onApplyFilters={updateFilters}
         onResetFilters={resetFilters}

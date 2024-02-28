@@ -19,6 +19,7 @@ export default function OwnedNFTs({
   const api = useMarketplaceApi();
   const {
     isLoadingMore,
+    isLoading,
     items,
     error,
     showFilters,
@@ -37,7 +38,7 @@ export default function OwnedNFTs({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 5000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -65,7 +66,8 @@ export default function OwnedNFTs({
 
       <NFTsList
         onClose={() => toggleFilter(false)}
-        loading={isLoadingMore}
+        isLoadMore={isLoadingMore}
+        isLoading={isLoading}
         activeFilters={filters}
         onApplyFilters={updateFilters}
         onResetFilters={resetFilters}

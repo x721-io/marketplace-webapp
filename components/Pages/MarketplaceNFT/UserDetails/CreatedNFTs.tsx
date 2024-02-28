@@ -22,6 +22,7 @@ export default function CreatedNFTs({
 
   const {
     isLoadingMore,
+    isLoading,
     items,
     error,
     showFilters,
@@ -43,7 +44,7 @@ export default function CreatedNFTs({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 5000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -70,7 +71,8 @@ export default function CreatedNFTs({
       </Button>
 
       <NFTsList
-        loading={isLoadingMore}
+        isLoadMore={isLoadingMore}
+        isLoading={isLoading}
         onApplyFilters={updateFilters}
         activeFilters={filters}
         onResetFilters={resetFilters}
