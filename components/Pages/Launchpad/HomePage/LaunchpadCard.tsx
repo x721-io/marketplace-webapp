@@ -6,9 +6,8 @@ import Stepper from "@/components/Stepper";
 import { useRouter } from "next/navigation";
 import { useRoundsWithStatus } from "@/hooks/useRoundStatus";
 import { useMemo } from "react";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { formatEther } from "ethers";
-import { format } from "date-fns";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   project: Project;
@@ -73,7 +72,7 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
               </Text>
               <Icon name="u2u-logo" width={16} height={16} />
               <Text className="font-semibold" variant="body-18">
-                {formatDisplayedBalance(formatEther(activeRound?.price || 0))}
+                {formatDisplayedNumber(formatEther(activeRound?.price || 0))}
               </Text>
               <Text className="text-secondary font-semibold" variant="body-14">
                 U2U
@@ -108,7 +107,7 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
             <Text className="text-secondary" variant="body-12">
               Items:{" "}
               {!!activeRound && activeRound.totalNftt > 0
-                ? formatDisplayedBalance(activeRound.totalNftt, 0)
+                ? formatDisplayedNumber(activeRound.totalNftt)
                 : "Open Edition"}
             </Text>
           </div>

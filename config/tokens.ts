@@ -1,11 +1,11 @@
 import { Address } from "wagmi";
 
 interface Token {
-  name: string
-  symbol: string
-  decimal: number
-  address: Address,
-  logo: string
+  name: string;
+  symbol: string;
+  decimal: number;
+  address: Address;
+  logo: string;
 }
 
 export const tokens: Record<string, Token> = {

@@ -111,7 +111,7 @@ export namespace APIParams {
     sellStatus?: MarketEventType;
     owner?: Address;
     name?: string;
-    quoteToken?: Address
+    quoteToken?: Address;
   }
 
   export interface NFTEvents extends PaginationParams {
@@ -195,7 +195,7 @@ export namespace APIParams {
   }
 
   export interface FloorPrice {
-    address?: Address
+    address?: Address;
   }
 }
 
@@ -353,6 +353,6 @@ export namespace APIResponse {
   }
 
   export interface FloorPrice {
-    address: string
+    address: string;
   }
 }

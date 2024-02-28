@@ -4,12 +4,10 @@ import { APIResponse } from "@/services/api/types";
 import Link from "next/link";
 import { formatEther } from "ethers";
 import { useMemo, useState } from "react";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { useReadCollectionRoyalties } from "@/hooks/useRoyalties";
-import Button from "@/components/Button";
 import { Royalty } from "@/types";
 import UpdateRoyaltiesModal from "@/components/Modal/UpdateRoyaltiesModal";
-import { useAccount } from "wagmi";
 import useAuthStore from "@/store/auth/store";
 import { NFT_COLLECTION_VERIFICATION_REQUEST } from "@/config/constants";
 
@@ -108,7 +106,7 @@ export default function InformationSectionCollection({ data }: Props) {
               className="text-primary font-bold flex items-center gap-1"
               variant="body-16"
             >
-              {formatDisplayedBalance(formatEther(floorPrice || 0), 2)}
+              {formatDisplayedNumber(formatEther(floorPrice || 0))}
               <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
@@ -118,7 +116,7 @@ export default function InformationSectionCollection({ data }: Props) {
               className="text-primary font-bold flex items-center gap-1"
               variant="body-16"
             >
-              {formatDisplayedBalance(formatEther(volumn || 0), 2)}
+              {formatDisplayedNumber(formatEther(volumn || 0))}
               <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>

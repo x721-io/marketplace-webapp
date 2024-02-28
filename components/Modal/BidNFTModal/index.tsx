@@ -4,16 +4,15 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import NFTMarketData = APIResponse.NFTMarketData;
 import { Address, useAccount, useBalance } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { useCalculateFee } from "@/hooks/useMarket";
 import { useForm } from "react-hook-form";
-import { MaxUint256, formatUnits, parseEther, parseUnits } from "ethers";
+import { formatUnits, MaxUint256, parseEther, parseUnits } from "ethers";
 import { toast } from "react-toastify";
 import Input from "@/components/Form/Input";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { numberRegex } from "@/utils/regex";
@@ -26,6 +25,7 @@ import {
   useBidURC721UsingURC20,
 } from "@/hooks/useBidNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
+import NFTMarketData = APIResponse.NFTMarketData;
 
 interface Props extends ModalProps {
   nft: NFT;
@@ -299,7 +299,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 </label>
                 <Text>
                   Balance:{" "}
-                  {formatDisplayedBalance(
+                  {formatDisplayedNumber(
                     formatUnits(
                       tokenBalance?.value || 0,
                       tokenBalance?.decimals,
@@ -326,10 +326,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     appendIcon={
                       <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
                         Max:{" "}
-                        {formatDisplayedBalance(
-                          marketData?.totalSupply || 0,
-                          0,
-                        )}
+                        {formatDisplayedNumber(marketData?.totalSupply || 0)}
                       </Text>
                     }
                   />

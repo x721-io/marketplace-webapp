@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import Image from "next/image";
 import { BigNumberish, formatUnits } from "ethers";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import Button from "@/components/Button";
 import WETH_ABI from "@/abi/WETH";
 import { useMemo, useState } from "react";
@@ -78,13 +78,16 @@ export default function TokenBalances() {
             height={24}
             className="w-6 h-6 rounded-full"
           />
-          {formatDisplayedBalance(u2uBalance?.formatted || "0")}
+          {formatDisplayedNumber(u2uBalance?.formatted || "0")}
           <span>U2U</span>
         </div>
 
         {Object.values(tokens).map((token, index) => {
           const balance = tokenBalances
-            ? formatUnits(tokenBalances[index].result as BigNumberish, 18)
+            ? formatUnits(
+                tokenBalances[index].result as BigNumberish,
+                token.decimal,
+              )
             : 0;
           return (
             <div

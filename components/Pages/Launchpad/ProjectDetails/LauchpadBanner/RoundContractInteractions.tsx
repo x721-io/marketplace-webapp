@@ -1,12 +1,9 @@
 import Icon from "@/components/Icon";
 import { Collection, Round } from "@/types";
 import { formatEther } from "ethers";
-import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import RoundAction from "./RoundAction";
-import { useRoundStatus } from "@/hooks/useRoundStatus";
-import { format } from "date-fns";
-import { useAccount, useContractRead, useContractReads } from "wagmi";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import useLaunchpadStore from "@/store/launchpad/store";
 import RoundStatusHeader from "./RoundStatusHeader";
 
@@ -42,7 +39,7 @@ export default function RoundContractInteractions({
           <p className="text-primary desktop:text-heading-sm tablet:text-heading-sm text-heading-xs  font-semibold">
             {round?.totalNftt === 0
               ? "Open edition"
-              : formatDisplayedBalance(round?.totalNftt, 0)}
+              : formatDisplayedNumber(round?.totalNftt)}
           </p>
         </div>
 
@@ -51,7 +48,7 @@ export default function RoundContractInteractions({
           <div className="flex items-center gap-2">
             <Icon name="u2u-logo" width={24} height={24} />
             <p className="font-semibold text-body-16">
-              {formatDisplayedBalance(formatEther(round?.price))}
+              {formatDisplayedNumber(formatEther(round?.price))}
             </p>
             <p className="text-secondary text-body-16 font-semibold">U2U</p>
           </div>

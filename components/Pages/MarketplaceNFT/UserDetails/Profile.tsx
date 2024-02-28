@@ -85,13 +85,13 @@ export default function Profile({ user, onRefresh }: Props) {
             <div className="flex items-center gap-3">
               <div className="flex gap-2">
                 <Text className="text-body-12 font-medium">
-                  {formatDisplayedNumber(user.followers, 1)}
+                  {formatDisplayedNumber(user.followers)}
                 </Text>
                 <Text className="text-body-12 text-secondary">Followers</Text>
               </div>
               <div className="flex gap-2">
                 <Text className="text-body-12 font-medium">
-                  {formatDisplayedNumber(user.following, 1)}
+                  {formatDisplayedNumber(user.following)}
                 </Text>
                 <Text className="text-body-12 text-secondary">Following</Text>
               </div>

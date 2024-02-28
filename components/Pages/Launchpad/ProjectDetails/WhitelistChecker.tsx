@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import { useAccount, useBalance, useContractRead } from "wagmi";
 import { useMemo, useState } from "react";
 import { formatEther, formatUnits } from "ethers";
-import { formatDisplayedBalance, getRoundAbi } from "@/utils";
+import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { toast } from "react-toastify";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { Collection, Round } from "@/types";
@@ -55,7 +55,7 @@ export default function WhitelistChecker({
   const estimatedCost = useMemo(() => {
     const totalCostBN = BigInt(round.price || 0) * BigInt(amount || 0);
     const totalCost = formatEther(totalCostBN);
-    return formatDisplayedBalance(totalCost);
+    return formatDisplayedNumber(totalCost);
   }, [round, amount]);
 
   const handleAddAmount = (num: number) => {
