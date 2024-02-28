@@ -89,7 +89,7 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             Current bid:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedNumber(formatUnits(price as string))}
+              {formatDisplayedNumber(formatUnits((price as string),token?.decimal))}
             </span>{" "}
             {token?.symbol}
           </Text>
@@ -99,7 +99,7 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedNumber(formatUnits(price as string))}
+              {formatDisplayedNumber(formatUnits((price as string),token?.decimal))}
             </span>{" "}
             {token?.symbol}
           </Text>

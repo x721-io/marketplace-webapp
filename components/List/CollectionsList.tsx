@@ -129,25 +129,23 @@ export default function CollectionsList({
                           </Text>
                         </div>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Items</Text>
                         <Text className="text-body-12 text-secondary">
                           {c.totalNft}
                         </Text>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Volume</Text>
                         <Text className="text-body-12 text-secondary">
                           {formatDisplayedNumber(formatUnits(c.volumn || 0))}{" "}
                           U2U
                         </Text>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedNumber(
-                            formatUnits(c.floorPrice || 0, 2),
-                          )}{" "}
+                          {formatDisplayedNumber(c.floorPrice || 0)}{" "}
                           U2U
                         </Text>
                       </div>
