@@ -73,6 +73,7 @@ const DEFAULT_STATE: LaunchpadStoreState = {
     totalOwner: 0,
     totalNft: 0,
     floorPrice: "",
+    isVerified: false,
   },
 };
 

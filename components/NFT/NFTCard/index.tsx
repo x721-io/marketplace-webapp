@@ -10,6 +10,7 @@ import { formatDisplayedNumber } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
+import Icon from "@/components/Icon";
 
 
 export default function NFTCard({
@@ -21,6 +22,7 @@ export default function NFTCard({
   image,
   animationUrl,
   quoteToken,
+  creator
 }: NFT) {
   const displayMedia = image || animationUrl;
   const fileExtension = displayMedia.split(".").pop();
@@ -123,7 +125,11 @@ export default function NFTCard({
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        {/* <VerifyIcon width={16} height={16} /> */}
+        {(creator?.accountStatus && collection?.isVerified) ? (
+          <Icon name="verify-active" width={16} height={16} />
+         ) : (
+          <Icon name="verify-disable" width={16} height={16} />
+        )} 
         <Tooltip content={name} placement="top">
           <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:max-w-[235px] tablet:w-[150px] w-[100px]">
             {name}
