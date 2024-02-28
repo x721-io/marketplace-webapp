@@ -13,7 +13,7 @@ interface ListData {
 interface Params {
   data: ListData[] | undefined;
   onNext: () => void;
-  loading: boolean;
+  loading: boolean | undefined;
   page: number;
   offset?: number;
 }
@@ -26,7 +26,10 @@ export const useFetchCollectionList = (filters: APIParams.FetchCollections) => {
       ...filters,
       page: index + 1,
     }),
-    (params) => api.fetchCollections(sanitizeObject(params)),
+    (params) =>
+      api.fetchCollections(
+        sanitizeObject(params) as APIParams.FetchCollections,
+      ),
   );
 };
 
@@ -54,7 +57,7 @@ export const useFetchNFTList = (filters: APIParams.FetchNFTs) => {
       ...filters,
       page: index + 1,
     }),
-    (params) => api.fetchNFTs(sanitizeObject(params)),
+    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
   );
 };
 

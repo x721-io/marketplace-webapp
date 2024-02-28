@@ -16,7 +16,8 @@ import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
 
 interface Props {
-  loading?: boolean;
+  isLoading?: boolean;
+  isLoadMore?: boolean | undefined;
   error?: boolean;
   collections?: Collection[];
   showFilter?: boolean;
@@ -28,13 +29,22 @@ interface Props {
 export default function CollectionsList({
   collections,
   currentHasNext,
-  loading,
+  isLoading,
+  isLoadMore,
   error,
   showFilter,
   showCreateCollection,
   creator,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
 
   if (error && !collections) {
     return (
@@ -157,7 +167,7 @@ export default function CollectionsList({
           })}
       </div>
       <div className="flex justify-center items-center">
-        {loading && (
+        {isLoadMore && (
           <div className="w-full h-56 flex justify-center items-center">
             <Spinner size="xl" />
           </div>

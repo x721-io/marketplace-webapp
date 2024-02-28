@@ -21,7 +21,8 @@ interface Props {
   onResetFilters: () => void;
   traitFilters?: APIResponse.CollectionDetails["traitAvailable"];
   onClose?: () => void; // For mobile only: Close modal filters
-  loading?: boolean;
+  isLoading?: boolean;
+  isLoadMore?: boolean | undefined;
   error?: boolean;
   dataCollectionType?: AssetType;
   userId?: string;
@@ -38,7 +39,8 @@ export default function NFTsList({
   onResetFilters,
   traitFilters,
   onClose,
-  loading,
+  isLoading,
+  isLoadMore,
   error,
   dataCollectionType,
   userId,
@@ -60,6 +62,13 @@ export default function NFTsList({
       );
     }
 
+    if (isLoading) {
+      return (
+        <div className="w-full h-56 flex justify-center items-center">
+          <Spinner size="xl" />
+        </div>
+      );
+    }
     if (!items?.length) {
       return (
         <>
@@ -112,7 +121,7 @@ export default function NFTsList({
 
         {!!items?.length && (
           <div className="flex justify-center items-center">
-            {loading && (
+            {isLoadMore && (
               <div className="w-full h-56 flex justify-center items-center">
                 <Spinner size="xl" />
               </div>

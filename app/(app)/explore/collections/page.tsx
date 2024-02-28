@@ -46,7 +46,8 @@ export default function ExploreCollectionsPage() {
       <div className="flex-1">
         <CollectionsList
           error={error}
-          loading={isLoadingMore}
+          isLoading={isLoading}
+          isLoadMore={isLoadingMore}
           collections={collections.concatenatedData}
           showFilter={showFilters}
           currentHasNext={collections.currentHasNext}

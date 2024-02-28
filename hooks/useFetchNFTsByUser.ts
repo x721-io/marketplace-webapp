@@ -35,6 +35,7 @@ export const useFetchNFTsByUser = (
 
   return {
     isLoadingMore,
+    isLoading,
     items,
     showFilters,
     filters,

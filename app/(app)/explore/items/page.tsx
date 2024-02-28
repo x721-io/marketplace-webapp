@@ -20,7 +20,8 @@ export default function ExploreNFTsPage() {
   return (
     <NFTsList
       onClose={() => toggleFilter(false)}
-      loading={isLoadingMore}
+      isLoading={isLoading}
+      isLoadMore={isLoadingMore}
       activeFilters={filters}
       onApplyFilters={updateFilters}
       onResetFilters={resetFilters}
