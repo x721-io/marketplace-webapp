@@ -9,7 +9,6 @@ export default function ExploreNFTsPage() {
     useNFTFilterStore();
 
   const { error, isLoading, setSize, size, data } = useFetchNFTList(filters);
-  console.log("nft",isLoading)
 
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
@@ -18,13 +17,11 @@ export default function ExploreNFTsPage() {
     onNext: () => setSize(size + 1),
   });
 
-  console.log("loadmore: " , isLoadingMore)
-
   return (
     <NFTsList
       onClose={() => toggleFilter(false)}
-      loading={isLoading}
-      loadMore={isLoadingMore}
+      isLoading={isLoading}
+      isLoadMore={isLoadingMore}
       activeFilters={filters}
       onApplyFilters={updateFilters}
       onResetFilters={resetFilters}

@@ -69,8 +69,6 @@ export default function NFTsList({
           </div>
       );
     }
-    console.log(isLoading)
-
     if (!items?.length) {
       return (
         <>
