@@ -59,7 +59,9 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, token?.decimal))}
+                labelTooltip={formatDisplayedNumber(
+                  formatUnits(sellerFee, token?.decimal),
+                )}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(formatUnits(sellerFee, token?.decimal))}
@@ -82,10 +84,14 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, token?.decimal))}
+                labelTooltip={formatDisplayedNumber(
+                  formatUnits(sellerFee, token?.decimal),
+                )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedNumber(formatUnits(royaltiesFee, token?.decimal))}
+                {formatDisplayedNumber(
+                  formatUnits(royaltiesFee, token?.decimal),
+                )}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (
@@ -105,7 +111,9 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(formatUnits(sellerFee, token?.decimal))}
+                labelTooltip={formatDisplayedNumber(
+                  formatUnits(sellerFee, token?.decimal),
+                )}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(
@@ -134,7 +142,9 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatDisplayedNumber(formatUnits(buyerFee, token?.decimal))}
+                labelTooltip={formatDisplayedNumber(
+                  formatUnits(buyerFee, token?.decimal),
+                )}
                 className="w-auto max-w-[80px]"
               >
                 {formatDisplayedNumber(formatUnits(buyerFee, token?.decimal))}
@@ -162,7 +172,9 @@ export default function FeeCalculator({
                 )}
                 className="w-auto max-w-[80px]"
               >
-                {formatDisplayedNumber(formatUnits(price + buyerFee, token?.decimal))}
+                {formatDisplayedNumber(
+                  formatUnits(price + buyerFee, token?.decimal),
+                )}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (

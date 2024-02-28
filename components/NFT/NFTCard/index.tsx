@@ -5,13 +5,16 @@ import Image from "next/image";
 import Text from "@/components/Text";
 import { formatUnits } from "ethers";
 import Link from "next/link";
-import { ALLOWED_AUDIO_TYPES, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES, } from "@/config/constants";
+import {
+  ALLOWED_AUDIO_TYPES,
+  ALLOWED_IMAGE_TYPES,
+  ALLOWED_VIDEO_TYPES,
+} from "@/config/constants";
 import { formatDisplayedNumber } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
-
 
 export default function NFTCard({
   name,
@@ -22,7 +25,7 @@ export default function NFTCard({
   image,
   animationUrl,
   quoteToken,
-  creator
+  creator,
 }: NFT) {
   const displayMedia = image || animationUrl;
   const fileExtension = displayMedia.split(".").pop();
@@ -91,7 +94,9 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             Current bid:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedNumber(formatUnits((price as string),token?.decimal))}
+              {formatDisplayedNumber(
+                formatUnits(price as string, token?.decimal),
+              )}
             </span>{" "}
             {token?.symbol}
           </Text>
@@ -101,7 +106,9 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedNumber(formatUnits((price as string),token?.decimal))}
+              {formatDisplayedNumber(
+                formatUnits(price as string, token?.decimal),
+              )}
             </span>{" "}
             {token?.symbol}
           </Text>
@@ -125,11 +132,11 @@ export default function NFTCard({
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        {(creator?.accountStatus && collection?.isVerified) ? (
+        {creator?.accountStatus && collection?.isVerified ? (
           <Icon name="verify-active" width={16} height={16} />
-         ) : (
+        ) : (
           <Icon name="verify-disable" width={16} height={16} />
-        )} 
+        )}
         <Tooltip content={name} placement="top">
           <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:max-w-[235px] tablet:w-[150px] w-[100px]">
             {name}

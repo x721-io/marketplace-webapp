@@ -68,12 +68,12 @@ export default function CollectionsList({
       >
         {showCreateCollection
           ? creator === myId && (
-            <Link href={`/create/collection`}>
-              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
-                <Button variant="primary">Create a collection</Button>
-              </div>
-            </Link>
-          )
+              <Link href={`/create/collection`}>
+                <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
+                  <Button variant="primary">Create a collection</Button>
+                </div>
+              </Link>
+            )
           : ""}
         {Array.isArray(collections) &&
           collections.map((c, index) => {
@@ -108,7 +108,10 @@ export default function CollectionsList({
                               {c.name}
                             </Text>
                           </Tooltip>
-                          {((c.creators && c.creators.length > 0 && c.creators[0].user.accountStatus) && c.isVerified) ? (
+                          {c.creators &&
+                          c.creators.length > 0 &&
+                          c.creators[0].user.accountStatus &&
+                          c.isVerified ? (
                             <Icon name="verify-active" width={16} height={16} />
                           ) : (
                             <Icon
@@ -143,8 +146,7 @@ export default function CollectionsList({
                       <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedNumber(c.floorPrice || 0)}{" "}
-                          U2U
+                          {formatDisplayedNumber(c.floorPrice || 0)} U2U
                         </Text>
                       </div>
                     </div>
