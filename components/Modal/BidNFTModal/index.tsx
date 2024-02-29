@@ -78,7 +78,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
-    tokenId: nft.id || nft.u2uId,
+    tokenId: nft.u2uId || nft.id,
     price: parseUnits(price || "0", token?.decimal),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
