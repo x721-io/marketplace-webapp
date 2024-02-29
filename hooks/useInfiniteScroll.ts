@@ -110,7 +110,7 @@ export const useInfiniteScroll = ({
         document.documentElement;
       if (
         scrollTop > scrollHeight - clientHeight - offset &&
-        !loading &&
+        !isLoadingMore &&
         page &&
         list.currentHasNext
       ) {
@@ -121,7 +121,7 @@ export const useInfiniteScroll = ({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [loading, page, list]);
+  }, [isLoadingMore, page, list.currentHasNext]);
 
   return {
     list,
