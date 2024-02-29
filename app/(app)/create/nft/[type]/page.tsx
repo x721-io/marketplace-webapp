@@ -200,7 +200,7 @@ export default function CreateNftPage() {
             type: "custom",
             message: "NFT name already existed",
           });
-        else if (!errors.name) clearErrors("name");
+        else clearErrors("name");
       }
     } finally {
       setValidating(false);
