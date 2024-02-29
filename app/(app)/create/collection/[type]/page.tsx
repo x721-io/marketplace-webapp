@@ -154,7 +154,7 @@ export default function CreateNFTCollectionPage() {
             type: "custom",
             message: "Collection name already existed",
           });
-        else if (errors.name) clearErrors("name");
+        else clearErrors("name");
       }
 
       if (name === "shortUrl" && !!value.shortUrl) {
@@ -167,7 +167,7 @@ export default function CreateNFTCollectionPage() {
             type: "custom",
             message: "Short url already existed",
           });
-        else if (errors.shortUrl) clearErrors("shortUrl");
+        else clearErrors("shortUrl");
       }
     } finally {
       setValidating(false);

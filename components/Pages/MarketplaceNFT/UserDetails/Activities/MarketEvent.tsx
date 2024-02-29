@@ -88,7 +88,9 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 ` ${event.quantity} editions`}{" "}
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
+                {formatDisplayedNumber(
+                  formatUnits(event.price, token?.decimal),
+                )}
               </span>
               <Image
                 width={20}
@@ -146,7 +148,9 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               </Link>
               for
               <span className="font-semibold text-primary">
-                {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
+                {formatDisplayedNumber(
+                  formatUnits(event.price, token?.decimal),
+                )}
               </span>
               <Image
                 width={20}
@@ -179,7 +183,10 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                   ? `${event.quantity} edition(s) for`
                   : "for"}
                 <span className="font-semibold text-primary">
-                  &nbsp;{formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
+                  &nbsp;
+                  {formatDisplayedNumber(
+                    formatUnits(event.price, token?.decimal),
+                  )}
                 </span>
               </p>
               <Image
@@ -221,7 +228,9 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 ? `For ${event.quantity} edition(s)`
                 : "For"}
               <span className="font-semibold text-primary">
-                {formatDisplayedNumber(formatUnits(event.price, token?.decimal))}
+                {formatDisplayedNumber(
+                  formatUnits(event.price, token?.decimal),
+                )}
               </span>
               <Image
                 width={20}
