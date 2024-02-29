@@ -76,7 +76,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
-    tokenId: nft.id || nft.u2uId,
+    tokenId: nft.u2uId || nft.id,
     price:
       nft.collection.type === "ERC721"
         ? BigInt(saleData?.price || "0")

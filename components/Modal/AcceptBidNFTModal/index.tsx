@@ -72,7 +72,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     buyerFeeRatio,
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
-    tokenId: nft.id || nft.u2uId,
+    tokenId: nft.u2uId || nft.id,
     price: BigInt(bid?.price || 0),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
