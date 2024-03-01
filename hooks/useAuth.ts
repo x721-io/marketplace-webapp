@@ -31,8 +31,11 @@ export const useAuth = () => {
   const isValidSession = useMemo(() => {
     return acceptedTerms && !!accessToken && !isExpired && isCorrectWallet;
   }, [acceptedTerms, accessToken, isExpired, isCorrectWallet]);
-  if (!isValidSession  ){
-    localStorage.removeItem('auth-storage');
+  
+  if (typeof localStorage !== 'undefined') {
+    if (!isValidSession) {
+      localStorage.removeItem('auth-storage');
+    }
   }
 
   const onAuth = useCallback(
