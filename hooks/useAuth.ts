@@ -23,7 +23,7 @@ export const useAuth = () => {
     if (!userWallet || !address) return false;
     return userWallet.toLowerCase() === address.toLowerCase();
   }, [userWallet, address, isConnected]);
-
+  
   const isExpired = useMemo(() => {
     return !!expiredDate && expiredDate < Date.now();
   }, [expiredDate]);
@@ -31,6 +31,9 @@ export const useAuth = () => {
   const isValidSession = useMemo(() => {
     return acceptedTerms && !!accessToken && !isExpired && isCorrectWallet;
   }, [acceptedTerms, accessToken, isExpired, isCorrectWallet]);
+  if (!isValidSession  ){
+    localStorage.removeItem('auth-storage');
+  }
 
   const onAuth = useCallback(
     async (date: string, message: Address) => {
