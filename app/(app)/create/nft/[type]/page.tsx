@@ -188,7 +188,12 @@ export default function CreateNftPage() {
       setValidating(true);
       if (name === "name" && !!value.name) {
         if (!getValues("collection")) {
-          return;
+          setError("collection", {
+            type: "custom",
+            message: "Please select a collection first",
+          });
+        } else {
+          clearErrors("collection");
         }
         const existed = await api.validateInput({
           key: "nftName",
@@ -221,6 +226,22 @@ export default function CreateNftPage() {
       return redirect("/create/nft");
     }
   }, [type]);
+
+  useEffect(() => {
+    const subscription = watch(async (value, { name }) => {
+      if (name === "name" && value.name) {
+        if (!getValues("collection")) {
+          setError("collection", {
+            type: "manual",
+            message: "Please select a collection first",
+          });
+        } else {
+          clearErrors("collection");
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, getValues, setError, clearErrors]);
 
   return (
     <div className="w-full flex justify-center py-10 tablet:py-20 desktop:py-20">
