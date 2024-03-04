@@ -106,7 +106,7 @@ export default function InformationSectionCollection({ data }: Props) {
               className="text-primary font-bold flex items-center gap-1"
               variant="body-16"
             >
-              {formatDisplayedNumber(formatEther(floorPrice || 0))}
+              {formatDisplayedNumber(data?.collection.floorPrice)}
               <span className="text-secondary font-normal">U2U</span>
             </Text>
           </div>
