@@ -53,19 +53,24 @@ export default function SearchUserTab({ loading, data, onClose }: Props) {
                 {user.username}
               </Text>
               {user.accountStatus ? (
-                  <Icon name="verify-active" width={20} height={20} />
+                <Icon name="verify-active" width={20} height={20} />
               ) : (
-                  <Icon name="verify-disable" width={20} height={20} />
+                <Icon name="verify-disable" width={20} height={20} />
               )}
             </div>
-
           </div>
         </Link>
       ))}
-      <Link  onClick={onClose} href={`/explore/users`} className=" border border-tertiary rounded-xl mt-1 py-1 bg-gray-100">
+      <Link
+        onClick={onClose}
+        href={`/explore/users`}
+        className=" border border-tertiary rounded-xl mt-1 py-1 bg-gray-100"
+      >
         <div className="flex gap-1 items-center justify-center">
-          <Icon name="search" width={25} height={25}/>
-          <Text className="font-semibold text-primary" variant="body-14">See all Users</Text>
+          <Icon name="search" width={25} height={25} />
+          <Text className="font-semibold text-primary" variant="body-14">
+            See all Users
+          </Text>
         </div>
       </Link>
     </div>

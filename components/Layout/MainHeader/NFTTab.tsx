@@ -8,7 +8,6 @@ import placeholderImage from "@/assets/images/placeholder-image.svg";
 import Icon from "@/components/Icon";
 import { APIResponse } from "@/services/api/types";
 
-
 interface Props {
   loading?: boolean;
   data?: APIResponse.SearchNFTs | undefined;
@@ -83,10 +82,16 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
           </Link>
         );
       })}
-      <Link  onClick={onClose} href={`/explore/items`} className=" border border-tertiary rounded-xl mt-1 py-1 bg-gray-100">
+      <Link
+        onClick={onClose}
+        href={`/explore/items`}
+        className=" border border-tertiary rounded-xl mt-1 py-1 bg-gray-100"
+      >
         <div className="flex gap-1 items-center justify-center">
-          <Icon name="search" width={25} height={25}/>
-          <Text className="font-semibold text-primary" variant="body-14">See all NFTs</Text>
+          <Icon name="search" width={25} height={25} />
+          <Text className="font-semibold text-primary" variant="body-14">
+            See all NFTs
+          </Text>
         </div>
       </Link>
     </div>

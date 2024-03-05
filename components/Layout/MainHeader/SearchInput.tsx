@@ -14,7 +14,6 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
 
-
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner:
@@ -27,7 +26,16 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function SearchInput() {
-  const {setActiveTab,handleTextInput,searchKey,text,tabsRef,openModal,setOpenModal,searchString} = useSearch();
+  const {
+    setActiveTab,
+    handleTextInput,
+    searchKey,
+    text,
+    tabsRef,
+    openModal,
+    setOpenModal,
+    searchString,
+  } = useSearch();
 
   const api = useMarketplaceApi();
 
@@ -35,23 +43,23 @@ export default function SearchInput() {
     trigger: searchCollection,
     data: collectionSearchData,
     isMutating: searchingCollection,
-      reset : resetCollection
+    reset: resetCollection,
   } = useSWRMutation(text.collection || null, (text) =>
-      api.searchCollections(text),
+    api.searchCollections(text),
   );
 
   const {
     trigger: searchNFTs,
     data: nftSearchData,
     isMutating: searchingNFT,
-    reset : resetNft
+    reset: resetNft,
   } = useSWRMutation(text.nft || null, (text) => api.searchNFTs(text));
 
   const {
     trigger: searchUsers,
     data: userSearchData,
     isMutating: searchingUser,
-    reset : resetUser
+    reset: resetUser,
   } = useSWRMutation(text.user || null, (text) => api.searchUsers(text));
 
   const handleSearch = () => {
@@ -68,9 +76,9 @@ export default function SearchInput() {
 
   useEffect(() => {
     // Lazy search
-    resetCollection()
-    resetNft()
-    resetUser()
+    resetCollection();
+    resetNft();
+    resetUser();
     const timeOutId = setTimeout(handleSearch, 200);
     return () => clearTimeout(timeOutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps

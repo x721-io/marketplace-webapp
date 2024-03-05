@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { TabsRef } from "flowbite-react";
 
-
 export const useSearch = () => {
   const tabsRef = useRef<TabsRef>(null);
   const [openModal, setOpenModal] = useState(false);
@@ -25,7 +24,7 @@ export const useSearch = () => {
   }, [activeTab]);
 
   const handleTextInput = async (value: string) => {
-    if (!searchKey ) return;
+    if (!searchKey) return;
     setText({
       ...text,
       [searchKey]: value,
@@ -33,8 +32,8 @@ export const useSearch = () => {
   };
 
   const searchString = useMemo(
-      () => (searchKey ? text[searchKey] : ""),
-      [searchKey, text]
+    () => (searchKey ? text[searchKey] : ""),
+    [searchKey, text],
   );
 
   return {
@@ -45,7 +44,6 @@ export const useSearch = () => {
     tabsRef,
     openModal,
     setOpenModal,
-    searchString
-  }
-
+    searchString,
+  };
 };
