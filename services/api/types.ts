@@ -94,6 +94,8 @@ export namespace APIParams {
     max?: string;
     creatorAddress?: Address;
     quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface FetchCollectionById extends PaginationParams {
@@ -112,6 +114,8 @@ export namespace APIParams {
     owner?: Address;
     name?: string;
     quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface NFTEvents extends PaginationParams {
