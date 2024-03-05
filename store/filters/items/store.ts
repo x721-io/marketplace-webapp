@@ -17,6 +17,8 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
     page: 1,
     limit: 20,
     quoteToken: undefined,
+    order: "",
+    orderBy: "",
   },
 };
 
