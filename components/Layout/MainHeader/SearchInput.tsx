@@ -2,17 +2,17 @@
 import Icon from "@/components/Icon";
 import InputDropdown from "@/components/Form/InputDropdown";
 import Button from "@/components/Button";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { CustomFlowbiteTheme, Modal, Tabs, TabsRef } from "flowbite-react";
+import { useEffect } from "react";
+import { CustomFlowbiteTheme, Modal, Tabs } from "flowbite-react";
 import SearchUserTab from "./UserTab";
 import SearchCollectionTab from "./CollectionTab";
 import SearchNFTTab from "./NFTTab";
 import { isMobile } from "react-device-detect";
 // import { useSearch, useSearchCollection, useSearchNft, useSearchUser } from "@/hooks/useSearch";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
+
 
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -82,7 +82,7 @@ export default function SearchInput() {
     const timeOutId = setTimeout(handleSearch, 200);
     return () => clearTimeout(timeOutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchString,text]);
 
   return (
     <>
