@@ -78,7 +78,7 @@ export default function ExploreUsersPage() {
                 />
                 <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white ">
                   <Image
-                    className="cursor-pointer rounded-full object-fill"
+                    className="cursor-pointer rounded-full object-fill w-full h-full"
                     src={getUserAvatarImage(user)}
                     alt="Avatar"
                     width={60}
@@ -88,8 +88,8 @@ export default function ExploreUsersPage() {
               </div>
             </Link>
 
-            <div className="px-4 pt-5 pb-2 flex items-center justify-between">
-              <div className="flex flex-col gap-1">
+            <div className="px-4 pt-8 pb-4 flex items-center justify-between">
+              <div className="flex flex-col gap-2">
                 <div className="flex gap-2 items-center">
                   <Text className="font-medium">{user.username}</Text>
                   {user.accountStatus ? (
@@ -99,10 +99,18 @@ export default function ExploreUsersPage() {
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <Text className="text-body-12 font-medium">
-                    {formatDisplayedNumber(user.followers)}
-                  </Text>
-                  <Text className="text-body-12 text-secondary">Followers</Text>
+                  <div className="flex gap-2">
+                    <Text className="text-body-12 font-medium">
+                      {formatDisplayedNumber(user.followers)}
+                    </Text>
+                    <Text className="text-body-12 text-secondary">Followers</Text>
+                  </div>
+                  <div className="flex gap-2">
+                    <Text className="text-body-12 font-medium">
+                      {formatDisplayedNumber(user.following)}
+                    </Text>
+                    <Text className="text-body-12 text-secondary">Following</Text>
+                  </div>
                 </div>
               </div>
               {myId !== user.id ? (
