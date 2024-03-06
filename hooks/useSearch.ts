@@ -5,7 +5,7 @@ export const useSearch = () => {
   const tabsRef = useRef<TabsRef>(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const [text, setText] = useState({
+  const [text, setText] = useState<Record<string, string>>({
     collection: "",
     nft: "",
     user: "",
