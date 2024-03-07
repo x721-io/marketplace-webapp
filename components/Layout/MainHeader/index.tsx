@@ -89,13 +89,13 @@ export default function MainHeader() {
         </div>
 
         <div className="flex gap-4 items-center">
-          <div className="hidden tablet:block">
+          <div className="hidden tablet:block w-[35px] h-[35px]">
             <ConnectWalletButton
               showConnectButton
               action={() => setShowMenu(true)}
             >
               <Image
-                className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full"
+                className="cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity rounded-full w-full h-[35px] object-cover"
                 src={getUserAvatarImage(user)}
                 alt="Avatar"
                 width={35}
