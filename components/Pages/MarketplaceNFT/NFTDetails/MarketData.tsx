@@ -42,11 +42,6 @@ export default function NFTMarketData({
       {/* NFT info */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-2  items-center">
-          {nft.collection.isVerified && nft.creator?.accountStatus ? (
-            <Icon name="verified" width={24} height={24} />
-          ) : (
-            <Icon name="verify-disable" width={24} height={24} />
-          )}
           <Text
             showTooltip
             labelTooltip={nft.collection.name}
@@ -59,6 +54,11 @@ export default function NFTMarketData({
               {nft.collection.name}
             </Link>
           </Text>
+          {nft.collection.isVerified && nft.creator?.accountStatus ? (
+              <Icon name="verified" width={20} height={20} />
+          ) : (
+              <Icon name="verify-disable" width={20} height={20} />
+          )}
         </div>
 
         <Tooltip content={nft.name} placement="bottom">
