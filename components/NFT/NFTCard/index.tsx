@@ -27,10 +27,9 @@ export default function NFTCard({
   quoteToken,
   creator,
 }: NFT) {
-  const displayMedia = image || animationUrl;
+  const displayMedia = (image || animationUrl).includes(process.env.NEXT_PUBLIC_IPFS_SERVER || '') ? (image || animationUrl) : `${process.env.NEXT_PUBLIC_IPFS_SERVER}${(image || animationUrl)}`;
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
-
   const fileType = useMemo(() => {
     if (!fileExtension) return "image";
 
