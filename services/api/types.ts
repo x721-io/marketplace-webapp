@@ -13,12 +13,13 @@ import { FormState } from "@/types";
 
 /********** =========== Queries & Params for Api call ========== ***********/
 export namespace APIParams {
-  interface PaginationParams {
+  export interface PaginationParams {
     page?: number;
     limit?: number;
+    hasNext?: boolean;
   }
 
-  interface WithAuth {
+  export interface WithAuth {
     accessToken?: string;
   }
 
@@ -92,6 +93,9 @@ export namespace APIParams {
     min?: string;
     max?: string;
     creatorAddress?: Address;
+    quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface FetchCollectionById extends PaginationParams {
@@ -108,6 +112,10 @@ export namespace APIParams {
     priceMin?: string;
     sellStatus?: MarketEventType;
     owner?: Address;
+    name?: string;
+    quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface NFTEvents extends PaginationParams {
@@ -189,6 +197,10 @@ export namespace APIParams {
     owner?: Address;
     mode: string;
   }
+
+  export interface FloorPrice {
+    address?: Address;
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -200,10 +212,10 @@ export namespace APIResponse {
     lastDateRecord: Date;
   }
 
-  interface Pagination {
+  export interface Pagination {
     page: number;
     limit: number;
-    total: number;
+    hasNext: boolean;
   }
 
   export interface Connect {
@@ -247,7 +259,7 @@ export namespace APIResponse {
     };
   }
 
-  export interface CollectionsData {
+  export interface FetchCollections {
     data: Collection[];
     paging: Pagination;
   }
@@ -293,46 +305,11 @@ export namespace APIResponse {
 
   export type FetchNFTMetadata = NFTMetadata;
 
-  export type SearchNFTs = Pick<
-    NFT,
-    | "id"
-    | "u2uId"
-    | "name"
-    | "image"
-    | "animationUrl"
-    | "createdAt"
-    | "updatedAt"
-    | "status"
-    | "tokenUri"
-    | "txCreationHash"
-    | "creatorId"
-    | "collectionId"
-    | "collection"
-  >[];
+  export type SearchNFTs = FetchNFTs;
 
-  export type SearchCollections = Pick<
-    Collection,
-    | "id"
-    | "txCreationHash"
-    | "name"
-    | "symbol"
-    | "description"
-    | "address"
-    | "shortUrl"
-    | "metadata"
-    | "status"
-    | "type"
-    | "categoryId"
-    | "createdAt"
-    | "updatedAt"
-    | "coverImage"
-    | "avatar"
-  >[];
+  export type SearchCollections = FetchCollections;
 
-  export type SearchUsers = Pick<
-    User,
-    "id" | "signer" | "username" | "avatar"
-  >[];
+  export type SearchUsers = UsersData;
 
   export type VerifyAccount = FormState.VerifyAccount;
 
@@ -342,5 +319,9 @@ export namespace APIResponse {
 
   export interface TotalCount {
     total: number;
+  }
+
+  export interface FloorPrice {
+    address: string;
   }
 }

@@ -1,11 +1,10 @@
-import { Pagination, Spinner, Tooltip } from "flowbite-react";
-import { formatEther } from "ethers";
+import { Spinner, Tooltip } from "flowbite-react";
+import { formatEther, formatUnits } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
-import React, { useMemo } from "react";
+import React from "react";
 import Image from "next/image";
-import VerifyIcon from "../Icon/Verify";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import Button from "../Button";
 import { Collection } from "@/types";
 import {
@@ -14,43 +13,32 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
-
-interface Paging {
-  page?: number;
-  limit: number;
-  total?: number;
-}
+import Icon from "@/components/Icon";
 
 interface Props {
-  id?: string | string[];
-  loading?: boolean;
+  isLoading?: boolean;
+  isLoadMore?: boolean | undefined;
   error?: boolean;
-  paging?: Paging;
   collections?: Collection[];
-  onChangePage: (page: number) => void;
   showFilter?: boolean;
   showCreateCollection?: boolean;
   creator?: string;
+  currentHasNext: boolean;
 }
 
 export default function CollectionsList({
   collections,
-  paging,
-  onChangePage,
-  id,
-  loading,
+  currentHasNext,
+  isLoading,
+  isLoadMore,
   error,
   showFilter,
   showCreateCollection,
   creator,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
-  const totalPage = useMemo(() => {
-    if (!paging?.total) return 0;
-    return Math.ceil(paging.total / paging.limit);
-  }, [paging]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-56 flex justify-center items-center">
         <Spinner size="xl" />
@@ -105,30 +93,19 @@ export default function CollectionsList({
                 <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
                   <div className="relative">
                     <Image
-                      className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover"
+                      className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover w-full h-[100px]"
                       src={getCollectionBannerImage(c)}
                       alt="Cover"
                       width={1200}
                       height={256}
-                      style={{ width: "100%", height: "100px" }}
                     />
-                    <div
-                      className="absolute rounded-full"
-                      style={{
-                        width: "56px",
-                        height: "56px",
-                        top: "60px",
-                        left: "16.3px",
-                        border: "2px solid #fff",
-                      }}
-                    >
+                    <div className="absolute rounded-full w-14 h-14 top-14 left-4 border-2 border-white">
                       <Image
-                        className="cursor-pointer rounded-full object-cover"
+                        className="cursor-pointer rounded-full object-cover w-full h-full"
                         src={getCollectionAvatarImage(c)}
                         alt="Avatar"
                         width={60}
                         height={60}
-                        style={{ width: "100%", height: "100%" }}
                       />
                     </div>
                   </div>
@@ -141,7 +118,18 @@ export default function CollectionsList({
                               {c.name}
                             </Text>
                           </Tooltip>
-                          {/* <VerifyIcon width={16} height={16} /> */}
+                          {c.creators &&
+                          c.creators.length > 0 &&
+                          c.creators[0].user.accountStatus &&
+                          c.isVerified ? (
+                            <Icon name="verify-active" width={16} height={16} />
+                          ) : (
+                            <Icon
+                              name="verify-disable"
+                              width={16}
+                              height={16}
+                            />
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Text className="text-body-12 font-medium">
@@ -152,30 +140,23 @@ export default function CollectionsList({
                           </Text>
                         </div>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Items</Text>
                         <Text className="text-body-12 text-secondary">
                           {c.totalNft}
                         </Text>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Volume</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedBalance(
-                            formatEther(c.volumn || 0),
-                            2,
-                          )}{" "}
+                          {formatDisplayedNumber(formatUnits(c.volumn || 0))}{" "}
                           U2U
                         </Text>
                       </div>
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex items-center gap-2 flex-col">
                         <Text className="text-body-12 font-medium">Floor</Text>
                         <Text className="text-body-12 text-secondary">
-                          {formatDisplayedBalance(
-                            formatEther(c.floorPrice || 0),
-                            2,
-                          )}{" "}
-                          U2U
+                          {formatDisplayedNumber(c.floorPrice || 0)} U2U
                         </Text>
                       </div>
                     </div>
@@ -185,12 +166,17 @@ export default function CollectionsList({
             );
           })}
       </div>
-      <div className="flex justify-end mt-20">
-        <Pagination
-          currentPage={paging?.page ?? 1}
-          totalPages={totalPage}
-          onPageChange={onChangePage}
-        />
+      <div className="flex justify-center items-center">
+        {isLoadMore && (
+          <div className="w-full h-56 flex justify-center items-center">
+            <Spinner size="xl" />
+          </div>
+        )}
+        {!currentHasNext && (
+          <div className="w-full h-36 flex justify-center items-center">
+            No more data
+          </div>
+        )}
       </div>
     </>
   );

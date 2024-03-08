@@ -37,35 +37,17 @@ export const parseQueries = (queries?: Record<string, any> | undefined) => {
   );
 };
 
-export const formatDisplayedBalance = (value: string | number, digits = 10) => {
-  if (!value) return "0";
-  return Number(value).toLocaleString("en-us", {
-    maximumFractionDigits: digits,
-  });
-};
-
 export const getRoundAbi = (round: Round) => {
   const { type: roundType } = round;
   return abis[roundType];
 };
 
-export const formatDisplayedNumber = (value: string | number, digits = 10) => {
+export const formatDisplayedNumber = (value: string | number) => {
   if (!value) return "0";
-  const lookup = [
-    { value: 1, symbol: "" },
-    { value: 1e3, symbol: "K" },
-    { value: 1e6, symbol: "M" },
-    { value: 1e9, symbol: "G" },
-    { value: 1e12, symbol: "T" },
-    { value: 1e15, symbol: "P" },
-    { value: 1e18, symbol: "E" },
-  ];
-  const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
-  const item = lookup.findLast((item) => Number(value) >= item.value);
-  return item
-    ? (Number(value) / item.value)
-        .toFixed(digits)
-        .replace(regexp, "")
-        .concat(item.symbol)
-    : "0";
+  const usFormatter = Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+  });
+
+  return usFormatter.format(Number(value));
 };

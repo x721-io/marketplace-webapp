@@ -85,11 +85,13 @@ export interface NFT {
     id: string;
     publicKey: Address;
     username: string;
+    accountStatus: boolean;
   } | null;
   collection: Collection;
   traits?: Trait[];
   price?: BigNumberish;
   sellStatus?: MarketEventType;
+  quoteToken?: Address;
 }
 
 export interface Collection {
@@ -114,6 +116,7 @@ export interface Collection {
   totalOwner: number;
   totalNft: number;
   floorPrice: string;
+  isVerified: boolean;
 }
 
 export interface Timeframe {

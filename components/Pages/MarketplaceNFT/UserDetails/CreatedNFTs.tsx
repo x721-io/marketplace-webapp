@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SliderIcon from "@/components/Icon/Sliders";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
 import NFTsList from "@/components/List/NFTsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { APIParams, APIResponse } from "@/services/api/types";
 import useSWR from "swr";
-import { sanitizeObject } from "@/utils";
-import { useNFTFilters } from "@/hooks/useFilters";
 import { Address } from "wagmi";
 import { MODE_CREATED } from "@/config/constants";
+import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 
 export default function CreatedNFTs({
   wallet,
@@ -20,37 +18,33 @@ export default function CreatedNFTs({
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
   userId: string;
 }) {
-  const [showFilters, setShowFilters] = useState(false);
   const api = useMarketplaceApi();
-  const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters(
-    {
-      page: 1,
-      limit: 20,
-      traits: undefined,
-      collectionAddress: undefined,
-      creatorAddress: wallet,
-      priceMax: undefined,
-      priceMin: undefined,
-      sellStatus: undefined,
-    },
-  );
 
-  const { data, isLoading } = useSWR(
-    activeFilters,
-    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
-    { refreshInterval: 300000 },
-  );
+  const {
+    isLoadingMore,
+    isLoading,
+    items,
+    error,
+    showFilters,
+    filters,
+    toggleFilter,
+    resetFilters,
+    updateFilters,
+  } = useFetchNFTsByUser(wallet, "created");
 
   const { data: totalCreated } = useSWR(
     [
       "total_creator-data",
-      { creatorAddress: String(wallet) as `0x${string}`, mode: String(MODE_CREATED) },
+      {
+        creatorAddress: String(wallet) as `0x${string}`,
+        mode: String(MODE_CREATED),
+      },
     ],
     ([_, params]) =>
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 5000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -62,7 +56,7 @@ export default function CreatedNFTs({
   return (
     <div className="w-full py-7">
       <Button
-        onClick={() => setShowFilters(!showFilters)}
+        onClick={() => toggleFilter()}
         className={classNames(
           showFilters ? "bg-white shadow" : `bg-surface-soft`,
           "mb-7",
@@ -77,15 +71,17 @@ export default function CreatedNFTs({
       </Button>
 
       <NFTsList
-        loading={isLoading}
-        onApplyFilters={handleApplyFilters}
-        onChangePage={handleChangePage}
-        filters={["type", "price"]}
+        isLoadMore={isLoadingMore}
+        isLoading={isLoading}
+        onApplyFilters={updateFilters}
+        activeFilters={filters}
+        onResetFilters={resetFilters}
         showFilters={showFilters}
-        items={data?.data}
-        paging={data?.paging}
+        items={items.concatenatedData}
+        currentHasNext={items.currentHasNext}
         userId={userId}
         showCreateNFT={true}
+        error={error}
       />
     </div>
   );

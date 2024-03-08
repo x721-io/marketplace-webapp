@@ -13,9 +13,10 @@ import {
   getDisplayedUserName,
   getUserAvatarImage,
   getUserLink,
-  truncate,
 } from "@/utils/string";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
+import { useMemo } from "react";
+import { findTokenByAddress } from "@/utils/token";
 
 export default function NFTMarketData({
   nft,
@@ -27,6 +28,10 @@ export default function NFTMarketData({
   const type = nft.collection.type;
 
   const { isOnSale, saleData } = useNFTMarketStatus(type, marketData);
+  const token = useMemo(
+    () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
+    [marketData?.sellInfo],
+  );
 
   if (!marketData) {
     return null;
@@ -36,8 +41,12 @@ export default function NFTMarketData({
     <div className="flex flex-col gap-10 justify-between w-full">
       {/* NFT info */}
       <div className="flex flex-col gap-3">
-        <div className="flex gap-1 items-center">
-          {/* <Icon name="verified" width={16} height={16} /> */}
+        <div className="flex gap-2  items-center">
+          {nft.collection.isVerified && nft.creator?.accountStatus ? (
+            <Icon name="verified" width={24} height={24} />
+          ) : (
+            <Icon name="verify-disable" width={24} height={24} />
+          )}
           <Text
             showTooltip
             labelTooltip={nft.collection.name}
@@ -130,13 +139,10 @@ export default function NFTMarketData({
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedBalance(
-                        formatUnits(saleData?.price || 0),
-                        3,
-                      )}
+                      {formatDisplayedNumber(formatUnits(saleData?.price || 0))}
                     </span>
                     &nbsp;
-                    <span className="text-secondary">U2U</span>
+                    <span className="text-secondary">{token?.symbol}</span>
                   </Text>
                 </div>
               ) : (

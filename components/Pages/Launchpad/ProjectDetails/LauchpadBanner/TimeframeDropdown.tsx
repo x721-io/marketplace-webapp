@@ -36,8 +36,10 @@ export default function TimeframeDropdown({ round }: Props) {
     }),
     enabled: Number(timeframesLength) > 0,
     watch: true,
-    select: (data) => data.map((item) => {
-      return item.result as unknown as Timeframe}),
+    select: (data) =>
+      data.map((item) => {
+        return item.result as unknown as Timeframe;
+      }),
   });
 
   useEffect(() => {
@@ -62,7 +64,8 @@ export default function TimeframeDropdown({ round }: Props) {
       for (let i = 0; i < timeframes.length; i++) {
         const start =
           timeframes[i]?.hourStart * 3600 + timeframes[i]?.minuteStart * 60;
-        const end = timeframes[i]?.hourEnd * 3600 + timeframes[i]?.minuteEnd * 60;
+        const end =
+          timeframes[i]?.hourEnd * 3600 + timeframes[i]?.minuteEnd * 60;
 
         if (currentTime >= start && currentTime <= end) {
           setIsInTimeframe(true);
@@ -87,6 +90,7 @@ export default function TimeframeDropdown({ round }: Props) {
       }
     }
     return current;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeframes]);
 
   const formatTimeframe = (timeframe?: Timeframe) => {

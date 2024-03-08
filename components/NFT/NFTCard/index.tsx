@@ -2,18 +2,19 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import VerifyIcon from "@/components/Icon/Verify";
 import Text from "@/components/Text";
-import { formatEther } from "ethers";
+import { formatUnits } from "ethers";
 import Link from "next/link";
 import {
   ALLOWED_AUDIO_TYPES,
   ALLOWED_IMAGE_TYPES,
   ALLOWED_VIDEO_TYPES,
 } from "@/config/constants";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
+import { findTokenByAddress } from "@/utils/token";
+import Icon from "@/components/Icon";
 
 export default function NFTCard({
   name,
@@ -23,9 +24,12 @@ export default function NFTCard({
   collection,
   image,
   animationUrl,
+  quoteToken,
+  creator,
 }: NFT) {
   const displayMedia = image || animationUrl;
   const fileExtension = displayMedia.split(".").pop();
+  const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
   const fileType = useMemo(() => {
     if (!fileExtension) return "image";
@@ -90,9 +94,11 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             Current bid:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedBalance(formatEther(price as string), 2)}
+              {formatDisplayedNumber(
+                formatUnits(price as string, token?.decimal),
+              )}
             </span>{" "}
-            U2U
+            {token?.symbol}
           </Text>
         );
       case "AskNew":
@@ -100,12 +106,11 @@ export default function NFTCard({
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
-              {formatDisplayedBalance(
-                formatEther(price as string).toString(),
-                2,
+              {formatDisplayedNumber(
+                formatUnits(price as string, token?.decimal),
               )}
             </span>{" "}
-            U2U
+            {token?.symbol}
           </Text>
         );
       default:
@@ -127,7 +132,11 @@ export default function NFTCard({
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        {/* <VerifyIcon width={16} height={16} /> */}
+        {creator?.accountStatus && collection?.isVerified ? (
+          <Icon name="verify-active" width={16} height={16} />
+        ) : (
+          <Icon name="verify-disable" width={16} height={16} />
+        )}
         <Tooltip content={name} placement="top">
           <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:max-w-[235px] tablet:w-[150px] w-[100px]">
             {name}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Spinner, Tabs } from "flowbite-react";
 import { useParams } from "next/navigation";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import Text from "@/components/Text";
 import { formatDisplayedNumber } from "@/utils";
@@ -13,6 +13,7 @@ import CreatedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/CreatedNF
 import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserCollections";
 import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
+import { useFilterByUser } from "@/store/filters/byUser/store";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi();
@@ -26,11 +27,26 @@ export default function ProfilePage() {
   } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
     revalidateOnFocus: false,
   });
+  const filterStore = useFilterByUser();
 
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
   const [createdAmount, setCreatedAmount] = useState(0);
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
+
+  useEffect(() => {
+    const userAddress = user?.publicKey;
+    if (!userAddress) return;
+
+    if (!filterStore[userAddress]) {
+      filterStore.createFiltersForUser(user?.publicKey);
+      filterStore.updateFilters("created", userAddress, {
+        creatorAddress: userAddress,
+      });
+      filterStore.updateFilters("owned", userAddress, { owner: userAddress });
+      filterStore.updateFilters("onSale", userAddress, { owner: userAddress });
+    }
+  }, [filterStore, user?.publicKey]);
 
   if (isLoading) {
     return (
@@ -76,7 +92,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Owned ({formatDisplayedNumber(ownedAmount, 1)})
+                Owned ({formatDisplayedNumber(ownedAmount)})
               </div>
             }
           >
@@ -88,7 +104,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                On Sale ({formatDisplayedNumber(saleAmount, 1)})
+                On Sale ({formatDisplayedNumber(saleAmount)})
               </div>
             }
           >
@@ -100,7 +116,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Created ({formatDisplayedNumber(createdAmount, 0)})
+                Created ({formatDisplayedNumber(createdAmount)})
               </div>
             }
           >
@@ -113,8 +129,7 @@ export default function ProfilePage() {
           <Tabs.Item
             title={
               <div className="min-w-fit whitespace-nowrap">
-                Collections ({formatDisplayedNumber(createdCollectionAmount, 0)}
-                )
+                Collections ({formatDisplayedNumber(createdCollectionAmount)})
               </div>
             }
           >

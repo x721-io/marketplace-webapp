@@ -188,7 +188,12 @@ export default function CreateNftPage() {
       setValidating(true);
       if (name === "name" && !!value.name) {
         if (!getValues("collection")) {
-          return;
+          setError("collection", {
+            type: "custom",
+            message: "Please select a collection first",
+          });
+        } else {
+          clearErrors("collection");
         }
         const existed = await api.validateInput({
           key: "nftName",
@@ -200,7 +205,7 @@ export default function CreateNftPage() {
             type: "custom",
             message: "NFT name already existed",
           });
-        else if (errors.name) clearErrors("name");
+        else clearErrors("name");
       }
     } finally {
       setValidating(false);

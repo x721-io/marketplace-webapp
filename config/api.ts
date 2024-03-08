@@ -26,4 +26,5 @@ export const API_ENDPOINTS = {
   SNAPSHOT: "/user/projects",
   FOLLOW: "/user/follow",
   TOTAL_COUNT: "/nft/general-count",
+  FLOOR_PRICE: "/collection/floor-price",
 };

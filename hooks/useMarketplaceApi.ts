@@ -4,7 +4,9 @@ import { marketplaceApi } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { Address } from "wagmi";
 import { useCallback, useMemo } from "react";
-import { parseQueries } from "@/utils";
+import { parseQueries, sanitizeObject } from "@/utils";
+import { parseUnits } from "ethers";
+import { tokens } from "@/config/tokens";
 
 export const useMarketplaceApi = () => {
   const { credentials } = useAuthStore();
@@ -103,8 +105,25 @@ export const useMarketplaceApi = () => {
 
       fetchNFTs: (
         params: APIParams.FetchNFTs,
-      ): Promise<APIResponse.FetchNFTs> =>
-        marketplaceApi.post(API_ENDPOINTS.SEARCH_NFT, params),
+      ): Promise<APIResponse.FetchNFTs> => {
+        const { priceMin, priceMax, quoteToken } = params;
+        const bigintMin =
+          priceMin !== undefined ? parseUnits(priceMin, 18) : undefined;
+        const bigintMax =
+          priceMax !== undefined ? parseUnits(priceMax, 18) : undefined;
+        return marketplaceApi.post(
+          API_ENDPOINTS.SEARCH_NFT,
+          sanitizeObject({
+            ...params,
+            sellStatus:
+              Number(priceMin) || Number(priceMax)
+                ? "AskNew"
+                : params.sellStatus,
+            priceMin: bigintMin?.toString(),
+            priceMax: bigintMax?.toString(),
+          }),
+        );
+      },
 
       fetchNFTEvents: (
         params: APIParams.NFTEvents,
@@ -122,8 +141,21 @@ export const useMarketplaceApi = () => {
       /** GET **/
       fetchCollections: (
         params: APIParams.FetchCollections,
-      ): Promise<APIResponse.CollectionsData> =>
-        marketplaceApi.get(API_ENDPOINTS.COLLECTIONS + parseQueries(params)),
+      ): Promise<APIResponse.FetchCollections> => {
+        const { min, max } = params;
+        const bigintMin = min !== undefined ? parseUnits(min, 18) : undefined;
+        const bigintMax = max !== undefined ? parseUnits(max, 18) : undefined;
+        return marketplaceApi.get(
+          API_ENDPOINTS.COLLECTIONS +
+            parseQueries(
+              sanitizeObject({
+                ...params,
+                min: bigintMin?.toString(),
+                max: bigintMax?.toString(),
+              }),
+            ),
+        );
+      },
 
       fetchCollectionById: (
         id: string | Address,
@@ -133,7 +165,7 @@ export const useMarketplaceApi = () => {
       fetchCollectionsByUser: async ({
         userId,
         ...rest
-      }: APIParams.FetchCollectionById): Promise<APIResponse.CollectionsData> => {
+      }: APIParams.FetchCollectionById): Promise<APIResponse.FetchCollections> => {
         return marketplaceApi.get(
           API_ENDPOINTS.USER_COLLECTIONS + `/${userId}` + parseQueries(rest),
         );
@@ -198,10 +230,20 @@ export const useMarketplaceApi = () => {
           {},
           authHeader(accessToken),
         ),
-      getTotalCountById: (
-        params: APIParams.CountNumber,
-      ): Promise<number> =>
+      getTotalCountById: (params: APIParams.CountNumber): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
+      getFloorPrice: (params: {
+        address: Address | string;
+      }): Promise<APIResponse.FloorPrice> => {
+        const requestData = {
+          address: params.address,
+        };
+        return marketplaceApi.post(
+          API_ENDPOINTS.FLOOR_PRICE,
+          requestData,
+          authHeader(),
+        );
+      },
     };
   }, [authHeader]);
 };

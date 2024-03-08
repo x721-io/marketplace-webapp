@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon";
 import { APIResponse } from "@/services/api/types";
 import { Round } from "@/types";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { classNames } from "@/utils/string";
 import { format } from "date-fns";
 import { formatEther } from "ethers";
@@ -37,14 +37,14 @@ export default function RoundZeroConditionStaking({
         </p>
 
         <p className="text-primary font-semibold text-right">
-          {formatDisplayedBalance(formatEther(snapshot?.stakingTotal || 0))} U2U
+          {formatDisplayedNumber(formatEther(snapshot?.stakingTotal || 0))} U2U
         </p>
       </div>
 
       <div className="flex items-center justify-between text-body-12">
         <p className="text-secondary font-medium">Required:</p>
         <p className="text-primary font-semibold text-right">
-          {formatDisplayedBalance(formatEther(round.requiredStaking))} U2U
+          {formatDisplayedNumber(formatEther(round.requiredStaking))} U2U
         </p>
       </div>
 

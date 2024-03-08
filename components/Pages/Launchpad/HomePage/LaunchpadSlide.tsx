@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Project, RoundType } from "@/types";
 import { useRoundsWithStatus } from "@/hooks/useRoundStatus";
 import { useMemo } from "react";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { formatEther } from "ethers";
 
 interface Props {
@@ -67,7 +67,7 @@ export default function LaunchpadSlide({ project }: Props) {
               <span className="text-secondary">Items:</span>{" "}
               {activeRound?.totalNftt === 0
                 ? "Open Edition"
-                : formatDisplayedBalance(activeRound?.totalNftt, 0) || 0}
+                : formatDisplayedNumber(activeRound?.totalNftt) || 0}
             </Text>
           </div>
 
@@ -80,10 +80,7 @@ export default function LaunchpadSlide({ project }: Props) {
               <div className="flex items-center gap-2">
                 <Icon name="u2u-logo" width={30} height={30} />
                 <Text className="font-semibold text-xl desktop:text-3xl tablet:text-3xl">
-                  {formatDisplayedBalance(
-                    formatEther(activeRound?.price || 0),
-                    0,
-                  )}
+                  {formatDisplayedNumber(formatEther(activeRound?.price || 0))}
                 </Text>
                 <Text className="font-semibold text-tertiary text-lg desktop:text-2xl">
                   U2U
@@ -98,7 +95,7 @@ export default function LaunchpadSlide({ project }: Props) {
               <Text className="font-semibold text-xl desktop:text-3xl tablet:text-3xl">
                 {activeRound?.totalNftt === 0
                   ? "Open Edition"
-                  : formatDisplayedBalance(activeRound?.totalNftt, 0) || 0}
+                  : formatDisplayedNumber(activeRound?.totalNftt) || 0}
               </Text>
             </div>
           </div>

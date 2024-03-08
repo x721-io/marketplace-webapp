@@ -7,7 +7,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { formatDisplayedBalance } from "@/utils";
+import { formatDisplayedNumber } from "@/utils";
 import { formatUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import AcceptBidNFTModal from "@/components/Modal/AcceptBidNFTModal";
@@ -64,7 +64,10 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
                 ? ` ${event.quantity} edition(s) for`
                 : " for"}
               <span className="font-semibold text-primary">
-                &nbsp;{formatDisplayedBalance(formatUnits(event.price, 18))}
+                &nbsp;
+                {formatDisplayedNumber(
+                  formatUnits(event.price, token?.decimal),
+                )}
               </span>
             </p>
             <Image

@@ -39,7 +39,7 @@ export default function Profile({ user, onRefresh }: Props) {
             alt="user-detail-bg"
             width={120}
             height={120}
-            className="rounded-2xl w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px]"
+            className="rounded-2xl w-[80px] h-[80px] tablet:w-[120px] desktop:w-[120px] tablet:h-[120px] desktop:h-[120px] object-cover"
           />
         </div>
       </div>
@@ -85,13 +85,13 @@ export default function Profile({ user, onRefresh }: Props) {
             <div className="flex items-center gap-3">
               <div className="flex gap-2">
                 <Text className="text-body-12 font-medium">
-                  {formatDisplayedNumber(user.followers, 1)}
+                  {formatDisplayedNumber(user.followers)}
                 </Text>
                 <Text className="text-body-12 text-secondary">Followers</Text>
               </div>
               <div className="flex gap-2">
                 <Text className="text-body-12 font-medium">
-                  {formatDisplayedNumber(user.following, 1)}
+                  {formatDisplayedNumber(user.following)}
                 </Text>
                 <Text className="text-body-12 text-secondary">Following</Text>
               </div>

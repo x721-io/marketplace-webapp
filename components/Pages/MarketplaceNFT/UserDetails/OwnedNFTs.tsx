@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SliderIcon from "@/components/Icon/Sliders";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
 import NFTsList from "@/components/List/NFTsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { useNFTFilters } from "@/hooks/useFilters";
 import useSWR from "swr";
-import { sanitizeObject } from "@/utils";
-import { APIParams, APIResponse } from "@/services/api/types";
 import { Address } from "wagmi";
 import { MODE_OWNED } from "@/config/constants";
+import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 
 export default function OwnedNFTs({
   wallet,
@@ -18,35 +16,29 @@ export default function OwnedNFTs({
   wallet: Address;
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [showFilters, setShowFilters] = useState(false);
   const api = useMarketplaceApi();
-  const { activeFilters, handleApplyFilters, handleChangePage } = useNFTFilters(
-    {
-      page: 1,
-      limit: 20,
-      traits: undefined,
-      collectionAddress: undefined,
-      creatorAddress: undefined,
-      owner: wallet,
-      priceMax: undefined,
-      priceMin: undefined,
-      sellStatus: undefined,
-    },
-  );
-
-  const { data, isLoading } = useSWR(
-    activeFilters,
-    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
-    { refreshInterval: 300000 },
-  );
+  const {
+    isLoadingMore,
+    isLoading,
+    items,
+    error,
+    showFilters,
+    filters,
+    toggleFilter,
+    resetFilters,
+    updateFilters,
+  } = useFetchNFTsByUser(wallet, "owned");
 
   const { data: totalOwned } = useSWR(
-    ["total_owner-data", { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) }],
+    [
+      "total_owner-data",
+      { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) },
+    ],
     ([_, params]) =>
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 5000 },
+    { refreshInterval: 0 },
   );
 
   useEffect(() => {
@@ -58,7 +50,7 @@ export default function OwnedNFTs({
   return (
     <div className="w-full py-7">
       <Button
-        onClick={() => setShowFilters(!showFilters)}
+        onClick={() => toggleFilter()}
         className={classNames(
           showFilters ? "bg-white shadow" : `bg-surface-soft`,
           "mb-7",
@@ -73,13 +65,16 @@ export default function OwnedNFTs({
       </Button>
 
       <NFTsList
-        loading={isLoading}
-        onApplyFilters={handleApplyFilters}
-        onChangePage={handleChangePage}
-        filters={["type", "price"]}
+        onClose={() => toggleFilter(false)}
+        isLoadMore={isLoadingMore}
+        isLoading={isLoading}
+        activeFilters={filters}
+        onApplyFilters={updateFilters}
+        onResetFilters={resetFilters}
         showFilters={showFilters}
-        items={data?.data}
-        paging={data?.paging}
+        items={items.concatenatedData}
+        currentHasNext={items.currentHasNext}
+        error={error}
       />
     </div>
   );

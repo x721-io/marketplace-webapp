@@ -27,11 +27,14 @@ export default function ConnectWalletButton({
   const { isValidSession } = useAuth();
 
   const handleConnectWallet = () => {
-    if (!isValidSession) {
-      setShowWalletConnect(true);
-    } else {
-      // Access Token has been saved in auth store
-      action?.();
+    if (typeof localStorage !== "undefined") {
+      if (!isValidSession) {
+        localStorage.removeItem("auth-storage");
+        setShowWalletConnect(true);
+      } else {
+        // Access Token has been saved in auth store
+        action?.();
+      }
     }
   };
 
@@ -39,7 +42,11 @@ export default function ConnectWalletButton({
     <>
       <div className={className} onClick={handleConnectWallet}>
         {showConnectButton && !isValidSession ? (
-          <Button type="button" className="w-full" onClick={handleConnectWallet}>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={handleConnectWallet}
+          >
             Connect Wallet
           </Button>
         ) : (

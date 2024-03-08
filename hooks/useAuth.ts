@@ -32,6 +32,12 @@ export const useAuth = () => {
     return acceptedTerms && !!accessToken && !isExpired && isCorrectWallet;
   }, [acceptedTerms, accessToken, isExpired, isCorrectWallet]);
 
+  if (typeof localStorage !== "undefined") {
+    if (!isValidSession) {
+      localStorage.removeItem("auth-storage");
+    }
+  }
+
   const onAuth = useCallback(
     async (date: string, message: Address) => {
       if (!address) return;

@@ -1,71 +1,56 @@
 "use client";
 
-import {
-  useCollectionFilters,
-  useExploreSectionFilters,
-} from "@/hooks/useFilters";
 import CollectionFilters from "@/components/Filters/CollectionFilters";
 import CollectionsList from "@/components/List/CollectionsList";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { useUIStore } from "@/store/ui/store";
-import useSWR from "swr";
-import { sanitizeObject } from "@/utils";
-import { APIParams } from "@/services/api/types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { isMobile } from "react-device-detect";
-import MobileCollectionFiltersModal from "@/components/Modal/MobileCollectionFiltersModal";
+import MobileCollectionFiltersModal from "@/components/Filters/MobileCollectionFiltersModal";
+import { useCollectionFilterStore } from "@/store/filters/collections/store";
+import {
+  useFetchCollectionList,
+  useInfiniteScroll,
+} from "@/hooks/useInfiniteScroll";
 
 export default function ExploreCollectionsPage() {
-  const [showFilters, setShowFilters] = useState(false);
+  const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
+    useCollectionFilterStore((state) => state);
+  const { data, size, setSize, isLoading, error } =
+    useFetchCollectionList(filters);
 
-  const api = useMarketplaceApi();
-
-  const { activeFilters, handleApplyFilters, handleChangePage } =
-    useCollectionFilters();
-
-  const { queryString } = useUIStore((state) => state);
-  const { searchKey } = useExploreSectionFilters();
-
-  const {
-    data: collections,
-    error,
-    isLoading,
-  } = useSWR(
-    !!queryString[searchKey]
-      ? { ...activeFilters, name: queryString[searchKey], page: 1 }
-      : { ...activeFilters, name: queryString[searchKey] },
-    (params) =>
-      api.fetchCollections(
-        sanitizeObject(params) as APIParams.FetchCollections,
-      ),
-    { refreshInterval: 10000 },
-  );
-
-  const { isFiltersVisible, handleToggleFilters } = useExploreSectionFilters();
+  const { isLoadingMore, list: collections } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1),
+  });
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">
       {isMobile ? (
         <MobileCollectionFiltersModal
-          onApplyFilters={handleApplyFilters}
-          showFilter={isFiltersVisible}
-          closeFilter={handleToggleFilters}
+          onApplyFilters={updateFilters}
+          show={showFilters}
+          activeFilters={filters}
+          onResetFilters={resetFilters}
+          onClose={() => toggleFilter(false)}
         />
       ) : (
-        isFiltersVisible && (
-          <CollectionFilters
-            visible={isFiltersVisible}
-            onApplyFilters={handleApplyFilters}
-          />
-        )
+        <CollectionFilters
+          activeFilters={filters}
+          onApplyFilters={updateFilters}
+          showFilters={showFilters}
+          onResetFilters={resetFilters}
+        />
       )}
+
       <div className="flex-1">
         <CollectionsList
-          loading={isLoading}
-          collections={collections?.data}
-          paging={collections?.paging}
-          onChangePage={handleChangePage}
-          showFilter={isFiltersVisible}
+          error={error}
+          isLoading={isLoading}
+          isLoadMore={isLoadingMore}
+          collections={collections.concatenatedData}
+          showFilter={showFilters}
+          currentHasNext={collections.currentHasNext}
         />
       </div>
     </div>
