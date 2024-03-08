@@ -212,6 +212,11 @@ export default function CreateNftPage() {
     }
   };
 
+  const handleCollectionChange = (collectionValue: any, onChange: any) => {
+    clearErrors("collection");
+    onChange(collectionValue);
+  };
+
   useEffect(() => {
     const subscription = watch(async (value, { name, type }) => {
       if (!name) return;
@@ -321,7 +326,7 @@ export default function CreateNftPage() {
                       ? collectionOptions.map((c) => (
                           <div
                             key={c.value}
-                            onClick={() => onChange(c.value)}
+                            onClick={() => handleCollectionChange(c.value, onChange)} 
                             className={classNames(
                               "w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 text-center",
                               "hover:border-primary hover:bg-white hover:text-primary border-2 transition-all",
