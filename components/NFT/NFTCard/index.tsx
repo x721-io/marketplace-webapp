@@ -15,6 +15,7 @@ import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
+import { convertImageUrl } from "@/utils/nft";
 
 export default function NFTCard({
   name,
@@ -27,7 +28,7 @@ export default function NFTCard({
   quoteToken,
   creator,
 }: NFT) {
-  const displayMedia = (image || animationUrl).includes(process.env.NEXT_PUBLIC_IPFS_SERVER || '') ? (image || animationUrl) : `${process.env.NEXT_PUBLIC_IPFS_SERVER}${(image || animationUrl)}`;
+  const displayMedia = (image || animationUrl) ? convertImageUrl(image || animationUrl) : (image || animationUrl) ;
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const fileType = useMemo(() => {
