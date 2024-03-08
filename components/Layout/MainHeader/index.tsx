@@ -89,7 +89,7 @@ export default function MainHeader() {
         </div>
 
         <div className="flex gap-4 items-center">
-          <div className="hidden tablet:block w-[35px] h-[35px]">
+          <div className="hidden tablet:block w-auto h-[35px]">
             <ConnectWalletButton
               showConnectButton
               action={() => setShowMenu(true)}
