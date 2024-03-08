@@ -28,7 +28,7 @@ export default function NFTCard({
   quoteToken,
   creator,
 }: NFT) {
-  const displayMedia = (image || animationUrl) ? convertImageUrl(image || animationUrl) : (image || animationUrl) ;
+  const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const fileType = useMemo(() => {
