@@ -132,16 +132,14 @@ export default function NFTCard({
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        {creator?.accountStatus && collection?.isVerified ? (
-          <Icon name="verify-active" width={16} height={16} />
-        ) : (
-          <Icon name="verify-disable" width={16} height={16} />
-        )}
-        <Tooltip content={name} placement="top">
-          <Text className="text-secondary text-body-12 whitespace-nowrap overflow-hidden text-ellipsis desktop:max-w-[235px] tablet:w-[150px] w-[100px]">
+          <Text className="text-secondary text-body-12">
             {name}
           </Text>
-        </Tooltip>
+        {creator?.accountStatus && collection?.isVerified ? (
+            <Icon name="verified" width={16} height={16} />
+        ) : (
+            <Icon name="verify-disable" width={16} height={16} />
+        )}
       </div>
 
       {renderNFTData()}

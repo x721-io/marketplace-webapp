@@ -13,6 +13,7 @@ import { formatDisplayedNumber } from "@/utils";
 import { findTokenByAddress } from "@/utils/token";
 import React from "react";
 import { Tooltip } from "flowbite-react";
+import Icon from "@/components/Icon";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -25,16 +26,24 @@ interface RowProps {
 }
 
 const Row = ({ children, timestamp, maker }: RowProps) => {
+  console.log(maker)
   return (
     <div className="flex items-center gap-3">
-      <Link href={getUserLink(maker)} className="flex items-center gap-2">
+      <Link href={getUserLink(maker)} className="flex items-center gap-2 relative">
         <Image
-          className="w-10 h-10 rounded-full"
-          src={getUserAvatarImage(maker)}
-          alt="user"
-          width={40}
-          height={40}
+            className="w-10 h-10 rounded-full"
+            src={getUserAvatarImage(maker)}
+            alt="user"
+            width={40}
+            height={40}
         />
+        <div className="absolute bottom-[-7px] right-[-4px]">
+          {maker?.accountStatus ? (
+              <Icon name="verified" width={16} height={16} />
+          ) : (
+              <Icon name="verify-disable" width={16} height={16} />
+          )}
+        </div>
       </Link>
 
       <div className="flex flex-col">
