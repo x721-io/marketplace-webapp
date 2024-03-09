@@ -9,7 +9,10 @@ import { NFT } from "@/types";
 import { convertImageUrl } from "@/utils/nft";
 
 export default function NFTImage({ item }: { item: NFT }) {
-  const displayMedia = useMemo(() => convertImageUrl(item?.animationUrl || item?.image), [item?.animationUrl, item?.image]);
+  const displayMedia = useMemo(
+    () => convertImageUrl(item?.animationUrl || item?.image),
+    [item?.animationUrl, item?.image],
+  );
   const fileExtension = useMemo(
     () => displayMedia?.split(".").pop(),
     [displayMedia],

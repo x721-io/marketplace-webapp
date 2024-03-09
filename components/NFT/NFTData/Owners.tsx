@@ -59,7 +59,6 @@ export default function OwnersTab({
     });
   }, [marketData, userWallet]);
 
-
   return (
     <div className="w-full py-7">
       <div className="w-full p-3 desktop:p-5 tablet:p-4  flex flex-col desktop:gap-4 tablet:gap-4 gap-3 rounded-2xl border border-disabled border-dashed">
@@ -75,55 +74,53 @@ export default function OwnersTab({
                 key={owner.id}
               >
                 <div className="flex items-center gap-4">
-                  <Link
-                      href={`/user/${owner.id}`}
-                      className="flex relative"
-                  >
+                  <Link href={`/user/${owner.id}`} className="flex relative">
                     <Image
-                        className="w-10 h-10 tablet:w-12 tablet:h-12 desktop:w-12 desktop:h-12 rounded-full"
-                        width={80}
-                        height={80}
-                        src={getUserAvatarImage(owner)}
-                        alt="avatar"
+                      className="w-10 h-10 tablet:w-12 tablet:h-12 desktop:w-12 desktop:h-12 rounded-full"
+                      width={80}
+                      height={80}
+                      src={getUserAvatarImage(owner)}
+                      alt="avatar"
                     />
                     <div className="absolute bottom-[-7px] right-[-4px]">
                       {owner && owner?.accountStatus ? (
-                          <Icon name="verify-active" width={16} height={16} />
+                        <Icon name="verify-active" width={16} height={16} />
                       ) : (
-                          <Icon name="verify-disable" width={16} height={16} />
+                        <Icon name="verify-disable" width={16} height={16} />
                       )}
                     </div>
                   </Link>
                   <div>
                     <p className="font-medium text-body-16">{owner.username}</p>
                     {!!owner.sellInfo ? (
-                        <p className="text-secondary text-body-14 font-semibold break-all">
-                          {owner.sellInfo.quantity}/{owner.quantity} item(s) on
-                          sale for
-                          <span className="text-primary">
+                      <p className="text-secondary text-body-14 font-semibold break-all">
+                        {owner.sellInfo.quantity}/{owner.quantity} item(s) on
+                        sale for
+                        <span className="text-primary">
                           {" "}
-                            {formatDisplayedNumber(
-                                formatEther(owner.sellInfo.price),
-                            )}{" "}
-                            {token?.symbol}
+                          {formatDisplayedNumber(
+                            formatEther(owner.sellInfo.price),
+                          )}{" "}
+                          {token?.symbol}
                         </span>{" "}
-                          each
-                        </p>
+                        each
+                      </p>
                     ) : (
-                        <p className="flex items-center gap-1">
-                          <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
-                            {formatDisplayedNumber(owner.quantity)}
-                          </p>
-                          <p className="text-secondary font-semibold text-body-14">
-                            {" "}
-                            edition(s) -
-                          </p>{" "}
-                          <span className="font-bold text-body-14"> Not for sale</span>
+                      <p className="flex items-center gap-1">
+                        <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
+                          {formatDisplayedNumber(owner.quantity)}
                         </p>
+                        <p className="text-secondary font-semibold text-body-14">
+                          {" "}
+                          edition(s) -
+                        </p>{" "}
+                        <span className="font-bold text-body-14">
+                          {" "}
+                          Not for sale
+                        </span>
+                      </p>
                     )}
                   </div>
-
-
                 </div>
 
                 {owner.publicKey.toLowerCase() === userWallet?.toLowerCase() ? (

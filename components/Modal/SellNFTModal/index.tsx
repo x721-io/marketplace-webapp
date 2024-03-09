@@ -178,7 +178,6 @@ export default function SellNFTModal({
         closeButton: true,
         isLoading: false,
       });
-      
     } catch (e) {
       toast.update(toastId, {
         render: "Failed to approve token",

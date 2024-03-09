@@ -29,7 +29,11 @@ export default function ExploreSectionNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const tabsRef = useRef<TabsRef>(null);
-  const [sortOption, setSortOption] = useState({name: "Date: Descending", order: 'desc', orderBy: 'time' });
+  const [sortOption, setSortOption] = useState({
+    name: "Date: Descending",
+    order: "desc",
+    orderBy: "time",
+  });
 
   const {
     filters: { name: collectionSearchText },
@@ -105,39 +109,46 @@ export default function ExploreSectionNavbar() {
   };
 
   const sortCollections = (sortOptionCollection: any) => {
-    updateCollectionFilters({orderBy: sortOptionCollection?.orderBy, order: sortOptionCollection?.order});
+    updateCollectionFilters({
+      orderBy: sortOptionCollection?.orderBy,
+      order: sortOptionCollection?.order,
+    });
   };
 
   const sortNFTs = (sortOptionNFT: any) => {
-    updateNFTFilters({orderBy: sortOptionNFT?.orderBy, order: sortOptionNFT?.order});
+    updateNFTFilters({
+      orderBy: sortOptionNFT?.orderBy,
+      order: sortOptionNFT?.order,
+    });
   };
 
   const handleChange = (selectedOption: any) => {
-    
-    let order = '', orderBy = '', name= ''; 
+    let order = "",
+      orderBy = "",
+      name = "";
     switch (selectedOption) {
       case "Price: Ascending":
-        order = 'asc';
-        orderBy = 'price';
-        name= "Price: Ascending";
+        order = "asc";
+        orderBy = "price";
+        name = "Price: Ascending";
         break;
       case "Price: Descending":
-        order = 'desc';
-        orderBy = 'price';
-        name= 'Price: Descending';
+        order = "desc";
+        orderBy = "price";
+        name = "Price: Descending";
         break;
       case "Date: Descending":
-        order = 'desc';
-        orderBy = 'time';
-        name= 'Date: Descending';
+        order = "desc";
+        orderBy = "time";
+        name = "Date: Descending";
         break;
       default:
-          order = 'asc';
-          orderBy = 'time';
-          name= 'Date: Ascending';
-          break;
-    }    
-    setSortOption({name, order, orderBy });
+        order = "asc";
+        orderBy = "time";
+        name = "Date: Ascending";
+        break;
+    }
+    setSortOption({ name, order, orderBy });
   };
 
   useEffect(() => {
@@ -147,8 +158,7 @@ export default function ExploreSectionNavbar() {
       sortNFTs(sortOption);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortOption,pathname]);
-  
+  }, [sortOption, pathname]);
 
   useEffect(() => {
     if (tabsRef.current) {
@@ -224,12 +234,10 @@ export default function ExploreSectionNavbar() {
                   <Icon name="chevronDown" width={14} height={14} />
                 </div>
               </div>
-            )}>
+            )}
+          >
             {dropdownItems.map((item: any, i: any) => (
-              <Dropdown.Item
-                key={i}
-                onClick={() => handleChange(item.name)}
-              >
+              <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
                 {item.name}
               </Dropdown.Item>
             ))}

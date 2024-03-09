@@ -298,7 +298,13 @@ export namespace APIResponse {
     bidInfo: MarketEvent[];
     owners: (Pick<
       User,
-      "username" | "avatar" | "email" | "publicKey" | "id" | "signer" | "accountStatus"
+      | "username"
+      | "avatar"
+      | "email"
+      | "publicKey"
+      | "id"
+      | "signer"
+      | "accountStatus"
     > & { quantity: number })[];
     totalSupply: string;
   }
