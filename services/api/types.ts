@@ -94,6 +94,8 @@ export namespace APIParams {
     max?: string;
     creatorAddress?: Address;
     quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface FetchCollectionById extends PaginationParams {
@@ -112,6 +114,8 @@ export namespace APIParams {
     owner?: Address;
     name?: string;
     quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
   }
 
   export interface NFTEvents extends PaginationParams {
@@ -301,46 +305,11 @@ export namespace APIResponse {
 
   export type FetchNFTMetadata = NFTMetadata;
 
-  export type SearchNFTs = Pick<
-    NFT,
-    | "id"
-    | "u2uId"
-    | "name"
-    | "image"
-    | "animationUrl"
-    | "createdAt"
-    | "updatedAt"
-    | "status"
-    | "tokenUri"
-    | "txCreationHash"
-    | "creatorId"
-    | "collectionId"
-    | "collection"
-  >[];
+  export type SearchNFTs = FetchNFTs;
 
-  export type SearchCollections = Pick<
-    Collection,
-    | "id"
-    | "txCreationHash"
-    | "name"
-    | "symbol"
-    | "description"
-    | "address"
-    | "shortUrl"
-    | "metadata"
-    | "status"
-    | "type"
-    | "categoryId"
-    | "createdAt"
-    | "updatedAt"
-    | "coverImage"
-    | "avatar"
-  >[];
+  export type SearchCollections = FetchCollections;
 
-  export type SearchUsers = Pick<
-    User,
-    "id" | "signer" | "username" | "avatar"
-  >[];
+  export type SearchUsers = UsersData;
 
   export type VerifyAccount = FormState.VerifyAccount;
 

@@ -76,9 +76,9 @@ export default function ExploreUsersPage() {
                   width={1200}
                   height={256}
                 />
-                <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white ">
+                <div className="absolute rounded-full w-[60px] h-[60px] top-16 left-4 border-2 border-white">
                   <Image
-                    className="cursor-pointer rounded-full object-fill w-full h-full"
+                    className="cursor-pointer rounded-full w-full h-14 object-cover"
                     src={getUserAvatarImage(user)}
                     alt="Avatar"
                     width={60}
@@ -88,8 +88,8 @@ export default function ExploreUsersPage() {
               </div>
             </Link>
 
-            <div className="px-4 pt-8 pb-4 flex items-center justify-between">
-              <div className="flex flex-col gap-2">
+            <div className="px-4 pt-9 pb-2 flex items-center justify-between">
+              <div className="flex flex-col gap-1">
                 <div className="flex gap-2 items-center">
                   <Text className="font-medium">{user.username}</Text>
                   {user.accountStatus ? (

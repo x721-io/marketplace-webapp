@@ -171,7 +171,6 @@ export default function SellNFTModal({
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
       await onApprovalTokenForSingle();
-
       toast.update(toastId, {
         render: "Approve token successfully",
         type: "success",
@@ -179,11 +178,12 @@ export default function SellNFTModal({
         closeButton: true,
         isLoading: false,
       });
+      
     } catch (e) {
       toast.update(toastId, {
         render: "Failed to approve token",
         type: "error",
-        autoClose: 5000,
+        autoClose: 1000,
         closeButton: true,
         isLoading: false,
       });
@@ -220,7 +220,13 @@ export default function SellNFTModal({
   };
 
   return (
-    <Modal theme={modalTheme} dismissible size="lg" show={show} onClose={onClose}>
+    <Modal
+      theme={modalTheme}
+      dismissible
+      size="lg"
+      show={show}
+      onClose={onClose}
+    >
       <Modal.Body className="p-10">
         <div className="flex flex-col justify-center items-center gap-4">
           <form
@@ -315,6 +321,7 @@ export default function SellNFTModal({
               </Button>
             ) : (
               <NFTApproval
+                loading={loading}
                 nft={nft}
                 isMarketContractApprovedToken={isMarketContractApprovedToken}
                 handleApproveTokenForAll={handleApproveTokenForAll}
