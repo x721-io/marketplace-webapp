@@ -146,6 +146,7 @@ export default function ExploreSectionNavbar() {
     } else if (pathname.includes("items")) {
       sortNFTs(sortOption);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption,pathname]);
   
 

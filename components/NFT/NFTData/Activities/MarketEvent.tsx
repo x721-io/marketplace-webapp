@@ -26,7 +26,6 @@ interface RowProps {
 }
 
 const Row = ({ children, timestamp, maker }: RowProps) => {
-  console.log(maker)
   return (
     <div className="flex items-center gap-3">
       <Link href={getUserLink(maker)} className="flex items-center gap-2 relative">

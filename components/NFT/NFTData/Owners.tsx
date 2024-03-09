@@ -59,6 +59,7 @@ export default function OwnersTab({
     });
   }, [marketData, userWallet]);
 
+
   return (
     <div className="w-full py-7">
       <div className="w-full p-3 desktop:p-5 tablet:p-4  flex flex-col desktop:gap-4 tablet:gap-4 gap-3 rounded-2xl border border-disabled border-dashed">
@@ -86,7 +87,7 @@ export default function OwnersTab({
                         alt="avatar"
                     />
                     <div className="absolute bottom-[-7px] right-[-4px]">
-                      {owner?.accountStatus ? (
+                      {owner && owner?.accountStatus ? (
                           <Icon name="verify-active" width={16} height={16} />
                       ) : (
                           <Icon name="verify-disable" width={16} height={16} />
