@@ -12,6 +12,7 @@ import {
 } from "@/utils/string";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import { format } from "date-fns";
+import { convertImageUrl } from "@/utils/nft";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -37,12 +38,11 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
       >
         <Image
           className="w-12 h-12 rounded-lg"
-          src={nft?.image || placeholderImage}
+          src={convertImageUrl(nft?.image) || placeholderImage}
           alt="user"
           width={56}
           height={56}
         />
-
       </Link>
 
       <div className="flex flex-col text-body-14">
