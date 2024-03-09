@@ -42,6 +42,7 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
           width={56}
           height={56}
         />
+
       </Link>
 
       <div className="flex flex-col text-body-14">

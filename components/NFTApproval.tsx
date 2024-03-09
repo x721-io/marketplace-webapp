@@ -27,7 +27,7 @@ export default function NFTApproval({
           </Text>
         </div>
       </div>
-
+      
       <div className="flex items-center gap-2 justify-center flex-col tablet:flex-row ">
         {nft.collection.type === "ERC721" ? (
           <Button

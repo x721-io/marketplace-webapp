@@ -132,11 +132,13 @@ export default function NFTCard({
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        <Text className="text-secondary text-body-12">{name}</Text>
+          <Text className="text-secondary text-body-12">
+            {name}
+          </Text>
         {creator?.accountStatus && collection?.isVerified ? (
-          <Icon name="verified" width={16} height={16} />
+            <Icon name="verified" width={16} height={16} />
         ) : (
-          <Icon name="verify-disable" width={16} height={16} />
+            <Icon name="verify-disable" width={16} height={16} />
         )}
       </div>
 
