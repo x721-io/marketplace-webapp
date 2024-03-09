@@ -42,9 +42,10 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
           width={56}
           height={56}
         />
+
       </Link>
 
-      <div className="flex flex-col gap-0.5 text-body-14">
+      <div className="flex flex-col text-body-14">
         <Link
           href={`/item/${collection?.address}/${nft?.id}`}
           className="font-semibold hover:underline"
@@ -170,8 +171,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
             collection={event.collection}
             timestamp={event.timestamp}
           >
-            <div className="flex items-center gap-1">
-              <p className="text-secondary">
+              <div className="flex items-center gap-1">
                 <Link
                   className="font-semibold text-primary hover:underline"
                   href={getUserLink(event.to)}
@@ -188,19 +188,18 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                     formatUnits(event.price, token?.decimal),
                   )}
                 </span>
-              </p>
-              <Image
-                width={20}
-                height={20}
-                className="w-5 h-5 rounded-full"
-                src={token?.logo || ""}
-                alt="logo"
-              />
-              <p className="text-secondary">
-                {token?.symbol}
-                {event.collection?.type === "ERC1155" && ` each`}
-              </p>
-            </div>
+                <Image
+                    width={20}
+                    height={20}
+                    className=" rounded-full"
+                    src={token?.logo || ""}
+                    alt="logo"
+                />
+                <p className="text-secondary">
+                  {token?.symbol}
+                  {event.collection?.type === "ERC1155" && ` each`}
+                </p>
+              </div>
           </Row>
         );
       case "AcceptBid":
