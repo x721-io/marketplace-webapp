@@ -9,9 +9,10 @@ import { formatDisplayedNumber } from "@/utils";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import Text from "@/components/Text";
-import { getUserAvatarImage } from "@/utils/string";
+import { getUserAvatarImage, getUserLink } from "@/utils/string";
 import BidNFTModal from "@/components/Modal/BidNFTModal";
 import { findTokenByAddress } from "@/utils/token";
+import Icon from "@/components/Icon";
 
 export default function OwnersTab({
   nft,
@@ -60,7 +61,7 @@ export default function OwnersTab({
 
   return (
     <div className="w-full py-7">
-      <div className="w-full p-7 flex flex-col desktop:gap-4 tablet:gap-4 gap-6 rounded-2xl border border-disabled border-dashed">
+      <div className="w-full p-3 desktop:p-5 tablet:p-4  flex flex-col desktop:gap-4 tablet:gap-4 gap-3 rounded-2xl border border-disabled border-dashed">
         {!marketData || !owners.length ? (
           <Text className="text-secondary font-semibold text-body-4 text-center">
             Nothing to show
@@ -69,52 +70,63 @@ export default function OwnersTab({
           owners.map((owner) => {
             return (
               <div
-                className="flex desktop:items-center tablet:items-center items-start justify-between flex-col desktop:flex-row tablet:flex-row"
+                className="flex gap-2 tablet:gap-4 desktop:gap-4 justify-between  items-center"
                 key={owner.id}
               >
-                <Link
-                  href={`/user/${owner.id}`}
-                  className="flex items-center gap-4"
-                >
-                  <Image
-                    className="w-12 h-12 rounded-2xl"
-                    width={80}
-                    height={80}
-                    src={getUserAvatarImage(owner)}
-                    alt="avatar"
-                  />
+                <div className="flex items-center gap-4">
+                  <Link
+                      href={`/user/${owner.id}`}
+                      className="flex relative"
+                  >
+                    <Image
+                        className="w-10 h-10 tablet:w-12 tablet:h-12 desktop:w-12 desktop:h-12 rounded-full"
+                        width={80}
+                        height={80}
+                        src={getUserAvatarImage(owner)}
+                        alt="avatar"
+                    />
+                    <div className="absolute bottom-[-7px] right-[-4px]">
+                      {owner?.accountStatus ? (
+                          <Icon name="verify-active" width={16} height={16} />
+                      ) : (
+                          <Icon name="verify-disable" width={16} height={16} />
+                      )}
+                    </div>
+                  </Link>
                   <div>
-                    <p className="font-medium">{owner.username}</p>
+                    <p className="font-medium text-body-16">{owner.username}</p>
                     {!!owner.sellInfo ? (
-                      <p className="text-secondary text-body-14 font-semibold break-all">
-                        {owner.sellInfo.quantity} / {owner.quantity} item(s) on
-                        sale for
-                        <span className="text-primary">
+                        <p className="text-secondary text-body-14 font-semibold break-all">
+                          {owner.sellInfo.quantity}/{owner.quantity} item(s) on
+                          sale for
+                          <span className="text-primary">
                           {" "}
-                          {formatDisplayedNumber(
-                            formatEther(owner.sellInfo.price),
-                          )}{" "}
-                          {token?.symbol}
+                            {formatDisplayedNumber(
+                                formatEther(owner.sellInfo.price),
+                            )}{" "}
+                            {token?.symbol}
                         </span>{" "}
-                        each
-                      </p>
-                    ) : (
-                      <p className="flex items-center gap-1">
-                        <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
-                          {formatDisplayedNumber(owner.quantity)}
+                          each
                         </p>
-                        <p className="text-secondary font-semibold text-body-14">
-                          {" "}
-                          edition(s) -
-                        </p>{" "}
-                        <span className="font-bold"> Not for sale</span>
-                      </p>
+                    ) : (
+                        <p className="flex items-center gap-1">
+                          <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
+                            {formatDisplayedNumber(owner.quantity)}
+                          </p>
+                          <p className="text-secondary font-semibold text-body-14">
+                            {" "}
+                            edition(s) -
+                          </p>{" "}
+                          <span className="font-bold text-body-14"> Not for sale</span>
+                        </p>
                     )}
                   </div>
-                </Link>
+
+
+                </div>
 
                 {owner.publicKey.toLowerCase() === userWallet?.toLowerCase() ? (
-                  <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[120px] text-center">
+                  <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[90px] tablet:w-[120px] desktop:w-[120px] text-center">
                     This is me
                   </div>
                 ) : !!owner.sellInfo ? (
