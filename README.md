@@ -30,8 +30,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
     ```
 2. ### Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-   * You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-   * This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Contracts
 
@@ -74,19 +72,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - #### `Marketplace API`:
   - _**Mainnet**_: `https://marketplace-api.uniultra.xyz`
   - _**Testnet**_: `https://marketplace-api-stg.uniultra.xyz`
-
-## Learn More
-
-To learn more about (Framework,Web3...), take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and Marketplace.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [SWR](https://swr.vercel.app/docs/getting-started) - an interactive SWR tutorial.
-- [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction) - an interactive Zustand tutorial.
-- [Wagmi](  https://wagmi.sh/react/getting-started) - an interactive Wagmi tutorial.
-
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
