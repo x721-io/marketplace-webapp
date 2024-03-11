@@ -12,6 +12,7 @@ import {
 } from "@/utils/string";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import { format } from "date-fns";
+import { convertImageUrl } from "@/utils/nft";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -37,12 +38,11 @@ const Row = ({ children, timestamp, nft, collection }: RowProps) => {
       >
         <Image
           className="w-12 h-12 rounded-lg"
-          src={nft?.image || placeholderImage}
+          src={convertImageUrl(nft?.image) || placeholderImage}
           alt="user"
           width={56}
           height={56}
         />
-
       </Link>
 
       <div className="flex flex-col text-body-14">
@@ -171,35 +171,35 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
             collection={event.collection}
             timestamp={event.timestamp}
           >
-              <div className="flex items-center gap-1">
-                <Link
-                  className="font-semibold text-primary hover:underline"
-                  href={getUserLink(event.to)}
-                >
-                  {getDisplayedUserName(event.to)}
-                </Link>
-                Bid{" "}
-                {event.collection?.type === "ERC1155"
-                  ? `${event.quantity} edition(s) for`
-                  : "for"}
-                <span className="font-semibold text-primary">
-                  &nbsp;
-                  {formatDisplayedNumber(
-                    formatUnits(event.price, token?.decimal),
-                  )}
-                </span>
-                <Image
-                    width={20}
-                    height={20}
-                    className=" rounded-full"
-                    src={token?.logo || ""}
-                    alt="logo"
-                />
-                <p className="text-secondary">
-                  {token?.symbol}
-                  {event.collection?.type === "ERC1155" && ` each`}
-                </p>
-              </div>
+            <div className="flex items-center gap-1">
+              <Link
+                className="font-semibold text-primary hover:underline"
+                href={getUserLink(event.to)}
+              >
+                {getDisplayedUserName(event.to)}
+              </Link>
+              Bid{" "}
+              {event.collection?.type === "ERC1155"
+                ? `${event.quantity} edition(s) for`
+                : "for"}
+              <span className="font-semibold text-primary">
+                &nbsp;
+                {formatDisplayedNumber(
+                  formatUnits(event.price, token?.decimal),
+                )}
+              </span>
+              <Image
+                width={20}
+                height={20}
+                className=" rounded-full"
+                src={token?.logo || ""}
+                alt="logo"
+              />
+              <p className="text-secondary">
+                {token?.symbol}
+                {event.collection?.type === "ERC1155" && ` each`}
+              </p>
+            </div>
           </Row>
         );
       case "AcceptBid":
