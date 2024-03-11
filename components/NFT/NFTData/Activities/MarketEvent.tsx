@@ -26,10 +26,12 @@ interface RowProps {
 }
 
 const Row = ({ children, timestamp, maker }: RowProps) => {
-  console.log(maker)
   return (
     <div className="flex items-center gap-3">
-      <Link href={getUserLink(maker)} className="flex items-center gap-2 relative">
+      <Link
+        href={getUserLink(maker)}
+        className="flex items-center gap-2 relative"
+      >
         <Image
             className="w-10 h-10 rounded-full"
             src={getUserAvatarImage(maker)}
@@ -39,9 +41,9 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
         />
         <div className="absolute bottom-[-7px] right-[-4px]">
           {maker?.accountStatus ? (
-              <Icon name="verified" width={16} height={16} />
+            <Icon name="verified" width={16} height={16} />
           ) : (
-              <Icon name="verify-disable" width={16} height={16} />
+            <Icon name="verify-disable" width={16} height={16} />
           )}
         </div>
       </Link>

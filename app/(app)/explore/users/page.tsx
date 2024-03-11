@@ -93,7 +93,7 @@ export default function ExploreUsersPage() {
                 <div className="flex gap-2 items-center">
                   <Text className="font-medium">{user.username}</Text>
                   {user.accountStatus ? (
-                    <Icon name="verify-active" width={16} height={16} />
+                    <Icon name="verified" width={16} height={16} />
                   ) : (
                     <Icon name="verify-disable" width={16} height={16} />
                   )}
