@@ -326,7 +326,9 @@ export default function CreateNftPage() {
                       ? collectionOptions.map((c) => (
                           <div
                             key={c.value}
-                            onClick={() => handleCollectionChange(c.value, onChange)} 
+                            onClick={() =>
+                              handleCollectionChange(c.value, onChange)
+                            }
                             className={classNames(
                               "w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-8 text-center",
                               "hover:border-primary hover:bg-white hover:text-primary border-2 transition-all",

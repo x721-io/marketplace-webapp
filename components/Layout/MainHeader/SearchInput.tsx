@@ -13,7 +13,6 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
 
-
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner:
@@ -82,7 +81,7 @@ export default function SearchInput() {
     const timeOutId = setTimeout(handleSearch, 200);
     return () => clearTimeout(timeOutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString,text]);
+  }, [searchString, text]);
 
   return (
     <>
