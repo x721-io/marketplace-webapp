@@ -15,7 +15,7 @@ interface Props {
 
 export default function NFTData({ nft, metaData, marketData }: Props) {
   return (
-    <div className="pb-7">
+    <div className="pb-7 tablet:w-full overflow-auto">
       <Tabs.Group style="underline">
         {nft.collection.type === "ERC1155" && (
           <Tabs.Item
