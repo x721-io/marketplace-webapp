@@ -33,11 +33,11 @@ const Row = ({ children, timestamp, maker }: RowProps) => {
         className="flex items-center gap-2 relative"
       >
         <Image
-            className="w-10 h-10 rounded-full"
-            src={getUserAvatarImage(maker)}
-            alt="user"
-            width={40}
-            height={40}
+          className="w-10 h-10 rounded-full"
+          src={getUserAvatarImage(maker)}
+          alt="user"
+          width={40}
+          height={40}
         />
         <div className="absolute bottom-[-7px] right-[-4px]">
           {maker?.accountStatus ? (
