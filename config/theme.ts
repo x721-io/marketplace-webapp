@@ -54,8 +54,8 @@ export const typography = {
   "heading-xl": [
     "64px",
     {
-      lineHeight: "77px",
-      letterSpacing: "-1px",
+      lineHeight: "70px",
+      letterSpacing: "2px",
     },
   ],
   "heading-md": [
@@ -118,7 +118,7 @@ export const typography = {
     "40px",
     {
       lineHeight: "44px",
-      letterSpacing: "-1.5px",
+      letterSpacing: "-0.5px",
     },
   ],
   "body-24": [

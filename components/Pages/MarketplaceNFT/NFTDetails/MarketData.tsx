@@ -55,9 +55,9 @@ export default function NFTMarketData({
             </Link>
           </Text>
           {nft.collection.isVerified && nft.creator?.accountStatus ? (
-              <Icon name="verified" width={20} height={20} />
+            <Icon name="verified" width={20} height={20} />
           ) : (
-              <Icon name="verify-disable" width={20} height={20} />
+            <Icon name="verify-disable" width={20} height={20} />
           )}
         </div>
 
