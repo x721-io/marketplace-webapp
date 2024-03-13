@@ -56,7 +56,11 @@ export default function MainFooter() {
                 {group.title}
               </Text>
               {group.items.map((item, index) => (
-                <Link className="text-secondary text-body-14" key={index} href={item.href}>
+                <Link
+                  className="text-secondary text-body-14"
+                  key={index}
+                  href={item.href}
+                >
                   {item.label}
                 </Link>
               ))}

@@ -10,7 +10,6 @@ import MenuModal from "@/components/Modal/MenuModal";
 import { getUserAvatarImage } from "@/utils/string";
 import NavbarMenu from "@/components/Layout/MainHeader/NavbarMenu";
 
-
 export const HEADER_HEIGHT = 88;
 
 export default function MainHeader() {
@@ -39,7 +38,7 @@ export default function MainHeader() {
             </Link>
           </div>
           <SearchInput />
-          <NavbarMenu/>
+          <NavbarMenu />
         </div>
 
         <div className="flex gap-4 items-center">
