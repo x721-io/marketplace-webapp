@@ -20,4 +20,3 @@ export const convertImageUrl = (url?: string): string => {
     return baseURL + encodeURIComponent(url);
   }
 };
-
