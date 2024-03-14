@@ -94,7 +94,7 @@ export default function NFTPage() {
           </div>
           <NFTMarketData nft={item} marketData={marketData} />
         </div>
-        <div className="flex mt-[34px] desktop:w-[700px] tablet:w-full">
+        <div className="flex mt-[34px] desktop:w-[700px] tablet:w-full desktop:pl-14">
           <NFTData marketData={marketData} nft={item} metaData={metaData} />
         </div>
       </div>
