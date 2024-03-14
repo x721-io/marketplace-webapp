@@ -69,8 +69,12 @@ export default function OverviewTab({
                   />
                   <div className="flex-1 gap-4">
                     <div className="flex items-center gap-3 justify-between">
-                      <Text className="font-semibold">{shortenAddress(royalty.account)}</Text>
-                      <Text className="text-tertiary font-normal">{royaltyPercent.toFixed(2)}%</Text>
+                      <Text className="font-semibold">
+                        {shortenAddress(royalty.account)}
+                      </Text>
+                      <Text className="text-tertiary font-normal">
+                        {royaltyPercent.toFixed(2)}%
+                      </Text>
                     </div>
                     <div className="h-2 p-0.5 w-full bg-surface-medium shadow-sm rounded">
                       <div

@@ -82,7 +82,10 @@ export default function NFTPage() {
       <div className="desktop:px-[100px] px-4 tablet:py-[60px] py-6 flex flex-col desktop:w-auto tablet:w-[646px] w-full justify-center">
         <div className="flex desktop:gap-16 tablet:gap-8 gap-8 desktop:flex-row flex-col items-center w-full tablet:items-start">
           <div className="flex gap-4 justify-center flex-col tablet:flex-row">
-            <div className="w-10 h-10 flex justify-center items-center rounded-[42px] bg-surface-soft shadow hover:shadow-md" onClick={router.back}>
+            <div
+              className="w-10 h-10 flex justify-center items-center rounded-[42px] bg-surface-soft shadow hover:shadow-md"
+              onClick={router.back}
+            >
               <Icon
                 className="cursor-pointer"
                 name="arrowLeft"

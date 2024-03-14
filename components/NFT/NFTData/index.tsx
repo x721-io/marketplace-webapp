@@ -16,30 +16,30 @@ interface Props {
 export default function NFTData({ nft, metaData, marketData }: Props) {
   return (
     <div className="pb-7 tablet:w-full overflow-auto">
-      <Tabs.Group style="underline" className="flex flex-nowrap overflow-x-auto">
+      <Tabs.Group
+        style="underline"
+        className="flex flex-nowrap overflow-x-auto"
+      >
         {nft.collection.type === "ERC1155" && (
           <Tabs.Item
             active
             title={
               <div className="min-w-fit whitespace-nowrap">
                 Owners ({marketData?.owners.length || 0})
-              </div>}
+              </div>
+            }
           >
             <OwnersTab nft={nft} marketData={marketData} />
           </Tabs.Item>
         )}
-        <Tabs.Item active title={
-          <div className="min-w-fit whitespace-nowrap">
-            Overview
-          </div>}
+        <Tabs.Item
+          active
+          title={<div className="min-w-fit whitespace-nowrap">Overview</div>}
         >
           <OverviewTab metaData={metaData} nft={nft} />
         </Tabs.Item>
         <Tabs.Item
-          title={
-            <div className="min-w-fit whitespace-nowrap">
-              Properties
-            </div>}
+          title={<div className="min-w-fit whitespace-nowrap">Properties</div>}
         >
           <PropertiesTab metaData={metaData} />
         </Tabs.Item>
@@ -47,7 +47,8 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
           title={
             <div className="min-w-fit whitespace-nowrap">
               Bids ({marketData?.bidInfo.length || 0})
-            </div>}
+            </div>
+          }
         >
           <BidsTab marketData={marketData} nft={nft} />
         </Tabs.Item>

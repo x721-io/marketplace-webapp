@@ -103,13 +103,17 @@ export default function ExploreUsersPage() {
                     <Text className="text-body-12 font-medium">
                       {formatDisplayedNumber(user.followers)}
                     </Text>
-                    <Text className="text-body-12 text-secondary">Followers</Text>
+                    <Text className="text-body-12 text-secondary">
+                      Followers
+                    </Text>
                   </div>
                   <div className="flex gap-2">
                     <Text className="text-body-12 font-medium">
                       {formatDisplayedNumber(user.following)}
                     </Text>
-                    <Text className="text-body-12 text-secondary">Following</Text>
+                    <Text className="text-body-12 text-secondary">
+                      Following
+                    </Text>
                   </div>
                 </div>
               </div>

@@ -78,12 +78,12 @@ export default function CollectionsList({
       >
         {showCreateCollection
           ? creator === myId && (
-            <Link href={`/create/collection`}>
-              <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
-                <Button variant="primary">Create a collection</Button>
-              </div>
-            </Link>
-          )
+              <Link href={`/create/collection`}>
+                <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[192px] border">
+                  <Button variant="primary">Create a collection</Button>
+                </div>
+              </Link>
+            )
           : ""}
         {Array.isArray(collections) &&
           collections.map((c, index) => {
@@ -118,40 +118,40 @@ export default function CollectionsList({
                           </Text>
                         </Tooltip>
                         {c.creators &&
-                          c.creators.length > 0 &&
-                          c.creators[0].user.accountStatus &&
-                          c.isVerified ? (
+                        c.creators.length > 0 &&
+                        c.creators[0].user.accountStatus &&
+                        c.isVerified ? (
                           <Icon name="verify-active" width={16} height={16} />
                         ) : (
-                          <Icon
-                            name="verify-disable"
-                            width={16}
-                            height={16}
-                          />
+                          <Icon name="verify-disable" width={16} height={16} />
                         )}
                       </div>
                       <div className="flex justify-between">
                         <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">Owners</Text>
-                          <Text className="text-body-12">
-                            {c.totalOwner}
+                          <Text className="text-body-12 text-secondary">
+                            Owners
                           </Text>
+                          <Text className="text-body-12">{c.totalOwner}</Text>
                         </div>
                         <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">Items</Text>
-                          <Text className="text-body-12 ">
-                            {c.totalNft}
+                          <Text className="text-body-12 text-secondary">
+                            Items
                           </Text>
+                          <Text className="text-body-12 ">{c.totalNft}</Text>
                         </div>
                         <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">Volume</Text>
+                          <Text className="text-body-12 text-secondary">
+                            Volume
+                          </Text>
                           <Text className="text-body-12">
                             {formatDisplayedNumber(formatUnits(c.volumn || 0))}{" "}
                             U2U
                           </Text>
                         </div>
                         <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">Floor</Text>
+                          <Text className="text-body-12 text-secondary">
+                            Floor
+                          </Text>
                           <Text className="text-body-12">
                             {formatDisplayedNumber(c.floorPrice || 0)} U2U
                           </Text>

@@ -13,10 +13,14 @@ export default function PropertiesTab({
         <>
           <div className="flex items-center">
             <div className="flex-1">
-              <Text className="text-tertiary text-body-12 font-semibold">Name</Text>
+              <Text className="text-tertiary text-body-12 font-semibold">
+                Name
+              </Text>
             </div>
             <div className="flex-1">
-              <Text className="text-tertiary text-body-12 font-semibold">Value</Text>
+              <Text className="text-tertiary text-body-12 font-semibold">
+                Value
+              </Text>
             </div>
           </div>
           {Array.isArray(metaData?.attributes) &&
