@@ -9,7 +9,6 @@ import BannerSection from "@/components/Pages/MarketplaceNFT/ProfileSettings/Ban
 import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 
-
 export default function ProfilePage() {
   const { isValidSession } = useAuth();
   useEffect(() => {
@@ -18,7 +17,7 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full relative gap-10 tablet:gap-8 desktop:gap-8 flex flex-col items-center desktop:py-10 desktop:px-60 tablet:py-10 tablet:px-16 py-4 px-4">
-        <BannerSection />
+      <BannerSection />
 
       <div className="w-full ">
         <Tabs.Group style="underline">
