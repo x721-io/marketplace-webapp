@@ -25,7 +25,7 @@ export default function MainHeader() {
           <div className="hidden desktop:block tablet:block">
             <Link href="/" className="w-fit">
               <Image
-                className="h-10 object-contain desktop:w-[248px] tablet:w-fit"
+                className="h-10 object-contain desktop:w-[500px] tablet:w-fit"
                 height={100}
                 src={brandingSvg}
                 alt="u2u-brand"
