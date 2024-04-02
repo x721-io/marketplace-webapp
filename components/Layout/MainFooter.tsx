@@ -109,12 +109,12 @@ export default function MainFooter() {
 
         <div className="flex-1 self-center tablet:self-end desktop:self-end flex justify-end">
           <div className="bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end">
-            <span className="p-2 bg-white rounded-xl">
+            {/* <span className="p-2 bg-white rounded-xl">
               <SunIcon width={16} height={16} />
             </span>
             <span className="p-2">
               <MoonIcon width={16} height={16} />
-            </span>
+            </span> */}
           </div>
         </div>
       </div>
