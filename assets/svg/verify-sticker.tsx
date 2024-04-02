@@ -28,8 +28,8 @@ const VerifySticker = ({ width, height }: Props) => {
             y2="11.2501"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#5D96FF" />
-            <stop offset="1" stop-color="#D466FF" />
+            <stop stopColor="#5D96FF" />
+            <stop offset="1" stopColor="#D466FF" />
           </linearGradient>
         </defs>
       </svg>
