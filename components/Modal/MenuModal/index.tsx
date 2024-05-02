@@ -1,16 +1,16 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
-import { navs } from "@/config/nav";
-import Link from "next/link";
-import Icon from "@/components/Icon";
-import Button from "@/components/Button";
-import Text from "@/components/Text";
-import Collapsible from "@/components/Collapsible";
-import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
-import { useAuth } from "@/hooks/useAuth";
-import { isMobile } from "react-device-detect";
-import MenuAccountInformation from "./AccountInformation";
-import Image from "next/image";
 import brandingSvg from "@/assets/branding.svg";
+import Button from "@/components/Button";
+import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
+import Collapsible from "@/components/Collapsible";
+import Icon from "@/components/Icon";
+import Text from "@/components/Text";
+import { navs } from "@/config/nav";
+import { useAuth } from "@/hooks/useAuth";
+import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
+import Image from "next/image";
+import Link from "next/link";
+import { isMobile, isSafari } from "react-device-detect";
+import MenuAccountInformation from "./AccountInformation";
 
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   root: {
@@ -20,7 +20,7 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
     },
   },
   content: {
-    inner: "relative bg-white flex flex-col h-screen",
+    inner: `relative bg-white flex flex-col ${isSafari && isMobile ? 'h-[90vh]' : 'h-screen'}`,
   },
   body: {
     base: "p-0 flex-1 overflow-auto",
