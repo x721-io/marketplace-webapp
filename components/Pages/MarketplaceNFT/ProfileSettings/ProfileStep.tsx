@@ -1,18 +1,18 @@
 import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
-import Icon from "@/components/Icon";
-import Text from "@/components/Text";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import useAuthStore from "@/store/auth/store";
-import { toast } from "react-toastify";
-import { useAuth } from "@/hooks/useAuth";
-import { urlRegex } from "@/utils/regex";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { FormState } from "@/types";
+import Icon from "@/components/Icon";
 import VerifyAccountModal from "@/components/Modal/VerifyAccountModal";
+import Text from "@/components/Text";
 import { formRulesProfile } from "@/config/form/rules";
+import { useAuth } from "@/hooks/useAuth";
+import useAuthStore from "@/store/auth/store";
+import { FormState } from "@/types";
+import { urlRegex } from "@/utils/regex";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function ProfileStep() {
   const profile = useAuthStore((state) => state.profile);
@@ -211,7 +211,7 @@ export default function ProfileStep() {
           </Text>
           <Text className="text-secondary text-body-16">
             Proceed with verification process to get more visibility and gain
-            trust on U2NFT
+            trust on X721
           </Text>
           <Button
             onClick={() => handleGetVerify()}
