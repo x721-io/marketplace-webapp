@@ -1,37 +1,30 @@
-import Image from "next/image";
 import brandingSvg from "@/assets/branding.svg";
-import Link from "next/link";
-import Text from "@/components/Text";
-import SunIcon from "@/assets/svg/sun-icon";
-import MoonIcon from "@/assets/svg/moon";
-import Input from "@/components/Form/Input";
-import Button from "@/components/Button";
 import Icon from "@/components/Icon";
+import Text from "@/components/Text";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function MainFooter() {
   const links = [
     {
       title: "Marketplace",
       items: [
-        { label: "Explore", href: "/explore/items" },
-        { label: "Create", href: "/create/collection" },
-        { label: "Artists", href: "/explore/users" },
+        { label: "Explore", href: "/explore/collections", blank: '_parent' },
+        { label: "Create", href: "/create/collection/ERC721", blank: '_parent' },
+        { label: "Artists", href: "/explore/users", blank: '_parent' },
       ],
     },
     {
       title: "Links",
       items: [
-        { label: "API", href: "#" },
-        { label: "Token", href: "#" },
-        { label: "Branding", href: "#" },
+        { label: "Docs", href: " https://docs.x721.io/", blank: '_blank' },
       ],
     },
     {
       title: "Socials",
       items: [
-        { label: "Facebook", href: "#" },
-        { label: "Instagram", href: "#" },
-        { label: "Discord", href: "#" },
+        { label: "Twitter", href: "https://twitter.com/NFT_X721", blank: '_blank' },
+        { label: "Telegram", href: "https://t.me/NFT_X721", blank: '_blank' },
       ],
     },
   ];
@@ -60,6 +53,7 @@ export default function MainFooter() {
                   className="text-secondary text-body-14"
                   key={index}
                   href={item.href}
+                  target={item.blank}
                 >
                   {item.label}
                 </Link>
@@ -91,24 +85,24 @@ export default function MainFooter() {
       <div className="flex flex-col tablet:flex-row desktop:flex-row justify-center tablet:justify-between desktop:justify-between items-center gap-4 tablet:gap-0 desktop:gap-0">
         <div className="flex-1">
           <Text className="text-tertiary" variant="body-12">
-            © U2NFT, Inc. All rights reserved.
+            © X721, Inc. All rights reserved.
           </Text>
         </div>
 
         <div className="flex-1 flex items-center justify-center gap-6">
-          <Link href="#" className="text-body-12 text-tertiary">
+          <Link href="https://u2u.xyz" target="_blank" className="text-body-12 text-tertiary">
             Terms of Service
           </Link>
-          <Link href="#" className="text-body-12 text-tertiary">
+          {/* <Link href="#" className="text-body-12 text-tertiary">
             Privacy Policy
           </Link>
           <Link href="#" className="text-body-12 text-tertiary">
             Cookies
-          </Link>
+          </Link> */}
         </div>
 
         <div className="flex-1 self-center tablet:self-end desktop:self-end flex justify-end">
-          <div className="bg-surface-soft rounded-2xl p-1 w-[73px] flex justify-end">
+          <div className=" rounded-2xl p-1 w-[73px] flex justify-end">
             {/* <span className="p-2 bg-white rounded-xl">
               <SunIcon width={16} height={16} />
             </span>

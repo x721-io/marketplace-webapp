@@ -60,8 +60,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
   - _**Mainnet**_: `39`
   - _**Testnet**_: `2484`
 - #### `Marketplace URL`:
-  - _**Mainnet**_: `https://u2nft.io`
-  - _**Testnet**_: `https://nebulas.u2nft.io`
+  - _**Mainnet**_: `https://x721.io`
+  - _**Testnet**_: `https://testnet.x721.io`
 - #### `ERC721_FACTORY`:
   - _**Mainnet**_: `0xbFfB662EA0cC38A47379D458b35d1becD6da9115`
   - _**Testnet**_: `0x2d710Bce9e3e9501d69f657bfA29F2Dc21CD5B14`
