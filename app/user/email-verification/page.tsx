@@ -3,8 +3,8 @@ import Text from "@/components/Text";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { APIParams } from "@/services/api/types";
 import { Spinner } from "flowbite-react";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export default function EmailVerificationPage() {
@@ -73,7 +73,7 @@ export default function EmailVerificationPage() {
                 className="underline cursor-pointer hover:text-primary"
                 onClick={navigationHomepage}
               >
-                https://nebulas.u2nft.io/
+                https://testnet.x721.io/
               </span>{" "}
               to return to the home page
             </span>
