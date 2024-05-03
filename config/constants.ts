@@ -14,7 +14,7 @@ export const NFT_COLLECTION_VERIFICATION_REQUEST =
 
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) =>
-    `I want to login on U2UNFTMarket at ${time}. I accept the U2U Terms of Service https://unicornultra.xyz and I am at least 13 years old.`,
+    `I want to login on x721.io at ${time}. I accept the U2U Terms of Service https://u2u.xyz and I am at least 13 years old.`,
 };
 
 export const FINGERPRINT =
