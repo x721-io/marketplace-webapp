@@ -16,13 +16,20 @@ export const tokens: Record<string, Token> = {
     address: process.env.NEXT_PUBLIC_WU2U_CONTRACT as Address,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
-  // usdt: {
-  //   name: "ETH",
-  //   symbol: "ETH",
-  //   decimal: 18,
-  //   address: '0x36c17fd9ab448616aac885d06a58e4b5017ac9ca',
-  //   logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
-  // }
+  weth: {
+    name: "WETH",
+    symbol: "WETH",
+    decimal: 18,
+    address: process.env.NEXT_PUBLIC_WETH_CONTRACT as Address,
+    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  },
+  wbtc: {
+    name: "WBTC",
+    symbol: "WBTC",
+    decimal: 18,
+    address: process.env.NEXT_PUBLIC_WBTC_CONTRACT as Address,
+    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  }
 };
 
 export const tokenOptions = Object.values(tokens).map((token) => {
