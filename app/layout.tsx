@@ -9,8 +9,8 @@ import React, { Suspense } from "react";
 import LoadingPage from "./loading";
 
 export const metadata: Metadata = {
-  title: "U2U NFT Marketplace",
-  description: "U2U NFT Marketplace",
+  title: "U2U NFT",
+  description: "U2U NFT",
 };
 
 export default function RootLayout({
