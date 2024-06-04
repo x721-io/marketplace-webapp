@@ -1,5 +1,4 @@
 export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
-export const ALLOWED_DOMAIN_URL = process.env.NEXT_PUBLIC_ALLOWED_DOMAIN_URL;
 
 export const API_ENDPOINTS = {
   CONNECT: "/auth/connect",
