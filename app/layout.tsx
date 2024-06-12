@@ -7,6 +7,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import React, { Suspense } from "react";
 import LoadingPage from "./loading";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata: Metadata = {
   title: "U2U NFT Marketplace",
@@ -27,6 +28,7 @@ export default function RootLayout({
             <ToastContainer autoClose={5000} />
           </Providers>
         </ErrorBoundary>
+        <GoogleAnalytics gaId="G-4BKP4Z6M3K" />
       </body>
     </html>
   );
