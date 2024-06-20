@@ -255,6 +255,7 @@ export default function SellNFTModal({
                 size={18}
                 error={!!errors.price}
                 register={register("price", formRules.price)}
+                type="number"
               />
             </div>
 

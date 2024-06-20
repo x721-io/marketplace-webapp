@@ -10,8 +10,8 @@ import LoadingPage from "./loading";
 import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata: Metadata = {
-  title: "U2U NFT Marketplace",
-  description: "U2U NFT Marketplace",
+  title: "X721 Marketplace",
+  description: "X721 Marketplace",
 };
 
 export default function RootLayout({
