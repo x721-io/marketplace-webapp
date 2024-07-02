@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { useNFTMarketStatus } from "@/hooks/useMarket";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import SellNFTModal from "@/components/Modal/SellNFTModal";
 import BuyNFTModal from "@/components/Modal/BuyNFTModal";
@@ -12,26 +12,30 @@ import useAuthStore from "@/store/auth/store";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import TransferNFTModal from "@/components/Modal/TransferNFT";
+import { useWrongNetwork } from "@/hooks/useAuth";
+import { CHAIN_ID } from "@/config/constants";
+import { switchNetwork } from "@wagmi/core";
+
 
 export default function NFTActions({
-  nft,
-  marketData,
-}: {
+                                     nft,
+                                     marketData,
+                                   }: {
   nft: NFT;
   marketData?: APIResponse.NFTMarketData;
 }) {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(
-    nft.collection.type,
-    marketData,
+      nft.collection.type,
+      marketData,
   );
   const myBid = useMemo(() => {
     if (!marketData) return;
     return marketData.bidInfo?.find((bid) => {
       return (
-        !!bid.to?.publicKey &&
-        !!wallet &&
-        bid.to?.publicKey?.toLowerCase() === wallet?.toLowerCase()
+          !!bid.to?.publicKey &&
+          !!wallet &&
+          bid.to?.publicKey?.toLowerCase() === wallet?.toLowerCase()
       );
     });
   }, [marketData, wallet]);
@@ -42,55 +46,55 @@ export default function NFTActions({
   const [showCancelSellModal, setShowCancelSellModal] = useState(false);
   const [showCancelBidModal, setShowCancelBidModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
-
+  const { isWrongNetwork, switchToCorrectNetwork } = useWrongNetwork()
   if (isOwner) {
     return (
-      <div className="w-full">
-        <p className="text-secondary text-body-16 font-medium text-center mb-2">
-          You own this NFT
-        </p>
-        <ConnectWalletButton showConnectButton className="w-full">
-          {isOnSale && isSeller ? (
-            <Button
-              className="w-full"
-              onClick={() => setShowCancelSellModal(true)}
-            >
-              Cancel listing
-            </Button>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <Button className="w-full" onClick={() => setShowSellModal(true)}>
-                Put on sale
-              </Button>
-              <Button
-                variant="outlined"
-                className="w-full"
-                onClick={() => setShowTransferModal(true)}
-              >
-                Transfer
-              </Button>
-            </div>
-          )}
-          <SellNFTModal
-            marketData={marketData}
-            nft={nft}
-            show={showSellModal}
-            onClose={() => setShowSellModal(false)}
-          />
-          <CancelSellNFTModal
-            nft={nft}
-            marketData={marketData}
-            show={showCancelSellModal}
-            onClose={() => setShowCancelSellModal(false)}
-          />
-          <TransferNFTModal
-            nft={nft}
-            marketData={marketData}
-            show={showTransferModal}
-            onClose={() => setShowTransferModal(false)}
-          />
-        </ConnectWalletButton>
-      </div>
+        <div className="w-full">
+          <p className="text-secondary text-body-16 font-medium text-center mb-2">
+            You own this NFT
+          </p>
+          <ConnectWalletButton showConnectButton className="w-full">
+            {isOnSale && isSeller ? (
+                <Button
+                    className="w-full"
+                    onClick={() => setShowCancelSellModal(true)}
+                >
+                  Cancel listing
+                </Button>
+            ) : (
+                <div className="flex flex-col gap-2">
+                  <Button className="w-full" onClick={() => setShowSellModal(true)}>
+                    Put on sale
+                  </Button>
+                  <Button
+                      variant="outlined"
+                      className="w-full"
+                      onClick={() => setShowTransferModal(true)}
+                  >
+                    Transfer
+                  </Button>
+                </div>
+            )}
+            <SellNFTModal
+                marketData={marketData}
+                nft={nft}
+                show={showSellModal}
+                onClose={() => setShowSellModal(false)}
+            />
+            <CancelSellNFTModal
+                nft={nft}
+                marketData={marketData}
+                show={showCancelSellModal}
+                onClose={() => setShowCancelSellModal(false)}
+            />
+            <TransferNFTModal
+                nft={nft}
+                marketData={marketData}
+                show={showTransferModal}
+                onClose={() => setShowTransferModal(false)}
+            />
+          </ConnectWalletButton>
+        </div>
     );
   }
 
@@ -123,24 +127,24 @@ export default function NFTActions({
         </Button>
       )}
 
-      <BuyNFTModal
-        saleData={saleData}
-        nft={nft}
-        show={showBuyModal}
-        onClose={() => setShowBuyModal(false)}
-      />
-      <BidNFTModal
-        marketData={marketData}
-        nft={nft}
-        show={showBidModal}
-        onClose={() => setShowBidModal(false)}
-      />
-      <CancelBidNFTModal
-        bid={myBid}
-        nft={nft}
-        show={showCancelBidModal}
-        onClose={() => setShowCancelBidModal(false)}
-      />
-    </ConnectWalletButton>
+        <BuyNFTModal
+            saleData={saleData}
+            nft={nft}
+            show={showBuyModal}
+            onClose={() => setShowBuyModal(false)}
+        />
+        <BidNFTModal
+            marketData={marketData}
+            nft={nft}
+            show={showBidModal}
+            onClose={() => setShowBidModal(false)}
+        />
+        <CancelBidNFTModal
+            bid={myBid}
+            nft={nft}
+            show={showCancelBidModal}
+            onClose={() => setShowCancelBidModal(false)}
+        />
+      </ConnectWalletButton>
   );
 }

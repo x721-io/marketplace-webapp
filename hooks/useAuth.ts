@@ -1,10 +1,11 @@
-import { Address, useAccount } from "wagmi";
+import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { disconnect } from "@wagmi/core";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { APIParams } from "@/services/api/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import { CHAIN_ID } from "@/config/constants";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
@@ -92,4 +93,22 @@ export const useAuth = () => {
     onResendEmail,
     onVerifyAccount,
   };
+};
+
+
+export const useWrongNetwork = () => {
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+
+  const isWrongNetwork = useMemo(() => {
+    return !!chain?.id && chain?.id !== Number(CHAIN_ID);
+  }, [chain?.id]);
+
+  const switchToCorrectNetwork = () => {
+    if (isWrongNetwork) {
+      switchNetwork?.(Number(CHAIN_ID));
+    }
+  };
+
+  return { isWrongNetwork, switchToCorrectNetwork };
 };
