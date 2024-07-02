@@ -20,6 +20,7 @@ export default function ExploreSectionNavbar() {
   ];
 
   const dropdownItems = [
+    { name: "All", order: "", orderBy: "all" },
     { name: "Price: Ascending", order: "asc", orderBy: "price" },
     { name: "Price: Descending", order: "desc", orderBy: "price" },
     { name: "Date: Ascending", order: "asc", orderBy: "time" },
@@ -30,9 +31,9 @@ export default function ExploreSectionNavbar() {
   const router = useRouter();
   const tabsRef = useRef<TabsRef>(null);
   const [sortOption, setSortOption] = useState({
-    name: "Date: Descending",
-    order: "desc",
-    orderBy: "time",
+    name: "All",
+    order: "",
+    orderBy: "all",
   });
 
   const {
@@ -124,8 +125,8 @@ export default function ExploreSectionNavbar() {
 
   const handleChange = (selectedOption: any) => {
     let order = "",
-      orderBy = "",
-      name = "";
+        orderBy = "",
+        name = "";
     switch (selectedOption) {
       case "Price: Ascending":
         order = "asc";
@@ -137,15 +138,25 @@ export default function ExploreSectionNavbar() {
         orderBy = "price";
         name = "Price: Descending";
         break;
+      case "Date: Ascending":
+        order = "asc";
+        orderBy = "time";
+        name = "Date: Ascending";
+        break;
       case "Date: Descending":
         order = "desc";
         orderBy = "time";
         name = "Date: Descending";
         break;
+      case "All":
+        order = "";
+        orderBy = "all";
+        name = "All";
+        break;
       default:
-        order = "asc";
-        orderBy = "time";
-        name = "Date: Ascending";
+        order = "";
+        orderBy = "all";
+        name = "All";
         break;
     }
     setSortOption({ name, order, orderBy });
@@ -177,73 +188,73 @@ export default function ExploreSectionNavbar() {
   }, [tabsRef, pathname]);
 
   return (
-    <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
-      {!pathname.includes("users") && (
-        <div className="order-3 desktop:order-1">
-          <Button
-            onClick={handleToggleFilters}
-            className={
-              isFiltersVisible
-                ? "bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]"
-                : `bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px]`
-            }
-            scale="lg"
-            variant="secondary"
-          >
-            Filters
-            <span className="p-1 bg-surface-medium rounded-lg">
+      <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
+        {!pathname.includes("users") && (
+            <div className="order-3 desktop:order-1">
+              <Button
+                  onClick={handleToggleFilters}
+                  className={
+                    isFiltersVisible
+                        ? "bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]"
+                        : `bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px]`
+                  }
+                  scale="lg"
+                  variant="secondary"
+              >
+                Filters
+                <span className="p-1 bg-surface-medium rounded-lg">
               <SliderIcon width={14} height={14} />
             </span>
-          </Button>
-        </div>
-      )}
+              </Button>
+            </div>
+        )}
 
-      <div className="order-1 w-full desktop:order-2 desktop:flex-none desktop:w-auto">
-        <Tabs.Group
-          onActiveTabChange={handleChangeTab}
-          style="default"
-          ref={tabsRef}
-        >
-          {tabs.map((tab) => (
-            <Tabs.Item
-              active={pathname.includes(tab.href)}
-              key={tab.href}
-              title={tab.label}
-            />
-          ))}
-        </Tabs.Group>
-      </div>
-      <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
-        <Input
-          onChange={(e) => handleInputText(e.target.value)}
-          value={searchText}
-          className="py-4 h-14"
-          appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
-          appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
-        />
-      </div>
-
-      {!pathname.includes("users") && (
-        <div className="order-4">
-          <Dropdown
-            label=""
-            renderTrigger={() => (
-              <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
-                {sortOption.name}
-                <div className="rounded-lg p-1 bg-surface-medium">
-                  <Icon name="chevronDown" width={14} height={14} />
-                </div>
-              </div>
-            )}
+        <div className="order-1 w-full desktop:order-2 desktop:flex-none desktop:w-auto">
+          <Tabs.Group
+              onActiveTabChange={handleChangeTab}
+              style="default"
+              ref={tabsRef}
           >
-            {dropdownItems.map((item: any, i: any) => (
-              <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
-                {item.name}
-              </Dropdown.Item>
+            {tabs.map((tab) => (
+                <Tabs.Item
+                    active={pathname.includes(tab.href)}
+                    key={tab.href}
+                    title={tab.label}
+                />
             ))}
-          </Dropdown>
+          </Tabs.Group>
         </div>
-      )}
-    </div>
+        <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
+          <Input
+              onChange={(e) => handleInputText(e.target.value)}
+              value={searchText}
+              className="py-4 h-14"
+              appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
+              appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
+          />
+        </div>
+
+        {!pathname.includes("users") && (
+            <div className="order-4">
+              <Dropdown
+                  label=""
+                  renderTrigger={() => (
+                      <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+                        {sortOption.name}
+                        <div className="rounded-lg p-1 bg-surface-medium">
+                          <Icon name="chevronDown" width={14} height={14} />
+                        </div>
+                      </div>
+                  )}
+              >
+                {dropdownItems.map((item: any, i: any) => (
+                    <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
+                      {item.name}
+                    </Dropdown.Item>
+                ))}
+              </Dropdown>
+            </div>
+        )}
+      </div>
   );
 }
