@@ -118,7 +118,7 @@ export default function ProfileStep() {
               />
               <Text className="text-tertiary mt-1" variant="body-12">
                 Your profile will be available on
-                https://marketplace.uniultra.xyz/user/[shortLink]
+                https://testnet.x721.io/user/[shortLink]
               </Text>
             </div>
             <div>
