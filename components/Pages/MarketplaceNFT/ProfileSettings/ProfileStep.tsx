@@ -13,6 +13,7 @@ import { urlRegex } from "@/utils/regex";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { MARKETPLACE_URL } from "@/config/constants";
 
 export default function ProfileStep() {
   const profile = useAuthStore((state) => state.profile);
@@ -117,8 +118,7 @@ export default function ProfileStep() {
                 register={register("shortLink", formRulesProfile.shortLink)}
               />
               <Text className="text-tertiary mt-1" variant="body-12">
-                Your profile will be available on
-                https://marketplace.uniultra.xyz/user/[shortLink]
+                Your profile will be available on {MARKETPLACE_URL}user/[shortLink]
               </Text>
             </div>
             <div>
