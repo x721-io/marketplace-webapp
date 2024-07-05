@@ -47,7 +47,7 @@ export default function RoundActionUpcoming({
 
   return (
     <div className="flex flex-col gap-4 tablet:flex-col justify-between">
-      <div className="tablet:flex flex-row justify-between desktop:flex flex-row justify-between">
+      <div className="tablet:flex flex-row justify-between desktop:flex">
         <p className="text-body-14 text-secondary">
           Minting starts:{" "}
           <span className="text-primary font-semibold">

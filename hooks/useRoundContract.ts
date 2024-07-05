@@ -2,6 +2,7 @@ import { AssetType, Collection, Round } from "@/types";
 import { waitForTransaction, writeContract } from "@wagmi/core";
 import { getRoundAbi } from "@/utils";
 import { formatUnits } from "ethers";
+import { contracts } from "@/config/contracts";
 
 type BuyFunctionName = `buy${AssetType}`;
 type ClaimFunctionName = `claim${AssetType}`;
@@ -82,9 +83,29 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     };
   };
 
+  const onClaimMemetaverse = async () => {
+    try {
+      const tx = await writeContract({
+        address: round.address,
+        abi: contracts.memeTaVerseContract.abi,
+        functionName: 'claim',
+        args: [] as any,
+      });
+
+      return {
+        hash: tx.hash,
+        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
+      };
+    } catch (error) {
+      console.error('Error in onClaimMemetaverse:', error);
+    }
+  };
+
+
   return {
     onClaimNFT,
     onBuyNFT,
     onBuyNFTCustomized,
+    onClaimMemetaverse
   };
 };

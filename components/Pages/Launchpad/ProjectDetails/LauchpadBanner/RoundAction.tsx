@@ -1,7 +1,6 @@
 import { Address, erc721ABI, useAccount, useContractRead } from "wagmi";
 import { useMemo, useState } from "react";
 import { formatUnits } from "ethers";
-import { Collection, Round } from "@/types";
 import { useRoundStatus } from "@/hooks/useRoundStatus";
 import useSWR from "swr";
 import { useParams } from "next/navigation";
@@ -19,11 +18,13 @@ export default function RoundAction() {
   const { address } = useAccount();
   const { id } = useParams();
   const status = useRoundStatus(round);
+
   const { data: snapshot } = useSWR(
     address && id ? { userId: address, projectId: id } : null,
     (params) => api.fetchSnapshot(params),
     { refreshInterval: 3000 },
   );
+
   const { data: isWhitelisted } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
@@ -40,6 +41,10 @@ export default function RoundAction() {
       BigInt(snapshot?.stakingTotal || 0) >= BigInt(round.requiredStaking || 0)
     );
   }, [snapshot, round]);
+
+
+
+
   const { data: balanceNFT } = useContractRead({
     address: ZERO_COLLECTION as Address,
     abi: erc721ABI,
