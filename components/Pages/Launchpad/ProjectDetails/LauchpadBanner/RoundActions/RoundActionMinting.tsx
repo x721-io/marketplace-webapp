@@ -168,6 +168,19 @@ export default function RoundActionMinting({
     }
   };
 
+  const handleMint = async () => {
+    try {
+      setLoading(true);
+      await onClaimMemetaverse();
+      toast.success("Mint successfully!");
+    } catch (e: any) {
+      toast.error(`Error report: ${e?.message || e}`);
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const disableMint = useMemo(() => {
     if (
         roundType == "2" || "8" &&
@@ -256,7 +269,7 @@ export default function RoundActionMinting({
                   disabled={round.id === 2 ? disableMint : isMemeTaVerseMint}
                   scale="lg"
                   className="w-full"
-                  onClick={round.id === 2 ? handleBuyNFT : onClaimMemetaverse}
+                  onClick={round.id === 2 ? handleBuyNFT : handleMint}
                   loading={loading}
               >
                 {Number(amountBought) > 0 &&

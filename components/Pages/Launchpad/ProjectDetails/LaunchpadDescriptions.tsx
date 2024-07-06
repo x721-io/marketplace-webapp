@@ -1,5 +1,6 @@
 import { Project } from "@/types";
 import Image from "next/image";
+import DOMPurify from "dompurify";
 
 export default function ProjectPageDescriptions({
   project,
@@ -12,7 +13,8 @@ export default function ProjectPageDescriptions({
         project.details.map((section) => (
           <div key={section.key}>
             <h1 className="text-heading-sm mb-6">{section.key}</h1>
-            <p className="text-body-16 text-secondary">{section.content}</p>
+            <p className="text-body-16 text-secondary" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(section.content, { FORBID_TAGS: ['script'] }) }}
+            />
           </div>
         ))}
 
