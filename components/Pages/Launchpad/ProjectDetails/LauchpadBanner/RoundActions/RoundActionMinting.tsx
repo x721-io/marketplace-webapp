@@ -8,9 +8,11 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
-import { useAccount, useBalance, useContractReads } from "wagmi";
+import { Address, useAccount, useBalance, useContractRead, useContractReads } from "wagmi";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
+import { contracts } from "@/config/contracts";
+
 
 interface Props {
   eligibleStatus: boolean;
@@ -19,10 +21,10 @@ interface Props {
 }
 
 export default function RoundActionMinting({
-  eligibleStatus,
-  setLoading,
-  loading,
-}: Props) {
+                                             eligibleStatus,
+                                             setLoading,
+                                             loading,
+                                           }: Props) {
   const { round, collection, isSpecial } = useLaunchpadStore((state) => state);
   const api = useLaunchpadApi();
   const { address } = useAccount();
@@ -32,9 +34,9 @@ export default function RoundActionMinting({
     watch: true,
     enabled: !!address,
   });
-  const { onBuyNFT, onBuyNFTCustomized } = useWriteRoundContract(
-    round,
-    collection,
+  const { onBuyNFT, onBuyNFTCustomized, onClaimMemetaverse } = useWriteRoundContract(
+      round,
+      collection,
   );
   const [amount, setAmount] = useState(1);
   const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
@@ -60,6 +62,40 @@ export default function RoundActionMinting({
       roundInfo?.result,
     ],
   });
+  const memetaverseContract = contracts.memeTaVerseContract;
+
+  const { data: memeTaVerse } = useContractReads({
+    contracts: [
+      {
+        address: round.address,
+        abi: memetaverseContract.abi,
+        functionName: "whitelistedUsers",
+        args: [address as Address],
+      },
+      {
+        address: round.address,
+        abi: memetaverseContract.abi,
+        functionName: "isClaimed",
+        args: [address as Address],
+      },
+    ],
+    watch: true,
+    enabled: !!address,
+    select: (data) => {
+      return data.map((item) => item.result);
+    },
+  });
+
+  const [
+    whitelistedUsers,
+    isClaimed,
+  ] = useMemo(() => memeTaVerse || [], [memeTaVerse]);
+
+  const isMemeTaVerseMint = useMemo(() => {
+    return !(whitelistedUsers && !isClaimed);
+  }, [whitelistedUsers, isClaimed]);
+
+
   const [amountBought, roundInfo] = useMemo(() => data || [], [data]);
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
   const soldAmountNFT = (roundInfo as any)?.soldAmountNFT;
@@ -90,9 +126,9 @@ export default function RoundActionMinting({
 
     if (value > amount) {
       if (
-        !balanceInfo ||
-        !balanceInfo?.value ||
-        balanceInfo.value < BigInt(round.price) * BigInt(value)
+          !balanceInfo ||
+          !balanceInfo?.value ||
+          balanceInfo.value < BigInt(round.price) * BigInt(value)
       ) {
         toast.error("Not enough U2U balance");
         return;
@@ -103,9 +139,9 @@ export default function RoundActionMinting({
 
   const handleBuyNFT = async () => {
     if (
-      !balanceInfo ||
-      !balanceInfo?.value ||
-      balanceInfo.value < BigInt(round.price)
+        !balanceInfo ||
+        !balanceInfo?.value ||
+        balanceInfo.value < BigInt(round.price)
     ) {
       toast.error("Not enough U2U balance");
       return;
@@ -114,13 +150,13 @@ export default function RoundActionMinting({
     try {
       setLoading(true);
       const { waitForTransaction, hash } = isSpecial
-        ? await onBuyNFTCustomized()
-        : collection.type === "ERC721"
-          ? await onBuyNFT()
-          : await onBuyNFT(amount);
+          ? await onBuyNFTCustomized()
+          : collection.type === "ERC721"
+              ? await onBuyNFT()
+              : await onBuyNFT(amount);
       await waitForTransaction();
       toast.success("Your item has been successfully purchased!");
-      api.crawlNFTInfo({
+      await api.crawlNFTInfo({
         txCreation: hash,
         collectionAddress: collection.address,
       });
@@ -132,22 +168,35 @@ export default function RoundActionMinting({
     }
   };
 
+  const handleMint = async () => {
+    try {
+      setLoading(true);
+      await onClaimMemetaverse();
+      toast.success("Mint successfully!");
+    } catch (e: any) {
+      toast.error(`Error report: ${e?.message || e}`);
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const disableMint = useMemo(() => {
     if (
-      roundType == "2" &&
-      Number(maxAmountNFT) == 0 &&
-      Number(maxAmountNFTPerWallet) == 0 &&
-      Number(startClaim) == 0 &&
-      Number(price) == 0
+        roundType == "2" || "8" &&
+        Number(maxAmountNFT) == 0 &&
+        Number(maxAmountNFTPerWallet) == 0 &&
+        Number(startClaim) == 0 &&
+        Number(price) == 0
     ) {
       return false;
     }
     return (
-      (Number(amountBought) === round.maxPerWallet &&
-        round.maxPerWallet != 0) ||
-      (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
-      !eligibleStatus ||
-      (!isInTimeframe && hasTimeframe)
+        (Number(amountBought) === round.maxPerWallet &&
+            round.maxPerWallet != 0) ||
+        (maxAmountNFT == soldAmountNFT && maxAmountNFT != 0) ||
+        !eligibleStatus ||
+        (!isInTimeframe && hasTimeframe)
     );
   }, [
     roundType,
@@ -164,73 +213,73 @@ export default function RoundActionMinting({
   ]);
 
   return (
-    <>
-      {round.type != "U2UPremintRoundFCFS" &&
-        round.type != "U2UMintRoundFCFS" && (
-          <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
-        )}
-      <div className="flex w-full gap-2 flex-col tablet:flex-row justify-between items-start">
-        {collection.type === "ERC1155" ? (
-          <div className="flex-1 flex items-center gap-3">
-            <div className="flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg">
-              <div onClick={() => handleAddAmount(-1)}>
-                <Icon
-                  className="cursor-pointer text-secondary"
-                  name="minus"
-                  width={24}
-                  height={24}
-                />
-              </div>
+      <>
+        {round.type != "U2UPremintRoundFCFS" &&
+            round.type != "U2UMintRoundFCFS" && (
+                <MessageRoundNotEligible eligibleStatus={eligibleStatus}/>
+            )}
+        <div className="flex w-full gap-2 flex-col tablet:flex-row justify-between items-start">
+          {collection.type === "ERC1155" ? (
+              <div className="flex-1 flex items-center gap-3">
+                <div className="flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg">
+                  <div onClick={() => handleAddAmount(-1)}>
+                    <Icon
+                        className="cursor-pointer text-secondary"
+                        name="minus"
+                        width={24}
+                        height={24}
+                    />
+                  </div>
 
-              <input
-                disabled={isSpecial ? true : false}
-                value={amount}
-                onChange={(e) => handleInputAmount(Number(e.target.value))}
-                className="border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium"
-              />
-              <div onClick={() => handleAddAmount(1)}>
-                <Icon
-                  className="cursor-pointer text-secondary"
-                  name="plus"
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </div>
-            <p className="text-body-16 text-secondary">
-              Total:{" "}
-              <span className="text-primary font-semibold">
+                  <input
+                      disabled={isSpecial}
+                      value={amount}
+                      onChange={(e) => handleInputAmount(Number(e.target.value))}
+                      className="border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium"
+                  />
+                  <div onClick={() => handleAddAmount(1)}>
+                    <Icon
+                        className="cursor-pointer text-secondary"
+                        name="plus"
+                        width={24}
+                        height={24}
+                    />
+                  </div>
+                </div>
+                <p className="text-body-16 text-secondary">
+                  Total:{" "}
+                  <span className="text-primary font-semibold">
                 {estimatedCost} U2U
               </span>
-            </p>
-          </div>
-        ) : (
-          <div className="flex-1">
-            <p className="text-body-12 text-secondary">
-              Minted: {amountBought}
-              <span className="text-primary font-semibold">
+                </p>
+              </div>
+          ) : (
+              <div className="flex-1">
+                <p className="text-body-12 text-secondary">
+                  Minted: {amountBought}
+                  <span className="text-primary font-semibold">
                 /{round.maxPerWallet}
               </span>
-            </p>
+                </p>
+              </div>
+          )}
+          <div className="flex-1 w-full">
+            <ConnectWalletButton showConnectButton className="w-full">
+              <Button
+                  disabled={round.id === 2 ? disableMint : isMemeTaVerseMint}
+                  scale="lg"
+                  className="w-full"
+                  onClick={round.id === 2 ? handleBuyNFT : handleMint}
+                  loading={loading}
+              >
+                {Number(amountBought) > 0 &&
+                Number(amountBought) < round.maxPerWallet
+                    ? "Mint another"
+                    : "Mint Now"}
+              </Button>
+            </ConnectWalletButton>
           </div>
-        )}
-        <div className="flex-1 w-full">
-          <ConnectWalletButton showConnectButton className="w-full">
-            <Button
-              disabled={disableMint}
-              scale="lg"
-              className="w-full"
-              onClick={handleBuyNFT}
-              loading={loading}
-            >
-              {Number(amountBought) > 0 &&
-              Number(amountBought) < round.maxPerWallet
-                ? "Mint another"
-                : "Mint Now"}
-            </Button>
-          </ConnectWalletButton>
         </div>
-      </div>
-    </>
+      </>
   );
 }

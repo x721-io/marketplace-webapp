@@ -7,6 +7,9 @@ import erc1155FactoryABI from "@/abi/ERC1155Factory";
 import erc1155ABI from "@/abi/ERC1155";
 import royaltiesRegistryABI from "@/abi/RoyaltiesRegistry";
 import feeDistributorABI from "@/abi/FeeDistributor";
+import memeTaVerseABI from "@/abi/Memetaverse";
+
+
 import * as process from "process";
 
 export const contracts = {
@@ -49,5 +52,9 @@ export const contracts = {
   feeDistributorContract: {
     address: process.env.NEXT_PUBLIC_FEE_DISTRIBUTOR as Address,
     abi: feeDistributorABI,
+  },
+  memeTaVerseContract: {
+    address: process.env.NEXT_PUBLIC_MEMETAVERSE_CONTRACT as Address,
+    abi: memeTaVerseABI,
   },
 };
