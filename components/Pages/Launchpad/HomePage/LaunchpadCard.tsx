@@ -49,13 +49,13 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
       onClick={() => router.push(`/project/${project.id}`)}
       {...rest}
     >
-      <div className="p-2">
+      <div className="p-2 w-full aspect-video overflow-hidden">
         <Image
-          className="rounded-lg w-full tablet:h-[515px] max-h-[308px] object-fit"
+          className="rounded-lg w-full h-full object-cover"
           src={project.banner}
           alt=""
-          width={612}
-          height={308}
+          width={800}
+          height={450}
         />
       </div>
 
