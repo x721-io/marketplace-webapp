@@ -46,13 +46,16 @@ export default function LaunchpadSlide({ project }: Props) {
   return (
     <div className="flex justify-center desktop:gap-8 tablet:gap-7 gap-1 flex-col tablet:flex-row desktop:flex-row">
       {/** Project Image **/}
-      <Image
-        width={384}
-        height={384}
-        src={project.banner}
-        className="desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl w-full h-full"
-        alt=""
-      />
+      <div className='desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl aspect-video h-full overflow-hidden'>
+        <Image
+            width={800}
+            height={450}
+            src={project.banner}
+            className="w-full h-full object-cover"
+            alt=""
+        />
+      </div>
+
 
       <div className="flex flex-col justify-between">
         {/** Project descriptions **/}
