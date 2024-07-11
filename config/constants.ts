@@ -10,7 +10,7 @@ export const SPECIAL_ROUND = process.env.NEXT_PUBLIC_SPECIAL_ROUND_CONTRACT;
 export const CAMPAIGN_URL = "https://voyage.u2nft.io/";
 export const LAUNCHPAD_APPLY_URL = "https://forms.gle/9MaNk6gQbKccqqAeA";
 export const NFT_COLLECTION_VERIFICATION_REQUEST =
-  "https://docs.google.com/forms/d/1Klf53N2M29IPkltkMBwXifOEpwrg9yZUgFTpO9socFM/prefill";
+  "https://forms.gle/SJSVfYmfDz49132F7";
 
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) =>
@@ -37,6 +37,6 @@ export const MODE_CREATED = "creator";
 export const MODE_ON_SALES = "onsales";
 export const MODE_COLLECTIONS = "collection";
 
-export const ALLOWED_DOMAIN_URL ='https://ipfs.io/ipfs/,testnet-api.memetaverse.club,u2u-images.s3.ap-southeast-1.amazonaws.com,copper-defensive-cod-42.mypinata.cloud,ug-assets-dev.s3.ap-southeast-1.amazonaws.com,https://testnet-peer.memetaverse.club/';
+export const ALLOWED_DOMAIN_URL ='https://ipfs.io/ipfs/,testnet-api.memetaverse.club,u2u-images.s3.ap-southeast-1.amazonaws.com,copper-defensive-cod-42.mypinata.cloud,ug-assets-dev.s3.ap-southeast-1.amazonaws.com,https://testnet-peer.memetaverse.club/,https://apricot-worried-junglefowl-562.mypinata.cloud/';
 
 
