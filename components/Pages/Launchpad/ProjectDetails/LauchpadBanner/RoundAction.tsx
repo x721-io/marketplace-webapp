@@ -20,7 +20,9 @@ export default function RoundAction() {
   const status = useRoundStatus(round);
 
   const { data: snapshot } = useSWR(
-    address && id ? { userId: address, projectId: id } : null,
+    address && id &&
+    (round.type === "U2UMintRoundZero" ||
+        round.type === "U2UPremintRoundZero") ? { userId: address, projectId: id } : null,
     (params) => api.fetchSnapshot(params),
     { refreshInterval: 3000 },
   );
@@ -86,8 +88,6 @@ export default function RoundAction() {
         return (
           <RoundActionMinting
             eligibleStatus={!!eligibleStatus}
-            setLoading={setLoading}
-            loading={loading}
           />
         );
       case "UPCOMING":

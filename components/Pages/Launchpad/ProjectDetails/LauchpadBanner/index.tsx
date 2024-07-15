@@ -24,7 +24,6 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     });
     return active || next || project.rounds[0];
   }, [project]);
-
   const { timeframes, setHasTimeframe, hasTimeframe } = useTimeframeStore(
     (state) => state,
   );
