@@ -32,10 +32,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       functionName,
       args,
       value: price,
-      // gasPrice: BigInt(3000000000),             // 3 Gwei
       gas: BigInt(500000),
-      // maxFeePerGas: BigInt(3000000000),         // 3 Gwei
-      // maxPriorityFeePerGas: BigInt(2000000000)  // 2 Gwei
     });
 
     return {
@@ -55,10 +52,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       functionName,
       args,
       value: price,
-      // gasPrice: BigInt(3000000000),             // 3 Gwei
       gas: BigInt(500000),
-      // maxFeePerGas: BigInt(3000000000),         // 3 Gwei
-      // maxPriorityFeePerGas: BigInt(2000000000)  // 2 Gwei
     });
 
     return {

@@ -1,975 +1,975 @@
 [
   {
+    "type": "constructor",
+    "stateMutability": "nonpayable",
     "inputs": [
       {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "projectId",
-        "type": "uint256"
+        "internalType": "uint256"
       },
       {
-        "components": [
-          {
-            "internalType": "enum LibStructs.RoundType",
-            "name": "roundType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "start",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "end",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startClaim",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "maxAmountNFT",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "soldAmountNFT",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "maxAmountNFTPerWallet",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibStructs.Round",
+        "type": "tuple",
         "name": "round",
-        "type": "tuple"
-      },
-      {
+        "internalType": "struct LibStructs.Round",
         "components": [
           {
-            "internalType": "bool",
-            "name": "isERC721",
-            "type": "bool"
+            "type": "uint8",
+            "name": "roundType",
+            "internalType": "enum LibStructs.RoundType"
           },
           {
-            "internalType": "bool",
-            "name": "isU2UCollection",
-            "type": "bool"
+            "type": "uint256",
+            "name": "price",
+            "internalType": "uint256"
           },
           {
-            "internalType": "bool",
-            "name": "isPreminted",
-            "type": "bool"
+            "type": "uint256",
+            "name": "start",
+            "internalType": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "collectionAddress",
-            "type": "address"
+            "type": "uint256",
+            "name": "end",
+            "internalType": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
+            "type": "uint256",
+            "name": "startClaim",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "maxAmountNFT",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "soldAmountNFT",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "maxAmountNFTPerWallet",
+            "internalType": "uint256"
           }
-        ],
+        ]
+      },
+      {
+        "type": "tuple",
+        "name": "collection",
         "internalType": "struct LibStructs.Collection",
-        "name": "collection",
-        "type": "tuple"
-      },
-      {
         "components": [
           {
-            "internalType": "uint8",
-            "name": "hourStart",
-            "type": "uint8"
+            "type": "bool",
+            "name": "isERC721",
+            "internalType": "bool"
           },
           {
-            "internalType": "uint8",
-            "name": "minuteStart",
-            "type": "uint8"
+            "type": "bool",
+            "name": "isU2UCollection",
+            "internalType": "bool"
           },
           {
-            "internalType": "uint8",
-            "name": "hourEnd",
-            "type": "uint8"
+            "type": "bool",
+            "name": "isPreminted",
+            "internalType": "bool"
           },
           {
-            "internalType": "uint8",
-            "name": "minuteEnd",
-            "type": "uint8"
+            "type": "address",
+            "name": "collectionAddress",
+            "internalType": "address"
+          },
+          {
+            "type": "address",
+            "name": "owner",
+            "internalType": "address"
           }
-        ],
-        "internalType": "struct LibStructs.Timeframe[]",
+        ]
+      },
+      {
+        "type": "tuple[]",
         "name": "timeframes",
-        "type": "tuple[]"
+        "internalType": "struct LibStructs.Timeframe[]",
+        "components": [
+          {
+            "type": "uint8",
+            "name": "hourStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "hourEnd",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteEnd",
+            "internalType": "uint8"
+          }
+        ]
       },
       {
-        "internalType": "address",
+        "type": "address",
         "name": "_projectManager",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "address",
+        "type": "address",
         "name": "_feeReceiver",
-        "type": "address"
+        "internalType": "address"
       }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    ]
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "projectId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "collection",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
+    "type": "event",
     "name": "BuyERC1155",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
+        "type": "address",
         "name": "buyer",
-        "type": "address"
+        "internalType": "address",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "projectId",
-        "type": "uint256"
+        "internalType": "uint256",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "address",
+        "type": "address",
         "name": "collection",
-        "type": "address"
+        "internalType": "address",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "BuyERC721",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
+        "internalType": "uint256",
+        "indexed": false
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "amount",
-        "type": "uint256"
+        "internalType": "uint256",
+        "indexed": false
       }
     ],
-    "name": "buyERC1155",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
+    "anonymous": false
   },
   {
-    "inputs": [],
-    "name": "buyERC721",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "checkOnlyInTimeframe",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimERC1155",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimERC721",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feePercent",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feeReceiver",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
+    "type": "event",
+    "name": "BuyERC721",
     "inputs": [
       {
+        "type": "address",
+        "name": "buyer",
         "internalType": "address",
-        "name": "user",
-        "type": "address"
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "projectId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "address",
+        "name": "collection",
+        "internalType": "address",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "tokenId",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOwner",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "buyERC1155",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "buyERC721",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "checkOnlyInTimeframe",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "claimERC1155",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "claimERC721",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint16",
+        "name": "",
+        "internalType": "uint16"
+      }
+    ],
+    "name": "feePercent",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "feeReceiver",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
       }
     ],
     "name": "getAmountBought",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "user",
-        "type": "address"
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
       }
     ],
     "name": "getAmountClaimed",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAmountUser",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "user",
-        "type": "address"
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "getAmountUser",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
       }
     ],
     "name": "getClaimableAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCollection",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "bool",
-            "name": "isERC721",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isU2UCollection",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isPreminted",
-            "type": "bool"
-          },
-          {
-            "internalType": "address",
-            "name": "collectionAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct LibStructs.Collection",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "user",
-        "type": "address"
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "",
+        "internalType": "struct LibStructs.Collection",
+        "components": [
+          {
+            "type": "bool",
+            "name": "isERC721",
+            "internalType": "bool"
+          },
+          {
+            "type": "bool",
+            "name": "isU2UCollection",
+            "internalType": "bool"
+          },
+          {
+            "type": "bool",
+            "name": "isPreminted",
+            "internalType": "bool"
+          },
+          {
+            "type": "address",
+            "name": "collectionAddress",
+            "internalType": "address"
+          },
+          {
+            "type": "address",
+            "name": "owner",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "name": "getCollection",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "",
+        "internalType": "struct LibStructs.Token[]",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "id",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "amount",
+            "internalType": "uint256"
+          }
+        ]
       }
     ],
     "name": "getOwnerOfAmount",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibStructs.Token[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getProjectId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRound",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "enum LibStructs.RoundType",
-            "name": "roundType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "start",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "end",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startClaim",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "maxAmountNFT",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "soldAmountNFT",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "maxAmountNFTPerWallet",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibStructs.Round",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "getProjectId",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "",
+        "internalType": "struct LibStructs.Round",
+        "components": [
+          {
+            "type": "uint8",
+            "name": "roundType",
+            "internalType": "enum LibStructs.RoundType"
+          },
+          {
+            "type": "uint256",
+            "name": "price",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "start",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "end",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "startClaim",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "maxAmountNFT",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "soldAmountNFT",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "maxAmountNFTPerWallet",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "name": "getRound",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "",
+        "internalType": "struct LibStructs.Timeframe",
+        "components": [
+          {
+            "type": "uint8",
+            "name": "hourStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "hourEnd",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteEnd",
+            "internalType": "uint8"
+          }
+        ]
       }
     ],
     "name": "getTimeframes",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint8",
-            "name": "hourStart",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "minuteStart",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "hourEnd",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "minuteEnd",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct LibStructs.Timeframe",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTimeframesLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "isInitialized",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "isLocked",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "uint256",
+        "name": "index",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
         "name": "",
-        "type": "address"
+        "internalType": "uint256"
+      }
+    ],
+    "name": "getTimeframesLength",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "isInitialized",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "isLocked",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
       }
     ],
     "name": "isUserJoined",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lock",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      },
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "lock",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "ids",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "values",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
+        "type": "bytes4",
+        "name": "",
+        "internalType": "bytes4"
       }
     ],
     "name": "onERC1155BatchReceived",
-    "outputs": [
-      {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "operator",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "address",
+        "type": "address",
         "name": "from",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        "type": "uint256[]",
+        "name": "ids",
+        "internalType": "uint256[]"
       },
       {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
+        "type": "uint256[]",
+        "name": "values",
+        "internalType": "uint256[]"
       },
       {
-        "internalType": "bytes",
+        "type": "bytes",
         "name": "data",
-        "type": "bytes"
+        "internalType": "bytes"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": "",
+        "internalType": "bytes4"
       }
     ],
     "name": "onERC1155Received",
-    "outputs": [
-      {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "operator",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "address",
+        "type": "address",
         "name": "from",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "type": "uint256",
+        "name": "id",
+        "internalType": "uint256"
       },
       {
-        "internalType": "bytes",
+        "type": "uint256",
+        "name": "value",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes",
         "name": "data",
-        "type": "bytes"
+        "internalType": "bytes"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": "",
+        "internalType": "bytes4"
       }
     ],
     "name": "onERC721Received",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
+        "type": "address",
+        "name": "operator",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "from",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "tokenId",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes",
+        "name": "data",
+        "internalType": "bytes"
       }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
+    ]
   },
   {
-    "inputs": [],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": []
   },
   {
-    "inputs": [],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
     "name": "projectManager",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "receiveAndIncreaseMaxAmountNFT",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "newMaxNFTPerWallet",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "renounceOwnership",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setClaimTime",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "startClaim",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setCollection",
+    "inputs": [
+      {
+        "type": "tuple",
+        "name": "newCollection",
+        "internalType": "struct LibStructs.Collection",
+        "components": [
+          {
+            "type": "bool",
+            "name": "isERC721",
+            "internalType": "bool"
+          },
+          {
+            "type": "bool",
+            "name": "isU2UCollection",
+            "internalType": "bool"
+          },
+          {
+            "type": "bool",
+            "name": "isPreminted",
+            "internalType": "bool"
+          },
+          {
+            "type": "address",
+            "name": "collectionAddress",
+            "internalType": "address"
+          },
+          {
+            "type": "address",
+            "name": "owner",
+            "internalType": "address"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setFee",
+    "inputs": [
+      {
+        "type": "uint16",
+        "name": "fee",
+        "internalType": "uint16"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setMaxAmountNFT",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "max",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setMaxAmountNFTPerWallet",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "max",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setPrice",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "price",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTime",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "start",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "end",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTimeframes",
+    "inputs": [
+      {
+        "type": "tuple[]",
+        "name": "timeframes",
+        "internalType": "struct LibStructs.Timeframe[]",
+        "components": [
+          {
+            "type": "uint8",
+            "name": "hourStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteStart",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "hourEnd",
+            "internalType": "uint8"
+          },
+          {
+            "type": "uint8",
+            "name": "minuteEnd",
+            "internalType": "uint8"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
     "outputs": [
       {
-        "internalType": "address",
+        "type": "bool",
         "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "newMaxNFTPerWallet",
-        "type": "uint256"
-      }
-    ],
-    "name": "receiveAndIncreaseMaxAmountNFT",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "startClaim",
-        "type": "uint256"
-      }
-    ],
-    "name": "setClaimTime",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bool",
-            "name": "isERC721",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isU2UCollection",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isPreminted",
-            "type": "bool"
-          },
-          {
-            "internalType": "address",
-            "name": "collectionAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct LibStructs.Collection",
-        "name": "newCollection",
-        "type": "tuple"
-      }
-    ],
-    "name": "setCollection",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "fee",
-        "type": "uint16"
-      }
-    ],
-    "name": "setFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "max",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMaxAmountNFT",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "max",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMaxAmountNFTPerWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      }
-    ],
-    "name": "setPrice",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "start",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "end",
-        "type": "uint256"
-      }
-    ],
-    "name": "setTime",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint8",
-            "name": "hourStart",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "minuteStart",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "hourEnd",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "minuteEnd",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct LibStructs.Timeframe[]",
-        "name": "timeframes",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "setTimeframes",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "interfaceID",
-        "type": "bytes4"
+        "internalType": "bool"
       }
     ],
     "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
+        "type": "bytes4",
+        "name": "interfaceID",
+        "internalType": "bytes4"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferNFTsToNextRound",
+    "inputs": [
+      {
+        "type": "address",
         "name": "nextRound",
-        "type": "address"
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "newMaxNFTPerWallet",
-        "type": "uint256"
+        "internalType": "uint256"
       }
-    ],
-    "name": "transferNFTsToNextRound",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    ]
   },
   {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOwnership",
     "inputs": [
       {
-        "internalType": "address",
+        "type": "address",
         "name": "newOwner",
-        "type": "address"
+        "internalType": "address"
       }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    ]
   }
 ]

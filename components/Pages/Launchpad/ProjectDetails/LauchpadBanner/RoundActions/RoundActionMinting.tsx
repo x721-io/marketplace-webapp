@@ -1,14 +1,14 @@
-import { formatEther, formatUnits } from "ethers";
+import { formatEther } from "ethers";
 import Button from "@/components/Button";
 import { MessageRoundNotEligible } from "../EligibleMessage";
 import Icon from "@/components/Icon";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import useTimeframeStore from "@/store/timeframe/store";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
-import { Address, useAccount, useBalance, useContractRead, useContractReads } from "wagmi";
+import { Address, useAccount, useBalance, useContractReads } from "wagmi";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
 import { contracts } from "@/config/contracts";
@@ -16,31 +16,23 @@ import { contracts } from "@/config/contracts";
 
 interface Props {
   eligibleStatus: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-  loading: boolean;
 }
 
 export default function RoundActionMinting({
-                                             eligibleStatus,
-                                             setLoading,
-                                             loading,
+                                             eligibleStatus
                                            }: Props) {
+  const [loading, setLoading] = useState(false);
   const { round, collection, isSpecial } = useLaunchpadStore((state) => state);
   const api = useLaunchpadApi();
   const { address } = useAccount();
-
   const { data: balanceInfo } = useBalance({
     address: address,
     watch: true,
     enabled: !!address,
   });
-  const { onBuyNFT, onBuyNFTCustomized, onClaimMemetaverse } = useWriteRoundContract(
-      round,
-      collection,
-  );
+
   const [amount, setAmount] = useState(1);
   const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
-
   const { data } = useContractReads({
     contracts: [
       {
@@ -53,15 +45,18 @@ export default function RoundActionMinting({
         address: round.address,
         abi: getRoundAbi(round),
         functionName: "getRound",
+        args: [],
+
       },
     ],
     watch: true,
     enabled: !!address,
-    select: ([amountBought, roundInfo]) => [
-      formatUnits(String(amountBought?.result), 0),
-      roundInfo?.result,
-    ],
+    select: (data) => {
+      return data.map((item) => item.result);
+    },
   });
+
+
   const memetaverseContract = contracts.memeTaVerseContract;
 
   const { data: memeTaVerse } = useContractReads({
@@ -95,7 +90,6 @@ export default function RoundActionMinting({
     return !(whitelistedUsers && !isClaimed);
   }, [whitelistedUsers, isClaimed]);
 
-
   const [amountBought, roundInfo] = useMemo(() => data || [], [data]);
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
   const soldAmountNFT = (roundInfo as any)?.soldAmountNFT;
@@ -104,6 +98,10 @@ export default function RoundActionMinting({
   const startClaim = (roundInfo as any)?.startClaim;
   const price = (roundInfo as any)?.price;
 
+  const { onBuyNFT, onBuyNFTCustomized, onClaimMemetaverse } = useWriteRoundContract(
+      round,
+      collection,
+  );
   const estimatedCost = useMemo(() => {
     const totalCostBN = BigInt(round.price || 0) * BigInt(amount || 0);
     const totalCost = formatEther(totalCostBN);
@@ -116,14 +114,13 @@ export default function RoundActionMinting({
     }
   };
 
+
   const handleInputAmount = (value: number) => {
     if (!address) {
       toast.warning("Please connect your wallet first");
       return;
     }
-
     if (value < 0) return;
-
     if (value > amount) {
       if (
           !balanceInfo ||
@@ -138,22 +135,24 @@ export default function RoundActionMinting({
   };
 
   const handleBuyNFT = async () => {
-    if (
-        !balanceInfo ||
-        !balanceInfo?.value ||
-        balanceInfo.value < BigInt(round.price)
-    ) {
+    if (!balanceInfo || !balanceInfo.value || balanceInfo.value < BigInt(round.price)) {
       toast.error("Not enough U2U balance");
       return;
     }
 
     try {
       setLoading(true);
-      const { waitForTransaction, hash } = isSpecial
-          ? await onBuyNFTCustomized()
-          : collection.type === "ERC721"
-              ? await onBuyNFT()
-              : await onBuyNFT(amount);
+      let transactionResponse;
+
+      if (isSpecial) {
+        transactionResponse = await onBuyNFTCustomized();
+      } else if (collection.type === "ERC721") {
+        transactionResponse = await onBuyNFT();
+      } else {
+        transactionResponse = await onBuyNFT(amount);
+      }
+
+      const { waitForTransaction, hash } = transactionResponse;
       await waitForTransaction();
       toast.success("Your item has been successfully purchased!");
       await api.crawlNFTInfo({
@@ -168,7 +167,7 @@ export default function RoundActionMinting({
     }
   };
 
-  const handleMint = async () => {
+  const handleMintMeme = async () => {
     try {
       setLoading(true);
       await onClaimMemetaverse();
@@ -180,10 +179,10 @@ export default function RoundActionMinting({
       setLoading(false);
     }
   };
-
+  const whiteListRoundsId = [1, 2, 3, 5, 7];
   const disableMint = useMemo(() => {
     if (
-        roundType == "2" || "8" &&
+        whiteListRoundsId.includes(roundType) &&
         Number(maxAmountNFT) == 0 &&
         Number(maxAmountNFTPerWallet) == 0 &&
         Number(startClaim) == 0 &&
@@ -198,19 +197,18 @@ export default function RoundActionMinting({
         !eligibleStatus ||
         (!isInTimeframe && hasTimeframe)
     );
-  }, [
-    roundType,
-    maxAmountNFT,
-    maxAmountNFTPerWallet,
-    startClaim,
-    price,
-    amountBought,
-    round,
-    soldAmountNFT,
-    eligibleStatus,
-    isInTimeframe,
-    hasTimeframe,
-  ]);
+  }, [whiteListRoundsId, roundType, maxAmountNFT, maxAmountNFTPerWallet, startClaim, price, amountBought, round.maxPerWallet, soldAmountNFT, eligibleStatus, isInTimeframe, hasTimeframe]);
+
+  const isDisable = useMemo(() => {
+    if (whiteListRoundsId.includes(round.id)){
+      return disableMint
+    }
+    if (round.id === 8){
+      return isMemeTaVerseMint
+    }
+    return false;
+  }, [whiteListRoundsId, round.id, disableMint, isMemeTaVerseMint]);
+
 
   return (
       <>
@@ -266,10 +264,10 @@ export default function RoundActionMinting({
           <div className="flex-1 w-full">
             <ConnectWalletButton showConnectButton className="w-full">
               <Button
-                  disabled={round.id === 2 ? disableMint : isMemeTaVerseMint}
+                  disabled={isDisable}
                   scale="lg"
                   className="w-full"
-                  onClick={round.id === 2 ? handleBuyNFT : handleMint}
+                  onClick={whiteListRoundsId.includes(round.id) ? handleBuyNFT : handleMintMeme}
                   loading={loading}
               >
                 {Number(amountBought) > 0 &&

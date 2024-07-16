@@ -11,7 +11,6 @@ export type RoundType =
     | "U2UPremintRoundWhitelist"
     | "U2UPremintRoundZero"
     | "U2UMintRoundWhitelistCustomized"
-    | "Memetaverse";
 
 
 export type RoundStatus = "MINTING" | "ENDED" | "UPCOMING" | "CLAIM";
