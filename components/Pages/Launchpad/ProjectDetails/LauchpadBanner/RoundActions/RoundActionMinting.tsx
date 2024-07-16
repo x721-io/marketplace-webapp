@@ -179,7 +179,7 @@ export default function RoundActionMinting({
       setLoading(false);
     }
   };
-  const whiteListRoundsId = useMemo(() => [1, 2,3, 5, 7], []);
+  const whiteListRoundsId = [1, 2, 3, 5, 7];
   const disableMint = useMemo(() => {
     if (
         whiteListRoundsId.includes(roundType) &&
