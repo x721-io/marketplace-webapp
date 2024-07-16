@@ -254,7 +254,7 @@ export default function RoundActionMinting({
           ) : (
               <div className="flex-1">
                 <p className="text-body-12 text-secondary">
-                  Minted: {amountBought}
+                  Minted: {Number(amountBought)}
                   <span className="text-primary font-semibold">
                 /{round.maxPerWallet}
               </span>
