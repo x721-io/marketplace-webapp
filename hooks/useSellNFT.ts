@@ -7,7 +7,6 @@ import { Address } from "wagmi";
 
 export const useSellURC721 = (nft: NFT) => {
   return async (price: number, quoteToken: Address) => {
-    console.log("quoteToken",quoteToken)
     const { hash } = await writeContract({
       abi: contracts.erc721Market.abi,
       address: contracts.erc721Market.address,
