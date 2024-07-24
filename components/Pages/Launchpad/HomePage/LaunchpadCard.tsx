@@ -16,7 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function LaunchpadCard({ project, ...rest }: Props) {
   const router = useRouter();
   const { activeRound, activeRoundIndex, roundsWithStatus } =
-    useRoundsWithStatus(project.rounds);
+    useRoundsWithStatus(project.rounds || []);
 
   const getIconName = (type: RoundType) => {
     switch (type) {
@@ -71,9 +71,20 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
                 Price:
               </Text>
               <Icon name="u2u-logo" width={16} height={16} />
-              <Text className="font-semibold" variant="body-18">
-                {formatDisplayedNumber(formatEther(activeRound?.price || 0))}
-              </Text>
+              {project.rounds.map((round) => {
+                  return (
+                    <Text
+                      key={round.id}
+                      className="font-semibold"
+                      variant="body-14"
+                    >
+                      {formatDisplayedNumber(formatEther(round.price || 0))}
+                    </Text>
+                  );
+              })}
+              {/*<Text className="font-semibold" variant="body-18">*/}
+              {/*  {formatDisplayedNumber(formatEther(activeRound?.price || 0))}*/}
+              {/*</Text>*/}
               <Text className="text-secondary font-semibold" variant="body-14">
                 U2U
               </Text>

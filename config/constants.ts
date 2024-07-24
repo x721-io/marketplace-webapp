@@ -8,9 +8,9 @@ export const MARKETPLACE_URL = process.env
 export const ZERO_COLLECTION = process.env.NEXT_PUBLIC_REQUIRED_COLLECTION;
 export const SPECIAL_ROUND = process.env.NEXT_PUBLIC_SPECIAL_ROUND_CONTRACT;
 export const CAMPAIGN_URL = "https://voyage.u2nft.io/";
-export const LAUNCHPAD_APPLY_URL = "https://forms.gle/GsThpe2ER6f1JWDw8";
+export const LAUNCHPAD_APPLY_URL = "https://forms.gle/SAYoVizSwm16XV7d8";
 export const NFT_COLLECTION_VERIFICATION_REQUEST =
-  "https://forms.gle/SJSVfYmfDz49132F7";
+  "https://forms.gle/ZH9ippAzReyztyoD9";
 
 export const SIGN_MESSAGE = {
   CONNECT: (time: string) =>
