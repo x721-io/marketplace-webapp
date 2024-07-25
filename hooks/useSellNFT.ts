@@ -1,33 +1,32 @@
 import { contracts } from "@/config/contracts";
-import { waitForTransaction, writeContract, readContract } from "@wagmi/core";
+import { waitForTransaction, writeContract } from "@wagmi/core";
 import { NFT } from "@/types";
 import { parseEther } from "ethers";
 import { Address } from "wagmi";
 
+
 export const useSellURC721 = (nft: NFT) => {
-  const onSellURC721 = async (price: number, quoteToken: Address) => {
+  return async (price: number, quoteToken: Address) => {
     const { hash } = await writeContract({
       abi: contracts.erc721Market.abi,
       address: contracts.erc721Market.address,
       functionName: "createAsk",
       args: [
         nft.collection.address,
-        BigInt(nft.u2uId) ?? BigInt(nft.id),
+        nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
         quoteToken,
         parseEther(String(price)),
       ],
     });
     return waitForTransaction({ hash });
   };
-
-  return onSellURC721;
 };
 
 export const useSellURC1155 = (nft: NFT) => {
-  const onSellURC1155 = async (
-    price: number,
-    quoteToken: Address,
-    quantity: any,
+  return async (
+      price: number,
+      quoteToken: Address,
+      quantity: any,
   ) => {
     const { hash } = await writeContract({
       abi: contracts.erc1155Market.abi,
@@ -35,7 +34,7 @@ export const useSellURC1155 = (nft: NFT) => {
       functionName: "createAsk",
       args: [
         nft.collection.address,
-        BigInt(nft.u2uId) ?? BigInt(nft.id),
+        nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
         quantity,
         quoteToken,
         parseEther(String(price)),
@@ -43,24 +42,23 @@ export const useSellURC1155 = (nft: NFT) => {
     });
     return waitForTransaction({ hash });
   };
-  return onSellURC1155;
 };
 
 export const useCancelSellURC721 = (nft: NFT) => {
-  const onCancelSellURC721 = async () => {
+  return async () => {
     const { hash } = await writeContract({
       abi: contracts.erc721Market.abi,
       address: contracts.erc721Market.address,
       functionName: "cancelAsk",
-      args: [nft.collection.address, BigInt(nft.u2uId ?? nft.id)],
+      args: [nft.collection.address, nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
+      ],
     });
     return waitForTransaction({ hash });
   };
-  return onCancelSellURC721;
 };
 
 export const useCancelSellURC1155 = () => {
-  const onCancelSellURC1155 = async (operationId: string) => {
+  return async (operationId: string) => {
     const { hash } = await writeContract({
       abi: contracts.erc1155Market.abi,
       address: contracts.erc1155Market.address,
@@ -69,7 +67,6 @@ export const useCancelSellURC1155 = () => {
     });
     return waitForTransaction({ hash });
   };
-  return onCancelSellURC1155;
 };
 
 export const useSellNFT = (nft: NFT) => {

@@ -1,5 +1,5 @@
 import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import { useMemo } from "react";
@@ -128,6 +128,8 @@ export default function SellNFTModal({
     },
   };
 
+
+
   const onSubmit = async ({
     price,
     quoteToken,
@@ -217,6 +219,8 @@ export default function SellNFTModal({
       setLoading(false);
     }
   };
+
+
 
   return (
     <Modal

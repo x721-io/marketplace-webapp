@@ -9,7 +9,7 @@ export const useBidURC721UsingNative = (nft: NFT) => {
     writeContract({
       ...contracts.erc721Market,
       functionName: "createBidUsingEth",
-      args: [nft.collection.address, (nft.u2uId ?? nft.id) as any, price],
+      args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any, price],
       value,
     });
 
@@ -35,7 +35,7 @@ export const useBidURC1155UsingNative = (nft: NFT) => {
       functionName: "createOfferUsingEth",
       args: [
         nft.collection.address,
-        (nft.u2uId ?? nft.id) as any,
+        (nft.u2uId ? nft.u2uId : nft.id) as any,
         quantity,
         pricePerUnit,
       ],
@@ -64,7 +64,7 @@ export const useBidURC721UsingURC20 = (nft: NFT) => {
       functionName: "createBid",
       args: [
         nft.collection.address,
-        (nft.u2uId ?? nft.id) as any,
+        (nft.u2uId ? nft.u2uId : nft.id) as any,
         quoteToken,
         parseEther(price),
       ],
@@ -85,7 +85,7 @@ export const useBidURC1155UsingURC20 = (nft: NFT) => {
       functionName: "createOffer",
       args: [
         nft.collection.address,
-        (nft.u2uId ?? nft.id) as any,
+        (nft.u2uId ? nft.u2uId : nft.id) as any,
         quantity as any,
         quoteToken,
         parseEther(price),
@@ -101,7 +101,7 @@ export const useCancelBidURC721 = (nft: NFT) => {
     const { hash } = await writeContract({
       ...contracts.erc721Market,
       functionName: "cancelBid",
-      args: [nft.collection.address, (nft.u2uId ?? nft.id) as any],
+      args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any],
       value: BigInt(0) as any,
     });
     return waitForTransaction({ hash });
@@ -129,7 +129,7 @@ export const useAcceptBidURC721 = (nft: NFT) => {
       functionName: "acceptBid",
       args: [
         nft.collection.address,
-        BigInt(nft.u2uId) ?? BigInt(nft.id),
+        nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
         bidder,
         quoteToken,
       ],
