@@ -13,8 +13,6 @@ import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import TransferNFTModal from "@/components/Modal/TransferNFT";
 import { useWrongNetwork } from "@/hooks/useAuth";
-import { CHAIN_ID } from "@/config/constants";
-import { switchNetwork } from "@wagmi/core";
 
 
 export default function NFTActions({
