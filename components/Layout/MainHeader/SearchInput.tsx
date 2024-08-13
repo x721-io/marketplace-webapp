@@ -12,6 +12,7 @@ import { isMobile } from "react-device-detect";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
+import { useTranslations } from "next-intl";
 
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -25,6 +26,7 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function SearchInput() {
+  const t = useTranslations("Header")
   const {
     setActiveTab,
     handleTextInput,
@@ -108,7 +110,7 @@ export default function SearchInput() {
                 containerClass="desktop:w-[420px] tablet:w-[280px]"
                 scale="sm"
                 value={searchString}
-                placeholder="Type for collections, NFTs etc"
+                placeholder={t("SearchBar.Placeholder")}
                 onChange={(event) => handleTextInput(event.target.value)}
                 renderDropdown={(onclose) => (
                   <Tabs.Group
@@ -150,7 +152,7 @@ export default function SearchInput() {
           containerClass="desktop:w-[420px] tablet:w-[280px]"
           scale="sm"
           value={searchString}
-          placeholder="Type for collections, NFTs etc"
+          placeholder={t("SearchBar.Placeholder")}
           onChange={(event) => handleTextInput(event.target.value)}
           renderDropdown={(onclose) => (
             <Tabs.Group

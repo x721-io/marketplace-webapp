@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
 import { Spinner } from "flowbite-react";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
 interface Props {
   className?: string;
@@ -38,6 +39,7 @@ export default function ImageUploadNft({
       size: 100000000,
     },
   };
+  const t = useTranslations("Common")
   const [file, setFile] = useState<Blob | undefined>();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const inputCoverRef = useRef<HTMLInputElement>(null);
@@ -174,7 +176,7 @@ export default function ImageUploadNft({
             <Text className="font-semibold text-secondary" variant="body-24">
               PNG, JPG, JPEG, MP4 or MP3. Max 10mb.
             </Text>
-            <Button variant="primary">Choose File</Button>
+            <Button variant="primary">{t("ChooseFile")}</Button>
           </div>
         )}
 
@@ -228,7 +230,7 @@ export default function ImageUploadNft({
                   >
                     PNG, JPG, JPEG. Max 10mb.
                   </Text>
-                  <Button variant="primary">Choose File</Button>
+                  <Button variant="primary">{t("ChooseFile")}</Button>
                 </div>
               )}
               {!!fileImage &&

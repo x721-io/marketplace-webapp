@@ -2,7 +2,7 @@
 
 import CollectionFilters from "@/components/Filters/CollectionFilters";
 import CollectionsList from "@/components/List/CollectionsList";
-import React from "react";
+import React, { useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Filters/MobileCollectionFiltersModal";
 import { useCollectionFilterStore } from "@/store/filters/collections/store";
@@ -23,6 +23,8 @@ export default function ExploreCollectionsPage() {
     page: size,
     onNext: () => setSize(size + 1),
   });
+
+  useEffect(() => {},[])
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">

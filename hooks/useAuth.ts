@@ -1,23 +1,22 @@
-import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { disconnect } from "@wagmi/core";
-import { sleep } from "@/utils";
-import useAuthStore, { clearProfile } from "@/store/auth/store";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { APIParams } from "@/services/api/types";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { CHAIN_ID } from "@/config/constants";
+import { Address, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { disconnect } from '@wagmi/core';
+import { sleep } from '@/utils';
+import useAuthStore, { clearProfile } from '@/store/auth/store';
+import { useCallback, useMemo } from 'react';
+import { APIParams } from '@/services/api/types';
+import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
+import { CHAIN_ID } from '@/config/constants';
+import { getAuthCookies, setAuthCookies } from '@/services/cookies';
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
-  const { setCredentials, setProfile, credentials } = useAuthStore();
+  const { setProfile } = useAuthStore();
+  const credentials = getAuthCookies();
   const bearerToken = credentials?.accessToken;
 
   const { isConnected, address } = useAccount();
   const acceptedTerms = useAuthStore((state) => state.profile?.acceptedTerms);
-  const accessToken = useAuthStore((state) => state.credentials?.accessToken);
-  const expiredDate = useAuthStore(
-    (state) => state.credentials?.accessTokenExpire,
-  );
+  const accessToken = credentials.accessToken;
   const userWallet = useAuthStore((state) => state.profile?.publicKey);
 
   const isCorrectWallet = useMemo(() => {
@@ -25,17 +24,16 @@ export const useAuth = () => {
     return userWallet.toLowerCase() === address.toLowerCase();
   }, [userWallet, address, isConnected]);
 
-  const isExpired = useMemo(() => {
-    return !!expiredDate && expiredDate < Date.now();
-  }, [expiredDate]);
 
   const isValidSession = useMemo(() => {
-    return acceptedTerms && !!accessToken && !isExpired && isCorrectWallet;
-  }, [acceptedTerms, accessToken, isExpired, isCorrectWallet]);
+    const credentials = getAuthCookies();
+    const accessToken = credentials?.accessToken
+    return acceptedTerms && !!accessToken && isCorrectWallet;
+  }, [acceptedTerms, accessToken, isCorrectWallet]);
 
-  if (typeof localStorage !== "undefined") {
+  if (typeof localStorage !== 'undefined') {
     if (!isValidSession) {
-      localStorage.removeItem("auth-storage");
+      localStorage.removeItem('auth-storage');
     }
   }
 
@@ -49,12 +47,11 @@ export const useAuth = () => {
         signature: message,
         signer: address.toLocaleLowerCase(),
       });
-      setCredentials(credentials);
-
+      setAuthCookies(credentials);
       await sleep(1000);
       return credentials;
     },
-    [address],
+    [address]
   );
 
   const onUpdateProfile = useCallback(
@@ -63,7 +60,7 @@ export const useAuth = () => {
       const profile = await api.updateProfile(params);
       setProfile(profile);
     },
-    [bearerToken, address],
+    [bearerToken, address]
   );
 
   const onVerifyAccount = useCallback(async () => {
@@ -76,7 +73,7 @@ export const useAuth = () => {
       if (!bearerToken) return;
       const email = await api.resendEmail(params);
     },
-    [bearerToken, address],
+    [bearerToken, address]
   );
 
   const onLogout = async () => {
@@ -94,7 +91,6 @@ export const useAuth = () => {
     onVerifyAccount,
   };
 };
-
 
 export const useWrongNetwork = () => {
   const { chain } = useNetwork();
