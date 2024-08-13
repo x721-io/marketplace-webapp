@@ -1,10 +1,10 @@
-import axios from "axios";
-import { BASE_API_URL } from "@/config/api";
+import axios from 'axios';
+import { BASE_API_URL } from '@/config/api';
 
 const BASE_REQUEST_OPTIONS = {
   timeout: 5000,
   headers: {
-    redirect: "follow",
+    redirect: 'follow',
   },
 };
 
@@ -24,7 +24,7 @@ marketplaceApi.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error.response.data);
-  },
+  }
 );
 
 launchpadAPi.interceptors.response.use(
@@ -33,7 +33,28 @@ launchpadAPi.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error.response.data);
-  },
+  }
 );
 
-export { marketplaceApi, launchpadAPi };
+const getMarketplaceApi = () => {
+  const backendAPI = axios.create({
+    baseURL: BASE_API_URL,
+    ...BASE_REQUEST_OPTIONS,
+  });
+  backendAPI.interceptors.request.use(
+    (config) => config,
+    (error) => Promise.reject(error)
+  );
+
+  // API response interceptor
+  backendAPI.interceptors.response.use(
+    (response) => response.data,
+    (error) => {
+      return Promise.reject(error.response.data);
+    }
+  );
+
+  return backendAPI;
+};
+
+export { marketplaceApi, launchpadAPi, getMarketplaceApi };

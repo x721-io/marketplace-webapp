@@ -8,6 +8,7 @@ import Button from '@/components/Button/index';
 import { useAuth, useWrongNetwork } from '@/hooks/useAuth';
 import { useTranslations } from 'next-intl';
 
+
 interface Props {
   className?: string;
   children?: React.ReactNode;

@@ -1,5 +1,5 @@
-import { setCookie, getCookie, deleteCookie } from 'cookies-next';
-
+import { cookies } from 'next/headers';
+import { getCookie } from 'cookies-next';
 import { APIResponse } from './api/types';
 
 export const setAuthCookies = ({
@@ -9,14 +9,14 @@ export const setAuthCookies = ({
   refreshTokenExpire,
   userId,
 }: APIResponse.Connect) => {
-  setCookie('accessToken', accessToken, {
-    maxAge: accessTokenExpire,
+  cookies().set('accessToken', accessToken, {
+    expires: accessTokenExpire,
   });
-  setCookie('refreshToken', refreshToken, {
-    maxAge: refreshTokenExpire,
+  cookies().set('refreshToken', refreshToken, {
+    expires: refreshTokenExpire,
   });
-  setCookie('userId', userId, {
-    maxAge: accessTokenExpire,
+  cookies().set('userId', userId, {
+    expires: accessTokenExpire,
   });
 };
 
@@ -24,12 +24,11 @@ export const getAuthCookies = () => {
   return {
     accessToken: getCookie('accessToken')?.toString(),
     refreshToken: getCookie('refreshToken')?.toString(),
-    userId: getCookie('userId')?.toString(),
   };
 };
 
 export const clearAuthCookies = () => {
-  deleteCookie('accessToken');
-  deleteCookie('refreshToken');
-  deleteCookie('userId');
+  cookies().delete('accessToken');
+  cookies().delete('refreshToken');
+  cookies().delete('userId');
 };
