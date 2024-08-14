@@ -9,22 +9,30 @@ export default function MainFooter() {
     {
       title: "Marketplace",
       items: [
-        { label: "Explore", href: "/explore/collections", blank: '_parent' },
-        { label: "Create", href: "/create/collection/ERC721", blank: '_parent' },
-        { label: "Artists", href: "/explore/users", blank: '_parent' },
+        { label: "Explore", href: "/explore/collections", blank: "_parent" },
+        {
+          label: "Create",
+          href: "/create/collection/ERC721",
+          blank: "_parent",
+        },
+        { label: "Artists", href: "/explore/users", blank: "_parent" },
       ],
     },
     {
       title: "Links",
       items: [
-        { label: "Docs", href: " https://docs.x721.io/", blank: '_blank' },
+        { label: "Docs", href: " https://docs.x721.io/", blank: "_blank" },
       ],
     },
     {
       title: "Socials",
       items: [
-        { label: "Twitter", href: "https://twitter.com/NFT_X721", blank: '_blank' },
-        { label: "Telegram", href: "https://t.me/NFT_X721", blank: '_blank' },
+        {
+          label: "Twitter",
+          href: "https://twitter.com/NFT_X721",
+          blank: "_blank",
+        },
+        { label: "Telegram", href: "https://t.me/NFT_X721", blank: "_blank" },
       ],
     },
   ];
@@ -90,7 +98,11 @@ export default function MainFooter() {
         </div>
 
         <div className="flex-1 flex items-center justify-center gap-6">
-          <Link href="https://u2u.xyz" target="_blank" className="text-body-12 text-tertiary">
+          <Link
+            href="https://u2u.xyz"
+            target="_blank"
+            className="text-body-12 text-tertiary"
+          >
             Terms of Service
           </Link>
           {/* <Link href="#" className="text-body-12 text-tertiary">

@@ -39,7 +39,7 @@ export default function ImageUploadNft({
       size: 100000000,
     },
   };
-  const t = useTranslations("Common")
+  const t = useTranslations("Common");
   const [file, setFile] = useState<Blob | undefined>();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const inputCoverRef = useRef<HTMLInputElement>(null);
@@ -133,7 +133,7 @@ export default function ImageUploadNft({
         className={classNames(
           "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full",
           error ? "border-error" : "border-tertiary",
-          className,
+          className
         )}
       >
         <input
@@ -204,7 +204,7 @@ export default function ImageUploadNft({
               className={classNames(
                 "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full mt-1",
                 error ? "border-error" : "border-tertiary",
-                className,
+                className
               )}
             >
               <input

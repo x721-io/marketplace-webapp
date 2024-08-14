@@ -38,20 +38,20 @@ export default function Input({
         return classNames(
           "text-body-16 rounded-2xl min-w-72 h-14 p-4",
           !!prependIcon && "ps-10",
-          !!appendIcon && "pe-10",
+          !!appendIcon && "pe-10"
         );
       case "sm":
         return classNames(
           "text-body-14 rounded-xl min-w-72 h-10 px-4 py-2",
           !!prependIcon && "ps-9",
-          !!appendIcon && "pe-9",
+          !!appendIcon && "pe-9"
         );
       case "md":
       default:
         return classNames(
           "text-body-16 rounded-2xl min-w-72 h-12 p-3",
           !!prependIcon && "ps-10",
-          !!appendIcon && "pe-10",
+          !!appendIcon && "pe-10"
         );
     }
   }, [scale, prependIcon, appendIcon]);
@@ -71,14 +71,14 @@ export default function Input({
     <div
       className={classNames(
         "flex items-center relative w-auto",
-        containerClass,
+        containerClass
       )}
     >
       {!!prependIcon && (
         <div
           className={classNames(
             "absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none",
-            prependIconContainerClass,
+            prependIconContainerClass
           )}
         >
           {prependIcon}
@@ -93,7 +93,7 @@ export default function Input({
         <div
           className={classNames(
             "absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none",
-            appendIconContainerClass,
+            appendIconContainerClass
           )}
         >
           {appendIcon}

@@ -62,7 +62,7 @@ export default function UpdateRoyaltiesModal({
       if (isMissingAddress) return "Invalid wallet address";
 
       const isMissingValue = value.some(
-        (item) => isNaN(item.value) || Number(item.value) <= 0,
+        (item) => isNaN(item.value) || Number(item.value) <= 0
       );
       if (isMissingValue) return "Royalty value must be greater than Zero";
 
@@ -85,7 +85,7 @@ export default function UpdateRoyaltiesModal({
     try {
       const _royalties = data.royalties.map((item) => {
         const royaltiesBigInt = BigInt(
-          Number(Number(item.value).toFixed(2)) * 100,
+          Number(Number(item.value).toFixed(2)) * 100
         );
 
         return { ...item, value: royaltiesBigInt };

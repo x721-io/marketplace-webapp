@@ -83,7 +83,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               for
               <span className="font-semibold text-primary">
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image
@@ -135,13 +135,13 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               for
               <Tooltip
                 content={formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
                 placement="bottom"
               >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {formatDisplayedNumber(
-                    formatUnits(event.price, token?.decimal),
+                    formatUnits(event.price, token?.decimal)
                   )}
                 </span>
               </Tooltip>
@@ -168,7 +168,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 <span className="font-semibold text-primary">
                   &nbsp;
                   {formatDisplayedNumber(
-                    formatUnits(event.price, token?.decimal),
+                    formatUnits(event.price, token?.decimal)
                   )}
                 </span>
               </p>
@@ -202,7 +202,7 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 : "For"}
               <span className="font-semibold text-primary">
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image

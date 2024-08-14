@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Spinner, Tabs } from "flowbite-react";
+import { Spinner } from "flowbite-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
@@ -14,6 +14,7 @@ import UserCollections from "@/components/Pages/MarketplaceNFT/UserDetails/UserC
 import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities";
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 import { useFilterByUser } from "@/store/filters/byUser/store";
+import { MyTabs } from "@/components/X721UIKits/Tabs";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi();
@@ -33,6 +34,7 @@ export default function ProfilePage() {
   const [saleAmount, setSaleAmount] = useState(0);
   const [createdAmount, setCreatedAmount] = useState(0);
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
+  const [currTabIndex, setCurrTabIndex] = useState(0);
 
   useEffect(() => {
     const userAddress = user?.publicKey;
@@ -80,73 +82,67 @@ export default function ProfilePage() {
     );
   }
 
+  const getComponentByCurrTabIndex = () => {
+    switch (currTabIndex) {
+      case 0:
+        return (
+          <OwnedNFTs wallet={user.publicKey} onUpdateAmount={setOwnedAmount} />
+        );
+      case 1:
+        return (
+          <OnSaleNFTs wallet={user.publicKey} onUpdateAmount={setSaleAmount} />
+        );
+      case 2:
+        return (
+          <CreatedNFTs
+            userId={user.id}
+            wallet={user.publicKey}
+            onUpdateAmount={setCreatedAmount}
+          />
+        );
+      case 3:
+        return (
+          <UserCollections
+            userId={user.id}
+            wallet={user.publicKey}
+            onUpdateAmount={setCreatedCollectionAmount}
+          />
+        );
+      case 4:
+        return <Activities wallet={user.publicKey} />;
+    }
+  };
+
   return (
     <div className="w-full mt-4 desktop:mt-0">
       <Profile onRefresh={mutate} user={user} />
-
       <div className="desktop:px-20 tablet:px-20 px-4">
-        <Tabs.Group
-          style="underline"
-          className="flex flex-nowrap overflow-x-auto"
-        >
-          <Tabs.Item
-            title={
-              <div className="min-w-fit whitespace-nowrap">
-                Owned ({formatDisplayedNumber(ownedAmount)})
-              </div>
-            }
-          >
-            <OwnedNFTs
-              wallet={user.publicKey}
-              onUpdateAmount={setOwnedAmount}
-            />
-          </Tabs.Item>
-          <Tabs.Item
-            title={
-              <div className="min-w-fit whitespace-nowrap">
-                On Sale ({formatDisplayedNumber(saleAmount)})
-              </div>
-            }
-          >
-            <OnSaleNFTs
-              wallet={user.publicKey}
-              onUpdateAmount={setSaleAmount}
-            />
-          </Tabs.Item>
-          <Tabs.Item
-            title={
-              <div className="min-w-fit whitespace-nowrap">
-                Created ({formatDisplayedNumber(createdAmount)})
-              </div>
-            }
-          >
-            <CreatedNFTs
-              userId={user.id}
-              wallet={user.publicKey}
-              onUpdateAmount={setCreatedAmount}
-            />
-          </Tabs.Item>
-          <Tabs.Item
-            title={
-              <div className="min-w-fit whitespace-nowrap">
-                Collections ({formatDisplayedNumber(createdCollectionAmount)})
-              </div>
-            }
-          >
-            <UserCollections
-              userId={user.id}
-              wallet={user.publicKey}
-              onUpdateAmount={setCreatedCollectionAmount}
-            />
-          </Tabs.Item>
-          <Tabs.Item
-            title={
-              <div className="min-w-fit whitespace-nowrap">Activities</div>
-            }
-          >
-            <Activities wallet={user.publicKey} />
-          </Tabs.Item>
-        </Tabs.Group>
+        <MyTabs.Group onActiveTabChange={setCurrTabIndex} style="underline">
+          <MyTabs.Item tabIndex={0} active={currTabIndex === 0}>
+            <div className="min-w-fit whitespace-nowrap">
+              Owned ({formatDisplayedNumber(ownedAmount)})
+            </div>
+          </MyTabs.Item>
+          <MyTabs.Item tabIndex={1} active={currTabIndex === 1}>
+            <div className="min-w-fit whitespace-nowrap">
+              On Sale ({formatDisplayedNumber(saleAmount)})
+            </div>
+          </MyTabs.Item>
+          <MyTabs.Item tabIndex={2} active={currTabIndex === 2}>
+            <div className="min-w-fit whitespace-nowrap">
+              Created ({formatDisplayedNumber(createdAmount)})
+            </div>
+          </MyTabs.Item>
+          <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
+            <div className="min-w-fit whitespace-nowrap">
+              Collections ({formatDisplayedNumber(createdCollectionAmount)})
+            </div>
+          </MyTabs.Item>
+          <MyTabs.Item tabIndex={4} active={currTabIndex === 4}>
+            <div className="min-w-fit whitespace-nowrap">Activities</div>
+          </MyTabs.Item>
+        </MyTabs.Group>
+        {getComponentByCurrTabIndex()}
       </div>
     </div>
   );

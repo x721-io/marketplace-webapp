@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md,mdx,css,scss}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md,mdx,css,scss}\"",
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@rarible/types": "~0.9.16",
@@ -49,7 +51,17 @@
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.2",
     "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.4",
+    "lint-staged": "^15.2.9",
     "postcss": "^8.4.31",
+    "prettier": "^2.8.8",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,html,css}": [
+      "eslint . --ext .ts,.tsx --fix",
+      "prettier --write .",
+      "git add ."
+    ]
   }
 }

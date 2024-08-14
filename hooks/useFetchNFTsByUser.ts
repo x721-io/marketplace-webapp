@@ -7,7 +7,7 @@ import { Address } from "wagmi";
 
 export const useFetchNFTsByUser = (
   wallet: Address,
-  mode: "created" | "owned" | "onSale",
+  mode: "created" | "owned" | "onSale"
 ) => {
   const filterStore = useFilterByUser();
   const { showFilters, filters, toggleFilter, resetFilters, updateFilters } =

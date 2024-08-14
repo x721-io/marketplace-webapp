@@ -43,7 +43,7 @@ export default function CancelSellNFTModal({
   const onCancelSellURC1155 = useCancelSellURC1155();
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
-      (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase(),
+      (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase()
     );
   }, [marketData, wallet]);
 

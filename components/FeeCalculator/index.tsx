@@ -42,7 +42,7 @@ export default function FeeCalculator({
     const totalRoyaltiesValue = royalties.reduce(
       (accumulator: bigint, current: Royalty) =>
         BigInt(current.value) + BigInt(accumulator),
-      BigInt(0),
+      BigInt(0)
     );
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);

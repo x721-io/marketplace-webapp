@@ -39,7 +39,7 @@ export default function OnSaleNFTs({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 0 },
+    { refreshInterval: 0 }
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function OnSaleNFTs({
         onClick={() => toggleFilter()}
         className={classNames(
           showFilters ? "bg-white shadow" : `bg-surface-soft`,
-          "mb-7",
+          "mb-7"
         )}
         scale="sm"
         variant="secondary"

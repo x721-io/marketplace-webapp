@@ -28,7 +28,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
               Change now
             </div>
           ),
-        },
+        }
       );
     } else {
       toast.dismiss();

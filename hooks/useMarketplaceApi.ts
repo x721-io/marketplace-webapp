@@ -1,12 +1,12 @@
-import { APIParams, APIResponse } from '@/services/api/types';
-import { marketplaceApi } from '@/services/api';
-import { API_ENDPOINTS } from '@/config/api';
-import { Address } from 'wagmi';
-import { useCallback, useMemo } from 'react';
-import { parseQueries, sanitizeObject } from '@/utils';
-import { parseUnits } from 'ethers';
-import { tokens } from '@/config/tokens';
-import { getAuthCookies } from '@/services/cookies-client';
+import { APIParams, APIResponse } from "@/services/api/types";
+import { marketplaceApi } from "@/services/api";
+import { API_ENDPOINTS } from "@/config/api";
+import { Address } from "wagmi";
+import { useCallback, useMemo } from "react";
+import { parseQueries, sanitizeObject } from "@/utils";
+import { parseUnits } from "ethers";
+import { tokens } from "@/config/tokens";
+import { getAuthCookies } from "@/services/cookies-client";
 
 export const useMarketplaceApi = () => {
   const credentials = getAuthCookies();
@@ -44,7 +44,7 @@ export const useMarketplaceApi = () => {
 
       searchNFTs: (text: string): Promise<APIResponse.SearchNFTs> =>
         marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-          mode: 'NFT',
+          mode: "NFT",
           text,
         }),
 
@@ -52,13 +52,13 @@ export const useMarketplaceApi = () => {
         text: string
       ): Promise<APIResponse.SearchCollections> =>
         marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-          mode: 'COLLECTION',
+          mode: "COLLECTION",
           text,
         }),
 
       searchUsers: (text: string): Promise<APIResponse.SearchUsers> =>
         marketplaceApi.post(API_ENDPOINTS.SEARCH, {
-          mode: 'USER',
+          mode: "USER",
           text,
         }),
 
@@ -69,14 +69,14 @@ export const useMarketplaceApi = () => {
         const form = new FormData();
         if (Array.isArray(files)) {
           files.forEach((file) => {
-            form.append('files', file);
+            form.append("files", file);
           });
         } else {
-          form.append('files', files, (files as any).name);
+          form.append("files", files, (files as any).name);
         }
 
         if (metadata) {
-          form.append('metadata', JSON.stringify(metadata));
+          form.append("metadata", JSON.stringify(metadata));
         }
         return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form);
       },
@@ -85,7 +85,7 @@ export const useMarketplaceApi = () => {
         data: Record<string, any>
       ): Promise<APIResponse.UploadMetadata> => {
         const form = new FormData();
-        form.append('metadata', JSON.stringify(data));
+        form.append("metadata", JSON.stringify(data));
         return marketplaceApi.post(API_ENDPOINTS.UPLOAD_IMAGE, form);
       },
 
@@ -118,7 +118,7 @@ export const useMarketplaceApi = () => {
             ...params,
             sellStatus:
               Number(priceMin) || Number(priceMax)
-                ? 'AskNew'
+                ? "AskNew"
                 : params.sellStatus,
             priceMin: bigintMin?.toString(),
             priceMax: bigintMax?.toString(),

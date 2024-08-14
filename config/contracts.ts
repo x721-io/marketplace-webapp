@@ -9,7 +9,6 @@ import royaltiesRegistryABI from "@/abi/RoyaltiesRegistry";
 import feeDistributorABI from "@/abi/FeeDistributor";
 import memeTaVerseABI from "@/abi/Memetaverse";
 
-
 import * as process from "process";
 
 export const contracts = {

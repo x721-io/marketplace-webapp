@@ -86,7 +86,7 @@ export default function TokenBalances() {
           const balance = tokenBalances
             ? formatUnits(
                 tokenBalances[index].result as BigNumberish,
-                token.decimal,
+                token.decimal
               )
             : 0;
           return (

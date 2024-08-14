@@ -95,7 +95,7 @@ export default function NFTCard({
             Current bid:{" "}
             <span className="text-primary font-semibold">
               {formatDisplayedNumber(
-                formatUnits(price as string, token?.decimal),
+                formatUnits(price as string, token?.decimal)
               )}
             </span>{" "}
             {token?.symbol}
@@ -107,7 +107,7 @@ export default function NFTCard({
             On sale for:{" "}
             <span className="text-primary font-semibold">
               {formatDisplayedNumber(
-                formatUnits(price as string, token?.decimal),
+                formatUnits(price as string, token?.decimal)
               )}
             </span>{" "}
             {token?.symbol}

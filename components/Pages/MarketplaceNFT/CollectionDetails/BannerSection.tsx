@@ -31,7 +31,7 @@ export default function BannerSectionCollection({
     return (
       creators.some(
         (creator) =>
-          creator.user.publicKey.toLowerCase() === wallet.toLowerCase(),
+          creator.user.publicKey.toLowerCase() === wallet.toLowerCase()
       ) ?? false
     );
   }, [creators, wallet]);

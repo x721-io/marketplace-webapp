@@ -24,7 +24,7 @@ export default function ExploreCollectionsPage() {
     onNext: () => setSize(size + 1),
   });
 
-  useEffect(() => {},[])
+  useEffect(() => {}, []);
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">

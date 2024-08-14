@@ -95,7 +95,7 @@ export default function MobileCollectionFiltersModal({
           >
             Reset <Icon name="refresh" width={12} height={12} />
           </Button>
-          
+
           <div className="w-full flex items-center gap-2 mt-2">
             <Button
               scale="sm"
