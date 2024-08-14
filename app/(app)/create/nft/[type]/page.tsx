@@ -23,7 +23,7 @@ import PlusCircleIcon from '@/components/Icon/PlusCircle';
 import { redirect, useParams, useRouter } from 'next/navigation';
 import { formRulesCreateNFT } from '@/config/form/rules';
 import { Accordion } from '@/components/X721UIKits/Accordion';
-import { getAuthCookies } from '@/services/cookies';
+import { getAuthCookies } from '@/services/cookies-client';
 import Tooltip from '@/components/X721UIKits/Tooltip';
 
 export default function CreateNftPage() {

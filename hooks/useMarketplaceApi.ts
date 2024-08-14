@@ -6,7 +6,7 @@ import { useCallback, useMemo } from 'react';
 import { parseQueries, sanitizeObject } from '@/utils';
 import { parseUnits } from 'ethers';
 import { tokens } from '@/config/tokens';
-import { getAuthCookies } from '@/services/cookies';
+import { getAuthCookies } from '@/services/cookies-client';
 
 export const useMarketplaceApi = () => {
   const credentials = getAuthCookies();

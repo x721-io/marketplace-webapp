@@ -16,7 +16,7 @@ import FormValidationMessages from '@/components/Form/ValidationMessages';
 import { toast } from 'react-toastify';
 import { FormState } from '@/types';
 import { formRulesSigupModal } from '@/config/form/rules';
-import { getAuthCookies } from '@/services/cookies';
+import { getAuthCookies } from '@/services/cookies-client';
 
 interface Props extends ModalProps {
   onSignupSuccess?: (accessToken?: string) => void;

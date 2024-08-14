@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import { getCookie } from 'cookies-next';
 import { APIResponse } from './api/types';
 
 export const setAuthCookies = ({
@@ -22,8 +21,8 @@ export const setAuthCookies = ({
 
 export const getAuthCookies = () => {
   return {
-    accessToken: getCookie('accessToken')?.toString(),
-    refreshToken: getCookie('refreshToken')?.toString(),
+    accessToken: cookies().get('accessToken')?.value,
+    refreshToken: cookies().get('refreshToken')?.value,
   };
 };
 

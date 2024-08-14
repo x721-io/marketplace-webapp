@@ -1,3 +1,5 @@
+'use client'
+
 import { Address, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { disconnect } from '@wagmi/core';
 import { sleep } from '@/utils';
@@ -6,7 +8,7 @@ import { useCallback, useMemo } from 'react';
 import { APIParams } from '@/services/api/types';
 import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
 import { CHAIN_ID } from '@/config/constants';
-import { getAuthCookies, setAuthCookies } from '@/services/cookies';
+import {  setAuthCookies, getAuthCookies, clearAuthCookies } from '@/services/cookies-client';
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
@@ -78,6 +80,7 @@ export const useAuth = () => {
 
   const onLogout = async () => {
     await disconnect();
+    clearAuthCookies()
     clearProfile();
   };
 
