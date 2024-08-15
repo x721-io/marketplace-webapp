@@ -1,5 +1,6 @@
 "use client";
 
+import ChevronDownIcon from "@/components/Icon/ChevronDown";
 import { useState } from "react";
 
 type AccordionRootProps = {
@@ -29,9 +30,16 @@ const Root: React.FC<AccordionRootProps> = ({
           background: isCollapseAll ? "transparent" : "#F5F5F5",
           opacity: isCollapseAll ? 0.5 : 1,
         }}
-        className="w-full px-[20px]  cursor-pointer pt-[20px]"
+        className="w-full px-[20px] flex items-center justify-between cursor-pointer pt-[20px]"
       >
         {title}
+        {isCollapseAll ? (
+          <ChevronDownIcon width={20} />
+        ) : (
+          <div className="rotate-180">
+            <ChevronDownIcon width={20} />
+          </div>
+        )}
       </div>
       {!isCollapseAll && <div className="px-[20px] py-[20px]">{children}</div>}
     </div>

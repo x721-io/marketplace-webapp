@@ -1,8 +1,8 @@
 "use client";
 import Text from "@/components/Text";
+import MySpinner from "@/components/X721UIKits/Spinner";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { APIParams } from "@/services/api/types";
-import { Spinner } from "flowbite-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -87,7 +87,7 @@ export default function EmailVerificationPage() {
       default:
         return (
           <div className="w-screen h-screen flex justify-center items-center">
-            <Spinner />
+            <MySpinner />
           </div>
         );
     }

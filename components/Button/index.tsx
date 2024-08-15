@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { classNames } from "@/utils/string";
-import { Spinner } from "flowbite-react";
+import MySpinner from "../X721UIKits/Spinner";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -95,7 +95,7 @@ export default function Button({
       <div className="flex justify-center items-center gap-1">
         {loading ? (
           <>
-            <Spinner size="sm" />
+            <MySpinner size={18} />
             {loadingText || "Loading..."}
           </>
         ) : (

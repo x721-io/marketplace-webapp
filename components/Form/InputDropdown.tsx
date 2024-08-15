@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Input, { BaseInputProps } from "@/components/Form/Input";
 import { classNames } from "@/utils/string";
-import { Spinner } from "flowbite-react";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props extends BaseInputProps {
   closeOnClick?: boolean;
@@ -50,7 +50,7 @@ export default function InputDropdown({
         >
           {loading ? (
             <div className="flex flex-col justify-center items-center">
-              <Spinner size="xl" />
+              <MySpinner />
             </div>
           ) : (
             renderDropdown(handleClose)

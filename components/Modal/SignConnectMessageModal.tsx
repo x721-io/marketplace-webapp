@@ -2,7 +2,6 @@ import {
   CustomFlowbiteTheme,
   Modal,
   ModalProps,
-  Spinner,
   Tooltip,
 } from "flowbite-react";
 import Text from "@/components/Text";
@@ -14,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { signMessage } from "@wagmi/core";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props extends ModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -94,7 +94,7 @@ export default function SignConnectMessageModal({
             <Text className="text-secondary text-center" variant="body-18">
               Connecting your wallet to U2U NFT Market
             </Text>
-            <Spinner size="xl" />
+            <MySpinner />
           </>
         );
       case isError || !!authError:
@@ -136,7 +136,7 @@ export default function SignConnectMessageModal({
             <Text className="text-secondary text-center" variant="body-18">
               Sign the message in your wallet MetaMask to sign in safely
             </Text>
-            <Spinner size="xl" />
+            <MySpinner />
             <Button className="w-full" variant="secondary" onClick={onClose}>
               Cancel
             </Button>

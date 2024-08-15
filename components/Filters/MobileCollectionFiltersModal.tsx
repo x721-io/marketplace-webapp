@@ -1,4 +1,3 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import React from "react";
 import Button from "@/components/Button";
 import { APIParams } from "@/services/api/types";
@@ -9,19 +8,9 @@ import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { Address } from "wagmi";
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
-
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   onApplyFilters: (filters: APIParams.FetchCollections) => void;
   activeFilters: APIParams.FetchCollections;
   onResetFilters?: () => void;
@@ -38,16 +27,13 @@ export default function MobileCollectionFiltersModal({
     useCollectionFilters(activeFilters, onApplyFilters);
 
   return (
-    <Modal
-      theme={modalTheme}
-      position="center"
+    <MyModal.Root
       onClose={onClose}
       show={show}
-      size="md"
-      className="bg-black flex items-center justify-center"
+      className="flex items-center justify-center"
     >
-      <Modal.Header>Collections Filters</Modal.Header>
-      <Modal.Body>
+      <MyModal.Header>Collections Filters</MyModal.Header>
+      <MyModal.Body>
         <Text className="font-semibold text-secondary mb-2">Floor price</Text>
         <div className="flex items-center gap-4 mb-4">
           <Input
@@ -71,11 +57,11 @@ export default function MobileCollectionFiltersModal({
             placeholder="Max"
           />
           {/* <Select 
-              options={tokenOptions} 
-              containerClass="w-2/3" scale='sm'
-              value={localFilters.quoteToken}
-              onChange={(e) => setLocalFilters(state => ({ ...state, quoteToken: e.target.value as Address }))}
-            /> */}
+            options={tokenOptions} 
+            containerClass="w-2/3" scale='sm'
+            value={localFilters.quoteToken}
+            onChange={(e) => setLocalFilters(state => ({ ...state, quoteToken: e.target.value as Address }))}
+          /> */}
         </div>
 
         <div className="mt-6">
@@ -117,7 +103,7 @@ export default function MobileCollectionFiltersModal({
             </Button>
           </div>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

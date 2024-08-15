@@ -8,9 +8,9 @@ import NFTData from "@/components/NFT/NFTData";
 import NFTMarketData from "@/components/Pages/MarketplaceNFT/NFTDetails/MarketData";
 import NFTImage from "@/components/Pages/MarketplaceNFT/NFTDetails/NFTImage";
 import Icon from "@/components/Icon";
-import { Spinner } from "flowbite-react";
 import React from "react";
 import useSWRImmutable from "swr/immutable";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function NFTPage() {
   if (isLoading) {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Spinner } from "flowbite-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
@@ -15,6 +14,7 @@ import Activities from "@/components/Pages/MarketplaceNFT/UserDetails/Activities
 import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 import { useFilterByUser } from "@/store/filters/byUser/store";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ProfilePage() {
   const api = useMarketplaceApi();
@@ -53,7 +53,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }

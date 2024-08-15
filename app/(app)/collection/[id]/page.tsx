@@ -9,7 +9,6 @@ import NFTsList from "@/components/List/NFTsList";
 import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
 import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection";
 import FiltersSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection";
-import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
 import {
   getCollectionAvatarImage,
@@ -19,6 +18,7 @@ import { useFilterByCollection } from "@/store/filters/byCollection/store";
 import useSWRInfinite from "swr/infinite";
 import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Address } from "wagmi";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function CollectionPage() {
   const { id } = useParams();
@@ -94,7 +94,7 @@ export default function CollectionPage() {
   if (isLoadingCollection) {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }
