@@ -10,6 +10,7 @@ import LoadingPage from "./loading";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import ThemeProvider from "./theme-provider";
+import AuthProvider from "./auth-provider";
 
 export const metadata: Metadata = {
   title: "X721 Marketplace",
@@ -30,8 +31,10 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages}>
             <ErrorBoundary>
               <Providers>
-                <Suspense fallback={<LoadingPage />}>{children}</Suspense>
-                <ToastContainer autoClose={5000} />
+                <AuthProvider>
+                  <Suspense fallback={<LoadingPage />}>{children}</Suspense>
+                  <ToastContainer autoClose={5000} />
+                </AuthProvider>
               </Providers>
             </ErrorBoundary>
           </NextIntlClientProvider>

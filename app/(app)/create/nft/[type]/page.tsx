@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Icon from "@/components/Icon";
 import { AssetType, FormState, Trait } from "@/types";
@@ -25,8 +25,10 @@ import { formRulesCreateNFT } from "@/config/form/rules";
 import { Accordion } from "@/components/X721UIKits/Accordion";
 import { getAuthCookies } from "@/services/cookies-client";
 import Tooltip from "@/components/X721UIKits/Tooltip";
+import { AuthenticationContext } from "@/app/auth-provider";
 
 export default function CreateNftPage() {
+  const { credentials } = useContext(AuthenticationContext);
   const type = useParams().type.toString().toUpperCase() as AssetType;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ export default function CreateNftPage() {
   const [uploading, setUploading] = useState(false);
   const api = useMarketplaceApi();
   const { onCreateNFT } = useCreateNFT(type || "ERC721");
-  const userId = getAuthCookies()?.userId;
+  const userId = credentials?.userId;
   const { data } = useSWR(
     userId || null,
     (userId) =>

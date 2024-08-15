@@ -57,4 +57,25 @@ const getMarketplaceApi = () => {
   return backendAPI;
 };
 
-export { marketplaceApi, launchpadAPi, getMarketplaceApi };
+const getBackendAPI = () => {
+  const backendAPI = axios.create({
+    baseURL: BASE_API_URL,
+    ...BASE_REQUEST_OPTIONS,
+  });
+  backendAPI.interceptors.request.use(
+    (config) => config,
+    (error) => Promise.reject(error)
+  );
+
+  // API response interceptor
+  backendAPI.interceptors.response.use(
+    (response) => response.data,
+    (error) => {
+      return Promise.reject(error.response.data);
+    }
+  );
+
+  return backendAPI;
+};
+
+export { marketplaceApi, launchpadAPi, getMarketplaceApi, getBackendAPI };

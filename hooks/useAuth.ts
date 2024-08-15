@@ -4,7 +4,7 @@ import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { disconnect } from "@wagmi/core";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
-import { useCallback, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { APIParams } from "@/services/api/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { CHAIN_ID } from "@/config/constants";
@@ -13,9 +13,11 @@ import {
   getAuthCookies,
   clearAuthCookies,
 } from "@/services/cookies-client";
+import { AuthenticationContext } from "@/app/auth-provider";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
+  const { isAuthenticated } = useContext(AuthenticationContext);
   const { setProfile } = useAuthStore();
   const credentials = getAuthCookies();
   const bearerToken = credentials?.accessToken;
@@ -31,16 +33,18 @@ export const useAuth = () => {
   }, [userWallet, address, isConnected]);
 
   const isValidSession = useMemo(() => {
-    const credentials = getAuthCookies();
-    const accessToken = credentials?.accessToken;
-    return acceptedTerms && !!accessToken && isCorrectWallet;
-  }, [acceptedTerms, accessToken, isCorrectWallet]);
-
-  if (typeof localStorage !== "undefined") {
-    if (!isValidSession) {
+    const isValid = isAuthenticated && acceptedTerms && isCorrectWallet;
+    if (!isValid) {
       localStorage.removeItem("auth-storage");
     }
-  }
+    return isValid;
+  }, [isAuthenticated, acceptedTerms, isCorrectWallet]);
+
+  // if (typeof localStorage !== "undefined") {
+  //   if (!isValidSession) {
+  //     localStorage.removeItem("auth-storage");
+  //   }
+  // }
 
   const onAuth = useCallback(
     async (date: string, message: Address) => {
