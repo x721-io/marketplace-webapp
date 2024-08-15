@@ -27,8 +27,10 @@ import { redirect, useParams, useRouter } from "next/navigation";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { CHAIN_ID } from "@/config/constants";
 import { formRulesCreateCollection } from "@/config/form/rules";
+import { useTranslations } from "next-intl";
 
 export default function CreateNFTCollectionPage() {
+  const t = useTranslations("CreateCollection");
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
   const type = useParams().type.toString().toUpperCase() as AssetType;
@@ -65,7 +67,7 @@ export default function CreateNFTCollectionPage() {
           render: (data) => {
             setValue(
               "avatar",
-              parseImageUrl(data?.data?.fileHashes[0]) as string,
+              parseImageUrl(data?.data?.fileHashes[0]) as string
             );
             clearErrors("avatar");
             return "Collection image uploaded successfully";
@@ -140,7 +142,7 @@ export default function CreateNFTCollectionPage() {
 
   const handleValidateInput = async (
     name: string,
-    value: Record<string, any>,
+    value: Record<string, any>
   ) => {
     try {
       setValidating(true);
@@ -201,7 +203,7 @@ export default function CreateNFTCollectionPage() {
             <Icon name="arrowLeft" width={24} height={24} />
           </Button>
           <Text className="text-body-32 tablet:text-body-40 desktop:text-body-40 font-semibold flex-1">
-            Create New Collection - {type}
+            {t("Title")} - {type}
           </Text>
         </div>
 
@@ -210,7 +212,7 @@ export default function CreateNFTCollectionPage() {
             {/* Upload file */}
             <div>
               <Text className="text-base font-semibold mb-1">
-                Collection image
+                {t("FormTitle.CollectionImage")}
               </Text>
               <Controller
                 name="avatar"
@@ -230,7 +232,9 @@ export default function CreateNFTCollectionPage() {
             </div>
             {/* Name */}
             <div>
-              <Text className="text-base font-semibold mb-1">Display name</Text>
+              <Text className="text-base font-semibold mb-1">
+                {t("FormTitle.DisplayName")}
+              </Text>
               <Input
                 register={register("name", formRulesCreateCollection.name)}
                 error={!!errors.name}
@@ -238,32 +242,36 @@ export default function CreateNFTCollectionPage() {
             </div>
             {/* Symbol */}
             <div>
-              <Text className="text-base font-semibold mb-1">Symbol</Text>
+              <Text className="text-base font-semibold mb-1">
+                {t("FormTitle.Symbol")}
+              </Text>
               <Input
                 register={register("symbol", formRulesCreateCollection.symbol)}
                 error={!!errors.symbol}
               />
             </div>
             <div>
-              <Text className="text-base font-semibold mb-1">Short URL</Text>
+              <Text className="text-base font-semibold mb-1">
+                {t("FormTitle.ShortURL")}
+              </Text>
               <Input
                 error={!!errors.shortUrl}
                 register={register(
                   "shortUrl",
-                  formRulesCreateCollection.shortUrl,
+                  formRulesCreateCollection.shortUrl
                 )}
               />
             </div>
             {/* Description */}
             <div>
               <Text className="text-base font-semibold mb-1">
-                Description (optional)
+                {t("FormTitle.Description")}
               </Text>
               <Textarea
                 className="h-[160px] resize-none"
                 register={register(
                   "description",
-                  formRulesCreateCollection.description,
+                  formRulesCreateCollection.description
                 )}
                 error={!!errors.description}
               />

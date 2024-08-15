@@ -6,8 +6,9 @@ import { useMemo, useRef, useState } from "react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
-import { Spinner } from "flowbite-react";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props {
   className?: string;
@@ -38,6 +39,7 @@ export default function ImageUploadNft({
       size: 100000000,
     },
   };
+  const t = useTranslations("Common");
   const [file, setFile] = useState<Blob | undefined>();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const inputCoverRef = useRef<HTMLInputElement>(null);
@@ -131,7 +133,7 @@ export default function ImageUploadNft({
         className={classNames(
           "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full",
           error ? "border-error" : "border-tertiary",
-          className,
+          className
         )}
       >
         <input
@@ -174,13 +176,13 @@ export default function ImageUploadNft({
             <Text className="font-semibold text-secondary" variant="body-24">
               PNG, JPG, JPEG, MP4 or MP3. Max 10mb.
             </Text>
-            <Button variant="primary">Choose File</Button>
+            <Button variant="primary">{t("ChooseFile")}</Button>
           </div>
         )}
 
         {!!file &&
           (loading ? (
-            <Spinner className="absolute right-0 top-[-18px]" />
+            <MySpinner className="absolute right-0 top-[-18px]" />
           ) : (
             <Button
               variant="icon"
@@ -202,7 +204,7 @@ export default function ImageUploadNft({
               className={classNames(
                 "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full mt-1",
                 error ? "border-error" : "border-tertiary",
-                className,
+                className
               )}
             >
               <input
@@ -228,12 +230,12 @@ export default function ImageUploadNft({
                   >
                     PNG, JPG, JPEG. Max 10mb.
                   </Text>
-                  <Button variant="primary">Choose File</Button>
+                  <Button variant="primary">{t("ChooseFile")}</Button>
                 </div>
               )}
               {!!fileImage &&
                 (loading ? (
-                  <Spinner className="absolute right-0 top-[-18px]" />
+                  <MySpinner className="absolute right-0 top-[-18px]" />
                 ) : (
                   <Button
                     variant="icon"

@@ -50,7 +50,7 @@ const { publicClient } = configureChains(
     retryCount: 5,
     retryDelay: 1000,
     stallTimeout: 5000,
-  },
+  }
 );
 
 const injectedConnector = new InjectedConnector({

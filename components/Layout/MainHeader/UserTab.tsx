@@ -1,4 +1,3 @@
-import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
 import React from "react";
 import Image from "next/image";
@@ -6,6 +5,7 @@ import Link from "next/link";
 import { getUserAvatarImage } from "@/utils/string";
 import { APIResponse } from "@/services/api/types";
 import Icon from "@/components/Icon";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 interface Props {
   loading?: boolean;
@@ -17,7 +17,7 @@ export default function SearchUserTab({ loading, data, onClose }: Props) {
   if (loading)
     return (
       <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
 

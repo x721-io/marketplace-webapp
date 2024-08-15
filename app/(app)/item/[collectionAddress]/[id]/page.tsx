@@ -8,9 +8,9 @@ import NFTData from "@/components/NFT/NFTData";
 import NFTMarketData from "@/components/Pages/MarketplaceNFT/NFTDetails/MarketData";
 import NFTImage from "@/components/Pages/MarketplaceNFT/NFTDetails/NFTImage";
 import Icon from "@/components/Icon";
-import { Spinner } from "flowbite-react";
 import React from "react";
 import useSWRImmutable from "swr/immutable";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function NFTPage() {
       "nft-details",
       { collectionAddress: String(collectionAddress), id: String(id) },
     ],
-    ([_, params]) => api.fetchNFTById(params),
+    ([_, params]) => api.fetchNFTById(params)
   );
 
   const { data: marketData } = useSWR(
@@ -40,19 +40,19 @@ export default function NFTPage() {
         bidListPage: 1,
         bidListLimit: 100,
       }),
-    { refreshInterval: 10000 },
+    { refreshInterval: 10000 }
   );
 
   const { data: metaData } = useSWRImmutable(
     !!item?.tokenUri ? item.tokenUri : null,
     (uri) => api.getNFTMetaData(uri),
-    { refreshInterval: 600000 },
+    { refreshInterval: 600000 }
   );
 
   if (isLoading) {
     return (
       <div className="w-full h-96 p-10 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }

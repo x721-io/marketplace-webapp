@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { Connector, useAccount, useConnect } from "wagmi";
-import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
 import Icon from "@/components/Icon";
 import SignConnectMessageModal from "@/components/Modal/SignConnectMessageModal";
 import SignupModal from "@/components/Modal/SignupModal";
 import { useRouter } from "next/navigation";
 import { connect } from "@wagmi/core";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ConnectPage() {
   const router = useRouter();
@@ -54,7 +54,7 @@ export default function ConnectPage() {
                     <Icon name={connector.id} width={40} height={40} />
                     <Text>{connector.name}</Text>
                     {isLoading && pendingConnector?.id === connector.id && (
-                      <Spinner size="xl" />
+                      <MySpinner />
                     )}
                   </div>
                 );

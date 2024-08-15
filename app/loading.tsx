@@ -1,11 +1,11 @@
 "use client";
 
-import { Spinner } from "flowbite-react";
+import { ClipLoader } from "react-spinners";
 
 export default function LoadingPage() {
   return (
     <div className="w-screen h-screen flex justify-center items-center">
-      <Spinner size="xl" />
+      <ClipLoader size={20} />
     </div>
   );
 }

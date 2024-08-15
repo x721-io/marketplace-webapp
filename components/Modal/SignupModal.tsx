@@ -16,7 +16,7 @@ import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { toast } from "react-toastify";
 import { FormState } from "@/types";
 import { formRulesSigupModal } from "@/config/form/rules";
-import useAuthStore from "@/store/auth/store";
+import { getAuthCookies } from "@/services/cookies-client";
 
 interface Props extends ModalProps {
   onSignupSuccess?: (accessToken?: string) => void;
@@ -34,7 +34,7 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
-  const { credentials } = useAuthStore();
+  const credentials = getAuthCookies();
   const { onUpdateProfile } = useAuth();
   const {
     register,

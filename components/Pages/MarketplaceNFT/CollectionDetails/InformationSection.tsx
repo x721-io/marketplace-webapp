@@ -20,7 +20,7 @@ export default function InformationSectionCollection({ data }: Props) {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const { floorPrice, volumn, totalNft, totalOwner } = useMemo(
     () => data.generalInfo,
-    [data.generalInfo],
+    [data.generalInfo]
   );
 
   const creator = useMemo(() => {
@@ -33,13 +33,13 @@ export default function InformationSectionCollection({ data }: Props) {
     return (
       data.collection.creators.some(
         (creator) =>
-          creator.user.publicKey.toLowerCase() === wallet.toLowerCase(),
+          creator.user.publicKey.toLowerCase() === wallet.toLowerCase()
       ) ?? false
     );
   }, [data, wallet]);
 
   const { data: royalties } = useReadCollectionRoyalties(
-    data.collection.address,
+    data.collection.address
   );
   const totalRoyalties = useMemo(() => {
     if (!royalties?.length) return 0;
@@ -47,7 +47,7 @@ export default function InformationSectionCollection({ data }: Props) {
     const totalRoyaltiesValue = royalties.reduce(
       (accumulator: bigint, current: Royalty) =>
         BigInt(current.value) + BigInt(accumulator),
-      BigInt(0),
+      BigInt(0)
     );
     return Number(totalRoyaltiesValue) / 100;
   }, [royalties]);

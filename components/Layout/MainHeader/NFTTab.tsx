@@ -1,4 +1,3 @@
-import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
 import React from "react";
 import Image from "next/image";
@@ -7,6 +6,7 @@ import { ALLOWED_VIDEO_TYPES } from "@/config/constants";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import Icon from "@/components/Icon";
 import { APIResponse } from "@/services/api/types";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 interface Props {
   loading?: boolean;
@@ -18,7 +18,7 @@ export default function SearchNFTTab({ loading, data, onClose }: Props) {
   if (loading)
     return (
       <div className="w-full flex justify-center items-center mt-4">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
 

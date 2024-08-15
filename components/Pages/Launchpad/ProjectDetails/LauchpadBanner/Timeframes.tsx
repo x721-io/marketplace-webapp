@@ -31,7 +31,7 @@ export default function Timeframes({ round, isSpecial }: Props) {
   const { data: timeframes } = useContractReads({
     contracts: Array.from(
       { length: Number(timeframesLength) },
-      (_, index) => index,
+      (_, index) => index
     ).map((timeframeIndex) => {
       return {
         address: round.address,

@@ -16,7 +16,7 @@ export default function RoundZeroConditionHoldNFT({
     <div
       className={classNames(
         "desktop:w-1/2 tablet:w-1/2 order-1 border-2 rounded-2xl transition-all p-4",
-        isHolder ? "border-success bg-white" : "bg-disabled",
+        isHolder ? "border-success bg-white" : "bg-disabled"
       )}
     >
       <p className="font-semibold text-center text-body-18">Zero Collection</p>

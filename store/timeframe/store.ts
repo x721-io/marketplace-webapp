@@ -22,7 +22,7 @@ const useTimeframeStore = create<TimeframeStoreState & TimeframeStoreAction>(
     setIsInTimeframe: (isInTimeframe) =>
       set(() => ({ isInTimeframe: isInTimeframe })),
     setTimeframes: (timeframes) => set(() => ({ timeframes: timeframes })),
-  }),
+  })
 );
 
 export default useTimeframeStore;

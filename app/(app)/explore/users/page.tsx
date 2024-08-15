@@ -4,7 +4,6 @@ import Text from "@/components/Text";
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { Spinner } from "flowbite-react";
 import {
   getUserAvatarImage,
   getUserCoverImage,
@@ -16,6 +15,7 @@ import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
 import { useFetchUserList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useUserFilterStore } from "@/store/filters/users/store";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ExploreUsersPage() {
   const { filters } = useUserFilterStore();
@@ -33,7 +33,7 @@ export default function ExploreUsersPage() {
   if (isLoading) {
     return (
       <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }
@@ -135,7 +135,7 @@ export default function ExploreUsersPage() {
       <div className="flex justify-center items-center">
         {isLoadingMore && (
           <div className="w-full h-56 flex justify-center items-center">
-            <Spinner size="xl" />
+            <MySpinner />
           </div>
         )}
         {!users.currentHasNext && (

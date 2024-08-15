@@ -38,7 +38,7 @@ export default function OwnedNFTs({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 0 },
+    { refreshInterval: 0 }
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function OwnedNFTs({
         onClick={() => toggleFilter()}
         className={classNames(
           showFilters ? "bg-white shadow" : `bg-surface-soft`,
-          "mb-7",
+          "mb-7"
         )}
         scale="sm"
         variant="secondary"

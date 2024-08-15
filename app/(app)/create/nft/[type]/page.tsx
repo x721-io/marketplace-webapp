@@ -9,10 +9,9 @@ import { Controller, useForm } from "react-hook-form";
 import Icon from "@/components/Icon";
 import { AssetType, FormState, Trait } from "@/types";
 import { classNames } from "@/utils/string";
-import useAuthStore from "@/store/auth/store";
 import useSWR from "swr";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { Accordion, Tooltip } from "flowbite-react";
+// import { Tooltip } from 'flowbite-react';
 import Link from "next/link";
 import { toast } from "react-toastify";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
@@ -23,6 +22,9 @@ import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from "@/config/constants";
 import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { formRulesCreateNFT } from "@/config/form/rules";
+import { Accordion } from "@/components/X721UIKits/Accordion";
+import { getAuthCookies } from "@/services/cookies-client";
+import Tooltip from "@/components/X721UIKits/Tooltip";
 
 export default function CreateNftPage() {
   const type = useParams().type.toString().toUpperCase() as AssetType;
@@ -32,7 +34,7 @@ export default function CreateNftPage() {
   const [uploading, setUploading] = useState(false);
   const api = useMarketplaceApi();
   const { onCreateNFT } = useCreateNFT(type || "ERC721");
-  const userId = useAuthStore((state) => state.credentials?.userId);
+  const userId = getAuthCookies()?.userId;
   const { data } = useSWR(
     userId || null,
     (userId) =>
@@ -42,7 +44,7 @@ export default function CreateNftPage() {
         userId,
         hasBase: true,
       }),
-    { refreshInterval: 3600 * 1000 },
+    { refreshInterval: 3600 * 1000 }
   );
   const {
     handleSubmit,
@@ -181,7 +183,7 @@ export default function CreateNftPage() {
 
   const handleValidateInput = async (
     name: string,
-    value: Record<string, any>,
+    value: Record<string, any>
   ) => {
     try {
       setValidating(true);
@@ -305,7 +307,7 @@ export default function CreateNftPage() {
                         <div
                           className={classNames(
                             "w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border-2 text-primary bg-white",
-                            "hover:border-primary hover:bg-white hover:text-primary transition-all",
+                            "hover:border-primary hover:bg-white hover:text-primary transition-all"
                           )}
                         >
                           <PlusCircleIcon width={24} height={24} />
@@ -333,12 +335,12 @@ export default function CreateNftPage() {
                               "hover:border-primary hover:bg-white hover:text-primary border-2 transition-all",
                               c.value === value
                                 ? "border-primary bg-white text-primary"
-                                : "text-tertiary bg-surface-soft",
+                                : "text-tertiary bg-surface-soft"
                             )}
                           >
                             <Tooltip content={c.label} placement="top">
                               <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">
-                                {c.label}
+                                {c.label} 123
                               </Text>
                             </Tooltip>
                             <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">
@@ -371,7 +373,7 @@ export default function CreateNftPage() {
                 error={!!errors.description}
                 register={register(
                   "description",
-                  formRulesCreateNFT.description,
+                  formRulesCreateNFT.description
                 )}
               />
             </div>
@@ -397,65 +399,61 @@ export default function CreateNftPage() {
               </div>
             )}
 
-            <Accordion collapseAll>
-              <Accordion.Panel>
-                <Accordion.Title>Advanced settings</Accordion.Title>
-                <Accordion.Content>
-                  <Text
-                    className="text-primary font-semibold mb-4"
-                    variant="body-16"
-                  >
-                    Properties{" "}
-                    <span className="text-secondary">(Optional)</span>
-                  </Text>
+            <Accordion.Root title="Advance settings" collapseAll>
+              <Accordion.Content>
+                <Text
+                  className="text-primary font-semibold mb-4"
+                  variant="body-16"
+                >
+                  Properties <span className="text-secondary">(Optional)</span>
+                </Text>
 
-                  <div className="w-full flex flex-col gap-4">
-                    <Controller
-                      name="traits"
-                      control={control}
-                      render={({ field: { onChange, value } }) => {
-                        return (
-                          <>
-                            {Array.isArray(value) &&
-                              value.map((trait, index) => (
-                                <div
-                                  key={index}
-                                  className="w-full flex items-center gap-7"
-                                >
-                                  <Input
-                                    value={value[index].trait_type}
-                                    containerClass="flex-1"
-                                    placeholder="e.g. Size"
-                                    onChange={(event) =>
-                                      handleTraitInput(
-                                        index,
-                                        "trait_type",
-                                        event.target.value,
-                                      )
-                                    }
-                                  />
-                                  <Input
-                                    value={value[index].value}
-                                    containerClass="flex-1"
-                                    placeholder="e.g. M"
-                                    onChange={(event) =>
-                                      handleTraitInput(
-                                        index,
-                                        "value",
-                                        event.target.value,
-                                      )
-                                    }
-                                  />
-                                </div>
-                              ))}
-                          </>
-                        );
-                      }}
-                    />
-                  </div>
-                </Accordion.Content>
-              </Accordion.Panel>
-            </Accordion>
+                <div className="w-full flex flex-col gap-4">
+                  <Controller
+                    name="traits"
+                    control={control}
+                    render={({ field: { onChange, value } }) => {
+                      return (
+                        <>
+                          {Array.isArray(value) &&
+                            value.map((trait, index) => (
+                              <div
+                                key={index}
+                                className="w-full flex items-center gap-7"
+                              >
+                                <Input
+                                  value={value[index].trait_type}
+                                  containerClass="flex-1"
+                                  placeholder="e.g. Size"
+                                  onChange={(event) =>
+                                    handleTraitInput(
+                                      index,
+                                      "trait_type",
+                                      event.target.value
+                                    )
+                                  }
+                                />
+                                <Input
+                                  value={value[index].value}
+                                  containerClass="flex-1"
+                                  placeholder="e.g. M"
+                                  onChange={(event) =>
+                                    handleTraitInput(
+                                      index,
+                                      "value",
+                                      event.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                            ))}
+                        </>
+                      );
+                    }}
+                  />
+                </div>
+              </Accordion.Content>
+            </Accordion.Root>
 
             <FormValidationMessages errors={errors} />
 

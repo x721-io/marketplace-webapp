@@ -16,7 +16,7 @@ import { isAddress } from "ethers";
 export const useMarketApproveERC20 = (
   token: Address,
   type: AssetType,
-  totalCost: bigint,
+  totalCost: bigint
 ) => {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const marketContract =

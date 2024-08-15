@@ -1,6 +1,6 @@
 "use client";
 
-import { Dropdown, Tabs, TabsRef } from "flowbite-react";
+import { TabsRef } from "flowbite-react";
 import Button from "@/components/Button";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -11,6 +11,8 @@ import { useCollectionFilterStore } from "@/store/filters/collections/store";
 import { useNFTFilterStore } from "@/store/filters/items/store";
 import { useUserFilterStore } from "@/store/filters/users/store";
 import Icon from "@/components/Icon";
+import { Dropdown } from "@/components/X721UIKits/Dropdown";
+import { MyTabs } from "@/components/X721UIKits/Tabs";
 
 export default function ExploreSectionNavbar() {
   const tabs = [
@@ -125,8 +127,8 @@ export default function ExploreSectionNavbar() {
 
   const handleChange = (selectedOption: any) => {
     let order = "",
-        orderBy = "",
-        name = "";
+      orderBy = "",
+      name = "";
     switch (selectedOption) {
       case "Price: Ascending":
         order = "asc";
@@ -188,73 +190,71 @@ export default function ExploreSectionNavbar() {
   }, [tabsRef, pathname]);
 
   return (
-      <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
-        {!pathname.includes("users") && (
-            <div className="order-3 desktop:order-1">
-              <Button
-                  onClick={handleToggleFilters}
-                  className={
-                    isFiltersVisible
-                        ? "bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]"
-                        : `bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px]`
-                  }
-                  scale="lg"
-                  variant="secondary"
-              >
-                Filters
-                <span className="p-1 bg-surface-medium rounded-lg">
+    <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
+      {!pathname.includes("users") && (
+        <div className="order-3 desktop:order-1">
+          <Button
+            onClick={handleToggleFilters}
+            className={
+              isFiltersVisible
+                ? "bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]"
+                : `bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px]`
+            }
+            scale="lg"
+            variant="secondary"
+          >
+            Filters
+            <span className="p-1 bg-surface-medium rounded-lg">
               <SliderIcon width={14} height={14} />
             </span>
-              </Button>
-            </div>
-        )}
-
-        <div className="order-1 w-full desktop:order-2 desktop:flex-none desktop:w-auto">
-          <Tabs.Group
-              onActiveTabChange={handleChangeTab}
-              style="default"
-              ref={tabsRef}
-          >
-            {tabs.map((tab) => (
-                <Tabs.Item
-                    active={pathname.includes(tab.href)}
-                    key={tab.href}
-                    title={tab.label}
-                />
-            ))}
-          </Tabs.Group>
+          </Button>
         </div>
-        <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
-          <Input
-              onChange={(e) => handleInputText(e.target.value)}
-              value={searchText}
-              className="py-4 h-14"
-              appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
-              appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
-          />
-        </div>
+      )}
 
-        {!pathname.includes("users") && (
-            <div className="order-4">
-              <Dropdown
-                  label=""
-                  renderTrigger={() => (
-                      <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
-                        {sortOption.name}
-                        <div className="rounded-lg p-1 bg-surface-medium">
-                          <Icon name="chevronDown" width={14} height={14} />
-                        </div>
-                      </div>
-                  )}
-              >
-                {dropdownItems.map((item: any, i: any) => (
-                    <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
-                      {item.name}
-                    </Dropdown.Item>
-                ))}
-              </Dropdown>
-            </div>
-        )}
+      <div className="order-1 w-full desktop:order-2 desktop:flex-none desktop:w-auto">
+        <MyTabs.Group onActiveTabChange={handleChangeTab}>
+          {tabs.map((tab, i) => (
+            <MyTabs.Item
+              active={pathname.includes(tab.href)}
+              tabIndex={i}
+              key={tab.href}
+            >
+              {tab.label}
+            </MyTabs.Item>
+          ))}
+        </MyTabs.Group>
       </div>
+      <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
+        <Input
+          onChange={(e) => handleInputText(e.target.value)}
+          value={searchText}
+          className="py-4 h-14"
+          appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
+          appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
+        />
+      </div>
+
+      {!pathname.includes("users") && (
+        <div className="order-4">
+          <Dropdown.Root
+            label=""
+            icon={
+              <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+                {sortOption.name}
+                <div className="rounded-lg p-1 bg-surface-medium">
+                  <Icon name="chevronDown" width={14} height={14} />
+                </div>
+              </div>
+            }
+          >
+            {dropdownItems.map((item: any, i: any) => (
+              <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
+                {item.name}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Root>
+        </div>
+      )}
+    </div>
   );
 }

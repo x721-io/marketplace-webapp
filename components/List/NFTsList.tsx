@@ -2,7 +2,6 @@ import { APIParams, APIResponse } from "@/services/api/types";
 import NFTFilters, { FilterType } from "@/components/Filters/NFTFilters";
 import { classNames } from "@/utils/string";
 import NFTCard from "@/components/NFT/NFTCard";
-import { Spinner } from "flowbite-react";
 import React from "react";
 import Text from "@/components/Text";
 import MobileNFTFiltersModal from "@/components/Filters/MobileNFTFiltersModal";
@@ -11,6 +10,7 @@ import { AssetType, NFT } from "@/types";
 import Link from "next/link";
 import Button from "../Button";
 import useAuthStore from "@/store/auth/store";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props {
   items?: NFT[];
@@ -65,7 +65,7 @@ export default function NFTsList({
     if (isLoading) {
       return (
         <div className="w-full h-56 flex justify-center items-center">
-          <Spinner size="xl" />
+          <MySpinner />
         </div>
       );
     }
@@ -97,8 +97,8 @@ export default function NFTsList({
             isMobile
               ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
               : showFilters
-                ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
-                : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2",
+              ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
+              : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
           )}
         >
           {showCreateNFT && myId === userId && (
@@ -123,7 +123,7 @@ export default function NFTsList({
           <div className="flex justify-center items-center">
             {isLoadMore && (
               <div className="w-full h-56 flex justify-center items-center">
-                <Spinner size="xl" />
+                <MySpinner />
               </div>
             )}
             {!currentHasNext && (
@@ -144,7 +144,7 @@ export default function NFTsList({
           "w-full flex gap:4 tablet:gap-7 laptop:gap-10 desktop:gap-12 mb-7",
           showFilters
             ? "flex-col tablet:flex-row desktop:flex-row tablet:items-start"
-            : "tablet:flex-row",
+            : "tablet:flex-row"
         )}
       >
         {isMobile ? (

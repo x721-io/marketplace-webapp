@@ -84,7 +84,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
         !isNaN(Number(price)) ? (price as string) : "0",
-        token?.decimal,
+        token?.decimal
       );
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
@@ -100,7 +100,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   } = useMarketApproveERC20(
     token?.address as Address,
     nft.collection.type,
-    parseUnits(price || "0", token?.decimal) + buyerFee,
+    parseUnits(price || "0", token?.decimal) + buyerFee
   );
 
   const formRules = {
@@ -302,8 +302,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   {formatDisplayedNumber(
                     formatUnits(
                       tokenBalance?.value || 0,
-                      tokenBalance?.decimals,
-                    ),
+                      tokenBalance?.decimals
+                    )
                   )}
                 </Text>
               </div>
@@ -346,7 +346,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   nft={nft}
                   price={parseUnits(
                     String(Number(price) * Number(quantity) || 0),
-                    token?.decimal,
+                    token?.decimal
                   )}
                   quoteToken={token?.address}
                   sellerFee={sellerFee}
@@ -392,7 +392,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 loading={loading}
                 registerAllowanceInput={register(
                   "allowance",
-                  formRules.allowance,
+                  formRules.allowance
                 )}
               />
             )}

@@ -98,7 +98,7 @@ export const useCalculateFee = ({
 
 export const useNFTMarketStatus = (
   type: AssetType,
-  marketData?: APIResponse.NFTMarketData,
+  marketData?: APIResponse.NFTMarketData
 ) => {
   const { owners, sellInfo, bidInfo } = useMemo(
     () =>
@@ -108,7 +108,7 @@ export const useNFTMarketStatus = (
         bidInfo: [],
         totalSupply: 0,
       },
-    [marketData],
+    [marketData]
   );
   const userId = useAuthStore((state) => state.profile?.id);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
@@ -127,7 +127,7 @@ export const useNFTMarketStatus = (
   const isBidder = useMemo(() => {
     if (!bidInfo || !wallet) return false;
     return bidInfo?.some(
-      (bid) => bid.to?.signer?.toLowerCase() === wallet?.toLowerCase(),
+      (bid) => bid.to?.signer?.toLowerCase() === wallet?.toLowerCase()
     );
   }, [bidInfo]);
 
@@ -235,7 +235,7 @@ export const useMarketApproval = (nft: NFT) => {
 export const useMarketTokenApproval = (
   token: Address,
   type: AssetType,
-  totalCost: bigint,
+  totalCost: bigint
 ) => {
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const marketContract =
@@ -289,13 +289,13 @@ export const useSellNFT = (nft: NFT) => {
   const { txStatus, updateHash } = useTransactionStatus();
   const { writeAsync, error: writeError } = useWriteMarketContract(
     type,
-    "createAsk",
+    "createAsk"
   );
 
   const onSellNFT = async (
     price: number,
     quoteToken: Address,
-    quantity?: number,
+    quantity?: number
   ) => {
     const args = [
       nft.collection.address,
@@ -319,7 +319,7 @@ export const useCancelSellNFT = (nft: NFT) => {
   const { txStatus, updateHash } = useTransactionStatus();
   const { writeAsync, error: writeError } = useWriteMarketContract(
     type,
-    "cancelAsk",
+    "cancelAsk"
   );
 
   const onCancelSell = async (operationId?: string) => {
@@ -441,7 +441,7 @@ export const useBidNFT = (nft: NFT) => {
   const onBidNFT = async (
     price: string,
     quoteToken: Address,
-    quantity?: string,
+    quantity?: string
   ) => {
     const { hash } =
       type === "ERC721"
@@ -537,7 +537,7 @@ export const useAcceptBidNFT = (nft: NFT) => {
   const { txStatus, updateHash } = useTransactionStatus();
   const { writeAsync, error: writeError } = useWriteMarketContract(
     type,
-    type === "ERC721" ? "acceptBid" : "acceptOffer",
+    type === "ERC721" ? "acceptBid" : "acceptOffer"
   );
 
   const onAcceptERC721Bid = async (bidder: Address, quoteToken: Address) => {

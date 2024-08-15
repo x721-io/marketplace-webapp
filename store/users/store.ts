@@ -21,7 +21,7 @@ export const useUserStore = create(
             },
           })),
       }),
-      { name: "user-storage" },
-    ),
-  ),
+      { name: "user-storage" }
+    )
+  )
 );

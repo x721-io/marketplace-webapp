@@ -9,7 +9,7 @@ export const classNames = (
 export const shortenAddress = (
   str: string = "",
   head: number = 6,
-  tail: number = 4,
+  tail: number = 4
 ) => {
   if (!str) return "";
 
@@ -22,31 +22,31 @@ export const shortenAddress = (
 };
 
 export const getUserAvatarImage = (
-  user?: Partial<Pick<User, "username" | "avatar">> | null,
+  user?: Partial<Pick<User, "username" | "avatar">> | null
 ) => {
   return user?.avatar || `https://avatar.vercel.sh/${user?.username}`;
 };
 
 export const getUserCoverImage = (
-  user?: Partial<Pick<User, "username" | "coverImage">> | null,
+  user?: Partial<Pick<User, "username" | "coverImage">> | null
 ) => {
   return user?.coverImage || `https://avatar.vercel.sh/origin`;
 };
 
 export const getCollectionAvatarImage = (
-  collection?: Partial<Pick<Collection, "name" | "avatar">> | null,
+  collection?: Partial<Pick<Collection, "name" | "avatar">> | null
 ) => {
   return collection?.avatar || `https://avatar.vercel.sh/${collection?.name}`;
 };
 
 export const getCollectionBannerImage = (
-  collection?: Partial<Pick<Collection, "name" | "coverImage">> | null,
+  collection?: Partial<Pick<Collection, "name" | "coverImage">> | null
 ) => {
   return collection?.coverImage || `https://avatar.vercel.sh/origin`;
 };
 
 export const getDisplayedUserName = (
-  user?: Partial<Pick<User, "username" | "publicKey" | "signer">> | null,
+  user?: Partial<Pick<User, "username" | "publicKey" | "signer">> | null
 ) => {
   if (!user) return "";
 
@@ -54,9 +54,7 @@ export const getDisplayedUserName = (
 };
 
 export const getUserLink = (
-  user?: Partial<
-    Pick<User, "shortLink" | "id" | "publicKey" | "signer">
-  > | null,
+  user?: Partial<Pick<User, "shortLink" | "id" | "publicKey" | "signer">> | null
 ) => {
   if (!user) return "#";
   const userQueryId =
@@ -65,7 +63,7 @@ export const getUserLink = (
 };
 
 export const getCollectionLink = (
-  collection?: Partial<Pick<Collection, "address" | "shortUrl" | "id">> | null,
+  collection?: Partial<Pick<Collection, "address" | "shortUrl" | "id">> | null
 ) => {
   if (!collection) return "#";
   const collectionQueryId =

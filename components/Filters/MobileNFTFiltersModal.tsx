@@ -1,11 +1,4 @@
-import {
-  Checkbox,
-  CustomFlowbiteTheme,
-  Label,
-  Modal,
-  ModalProps,
-  Radio,
-} from "flowbite-react";
+import { Checkbox, CustomFlowbiteTheme, Label, Radio } from "flowbite-react";
 import { FilterProps } from "@/components/Filters/NFTFilters";
 import React from "react";
 import Collapsible from "@/components/Collapsible";
@@ -18,17 +11,7 @@ import { DEFAULT_NFT_FILTERS_STATE } from "@/store/filters/items/store";
 import Select from "../Form/Select";
 import { tokenOptions } from "@/config/tokens";
 import { Address } from "wagmi";
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
 export default function MobileNFTFiltersModal({
   baseFilters = ["price", "type", "status"],
@@ -38,7 +21,7 @@ export default function MobileNFTFiltersModal({
   traitsFilter,
   show,
   onClose,
-}: ModalProps & FilterProps) {
+}: MyModalProps & FilterProps) {
   const {
     handleApplyFilters,
     localFilters,
@@ -53,16 +36,13 @@ export default function MobileNFTFiltersModal({
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      position="center"
+    <MyModal.Root
       onClose={handleCloseModal}
       show={show}
-      size="md"
-      className="bg-black flex items-center justify-center"
+      className="flex items-center justify-center"
     >
-      <Modal.Header>NFT Filters</Modal.Header>
-      <Modal.Body>
+      <MyModal.Header>NFT Filters</MyModal.Header>
+      <MyModal.Body>
         {baseFilters.includes("type") && (
           <div className="mb-5">
             <Text className="text-secondary font-semibold mb-2">Type</Text>
@@ -223,7 +203,7 @@ export default function MobileNFTFiltersModal({
             Apply
           </Button>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

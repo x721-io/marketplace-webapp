@@ -57,7 +57,7 @@ const RoundSchedule = ({
         />,
         {
           style: { width: "110%", marginLeft: "-3vw" },
-        },
+        }
       );
     } catch (e: any) {
       console.error(e);
@@ -76,7 +76,7 @@ const RoundSchedule = ({
             status === "ENDED" && "bg-success/50",
             status === "MINTING" && "bg-success/50",
             status === "UPCOMING" &&
-              (isActive ? "bg-warning/50" : "bg-surface-medium"),
+              (isActive ? "bg-warning/50" : "bg-surface-medium")
           )}
         >
           <div
@@ -85,7 +85,7 @@ const RoundSchedule = ({
               status === "ENDED" && "bg-success",
               status === "MINTING" && "bg-white",
               status === "UPCOMING" &&
-                (isActive ? "bg-white" : "bg-surface-soft"),
+                (isActive ? "bg-white" : "bg-surface-soft")
             )}
           >
             {isCompleted && (
@@ -97,7 +97,7 @@ const RoundSchedule = ({
           <div
             className={classNames(
               "flex-1 min-h-[20px] w-[2px]",
-              isCompleted ? "bg-success" : "bg-surface-soft",
+              isCompleted ? "bg-success" : "bg-surface-soft"
             )}
           />
         )}
@@ -159,7 +159,7 @@ const RoundSchedule = ({
             Claimable at:{" "}
             {format(
               new Date(round?.claimableStart || 0),
-              "yyyy/M/dd - hh:mm a",
+              "yyyy/M/dd - hh:mm a"
             )}
           </p>
 

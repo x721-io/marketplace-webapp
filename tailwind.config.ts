@@ -9,5 +9,6 @@ const config: Config = {
   ],
   theme: {},
   plugins: [require("flowbite/plugin")],
+  darkMode: "media",
 };
 module.exports = config;

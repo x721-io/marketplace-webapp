@@ -31,7 +31,7 @@ export default function Collapsible({
       <div
         className={classNames(
           "w-full rounded-2xl flex justify-between items-center hover:opacity-100 cursor-pointer select-none",
-          expanded ? "opacity-100" : "opacity-60",
+          expanded ? "opacity-100" : "opacity-60"
         )}
         onClick={handleToggle}
       >
@@ -39,7 +39,7 @@ export default function Collapsible({
         <div
           className={classNames(
             "rounded-lg p-1 bg-surface-medium transition-transform",
-            expanded && "rotate-180",
+            expanded && "rotate-180"
           )}
         >
           <Icon name="chevronDown" width={14} height={14} />
@@ -49,7 +49,7 @@ export default function Collapsible({
       <div
         className={classNames(
           "w-full pt-4 transition-all",
-          expanded ? "block" : "hidden",
+          expanded ? "block" : "hidden"
         )}
       >
         {children}

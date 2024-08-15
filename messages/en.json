@@ -1,0 +1,48 @@
+{
+  "Common": {
+    "ConnectWallet": "Connect Wallet",
+    "SwitchNetwork": "Switch Network",
+    "ChooseFile": "Choose File"
+  },
+  "Header": {
+    "SearchBar": {
+      "Placeholder": "Type for collections, NFTs etc"
+    }
+  },
+  "Homepage": {
+    "Banner": {
+      "Title": "Discover digital art and Collect NFTs",
+      "Button": {
+        "Create": "Create your NFTs",
+        "StartExplore": "Start exploring"
+      }
+    }
+  },
+  "CreateNft": {
+    "Title": {
+      "nft": "Select NFT type",
+      "collection": "Choose collection type"
+    },
+    "Description": "Choose “Single” for one of a kind or “Multiple” if you want to sell one collectible multiple times",
+    "Type": {
+      "Single": {
+        "Title": "Single Item",
+        "Description": "If you want to highlight the uniqueness and individuality of your item"
+      },
+      "Mutiple": {
+        "Title": "Multiple Editions",
+        "Description": "If you want to share your NFT with a large number of community members"
+      }
+    }
+  },
+  "CreateCollection": {
+    "Title": "Create New Collection",
+    "FormTitle": {
+      "CollectionImage": "Collection image",
+      "DisplayName": "Display name",
+      "Symbol": "Symbol",
+      "ShortURL": "Short URL",
+      "Description": "Description (optional)"
+    }
+  }
+}

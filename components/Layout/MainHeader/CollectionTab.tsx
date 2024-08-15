@@ -1,4 +1,3 @@
-import { Spinner } from "flowbite-react";
 import Text from "@/components/Text";
 import React from "react";
 import Image from "next/image";
@@ -6,6 +5,7 @@ import Link from "next/link";
 import placeholderImage from "@/assets/images/placeholder-image.svg";
 import Icon from "@/components/Icon";
 import { APIResponse } from "@/services/api/types";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 interface Props {
   loading?: boolean;
@@ -17,7 +17,7 @@ export default function SearchCollectionTab({ loading, data, onClose }: Props) {
   if (loading)
     return (
       <div className="w-full flex justify-center items-center mt-4">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
 

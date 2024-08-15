@@ -118,7 +118,8 @@ export default function ProfileStep() {
                 register={register("shortLink", formRulesProfile.shortLink)}
               />
               <Text className="text-tertiary mt-1" variant="body-12">
-                Your profile will be available on {MARKETPLACE_URL}user/[shortLink]
+                Your profile will be available on {MARKETPLACE_URL}
+                user/[shortLink]
               </Text>
             </div>
             <div>
