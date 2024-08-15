@@ -66,7 +66,7 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
               <span className="font-semibold text-primary">
                 &nbsp;
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
             </p>

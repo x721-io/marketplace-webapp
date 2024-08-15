@@ -20,7 +20,9 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
     },
   },
   content: {
-    inner: `relative bg-white flex flex-col ${isSafari && isMobile ? 'h-[90vh]' : 'h-screen'}`,
+    inner: `relative bg-white flex flex-col ${
+      isSafari && isMobile ? "h-[90vh]" : "h-screen"
+    }`,
   },
   body: {
     base: "p-0 flex-1 overflow-auto",

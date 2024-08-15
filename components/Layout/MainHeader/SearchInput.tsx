@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import InputDropdown from "@/components/Form/InputDropdown";
 import Button from "@/components/Button";
 import { useEffect } from "react";
-import { CustomFlowbiteTheme, Modal, Tabs } from "flowbite-react";
+import { CustomFlowbiteTheme, Modal } from "flowbite-react";
 import SearchUserTab from "./UserTab";
 import SearchCollectionTab from "./CollectionTab";
 import SearchNFTTab from "./NFTTab";
@@ -13,6 +13,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
 import { useTranslations } from "next-intl";
+import { MyTabs } from "@/components/X721UIKits/Tabs";
 
 const modalTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -26,8 +27,9 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function SearchInput() {
-  const t = useTranslations("Header")
+  const t = useTranslations("Header");
   const {
+    activeTab,
     setActiveTab,
     handleTextInput,
     searchKey,
@@ -46,7 +48,7 @@ export default function SearchInput() {
     isMutating: searchingCollection,
     reset: resetCollection,
   } = useSWRMutation(text.collection || null, (text) =>
-    api.searchCollections(text),
+    api.searchCollections(text)
   );
 
   const {
@@ -85,6 +87,35 @@ export default function SearchInput() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, text]);
 
+  const getComponentByCurrTabIndex = () => {
+    switch (activeTab) {
+      case 0:
+        return (
+          <SearchCollectionTab
+            loading={searchingCollection}
+            data={collectionSearchData}
+            onClose={() => setOpenModal(false)}
+          />
+        );
+      case 1:
+        return (
+          <SearchNFTTab
+            loading={searchingNFT}
+            data={nftSearchData}
+            onClose={() => setOpenModal(false)}
+          />
+        );
+      case 2:
+        return (
+          <SearchUserTab
+            loading={searchingUser}
+            data={userSearchData}
+            onClose={() => setOpenModal(false)}
+          />
+        );
+    }
+  };
+
   return (
     <>
       {isMobile ? (
@@ -113,33 +144,29 @@ export default function SearchInput() {
                 placeholder={t("SearchBar.Placeholder")}
                 onChange={(event) => handleTextInput(event.target.value)}
                 renderDropdown={(onclose) => (
-                  <Tabs.Group
-                    style="underline"
-                    ref={tabsRef}
-                    onActiveTabChange={(tab) => setActiveTab(tab)}
-                  >
-                    <Tabs.Item title="Collections">
-                      <SearchCollectionTab
-                        loading={searchingCollection}
-                        data={collectionSearchData}
-                        onClose={() => setOpenModal(false)}
-                      />
-                    </Tabs.Item>
-                    <Tabs.Item title="NFTs">
-                      <SearchNFTTab
-                        loading={searchingNFT}
-                        data={nftSearchData}
-                        onClose={() => setOpenModal(false)}
-                      />
-                    </Tabs.Item>
-                    <Tabs.Item title="Users">
-                      <SearchUserTab
-                        loading={searchingUser}
-                        data={userSearchData}
-                        onClose={() => setOpenModal(false)}
-                      />
-                    </Tabs.Item>
-                  </Tabs.Group>
+                  <>
+                    <MyTabs.Group
+                      onActiveTabChange={(tab) => setActiveTab(tab)}
+                      style="underline"
+                    >
+                      <MyTabs.Item tabIndex={0} active={activeTab === 0}>
+                        <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                          Collections
+                        </div>
+                      </MyTabs.Item>
+                      <MyTabs.Item tabIndex={1} active={activeTab === 1}>
+                        <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                          NFTs
+                        </div>
+                      </MyTabs.Item>
+                      <MyTabs.Item tabIndex={2} active={activeTab === 2}>
+                        <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                          Users
+                        </div>
+                      </MyTabs.Item>
+                    </MyTabs.Group>
+                    {getComponentByCurrTabIndex()}
+                  </>
                 )}
               />
             </Modal.Body>
@@ -155,33 +182,29 @@ export default function SearchInput() {
           placeholder={t("SearchBar.Placeholder")}
           onChange={(event) => handleTextInput(event.target.value)}
           renderDropdown={(onclose) => (
-            <Tabs.Group
-              style="underline"
-              ref={tabsRef}
-              onActiveTabChange={(tab) => setActiveTab(tab)}
-            >
-              <Tabs.Item title="Collections">
-                <SearchCollectionTab
-                  loading={searchingCollection}
-                  data={collectionSearchData}
-                  onClose={onclose}
-                />
-              </Tabs.Item>
-              <Tabs.Item title="NFTs">
-                <SearchNFTTab
-                  loading={searchingNFT}
-                  data={nftSearchData}
-                  onClose={onclose}
-                />
-              </Tabs.Item>
-              <Tabs.Item title="Users">
-                <SearchUserTab
-                  loading={searchingUser}
-                  data={userSearchData}
-                  onClose={onclose}
-                />
-              </Tabs.Item>
-            </Tabs.Group>
+            <>
+              <MyTabs.Group
+                onActiveTabChange={(tab) => setActiveTab(tab)}
+                style="underline"
+              >
+                <MyTabs.Item tabIndex={0} active={activeTab === 0}>
+                  <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                    Collections
+                  </div>
+                </MyTabs.Item>
+                <MyTabs.Item tabIndex={1} active={activeTab === 1}>
+                  <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                    NFTs
+                  </div>
+                </MyTabs.Item>
+                <MyTabs.Item tabIndex={2} active={activeTab === 2}>
+                  <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
+                    Users
+                  </div>
+                </MyTabs.Item>
+              </MyTabs.Group>
+              {getComponentByCurrTabIndex()}
+            </>
           )}
         />
       )}

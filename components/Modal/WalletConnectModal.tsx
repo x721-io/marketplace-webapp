@@ -1,28 +1,13 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-  Spinner,
-} from "flowbite-react";
 import Text from "@/components/Text";
 import Icon from "@/components/Icon";
 import { Connector, useAccount, useConnect } from "wagmi";
 import { connect } from "@wagmi/core";
+import MySpinner from "../X721UIKits/Spinner";
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   onSignMessage: () => void;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col tablet:h-auto h-auto desktop:h-auto ",
-    base: "relative w-full p-10 desktop:h-auto tablet:h-auto max-h-[90vh]",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function WalletConnectModal({
   show,
@@ -45,14 +30,8 @@ export default function WalletConnectModal({
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      show={show}
-      onClose={onClose}
-      size="lg"
-    >
-      <Modal.Body>
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body>
         <div className="mx-auto flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
           <Text className="desktop:text-heading-md tablet:text-heading-md text-body-32 text-primary font-semibold text-center">
             Connect wallet
@@ -74,7 +53,7 @@ export default function WalletConnectModal({
                   {connector.ready ? (
                     <Icon name={connector.id} width={40} height={40} />
                   ) : (
-                    <Spinner size="xl" />
+                    <MySpinner />
                   )}
                   <Text>{connector.name}</Text>
                 </div>
@@ -82,7 +61,7 @@ export default function WalletConnectModal({
             })}
           </div>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

@@ -90,7 +90,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               for
               <span className="font-semibold text-primary">
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image
@@ -150,7 +150,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               for
               <span className="font-semibold text-primary">
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image
@@ -185,7 +185,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
               <span className="font-semibold text-primary">
                 &nbsp;
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image
@@ -228,7 +228,7 @@ export default function UserMarketEvent({ event, ...rest }: MarketEventProps) {
                 : "For"}
               <span className="font-semibold text-primary">
                 {formatDisplayedNumber(
-                  formatUnits(event.price, token?.decimal),
+                  formatUnits(event.price, token?.decimal)
                 )}
               </span>
               <Image

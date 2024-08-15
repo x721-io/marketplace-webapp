@@ -1,9 +1,13 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { AppSettingsActions, AppSettingsState, Theme } from "@/store/app-settings/types";
+import {
+  AppSettingsActions,
+  AppSettingsState,
+  Theme,
+} from "@/store/app-settings/types";
 
 const DEFAULT_STATE: AppSettingsState = {
-    theme: Theme.LIGHT,
+  theme: Theme.LIGHT,
 };
 
 export const useAppSettingsStore = create(
@@ -13,7 +17,7 @@ export const useAppSettingsStore = create(
         ...DEFAULT_STATE,
         setTheme: (theme) => set(() => ({ theme })),
       }),
-      { name: "app-settings" },
-    ),
-  ),
+      { name: "app-settings" }
+    )
+  )
 );

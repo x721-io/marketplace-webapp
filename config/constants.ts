@@ -37,6 +37,5 @@ export const MODE_CREATED = "creator";
 export const MODE_ON_SALES = "onsales";
 export const MODE_COLLECTIONS = "collection";
 
-export const ALLOWED_DOMAIN_URL ='https://ipfs.io/ipfs/,testnet-api.memetaverse.club,u2u-images.s3.ap-southeast-1.amazonaws.com,copper-defensive-cod-42.mypinata.cloud,ug-assets-dev.s3.ap-southeast-1.amazonaws.com,https://testnet-peer.memetaverse.club/,https://apricot-worried-junglefowl-562.mypinata.cloud/,https://indigo-accessible-raccoon-107.mypinata.cloud/ipfs/';
-
-
+export const ALLOWED_DOMAIN_URL =
+  "https://ipfs.io/ipfs/,testnet-api.memetaverse.club,u2u-images.s3.ap-southeast-1.amazonaws.com,copper-defensive-cod-42.mypinata.cloud,ug-assets-dev.s3.ap-southeast-1.amazonaws.com,https://testnet-peer.memetaverse.club/,https://apricot-worried-junglefowl-562.mypinata.cloud/,https://indigo-accessible-raccoon-107.mypinata.cloud/ipfs/";

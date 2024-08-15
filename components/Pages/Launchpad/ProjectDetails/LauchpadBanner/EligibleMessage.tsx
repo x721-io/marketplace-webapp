@@ -8,7 +8,9 @@ export function MessageRoundNotEligible({
     <p className="text-body-16 font-medium">
       You are{" "}
       <span
-        className={`font-semibold ${eligibleStatus ? "text-success" : "text-error"}`}
+        className={`font-semibold ${
+          eligibleStatus ? "text-success" : "text-error"
+        }`}
       >
         {eligibleStatus ? "ELIGIBLE" : "NOT ELIGIBLE"}
       </span>{" "}

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import CloseIcon from '@/components/Icon/Close';
-import { useMemo, useRef, useState } from 'react';
-import Text from '@/components/Text';
-import Button from '@/components/Button';
-import { classNames } from '@/utils/string';
-import { Spinner } from 'flowbite-react';
-import { toast } from 'react-toastify';
-import { useTranslations } from 'next-intl';
+import Image from "next/image";
+import CloseIcon from "@/components/Icon/Close";
+import { useMemo, useRef, useState } from "react";
+import Text from "@/components/Text";
+import Button from "@/components/Button";
+import { classNames } from "@/utils/string";
+import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props {
   className?: string;
@@ -29,22 +29,22 @@ export default function ImageUploader({
   accept,
   maxSize = 100, // 100 MB
 }: Props) {
-  const t = useTranslations('Common');
+  const t = useTranslations("Common");
   const [file, setFile] = useState<Blob | undefined>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fileType = useMemo(() => {
     if (!file) return undefined;
-    return file.type.split('/')[0];
+    return file.type.split("/")[0];
   }, [file]);
 
   const previewImage = useMemo(() => {
     if (value) {
-      if (typeof value === 'string') return value;
+      if (typeof value === "string") return value;
       return URL.createObjectURL(value);
     }
 
-    if (!file) return '';
+    if (!file) return "";
     return URL.createObjectURL(file);
   }, [file, value]);
 
@@ -63,47 +63,47 @@ export default function ImageUploader({
     onInput?.(undefined);
     setFile(undefined);
     if (inputRef && inputRef.current) {
-      inputRef.current.value = '';
+      inputRef.current.value = "";
     }
   };
 
   const renderFile = () => {
     if (!file) {
       return (
-        <div className='w-full h-full flex flex-col justify-center items-center gap-6'>
+        <div className="w-full h-full flex flex-col justify-center items-center gap-6">
           <Text
-            className='font-semibold text-secondary text-center'
-            variant='body-24'
+            className="font-semibold text-secondary text-center"
+            variant="body-24"
           >
-            <span className='uppercase'>{accept?.split(',').join(', ')}</span>{' '}
+            <span className="uppercase">{accept?.split(",").join(", ")}</span>{" "}
             Max {maxSize}mb.
           </Text>
-          <Button variant='primary'>{t('ChooseFile')}</Button>
+          <Button variant="primary">{t("ChooseFile")}</Button>
         </div>
       );
     }
     switch (fileType) {
-      case 'image':
+      case "image":
         return (
           <Image
             src={previewImage}
-            alt=''
+            alt=""
             width={256}
             height={256}
-            className='w-auto h-full object-contain rounded-2xl m-auto'
+            className="w-auto h-full object-contain rounded-2xl m-auto"
           />
         );
-      case 'video':
+      case "video":
         return (
-          <video className='w-full h-full rounded-2xl' controls>
+          <video className="w-full h-full rounded-2xl" controls>
             <source src={URL.createObjectURL(file)} type={file.type} />
             Your browser does not support the video tag.
           </video>
         );
-      case 'audio':
+      case "audio":
         return (
-          <div className='w-full h-full rounded-2xl bg-black flex justify-center items-end p-2'>
-            <audio className='w-full h-[25px]' controls>
+          <div className="w-full h-full rounded-2xl bg-black flex justify-center items-end p-2">
+            <audio className="w-full h-[25px]" controls>
               <source src={URL.createObjectURL(file)} type={file.type} />
               Your browser does not support the audio tag.
             </audio>
@@ -117,18 +117,18 @@ export default function ImageUploader({
   return (
     <div
       className={classNames(
-        'relative cursor-pointer p-3 border border-dashed rounded-2xl w-full h-60',
-        error ? 'border-error' : 'border-tertiary',
+        "relative cursor-pointer p-3 border border-dashed rounded-2xl w-full h-60",
+        error ? "border-error" : "border-tertiary",
         className
       )}
     >
       <input
         className={
           !!file
-            ? 'hidden'
+            ? "hidden"
             : `absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`
         }
-        type='file'
+        type="file"
         ref={inputRef}
         accept={accept}
         onChange={(e) => handleInputImage(e.target.files)}
@@ -138,11 +138,11 @@ export default function ImageUploader({
 
       {!!file &&
         (loading ? (
-          <Spinner className='absolute right-0 top-[-18px]' />
+          <MySpinner className="absolute right-0 top-[-18px]" />
         ) : (
           <Button
-            variant='icon'
-            className='absolute right-0 top-[-18px]'
+            variant="icon"
+            className="absolute right-0 top-[-18px]"
             onClick={handleClearFile}
           >
             <CloseIcon width={20} height={20} />

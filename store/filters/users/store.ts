@@ -30,6 +30,6 @@ export const useUserFilterStore = create(
       resetFilters: () =>
         set((state) => ({ ...DEFAULT_STATE, showFilters: state.showFilters })),
     }),
-    { name: "user-filter" },
-  ),
+    { name: "user-filter" }
+  )
 );

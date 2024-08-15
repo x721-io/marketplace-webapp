@@ -2,13 +2,13 @@ export type SearchKey = "users";
 
 export enum Theme {
   DARK = "dark",
-  LIGHT = "light"
+  LIGHT = "light",
 }
 
-export type AppSettingsState =  {
-  theme: Theme
-}
+export type AppSettingsState = {
+  theme: Theme;
+};
 
 export interface AppSettingsActions {
-  setTheme:(theme: Theme) => void;
+  setTheme: (theme: Theme) => void;
 }

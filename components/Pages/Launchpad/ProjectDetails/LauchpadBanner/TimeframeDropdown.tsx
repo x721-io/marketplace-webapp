@@ -25,7 +25,7 @@ export default function TimeframeDropdown({ round }: Props) {
   const { data: timeframes } = useContractReads({
     contracts: Array.from(
       { length: Number(timeframesLength) },
-      (_, index) => index,
+      (_, index) => index
     ).map((timeframeIndex) => {
       return {
         address: round.address,
@@ -154,12 +154,12 @@ export default function TimeframeDropdown({ round }: Props) {
           {formatTimeframe(
             timeframes
               ? timeframes[currentTimeframe.index]
-              : { hourStart: 0, minuteStart: 0, hourEnd: 0, minuteEnd: 0 },
+              : { hourStart: 0, minuteStart: 0, hourEnd: 0, minuteEnd: 0 }
           )}
           <div
             className={classNames(
               "rounded-lg p-1 bg-surface-medium transition-transform",
-              open && "rotate-180",
+              open && "rotate-180"
             )}
           >
             <Icon name="chevronDown" width={14} height={14} className="grow" />
@@ -182,7 +182,7 @@ export default function TimeframeDropdown({ round }: Props) {
             <div className="w-2 h-2 rounded-full bg-warning" />
             <p key={index}>{formatTimeframe(timeframe)}</p>
           </div>
-        ),
+        )
       )}
       className="bg-white rounded-2xl h-12"
       open={open}

@@ -3,9 +3,9 @@ import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { toast } from "react-toastify";
-import { Spinner } from "flowbite-react";
 import { useAuth } from "@/hooks/useAuth";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
+import MySpinner from "@/components/X721UIKits/Spinner";
 
 export interface Props {
   isFollowed?: boolean;
@@ -33,7 +33,7 @@ export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
       });
       onRefresh();
       toast.success(
-        `${isFollowing ? "Unfollowed" : "Followed"} artist successfully`,
+        `${isFollowing ? "Unfollowed" : "Followed"} artist successfully`
       );
     } catch (e: any) {
       console.error(e);
@@ -52,7 +52,7 @@ export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {loading && <Spinner size="sm" />}
+        {loading && <MySpinner size={18} />}
         {!isFollowing && <Icon name="plus" width={16} height={16} />}
         {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
       </Button>

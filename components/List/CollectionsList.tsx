@@ -1,4 +1,4 @@
-import { Spinner, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import { formatEther, formatUnits } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
@@ -14,6 +14,7 @@ import {
 } from "@/utils/string";
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
+import MySpinner from "../X721UIKits/Spinner";
 
 interface Props {
   isLoading?: boolean;
@@ -41,7 +42,7 @@ export default function CollectionsList({
   if (isLoading) {
     return (
       <div className="w-full h-56 flex justify-center items-center">
-        <Spinner size="xl" />
+        <MySpinner />
       </div>
     );
   }
@@ -73,7 +74,7 @@ export default function CollectionsList({
       <div
         className={classNames(
           "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3",
-          showFilter ? "desktop:grid-cols-3" : "desktop:grid-cols-4",
+          showFilter ? "desktop:grid-cols-3" : "desktop:grid-cols-4"
         )}
       >
         {showCreateCollection
@@ -167,7 +168,7 @@ export default function CollectionsList({
       <div className="flex justify-center items-center">
         {isLoadMore && (
           <div className="w-full h-56 flex justify-center items-center">
-            <Spinner size="xl" />
+            <MySpinner />
           </div>
         )}
         {!currentHasNext && (

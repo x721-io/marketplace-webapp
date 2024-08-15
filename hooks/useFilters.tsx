@@ -7,7 +7,7 @@ import { tokens } from "@/config/tokens";
 
 export const useNFTFilters = (
   activeFilters: APIParams.FetchNFTs,
-  onApplyFilters?: (filters: APIParams.FetchNFTs) => void,
+  onApplyFilters?: (filters: APIParams.FetchNFTs) => void
 ) => {
   const [localFilters, setLocalFilters] =
     useState<APIParams.FetchNFTs>(activeFilters);
@@ -49,7 +49,7 @@ export const useNFTFilters = (
       sanitizeObject({
         ...localFilters,
         quoteToken: quoteToken === undefined ? tokens.wu2u.address : quoteToken,
-      }),
+      })
     );
   };
 
@@ -60,13 +60,13 @@ export const useNFTFilters = (
         return t.trait_type === key && t.value === value;
       });
     },
-    [activeFilters],
+    [activeFilters]
   );
 
   const handleSelectTrait = (
     key: string,
     value: any,
-    updateOnChange?: boolean,
+    updateOnChange?: boolean
   ) => {
     const selectedTraits = localFilters.traits ? [...localFilters.traits] : [];
     const isExist = isTraitSelected(key, value);
@@ -99,7 +99,7 @@ export const useNFTFilters = (
 
 export const useCollectionFilters = (
   activeFilters: APIParams.FetchCollections,
-  onApplyFilters?: (filters: APIParams.FetchCollections) => void,
+  onApplyFilters?: (filters: APIParams.FetchCollections) => void
 ) => {
   const [localFilters, setLocalFilters] =
     useState<APIParams.FetchCollections>(activeFilters);

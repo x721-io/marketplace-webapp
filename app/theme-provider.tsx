@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useAppSettingsStore } from '@/store/app-settings/store';
-import { Theme } from '@/store/app-settings/types';
-import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { useEffect, useState } from 'react';
+import { useAppSettingsStore } from "@/store/app-settings/store";
+import { Theme } from "@/store/app-settings/types";
+import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { useEffect, useState } from "react";
 
 export default function ThemeProvider({
   children,
@@ -12,15 +12,14 @@ export default function ThemeProvider({
   children: React.ReactNode;
 }) {
   const { theme } = useAppSettingsStore();
-  
   useEffect(() => {
     if (theme) {
       switch (theme) {
         case Theme.DARK:
-          document.body.classList.toggle('dark', true);
+          document.body.classList.toggle("dark", true);
           break;
         case Theme.LIGHT:
-          document.body.classList.toggle('dark', false);
+          document.body.classList.toggle("dark", false);
           break;
       }
     }

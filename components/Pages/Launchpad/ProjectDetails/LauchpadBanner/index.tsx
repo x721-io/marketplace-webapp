@@ -25,7 +25,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     return active || next || project.rounds[0];
   }, [project]);
   const { timeframes, setHasTimeframe, hasTimeframe } = useTimeframeStore(
-    (state) => state,
+    (state) => state
   );
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
                 Total Minted:{" "}
                 <span className="text-primary font-medium">
                   {formatDisplayedNumber(
-                    (roundData as any)?.soldAmountNFT || 0,
+                    (roundData as any)?.soldAmountNFT || 0
                   )}
                 </span>
               </p>

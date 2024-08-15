@@ -241,9 +241,9 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                   // price={BigInt(bid?.price || 0) * BigInt(bid?.quantity || 0)}
                   price={parseUnits(
                     String(
-                      Number(bid?.price || 0) * Number(bid?.quantity || 0),
+                      Number(bid?.price || 0) * Number(bid?.quantity || 0)
                     ),
-                    token?.decimal,
+                    token?.decimal
                   )}
                   sellerFee={sellerFee}
                   buyerFee={buyerFee}

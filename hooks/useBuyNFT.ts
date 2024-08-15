@@ -29,9 +29,9 @@ export const useBuyURC721UsingNative = (nft: NFT) => {
 
 export const useBuyURC1155UsingNative = (nft: NFT) => {
   const onBuyURC1155UsingNative = async (
-      operationId: string,
-      price: any,
-      quantity: number,
+    operationId: string,
+    price: any,
+    quantity: number
   ) => {
     const totalPrice = BigInt(price) * BigInt(quantity);
     const [_, buyerFee] = await readContract({
@@ -71,8 +71,8 @@ export const useBuyURC721UsingURC20 = (nft: NFT) => {
 
 export const useBuyURC1155UsingURC20 = () => {
   const onBuyURC1155UsingURC20 = async (
-      operationId: string,
-      quantity: number,
+    operationId: string,
+    quantity: number
   ) => {
     const { hash } = await writeContract({
       abi: contracts.erc1155Market.abi,
@@ -87,11 +87,11 @@ export const useBuyURC1155UsingURC20 = () => {
 };
 
 export const useBuyNFT = (
-    nft: NFT,
-    price: BigNumberish,
-    operationId: string,
-    quantity: number,
-    quoteToken: Address,
+  nft: NFT,
+  price: BigNumberish,
+  operationId: string,
+  quantity: number,
+  quoteToken: Address
 ) => {
   const buyURC721UsingNative = useBuyURC721UsingNative(nft);
   const buyURC1155UsingNative = useBuyURC1155UsingNative(nft);

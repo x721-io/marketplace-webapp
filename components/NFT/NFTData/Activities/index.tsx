@@ -18,7 +18,7 @@ export default function ActivitiesTab({ nft }: { nft: NFT }) {
       collectionAddress: nft.collection.address,
     },
     (params) => api.fetchNFTEvents(params),
-    { refreshInterval: 10000 },
+    { refreshInterval: 10000 }
   );
 
   return (

@@ -17,7 +17,7 @@ export const useRoundZero = (round: Round) => {
         }
       : null,
     (params) => api.checkIsSubscribed(params),
-    { refreshInterval: 3000 },
+    { refreshInterval: 3000 }
   );
 
   const onSubscribe = () => {

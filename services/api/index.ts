@@ -1,10 +1,10 @@
-import axios from 'axios';
-import { BASE_API_URL } from '@/config/api';
+import axios from "axios";
+import { BASE_API_URL } from "@/config/api";
 
 const BASE_REQUEST_OPTIONS = {
   timeout: 5000,
   headers: {
-    redirect: 'follow',
+    redirect: "follow",
   },
 };
 

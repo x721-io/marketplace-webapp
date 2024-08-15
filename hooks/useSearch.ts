@@ -33,11 +33,12 @@ export const useSearch = () => {
 
   const searchString = useMemo(
     () => (searchKey ? text[searchKey] : ""),
-    [searchKey, text],
+    [searchKey, text]
   );
 
   return {
     handleTextInput,
+    activeTab,
     setActiveTab,
     searchKey,
     text,

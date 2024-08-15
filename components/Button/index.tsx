@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { classNames } from "@/utils/string";
-import { Spinner } from "flowbite-react";
+import MySpinner from "../X721UIKits/Spinner";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,7 +24,7 @@ export default function Button({
   const baseClass = useMemo(() => {
     return classNames(
       `transition-all duration-500 whitespace-nowrap text-ellipsis`,
-      disabled ? "cursor-not-allowed text-disabled" : "cursor-pointer",
+      disabled ? "cursor-not-allowed text-disabled" : "cursor-pointer"
     );
   }, [disabled]);
 
@@ -35,14 +35,14 @@ export default function Button({
           "text-body-18",
           variant === "icon"
             ? "p-4 rounded-full w-fit"
-            : "px-6 py-3.5 h-[52px] min-w-40 rounded-xl",
+            : "px-6 py-3.5 h-[52px] min-w-40 rounded-xl"
         );
       case "sm":
         return classNames(
           "text-body-14",
           variant === "icon"
             ? "p-3 rounded-full w-fit"
-            : "px-4 py-2 h-9 min-w-[120px] rounded-lg",
+            : "px-4 py-2 h-9 min-w-[120px] rounded-lg"
         );
       case "md":
       default:
@@ -50,7 +50,7 @@ export default function Button({
           "text-body-14 rounded-xl",
           variant === "icon"
             ? "p-3 rounded-full w-fit"
-            : "px-5 py-3 h-11 min-w-[120px]",
+            : "px-5 py-3 h-11 min-w-[120px]"
         );
     }
   }, [scale, variant]);
@@ -88,14 +88,14 @@ export default function Button({
         scaleClass,
         variantClass,
         loadingClass,
-        className,
+        className
       )}
       {...rest}
     >
       <div className="flex justify-center items-center gap-1">
         {loading ? (
           <>
-            <Spinner size="sm" />
+            <MySpinner size={18} />
             {loadingText || "Loading..."}
           </>
         ) : (

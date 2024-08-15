@@ -1,14 +1,18 @@
-'use client'
+"use client";
 
-import { Address, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
-import { disconnect } from '@wagmi/core';
-import { sleep } from '@/utils';
-import useAuthStore, { clearProfile } from '@/store/auth/store';
-import { useCallback, useMemo } from 'react';
-import { APIParams } from '@/services/api/types';
-import { useMarketplaceApi } from '@/hooks/useMarketplaceApi';
-import { CHAIN_ID } from '@/config/constants';
-import {  setAuthCookies, getAuthCookies, clearAuthCookies } from '@/services/cookies-client';
+import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { disconnect } from "@wagmi/core";
+import { sleep } from "@/utils";
+import useAuthStore, { clearProfile } from "@/store/auth/store";
+import { useCallback, useMemo } from "react";
+import { APIParams } from "@/services/api/types";
+import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import { CHAIN_ID } from "@/config/constants";
+import {
+  setAuthCookies,
+  getAuthCookies,
+  clearAuthCookies,
+} from "@/services/cookies-client";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
@@ -26,16 +30,15 @@ export const useAuth = () => {
     return userWallet.toLowerCase() === address.toLowerCase();
   }, [userWallet, address, isConnected]);
 
-
   const isValidSession = useMemo(() => {
     const credentials = getAuthCookies();
-    const accessToken = credentials?.accessToken
+    const accessToken = credentials?.accessToken;
     return acceptedTerms && !!accessToken && isCorrectWallet;
   }, [acceptedTerms, accessToken, isCorrectWallet]);
 
-  if (typeof localStorage !== 'undefined') {
+  if (typeof localStorage !== "undefined") {
     if (!isValidSession) {
-      localStorage.removeItem('auth-storage');
+      localStorage.removeItem("auth-storage");
     }
   }
 
@@ -80,7 +83,7 @@ export const useAuth = () => {
 
   const onLogout = async () => {
     await disconnect();
-    clearAuthCookies()
+    clearAuthCookies();
     clearProfile();
   };
 
