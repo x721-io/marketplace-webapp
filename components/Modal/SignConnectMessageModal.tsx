@@ -1,9 +1,4 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-  Tooltip,
-} from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { useAccount, useSignMessage } from "wagmi";
@@ -14,22 +9,12 @@ import useAuthStore from "@/store/auth/store";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { signMessage } from "@wagmi/core";
 import MySpinner from "../X721UIKits/Spinner";
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
   onSignup: () => void;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function SignConnectMessageModal({
   show,
@@ -155,18 +140,12 @@ export default function SignConnectMessageModal({
   }, [show]);
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      show={show}
-      onClose={onClose}
-      size="md"
-    >
-      <Modal.Body>
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body>
         <div className="mx-auto flex flex-col gap-8 p-8 items-center overflow-ellipsis">
           {renderContent()}
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

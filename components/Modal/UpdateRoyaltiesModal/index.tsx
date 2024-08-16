@@ -1,4 +1,3 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import {
   useReadCollectionRoyalties,
   useUpdateCollectionRoyalties,
@@ -14,25 +13,15 @@ import { MAX_ROYALTIES } from "@/config/constants";
 import { Address } from "wagmi";
 import { isAddress } from "ethers";
 import { toast } from "react-toastify";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   collection: Collection;
 }
 
 interface FormState {
   royalties: { account: Address; value: any }[];
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 const newRoyalty = { account: "" as Address, value: "" };
 
@@ -123,15 +112,8 @@ export default function UpdateRoyaltiesModal({
   }, [royalties]);
 
   return (
-    <Modal
-      dismissible
-      onClose={onClose}
-      show={show}
-      size="lg"
-      theme={modalTheme}
-      position="center"
-    >
-      <Modal.Body className="p-10">
+    <MyModal.Root onClose={onClose} show={show}>
+      <MyModal.Body className="py-10 px-[30px]">
         <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
           <p className="text-primary font-bold text-heading-xs mb-4">
             Update Royalties
@@ -238,7 +220,7 @@ export default function UpdateRoyaltiesModal({
             </Button>
           </div>
         </form>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

@@ -3,7 +3,6 @@ import Icon from "@/components/Icon";
 import InputDropdown from "@/components/Form/InputDropdown";
 import Button from "@/components/Button";
 import { useEffect } from "react";
-import { CustomFlowbiteTheme, Modal } from "flowbite-react";
 import SearchUserTab from "./UserTab";
 import SearchCollectionTab from "./CollectionTab";
 import SearchNFTTab from "./NFTTab";
@@ -14,17 +13,7 @@ import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
 import { useTranslations } from "next-intl";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col tablet:h-full h-full desktop:h-auto ",
-    base: "relative w-full p-3 desktop:p-10 tablet:p-10 desktop:h-auto h-full tablet:h-full max-h-[85vh]",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
+import { MyModal } from "@/components/X721UIKits/Modal";
 
 export default function SearchInput() {
   const t = useTranslations("Header");
@@ -128,13 +117,9 @@ export default function SearchInput() {
               height={24}
             />
           </Button>
-          <Modal
-            theme={modalTheme}
-            show={openModal}
-            onClose={() => setOpenModal(false)}
-          >
-            <Modal.Header>Search</Modal.Header>
-            <Modal.Body>
+          <MyModal.Root show={openModal} onClose={() => setOpenModal(false)}>
+            <MyModal.Header>Search</MyModal.Header>
+            <MyModal.Body className="h-[70vh]">
               <InputDropdown
                 closeOnClick
                 className=""
@@ -169,8 +154,8 @@ export default function SearchInput() {
                   </>
                 )}
               />
-            </Modal.Body>
-          </Modal>
+            </MyModal.Body>
+          </MyModal.Root>
         </>
       ) : (
         <InputDropdown

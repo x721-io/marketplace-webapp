@@ -1,13 +1,15 @@
 "use client";
 
 import CloseIcon from "@/components/Icon/Close";
-import { createContext, useContext } from "react";
+import { createContext, CSSProperties, useContext, useEffect } from "react";
 
 export type MyModalProps = {
   show?: boolean;
   onClose?: () => void;
   className?: string;
   children?: React.ReactNode;
+  bodyContainerStyle?: React.CSSProperties;
+  position?: "center" | "right" | "top-right" | "left" | "top-left";
 };
 
 type MyModalContextType = {
@@ -18,11 +20,30 @@ const MyModalContext = createContext<MyModalContextType>({});
 
 const ModalRoot: React.FC<MyModalProps> = ({
   show = false,
+  position = "center",
   onClose,
+  bodyContainerStyle,
   className,
   children,
 }) => {
   if (!show) return null;
+
+  const getStyleByPos = (): CSSProperties => {
+    switch (position) {
+      case "top-right":
+        return {
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+        };
+      case "center":
+      default:
+        return {
+          justifyContent: "center",
+          alignItems: "center",
+        };
+    }
+  };
+
   return (
     <MyModalContext.Provider value={{ onClose }}>
       <div
@@ -31,9 +52,16 @@ const ModalRoot: React.FC<MyModalProps> = ({
             onClose && onClose();
           }
         }}
-        className={`fixed top-0 left-0 z-[500] w-screen h-screen bg-[rgba(0,0,0,0.25)] flex items-center justify-center ${className}`}
+        style={getStyleByPos()}
+        className={`fixed overflow-hidden top-0 left-0 z-[500] w-screen h-screen bg-[rgba(0,0,0,0.25)] flex ${className}`}
       >
-        <div className="bg-[white] w-[450px] py-[25px] rounded-lg max-[450px]:w-[92%]">
+        <div
+          style={{
+            borderRadius: position === "center" ? "8px" : 0,
+            ...bodyContainerStyle,
+          }}
+          className="bg-[white] w-[450px] py-[25px] max-[450px]:w-[92%]"
+        >
           {children}
         </div>
       </div>
@@ -54,8 +82,16 @@ const ModalHeader = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const ModalBody = ({ children }: { children: React.ReactNode }) => {
-  return <div className="w-full  px-[20px] pt-[20px]">{children}</div>;
+const ModalBody = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={`w-full px-[20px] pt-[20px] ${className}`}>{children}</div>
+  );
 };
 
 export const MyModal = {

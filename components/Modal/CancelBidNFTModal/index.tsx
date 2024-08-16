@@ -1,31 +1,15 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-  Tooltip,
-} from "flowbite-react";
 import { useCancelBidNFT } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { NFT, MarketEvent } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   nft: NFT;
   bid?: MarketEvent | undefined;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   const { onCancelBid, isLoading, error, isSuccess } = useCancelBidNFT(nft);
@@ -60,14 +44,8 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   }, [isSuccess]);
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      size="lg"
-      show={show}
-      onClose={onClose}
-    >
-      <Modal.Body className="p-10">
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body className="py-10 px-[30px]">
         <div className="flex flex-col justify-center items-center gap-4 ">
           <div className="font-bold">
             <Text className="mb-3 text-center" variant="heading-xs">
@@ -96,7 +74,7 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
             </Button>
           </div>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

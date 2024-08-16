@@ -6,42 +6,25 @@ import Icon from "@/components/Icon";
 import Text from "@/components/Text";
 import { navs } from "@/config/nav";
 import { useAuth } from "@/hooks/useAuth";
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
-import { isMobile, isSafari } from "react-device-detect";
 import MenuAccountInformation from "./AccountInformation";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { isMobile } from "react-device-detect";
 
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  root: {
-    sizes: {
-      "7xl": "max-w-8 !p-0",
-      sm: "max-w-sm !p-0",
-    },
-  },
-  content: {
-    inner: `relative bg-white flex flex-col ${
-      isSafari && isMobile ? "h-[90vh]" : "h-screen"
-    }`,
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
-
-export default function MenuModal({ onClose, show }: ModalProps) {
+export default function MenuModal({ onClose, show }: MyModalProps) {
   const { isValidSession } = useAuth();
 
   return (
-    <Modal
-      dismissible
+    <MyModal.Root
       onClose={onClose}
       show={show}
-      size={isMobile ? "7xl" : "sm"}
-      theme={modalTheme}
       position="top-right"
+      bodyContainerStyle={{
+        width: isMobile ? "100%" : "400px",
+      }}
     >
-      <Modal.Body className="flex flex-col gap-4 ">
+      <MyModal.Body className="flex flex-col gap-4 h-[100vh] pb-[50px] px-[40px] pt-[10px]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-6">
             <div className="hidden tablet:block">
@@ -130,7 +113,7 @@ export default function MenuModal({ onClose, show }: ModalProps) {
         </div>
 
         <ConnectWalletButton showConnectButton />
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

@@ -1,4 +1,3 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import { useCalculateFee } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
@@ -24,22 +23,12 @@ import {
 } from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   nft: NFT;
   saleData?: MarketEvent;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const api = useMarketplaceApi();
@@ -237,14 +226,8 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      size="lg"
-      show={show}
-      onClose={onClose}
-    >
-      <Modal.Body className="p-10">
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body className={"px-[40px] pb-[20px]"}>
         <div className="flex flex-col justify-center items-center gap-4">
           <form
             className="w-full flex flex-col gap-6"
@@ -405,7 +388,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
             <FormValidationMessages errors={errors} />
           </form>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }
