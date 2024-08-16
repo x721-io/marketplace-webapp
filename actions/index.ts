@@ -1,4 +1,11 @@
-// 'use server';
+"use server";
+
+import { APIResponse } from "@/services/api/types";
+import {
+  clearAuthCookies,
+  getAuthCookies,
+  setAuthCookies,
+} from "@/services/cookies-server";
 
 // import { API_ENDPOINTS } from '@/config/api';
 // import { marketplaceApi } from '@/services/api';
@@ -6,6 +13,30 @@
 // import { getAuthCookies } from '@/services/cookies-server';
 // import { Axios } from 'axios';
 // import { getTranslations } from 'next-intl/server';
+
+export const setAuthCookiesAction = async ({
+  accessToken,
+  accessTokenExpire,
+  refreshToken,
+  refreshTokenExpire,
+  userId,
+}: APIResponse.Connect) => {
+  setAuthCookies({
+    accessToken,
+    accessTokenExpire,
+    refreshToken,
+    refreshTokenExpire,
+    userId,
+  });
+};
+
+export const getAuthCookiesAction = async () => {
+  getAuthCookies();
+};
+
+export const clearAuthCookiesAction = async () => {
+  clearAuthCookies();
+};
 
 // export const handleRouteAuthentication = async (
 //   request: Request,

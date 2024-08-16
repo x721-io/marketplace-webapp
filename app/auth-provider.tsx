@@ -25,7 +25,7 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { setProfile } = useAuthStore();
+  const { setProfile, profile } = useAuthStore();
   const [isAuthenticated, setAuthenticated] = useState(false);
   const { data, isLoading } = useSWR("/api/auth/refresh", authenticate);
   const [credentials, setCredentials] = useState<APIResponse.Connect | null>(

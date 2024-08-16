@@ -7,7 +7,7 @@ import {
 } from "flowbite-react";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { sleep } from "@/utils";
@@ -16,7 +16,7 @@ import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { toast } from "react-toastify";
 import { FormState } from "@/types";
 import { formRulesSigupModal } from "@/config/form/rules";
-import { getAuthCookies } from "@/services/cookies-client";
+import { AuthenticationContext } from "@/app/auth-provider";
 
 interface Props extends ModalProps {
   onSignupSuccess?: (accessToken?: string) => void;
@@ -34,7 +34,7 @@ const modalTheme: CustomFlowbiteTheme["modal"] = {
 };
 
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
-  const credentials = getAuthCookies();
+  const { credentials } = useContext(AuthenticationContext);
   const { onUpdateProfile } = useAuth();
   const {
     register,

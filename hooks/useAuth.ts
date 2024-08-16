@@ -8,23 +8,16 @@ import { useCallback, useContext, useMemo } from "react";
 import { APIParams } from "@/services/api/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { CHAIN_ID } from "@/config/constants";
-import {
-  setAuthCookies,
-  getAuthCookies,
-  clearAuthCookies,
-} from "@/services/cookies-client";
 import { AuthenticationContext } from "@/app/auth-provider";
+import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
-  const { isAuthenticated } = useContext(AuthenticationContext);
+  const { isAuthenticated, credentials } = useContext(AuthenticationContext);
   const { setProfile } = useAuthStore();
-  const credentials = getAuthCookies();
   const bearerToken = credentials?.accessToken;
-
   const { isConnected, address } = useAccount();
   const acceptedTerms = useAuthStore((state) => state.profile?.acceptedTerms);
-  const accessToken = credentials.accessToken;
   const userWallet = useAuthStore((state) => state.profile?.publicKey);
 
   const isCorrectWallet = useMemo(() => {
@@ -33,7 +26,12 @@ export const useAuth = () => {
   }, [userWallet, address, isConnected]);
 
   const isValidSession = useMemo(() => {
-    const isValid = isAuthenticated && acceptedTerms && isCorrectWallet;
+    let isValid = false;
+    if (isAuthenticated) {
+      isValid = (isAuthenticated && acceptedTerms && isCorrectWallet) ?? false;
+    } else {
+      isValid = (acceptedTerms && isCorrectWallet) ?? false;
+    }
     if (!isValid) {
       localStorage.removeItem("auth-storage");
     }
@@ -56,7 +54,7 @@ export const useAuth = () => {
         signature: message,
         signer: address.toLocaleLowerCase(),
       });
-      setAuthCookies(credentials);
+      setAuthCookiesAction(credentials);
       await sleep(1000);
       return credentials;
     },
@@ -87,7 +85,7 @@ export const useAuth = () => {
 
   const onLogout = async () => {
     await disconnect();
-    clearAuthCookies();
+    clearAuthCookiesAction();
     clearProfile();
   };
 

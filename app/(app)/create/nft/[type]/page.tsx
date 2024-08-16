@@ -23,12 +23,11 @@ import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { formRulesCreateNFT } from "@/config/form/rules";
 import { Accordion } from "@/components/X721UIKits/Accordion";
-import { getAuthCookies } from "@/services/cookies-client";
 import Tooltip from "@/components/X721UIKits/Tooltip";
-import { AuthenticationContext } from "@/app/auth-provider";
+import useAuthStore from "@/store/auth/store";
 
 export default function CreateNftPage() {
-  const { credentials } = useContext(AuthenticationContext);
+  const { profile } = useAuthStore();
   const type = useParams().type.toString().toUpperCase() as AssetType;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -36,7 +35,7 @@ export default function CreateNftPage() {
   const [uploading, setUploading] = useState(false);
   const api = useMarketplaceApi();
   const { onCreateNFT } = useCreateNFT(type || "ERC721");
-  const userId = credentials?.userId;
+  const userId = profile?.id;
   const { data } = useSWR(
     userId || null,
     (userId) =>

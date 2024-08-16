@@ -2,14 +2,14 @@ import { APIParams, APIResponse } from "@/services/api/types";
 import { marketplaceApi } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { Address } from "wagmi";
-import { useCallback, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { parseQueries, sanitizeObject } from "@/utils";
 import { parseUnits } from "ethers";
 import { tokens } from "@/config/tokens";
-import { getAuthCookies } from "@/services/cookies-client";
+import { AuthenticationContext } from "@/app/auth-provider";
 
 export const useMarketplaceApi = () => {
-  const credentials = getAuthCookies();
+  const { credentials } = useContext(AuthenticationContext);
   const bearerToken = credentials?.accessToken;
 
   // Bearer token - Support directly passing token via function call or getting from auth store

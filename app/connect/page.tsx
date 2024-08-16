@@ -31,7 +31,7 @@ export default function ConnectPage() {
 
   return (
     <>
-      <main className="flex">
+      {/* <main className="flex">
         <div className="flex flex-1 items-center justify-center">
           <div className="px-20 py-40">
             <Text className="text-heading-md text-primary font-semibold mb-5">
@@ -62,7 +62,7 @@ export default function ConnectPage() {
             </div>
           </div>
         </div>
-      </main>
+      </main> */}
 
       <SignConnectMessageModal
         onSignup={() => setShowSignup(true)}
@@ -70,7 +70,7 @@ export default function ConnectPage() {
         onClose={() => setShowSignMessage(false)}
       />
       <SignupModal
-        show={showSignup}
+        show={true}
         onSignupSuccess={() => router.push("/")}
         onClose={() => setShowSignup(false)}
       />
