@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_API_URL } from "@/config/api";
 
 const BASE_REQUEST_OPTIONS = {
-  timeout: 5000,
+  timeout: 10000,
   headers: {
     redirect: "follow",
   },

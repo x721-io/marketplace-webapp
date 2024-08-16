@@ -5,7 +5,7 @@ import { Collection, Round, RoundStatus } from "@/types";
 import { formatEther } from "ethers";
 import { useRoundsWithStatus } from "@/hooks/useRoundStatus";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
@@ -46,6 +46,15 @@ const RoundSchedule = ({
     select: (data) => data,
   });
 
+  const { data: startClaim } = useContractRead({
+    address: round?.address,
+    abi: getRoundAbi(round),
+    functionName: "getRound",
+    enabled: !!address && !!round?.address,
+    watch: true,
+    select: (data: any) => data["startClaim"],
+  });
+
   const handleClaimNFT = async () => {
     setLoading(true);
     try {
@@ -60,7 +69,7 @@ const RoundSchedule = ({
         }
       );
     } catch (e: any) {
-      console.error(e);
+      console.error(e.cause);
       toast.error(`Error report: ${e?.message || e}`);
     } finally {
       setLoading(false);
@@ -163,11 +172,13 @@ const RoundSchedule = ({
             )}
           </p>
 
-          {claimable && Number(claimableAmount) > 0 && (
-            <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
-              Claim now
-            </Button>
-          )}
+          {claimable &&
+            Number(claimableAmount) > 0 &&
+            Number(startClaim) !== 0 && (
+              <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
+                Claim now
+              </Button>
+            )}
         </div>
       </Collapsible>
     </div>
