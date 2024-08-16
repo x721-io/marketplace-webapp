@@ -46,19 +46,32 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     const args: any[] = [];
     const price = BigInt(round.price);
 
-    const tx = await writeContract({
-      address: round.address,
-      abi: roundAbi,
-      functionName,
-      args,
-      value: price,
-      gas: BigInt(500000),
-    });
 
-    return {
-      hash: tx.hash,
-      waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-    };
+    try {
+      const tx = await writeContract({
+        address: round.address,
+        abi: roundAbi,
+        functionName,
+        args,
+        value: price,
+        gas: BigInt(500000),
+      });
+
+      return {
+        hash: tx.hash,
+        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
+      };
+    } catch (e: any) {
+      if (e.message.includes("rejected")) {
+        throw new Error(`user rejected the transaction`, {
+          cause: e,
+        });
+      } else {
+        throw new Error(`unexpected error. Try again later`, {
+          cause: e,
+        });
+      }
+    }
   };
 
   const onClaimNFT = async () => {

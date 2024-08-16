@@ -46,6 +46,15 @@ const RoundSchedule = ({
     select: (data) => data,
   });
 
+  const { data: startClaim } = useContractRead({
+    address: round?.address,
+    abi: getRoundAbi(round),
+    functionName: "getRound",
+    enabled: !!address && !!round?.address,
+    watch: true,
+    select: (data: any) => data["startClaim"],
+  });
+
   const handleClaimNFT = async () => {
     setLoading(true);
     try {
@@ -57,10 +66,10 @@ const RoundSchedule = ({
         />,
         {
           style: { width: "110%", marginLeft: "-3vw" },
-        },
+        }
       );
     } catch (e: any) {
-      console.error(e);
+      console.error(e.cause);
       toast.error(`Error report: ${e?.message || e}`);
     } finally {
       setLoading(false);
@@ -76,7 +85,7 @@ const RoundSchedule = ({
             status === "ENDED" && "bg-success/50",
             status === "MINTING" && "bg-success/50",
             status === "UPCOMING" &&
-              (isActive ? "bg-warning/50" : "bg-surface-medium"),
+              (isActive ? "bg-warning/50" : "bg-surface-medium")
           )}
         >
           <div
@@ -85,7 +94,7 @@ const RoundSchedule = ({
               status === "ENDED" && "bg-success",
               status === "MINTING" && "bg-white",
               status === "UPCOMING" &&
-                (isActive ? "bg-white" : "bg-surface-soft"),
+                (isActive ? "bg-white" : "bg-surface-soft")
             )}
           >
             {isCompleted && (
@@ -97,7 +106,7 @@ const RoundSchedule = ({
           <div
             className={classNames(
               "flex-1 min-h-[20px] w-[2px]",
-              isCompleted ? "bg-success" : "bg-surface-soft",
+              isCompleted ? "bg-success" : "bg-surface-soft"
             )}
           />
         )}
@@ -159,15 +168,17 @@ const RoundSchedule = ({
             Claimable at:{" "}
             {format(
               new Date(round?.claimableStart || 0),
-              "yyyy/M/dd - hh:mm a",
+              "yyyy/M/dd - hh:mm a"
             )}
           </p>
 
-          {claimable && Number(claimableAmount) > 0 && (
-            <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
-              Claim now
-            </Button>
-          )}
+          {claimable &&
+            Number(claimableAmount) > 0 &&
+            Number(startClaim) !== 0 && (
+              <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
+                Claim now
+              </Button>
+            )}
         </div>
       </Collapsible>
     </div>
@@ -211,3 +222,4 @@ export default function ProjectMintSchedule({
     </div>
   );
 }
+
