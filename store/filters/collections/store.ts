@@ -35,6 +35,6 @@ export const useCollectionFilterStore = create(
       resetFilters: () =>
         set((state) => ({ ...DEFAULT_STATE, showFilters: state.showFilters })),
     }),
-    { name: "collection-filter" },
-  ),
+    { name: "collection-filter" }
+  )
 );

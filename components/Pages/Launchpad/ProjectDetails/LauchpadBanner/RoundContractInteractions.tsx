@@ -61,7 +61,8 @@ export default function RoundContractInteractions({
               "Unlimited"
             ) : (
               <>
-                {round?.maxPerWallet} {round.maxPerWallet > 1 ? "items" : "item"}{" "}
+                {round?.maxPerWallet}{" "}
+                {round.maxPerWallet > 1 ? "items" : "item"}{" "}
                 <span className="text-secondary">per wallet</span>
               </>
             )}

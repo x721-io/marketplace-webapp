@@ -31,7 +31,7 @@ export default function AssetTypeSelection({ title, mode }: Props) {
             href={`${mode}/ERC721`}
             className={classNames(
               "flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl p-6",
-              "border hover:border-primary hover:bg-surface-soft text-tertiary",
+              "border hover:border-primary hover:bg-surface-soft text-tertiary"
             )}
           >
             <CheckCircleIcon width={34} height={34} />
@@ -49,7 +49,7 @@ export default function AssetTypeSelection({ title, mode }: Props) {
             href={`${mode}/ERC1155`}
             className={classNames(
               "flex flex-col justify-center items-center gap-2 flex-1 cursor-pointer rounded-2xl p-6",
-              "border hover:border-primary hover:bg-surface-soft text-tertiary",
+              "border hover:border-primary hover:bg-surface-soft text-tertiary"
             )}
           >
             <MultiSelectIcon width={34} height={34} />

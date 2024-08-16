@@ -43,7 +43,7 @@ export default function UserCollections({
       api.getTotalCountById({
         ...params,
       }),
-    { refreshInterval: 0 },
+    { refreshInterval: 0 }
   );
 
   useEffect(() => {

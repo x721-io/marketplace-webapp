@@ -44,6 +44,6 @@ export const useNFTFilterStore = create(
           showFilters: state.showFilters,
         })),
     }),
-    { name: "nft-filter" },
-  ),
+    { name: "nft-filter" }
+  )
 );

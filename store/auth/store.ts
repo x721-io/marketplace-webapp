@@ -15,9 +15,9 @@ const useAuthStore = create(
         setCredentials: (credentials) => set(() => ({ credentials })),
         setProfile: (profile) => set(() => ({ profile })),
       }),
-      { name: "auth-storage" },
-    ),
-  ),
+      { name: "auth-storage" }
+    )
+  )
 );
 
 export const clearProfile = () => useAuthStore.setState(DEFAULT_STATE);

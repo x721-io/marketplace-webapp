@@ -27,9 +27,7 @@ export const useFetchCollectionList = (filters: APIParams.FetchCollections) => {
       page: index + 1,
     }),
     (params) =>
-      api.fetchCollections(
-        sanitizeObject(params) as APIParams.FetchCollections,
-      ),
+      api.fetchCollections(sanitizeObject(params) as APIParams.FetchCollections)
   );
 };
 
@@ -45,7 +43,7 @@ export const useFetchCollectionListByUser = (id: string) => {
             page: index + 1,
           }
         : null,
-    (params) => api.fetchCollectionsByUser(params),
+    (params) => api.fetchCollectionsByUser(params)
   );
 };
 
@@ -57,7 +55,7 @@ export const useFetchNFTList = (filters: APIParams.FetchNFTs) => {
       ...filters,
       page: index + 1,
     }),
-    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs),
+    (params) => api.fetchNFTs(sanitizeObject(params) as APIParams.FetchNFTs)
   );
 };
 
@@ -69,7 +67,7 @@ export const useFetchUserList = (filters: APIParams.FetchUsers) => {
       ...filters,
       page: index + 1,
     }),
-    (params) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers),
+    (params) => api.fetchUsers(sanitizeObject(params) as APIParams.FetchUsers)
   );
 };
 
@@ -90,10 +88,10 @@ export const useInfiniteScroll = ({
           ...prevData,
           ...currentPage.data,
         ],
-        [],
+        []
       );
       const hasNextArray = data.map(
-        (currentPage: ListData) => currentPage.paging,
+        (currentPage: ListData) => currentPage.paging
       );
       currentHasNext = hasNextArray[data.length - 1].hasNext;
     }

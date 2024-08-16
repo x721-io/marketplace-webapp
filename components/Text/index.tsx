@@ -33,7 +33,9 @@ export default function Text({
         <p
           className={classNames(
             className,
-            `text-${variant || "body-14"}, text-ellipsis break-all whitespace-nowrap overflow-hidden`,
+            `text-${
+              variant || "body-14"
+            }, text-ellipsis break-all whitespace-nowrap overflow-hidden`
           )}
           {...rest}
         >

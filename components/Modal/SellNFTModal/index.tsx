@@ -52,7 +52,7 @@ export default function SellNFTModal({
   const ownerData = useMemo(() => {
     if (!wallet || !marketData) return undefined;
     return marketData.owners.find(
-      (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
+      (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase()
     );
   }, [wallet, marketData]);
   const {
@@ -127,8 +127,6 @@ export default function SellNFTModal({
       },
     },
   };
-
-
 
   const onSubmit = async ({
     price,
@@ -220,8 +218,6 @@ export default function SellNFTModal({
     }
   };
 
-
-
   return (
     <Modal
       theme={modalTheme}
@@ -293,7 +289,7 @@ export default function SellNFTModal({
                   nft={nft}
                   price={parseUnits(
                     String(Number(price || 0) * Number(quantity || 0)),
-                    token?.decimal,
+                    token?.decimal
                   )}
                   quoteToken={token?.address}
                   sellerFee={sellerFee}

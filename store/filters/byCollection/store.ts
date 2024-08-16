@@ -83,6 +83,6 @@ export const useFilterByCollection = create(
           };
         }),
     }),
-    { name: "filter-by-collection" },
-  ),
+    { name: "filter-by-collection" }
+  )
 );

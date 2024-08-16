@@ -15,7 +15,7 @@ export default function ProjectPage() {
   const { data, isLoading } = useSWR(
     !!id ? id : null,
     (id: string) => api.fetchProjectById(id),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false }
   );
 
   if (isLoading) {

@@ -113,6 +113,6 @@ export const useFilterByUser = create(
           };
         }),
     }),
-    { name: "filter-by-user" },
-  ),
+    { name: "filter-by-user" }
+  )
 );

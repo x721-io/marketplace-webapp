@@ -44,7 +44,7 @@ export default function SearchInput() {
     isMutating: searchingCollection,
     reset: resetCollection,
   } = useSWRMutation(text.collection || null, (text) =>
-    api.searchCollections(text),
+    api.searchCollections(text)
   );
 
   const {

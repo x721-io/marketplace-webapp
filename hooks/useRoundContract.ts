@@ -46,19 +46,31 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     const args: any[] = [];
     const price = BigInt(round.price);
 
-    const tx = await writeContract({
-      address: round.address,
-      abi: roundAbi,
-      functionName,
-      args,
-      value: price,
-      gas: BigInt(500000),
-    });
+    try {
+      const tx = await writeContract({
+        address: round.address,
+        abi: roundAbi,
+        functionName,
+        args,
+        value: price,
+        gas: BigInt(500000),
+      });
 
-    return {
-      hash: tx.hash,
-      waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-    };
+      return {
+        hash: tx.hash,
+        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
+      };
+    } catch (e: any) {
+      if (e.message.includes("rejected")) {
+        throw new Error(`user rejected the transaction`, {
+          cause: e,
+        });
+      } else {
+        throw new Error(`unexpected error. Try again later`, {
+          cause: e,
+        });
+      }
+    }
   };
 
   const onClaimNFT = async () => {
@@ -82,7 +94,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       const tx = await writeContract({
         address: round.address,
         abi: contracts.memeTaVerseContract.abi,
-        functionName: 'claim',
+        functionName: "claim",
         args: [] as any,
       });
 
@@ -91,15 +103,14 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
         waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
       };
     } catch (error) {
-      console.error('Error in onClaimMemetaverse:', error);
+      console.error("Error in onClaimMemetaverse:", error);
     }
   };
-
 
   return {
     onClaimNFT,
     onBuyNFT,
     onBuyNFTCustomized,
-    onClaimMemetaverse
+    onClaimMemetaverse,
   };
 };

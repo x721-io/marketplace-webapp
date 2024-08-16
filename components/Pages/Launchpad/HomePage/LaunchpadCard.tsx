@@ -72,15 +72,15 @@ export default function LaunchpadCard({ project, ...rest }: Props) {
               </Text>
               <Icon name="u2u-logo" width={16} height={16} />
               {project.rounds.map((round) => {
-                  return (
-                    <Text
-                      key={round.id}
-                      className="font-semibold"
-                      variant="body-14"
-                    >
-                      {formatDisplayedNumber(formatEther(round.price || 0))}
-                    </Text>
-                  );
+                return (
+                  <Text
+                    key={round.id}
+                    className="font-semibold"
+                    variant="body-14"
+                  >
+                    {formatDisplayedNumber(formatEther(round.price || 0))}
+                  </Text>
+                );
               })}
               {/*<Text className="font-semibold" variant="body-18">*/}
               {/*  {formatDisplayedNumber(formatEther(activeRound?.price || 0))}*/}

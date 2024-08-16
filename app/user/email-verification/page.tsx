@@ -36,7 +36,7 @@ export default function EmailVerificationPage() {
     error,
     isLoading,
   } = useSWR(token || null, (verifyToken) =>
-    api.fetchEmailVerify({ token: verifyToken } as APIParams.FetchEmailVerify),
+    api.fetchEmailVerify({ token: verifyToken } as APIParams.FetchEmailVerify)
   );
 
   const renderContent = () => {

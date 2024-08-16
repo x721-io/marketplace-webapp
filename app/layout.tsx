@@ -7,8 +7,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import React, { Suspense } from "react";
 import LoadingPage from "./loading";
-import { GoogleAnalytics } from '@next/third-parties/google'
-import Text from '@/components/Text'
+import { GoogleAnalytics } from "@next/third-parties/google";
+import Text from "@/components/Text";
 
 export const metadata: Metadata = {
   title: "X721 Marketplace",
@@ -22,7 +22,6 @@ export default function RootLayout({
 }) {
   const underMaintenance = false;
 
-
   return (
     <html lang="en">
       <body>
@@ -31,12 +30,12 @@ export default function RootLayout({
             <Text className="text-primary text-center font-semibold text-heading-sm">
               Service under Maintenance.
             </Text>
-            <br/>
+            <br />
             <Text className="text-secondary text-center text-body-24">
               We will comeback shortly.
             </Text>
           </div>
-          ) : (
+        ) : (
           <ErrorBoundary>
             <Providers>
               <Suspense fallback={<LoadingPage />}>{children}</Suspense>

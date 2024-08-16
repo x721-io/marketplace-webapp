@@ -20,8 +20,8 @@ const useAppCommonStore = create(
           };
         }),
     }),
-    { name: "app-storage" },
-  ),
+    { name: "app-storage" }
+  )
 );
 
 export default useAppCommonStore;

@@ -40,18 +40,18 @@ export default function Select({
       case "lg":
         return classNames(
           "text-body-16 rounded-2xl min-w-72 h-14 p-4",
-          !!prependIcon && "ps-10",
+          !!prependIcon && "ps-10"
         );
       case "md":
       default:
         return classNames(
           "text-body-14 rounded-2xl min-w-72 h-12 p-3",
-          !!prependIcon && "ps-10",
+          !!prependIcon && "ps-10"
         );
       case "sm":
         return classNames(
           "text-body-14 rounded-xl min-w-60 h-10 px-3 py-1",
-          !!prependIcon && "ps-9",
+          !!prependIcon && "ps-9"
         );
     }
   }, [scale, prependIcon]);
@@ -71,14 +71,14 @@ export default function Select({
     <div
       className={classNames(
         "flex items-center relative w-auto",
-        containerClass,
+        containerClass
       )}
     >
       {!!prependIcon && (
         <div
           className={classNames(
             "absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none",
-            prependIconContainerClass,
+            prependIconContainerClass
           )}
         >
           {prependIcon}

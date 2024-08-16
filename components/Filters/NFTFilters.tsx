@@ -49,7 +49,7 @@ export default function NFTFilters({
     <div
       className={classNames(
         "w-full tablet:w-72 flex flex-col rounded-2xl border",
-        containerClass,
+        containerClass
       )}
     >
       {baseFilters.includes("type") && (

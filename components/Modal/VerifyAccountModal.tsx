@@ -65,7 +65,7 @@ export default function VerifyAccountModal({
                         <Icon name="verify-active" width={16} height={16} />
                         <Text>{`${key} is required`}</Text>
                       </li>
-                    ),
+                    )
                   )}
               </div>
             </>

@@ -11,11 +11,11 @@ import { convertImageUrl } from "@/utils/nft";
 export default function NFTImage({ item }: { item: NFT }) {
   const displayMedia = useMemo(
     () => convertImageUrl(item?.animationUrl || item?.image),
-    [item?.animationUrl, item?.image],
+    [item?.animationUrl, item?.image]
   );
   const fileExtension = useMemo(
     () => displayMedia?.split(".").pop(),
-    [displayMedia],
+    [displayMedia]
   );
 
   const fileType = useMemo(() => {
@@ -46,7 +46,10 @@ export default function NFTImage({ item }: { item: NFT }) {
               height={512}
               className="object-cover w-full h-full rounded-2xl mb-10"
             />
-            <audio className="absolute bottom-0 h-10 desktop:w-[640px] tablet:w-[410px] w-[341px]" controls>
+            <audio
+              className="absolute bottom-0 h-10 desktop:w-[640px] tablet:w-[410px] w-[341px]"
+              controls
+            >
               <source
                 src={displayMedia}
                 type={`${fileType}/${fileExtension}`}

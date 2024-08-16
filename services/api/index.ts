@@ -24,7 +24,7 @@ marketplaceApi.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error.response.data);
-  },
+  }
 );
 
 launchpadAPi.interceptors.response.use(
@@ -33,7 +33,7 @@ launchpadAPi.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error.response.data);
-  },
+  }
 );
 
 export { marketplaceApi, launchpadAPi };

@@ -48,7 +48,7 @@ export default function TransferNFTModal({
   const ownerData = useMemo(() => {
     if (!wallet || !marketData) return undefined;
     return marketData.owners.find(
-      (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase(),
+      (owner) => owner.publicKey.toLowerCase() === wallet.toLowerCase()
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet]);

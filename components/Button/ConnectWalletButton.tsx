@@ -7,7 +7,6 @@ import useAuthStore from "@/store/auth/store";
 import Button from "@/components/Button/index";
 import { useAuth, useWrongNetwork } from "@/hooks/useAuth";
 
-
 interface Props {
   className?: string;
   children?: React.ReactNode;
@@ -16,15 +15,15 @@ interface Props {
 }
 
 export default function ConnectWalletButton({
-                                              action,
-                                              className,
-                                              showConnectButton,
-                                              children,
-                                            }: Props) {
+  action,
+  className,
+  showConnectButton,
+  children,
+}: Props) {
   const [showWalletConnect, setShowWalletConnect] = useState(false);
   const [showSignMessage, setShowSignMessage] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-  const { isWrongNetwork, switchToCorrectNetwork } = useWrongNetwork()
+  const { isWrongNetwork, switchToCorrectNetwork } = useWrongNetwork();
   const { isValidSession } = useAuth();
 
   const handleConnectWallet = () => {
@@ -40,46 +39,43 @@ export default function ConnectWalletButton({
   };
 
   return (
-      <>
-        <div className={className} onClick={handleConnectWallet}>
-          {showConnectButton && !isValidSession ? (
-              <Button
-                  type="button"
-                  className="w-full"
-                  onClick={handleConnectWallet}
-              >
-                Connect Wallet
-              </Button>
-          ) : (
-              isWrongNetwork ? (
-                  <Button className="flex-1 w-full" onClick={switchToCorrectNetwork}>
-                    Switch Network
-                  </Button>
-              ) : (
-                  children
-              )
+    <>
+      <div className={className} onClick={handleConnectWallet}>
+        {showConnectButton && !isValidSession ? (
+          <Button
+            type="button"
+            className="w-full"
+            onClick={handleConnectWallet}
+          >
+            Connect Wallet
+          </Button>
+        ) : isWrongNetwork ? (
+          <Button className="flex-1 w-full" onClick={switchToCorrectNetwork}>
+            Switch Network
+          </Button>
+        ) : (
+          children
+        )}
+      </div>
 
-          )}
-        </div>
+      <WalletConnectModal
+        show={showWalletConnect}
+        onSignMessage={() => setShowSignMessage(true)}
+        onClose={() => setShowWalletConnect(false)}
+      />
 
-        <WalletConnectModal
-            show={showWalletConnect}
-            onSignMessage={() => setShowSignMessage(true)}
-            onClose={() => setShowWalletConnect(false)}
-        />
+      <SignConnectMessageModal
+        show={showSignMessage}
+        onConnectSuccess={(accessToken) => action?.(accessToken)}
+        onSignup={() => setShowSignup(true)}
+        onClose={() => setShowSignMessage(false)}
+      />
 
-        <SignConnectMessageModal
-            show={showSignMessage}
-            onConnectSuccess={(accessToken) => action?.(accessToken)}
-            onSignup={() => setShowSignup(true)}
-            onClose={() => setShowSignMessage(false)}
-        />
-
-        <SignupModal
-            show={showSignup}
-            onClose={() => setShowSignup(false)}
-            onSignupSuccess={(accessToken) => action?.(accessToken)}
-        />
-      </>
+      <SignupModal
+        show={showSignup}
+        onClose={() => setShowSignup(false)}
+        onSignupSuccess={(accessToken) => action?.(accessToken)}
+      />
+    </>
   );
 }

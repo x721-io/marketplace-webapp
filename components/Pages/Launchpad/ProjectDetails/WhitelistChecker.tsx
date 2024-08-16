@@ -97,8 +97,8 @@ export default function WhitelistChecker({
       await waitForTransaction();
       toast.success("Your item has been successfully purchased!");
     } catch (e: any) {
-      toast.error(`Error report: ${e?.message || e}`);
-      console.error(e);
+      console.error(e.cause);
+      toast.error(`Error report: ` + e.message);
     } finally {
       setLoading(false);
     }

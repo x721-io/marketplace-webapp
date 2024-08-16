@@ -33,7 +33,7 @@ export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
       });
       onRefresh();
       toast.success(
-        `${isFollowing ? "Unfollowed" : "Followed"} artist successfully`,
+        `${isFollowing ? "Unfollowed" : "Followed"} artist successfully`
       );
     } catch (e: any) {
       console.error(e);

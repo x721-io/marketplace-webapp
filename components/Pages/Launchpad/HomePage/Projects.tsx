@@ -11,25 +11,25 @@ export default function HomePageProjectTabs() {
   const { data: mintingProjects } = useSWR(
     "mintingProjects",
     () => api.fetchProjects({ mode: "MINTING" }),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false }
   );
 
   const { data: comingProjects } = useSWR(
     "upcomingProjects",
     () => api.fetchProjects({ mode: "UPCOMING" }),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false }
   );
 
   const { data: endedProjects } = useSWR(
     "endedProjects",
     () => api.fetchProjects({ mode: "ENDED" }),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false }
   );
 
   const { data: claimableProjects } = useSWR(
     "claimProjects",
     () => api.fetchProjects({ mode: "CLAIM" }),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false }
   );
 
   const [current, setCurrent] = useState(1);
@@ -41,7 +41,7 @@ export default function HomePageProjectTabs() {
       { label: "Ended", value: 3, quantity: endedProjects?.length || "0" },
       { label: "Claim", value: 4, quantity: claimableProjects?.length || "0" },
     ],
-    [mintingProjects, comingProjects, endedProjects, claimableProjects],
+    [mintingProjects, comingProjects, endedProjects, claimableProjects]
   );
 
   return (
