@@ -131,7 +131,7 @@ export default function ImageUploadNft({
         className={classNames(
           "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full",
           error ? "border-error" : "border-tertiary",
-          className,
+          className
         )}
       >
         <input
@@ -202,7 +202,7 @@ export default function ImageUploadNft({
               className={classNames(
                 "relative cursor-pointer p-1 border border-dashed rounded-2xl w-full mt-1",
                 error ? "border-error" : "border-tertiary",
-                className,
+                className
               )}
             >
               <input

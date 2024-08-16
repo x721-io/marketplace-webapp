@@ -18,7 +18,7 @@ export default function Tabs({ current, tabs, onChangeTab }: Props) {
         <div
           className={classNames(
             "px-4 py-3 rounded-lg flex items-center gap-[6px] cursor-pointer select-none",
-            current === tab.value && "bg-surface-soft",
+            current === tab.value && "bg-surface-soft"
           )}
           onClick={() => onChangeTab(tab.value)}
           key={tab.value}

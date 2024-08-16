@@ -33,7 +33,7 @@ export default function Accordion({
       <div
         className={classNames(
           "w-full p-4 transition-all",
-          expanded ? "block" : "hidden",
+          expanded ? "block" : "hidden"
         )}
       >
         {children}

@@ -16,7 +16,7 @@ export const useAuth = () => {
   const acceptedTerms = useAuthStore((state) => state.profile?.acceptedTerms);
   const accessToken = useAuthStore((state) => state.credentials?.accessToken);
   const expiredDate = useAuthStore(
-    (state) => state.credentials?.accessTokenExpire,
+    (state) => state.credentials?.accessTokenExpire
   );
   const userWallet = useAuthStore((state) => state.profile?.publicKey);
 
@@ -54,7 +54,7 @@ export const useAuth = () => {
       await sleep(1000);
       return credentials;
     },
-    [address],
+    [address]
   );
 
   const onUpdateProfile = useCallback(
@@ -63,7 +63,7 @@ export const useAuth = () => {
       const profile = await api.updateProfile(params);
       setProfile(profile);
     },
-    [bearerToken, address],
+    [bearerToken, address]
   );
 
   const onVerifyAccount = useCallback(async () => {
@@ -76,7 +76,7 @@ export const useAuth = () => {
       if (!bearerToken) return;
       const email = await api.resendEmail(params);
     },
-    [bearerToken, address],
+    [bearerToken, address]
   );
 
   const onLogout = async () => {
@@ -94,7 +94,6 @@ export const useAuth = () => {
     onVerifyAccount,
   };
 };
-
 
 export const useWrongNetwork = () => {
   const { chain } = useNetwork();

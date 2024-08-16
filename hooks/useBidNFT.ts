@@ -9,7 +9,11 @@ export const useBidURC721UsingNative = (nft: NFT) => {
     writeContract({
       ...contracts.erc721Market,
       functionName: "createBidUsingEth",
-      args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any, price],
+      args: [
+        nft.collection.address,
+        (nft.u2uId ? nft.u2uId : nft.id) as any,
+        price,
+      ],
       value,
     });
 
@@ -78,7 +82,7 @@ export const useBidURC1155UsingURC20 = (nft: NFT) => {
   const onBidURC1155UsingURC20 = async (
     price: any,
     quoteToken: Address,
-    quantity: string,
+    quantity: string
   ) => {
     const { hash } = await writeContract({
       ...contracts.erc1155Market,

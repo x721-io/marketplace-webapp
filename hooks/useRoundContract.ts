@@ -46,7 +46,6 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     const args: any[] = [];
     const price = BigInt(round.price);
 
-
     try {
       const tx = await writeContract({
         address: round.address,
@@ -95,7 +94,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       const tx = await writeContract({
         address: round.address,
         abi: contracts.memeTaVerseContract.abi,
-        functionName: 'claim',
+        functionName: "claim",
         args: [] as any,
       });
 
@@ -104,15 +103,14 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
         waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
       };
     } catch (error) {
-      console.error('Error in onClaimMemetaverse:', error);
+      console.error("Error in onClaimMemetaverse:", error);
     }
   };
-
 
   return {
     onClaimNFT,
     onBuyNFT,
     onBuyNFTCustomized,
-    onClaimMemetaverse
+    onClaimMemetaverse,
   };
 };

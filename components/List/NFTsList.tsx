@@ -97,8 +97,8 @@ export default function NFTsList({
             isMobile
               ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
               : showFilters
-                ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
-                : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2",
+              ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
+              : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
           )}
         >
           {showCreateNFT && myId === userId && (
@@ -144,7 +144,7 @@ export default function NFTsList({
           "w-full flex gap:4 tablet:gap-7 laptop:gap-10 desktop:gap-12 mb-7",
           showFilters
             ? "flex-col tablet:flex-row desktop:flex-row tablet:items-start"
-            : "tablet:flex-row",
+            : "tablet:flex-row"
         )}
       >
         {isMobile ? (

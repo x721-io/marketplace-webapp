@@ -7,7 +7,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 export const useCreateCollection = () => {
   const onCreateCollectionContract = async (
     type: AssetType,
-    [name, symbol, baseURI, contractURI, operators, salt]: any[],
+    [name, symbol, baseURI, contractURI, operators, salt]: any[]
   ) => {
     if (type === "ERC721") {
       return writeContract({

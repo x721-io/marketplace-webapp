@@ -83,7 +83,7 @@ const useLaunchpadStore = create<LaunchpadStoreState & LaunchpadStoreAction>(
     setRound: (round) => set(() => ({ round: round })),
     setIsSpecial: (isSpecial) => set(() => ({ isSpecial: isSpecial })),
     setCollection: (collection) => set(() => ({ collection: collection })),
-  }),
+  })
 );
 
 export default useLaunchpadStore;

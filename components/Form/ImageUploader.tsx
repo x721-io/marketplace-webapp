@@ -117,7 +117,7 @@ export default function ImageUploader({
       className={classNames(
         "relative cursor-pointer p-3 border border-dashed rounded-2xl w-full h-60",
         error ? "border-error" : "border-tertiary",
-        className,
+        className
       )}
     >
       <input

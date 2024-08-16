@@ -69,7 +69,7 @@ export default function DropdownCustomized({
           className={classNames(
             "w-full min-w-fit px-5 py-3 rounded-lg absolute z-50 border-[0.5px] shadow-sm mt-1 transition-all bg-white max-h-96 overflow-auto",
             showDropdown ? "block" : "hidden",
-            dropdownContainerClass,
+            dropdownContainerClass
           )}
         >
           {dropdown}

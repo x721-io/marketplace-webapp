@@ -1,18 +1,17 @@
 import { Round } from "@/types";
 import { abis } from "@/abi";
 
-
 export const sleep = (millisecond: number) =>
-    new Promise((resolve) => setTimeout(resolve, millisecond));
+  new Promise((resolve) => setTimeout(resolve, millisecond));
 
 export const sanitizeObject = (obj: Record<string, any>) => {
   const _obj = { ...obj };
   Object.entries(_obj).forEach(([key, value]) => {
     if (
-        value === undefined ||
-        value === null ||
-        value === false ||
-        value === ""
+      value === undefined ||
+      value === null ||
+      value === false ||
+      value === ""
     )
       delete _obj[key];
   });
@@ -25,16 +24,16 @@ export const parseQueries = (queries?: Record<string, any> | undefined) => {
     return "";
   }
   return (
-      "?" +
-      Object.entries(queries)
-          .filter(([_, value]) => {
-            if (Array.isArray(value)) {
-              return value.length > 0;
-            }
-            return value !== null && value !== undefined && value !== "";
-          })
-          .map(([key, value]) => `${key}=${value}`)
-          .join("&")
+    "?" +
+    Object.entries(queries)
+      .filter(([_, value]) => {
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        }
+        return value !== null && value !== undefined && value !== "";
+      })
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&")
   );
 };
 

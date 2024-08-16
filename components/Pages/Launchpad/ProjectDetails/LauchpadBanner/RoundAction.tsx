@@ -20,11 +20,14 @@ export default function RoundAction() {
   const status = useRoundStatus(round);
 
   const { data: snapshot } = useSWR(
-    address && id &&
-    (round.type === "U2UMintRoundZero" ||
-        round.type === "U2UPremintRoundZero") ? { userId: address, projectId: id } : null,
+    address &&
+      id &&
+      (round.type === "U2UMintRoundZero" ||
+        round.type === "U2UPremintRoundZero")
+      ? { userId: address, projectId: id }
+      : null,
     (params) => api.fetchSnapshot(params),
-    { refreshInterval: 3000 },
+    { refreshInterval: 3000 }
   );
 
   const { data: isWhitelisted } = useContractRead({
@@ -43,9 +46,6 @@ export default function RoundAction() {
       BigInt(snapshot?.stakingTotal || 0) >= BigInt(round.requiredStaking || 0)
     );
   }, [snapshot, round]);
-
-
-
 
   const { data: balanceNFT } = useContractRead({
     address: ZERO_COLLECTION as Address,
@@ -85,11 +85,7 @@ export default function RoundAction() {
   const renderRoundAction = () => {
     switch (status) {
       case "MINTING":
-        return (
-          <RoundActionMinting
-            eligibleStatus={!!eligibleStatus}
-          />
-        );
+        return <RoundActionMinting eligibleStatus={!!eligibleStatus} />;
       case "UPCOMING":
         return (
           <RoundActionUpcoming

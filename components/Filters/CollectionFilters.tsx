@@ -38,7 +38,7 @@ export default function CollectionFilters({
       <div
         className={classNames(
           "w-full tablet:w-72 flex flex-col",
-          containerClass,
+          containerClass
         )}
       >
         <Collapsible isOpen header="Floor Price" className="rounded-2xl border">

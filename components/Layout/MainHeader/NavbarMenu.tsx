@@ -45,7 +45,7 @@ export default function NavbarMenu() {
                 {nav.label}
               </Link>
             </li>
-          ),
+          )
         )}
       </ul>
     </div>

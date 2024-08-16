@@ -28,7 +28,7 @@ const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
       <div
         className={classNames(
           "w-7 h-7 rounded-full flex items-center justify-center",
-          active ? "bg-success" : "bg-blue-300",
+          active ? "bg-success" : "bg-blue-300"
         )}
         {...rest}
       >
@@ -61,7 +61,7 @@ export default function Stepper({ current = 0, steps }: StepsProps) {
                 key={`${item.value}-${index}`}
                 className={classNames(
                   "w-[100px] h-[2px]",
-                  isCompleted ? "bg-success" : "bg-blue-300",
+                  isCompleted ? "bg-success" : "bg-blue-300"
                 )}
               />
             )}

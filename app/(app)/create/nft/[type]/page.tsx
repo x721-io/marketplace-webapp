@@ -42,7 +42,7 @@ export default function CreateNftPage() {
         userId,
         hasBase: true,
       }),
-    { refreshInterval: 3600 * 1000 },
+    { refreshInterval: 3600 * 1000 }
   );
   const {
     handleSubmit,
@@ -181,7 +181,7 @@ export default function CreateNftPage() {
 
   const handleValidateInput = async (
     name: string,
-    value: Record<string, any>,
+    value: Record<string, any>
   ) => {
     try {
       setValidating(true);
@@ -305,7 +305,7 @@ export default function CreateNftPage() {
                         <div
                           className={classNames(
                             "w-36 overflow-ellipsis flex flex-col justify-center items-center gap-2 cursor-pointer rounded-2xl p-5 text-center border-2 text-primary bg-white",
-                            "hover:border-primary hover:bg-white hover:text-primary transition-all",
+                            "hover:border-primary hover:bg-white hover:text-primary transition-all"
                           )}
                         >
                           <PlusCircleIcon width={24} height={24} />
@@ -333,7 +333,7 @@ export default function CreateNftPage() {
                               "hover:border-primary hover:bg-white hover:text-primary border-2 transition-all",
                               c.value === value
                                 ? "border-primary bg-white text-primary"
-                                : "text-tertiary bg-surface-soft",
+                                : "text-tertiary bg-surface-soft"
                             )}
                           >
                             <Tooltip content={c.label} placement="top">
@@ -371,7 +371,7 @@ export default function CreateNftPage() {
                 error={!!errors.description}
                 register={register(
                   "description",
-                  formRulesCreateNFT.description,
+                  formRulesCreateNFT.description
                 )}
               />
             </div>
@@ -430,7 +430,7 @@ export default function CreateNftPage() {
                                       handleTraitInput(
                                         index,
                                         "trait_type",
-                                        event.target.value,
+                                        event.target.value
                                       )
                                     }
                                   />
@@ -442,7 +442,7 @@ export default function CreateNftPage() {
                                       handleTraitInput(
                                         index,
                                         "value",
-                                        event.target.value,
+                                        event.target.value
                                       )
                                     }
                                   />

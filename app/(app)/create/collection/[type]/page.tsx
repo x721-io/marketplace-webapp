@@ -65,7 +65,7 @@ export default function CreateNFTCollectionPage() {
           render: (data) => {
             setValue(
               "avatar",
-              parseImageUrl(data?.data?.fileHashes[0]) as string,
+              parseImageUrl(data?.data?.fileHashes[0]) as string
             );
             clearErrors("avatar");
             return "Collection image uploaded successfully";
@@ -140,7 +140,7 @@ export default function CreateNFTCollectionPage() {
 
   const handleValidateInput = async (
     name: string,
-    value: Record<string, any>,
+    value: Record<string, any>
   ) => {
     try {
       setValidating(true);
@@ -250,7 +250,7 @@ export default function CreateNFTCollectionPage() {
                 error={!!errors.shortUrl}
                 register={register(
                   "shortUrl",
-                  formRulesCreateCollection.shortUrl,
+                  formRulesCreateCollection.shortUrl
                 )}
               />
             </div>
@@ -263,7 +263,7 @@ export default function CreateNFTCollectionPage() {
                 className="h-[160px] resize-none"
                 register={register(
                   "description",
-                  formRulesCreateCollection.description,
+                  formRulesCreateCollection.description
                 )}
                 error={!!errors.description}
               />

@@ -15,7 +15,7 @@ export interface NFTFilterByCollectionAction {
   setFilters: (address: Address, filters: APIParams.FetchNFTs) => void;
   updateFilters: (
     address: Address,
-    filters: Partial<APIParams.FetchNFTs>,
+    filters: Partial<APIParams.FetchNFTs>
   ) => void;
   resetFilters: (address: Address) => void;
 }

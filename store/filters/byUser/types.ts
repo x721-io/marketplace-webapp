@@ -22,12 +22,12 @@ export interface NFTFilterByUserAction {
   setFilters: (
     mode: Mode,
     address: Address,
-    filters: APIParams.FetchNFTs,
+    filters: APIParams.FetchNFTs
   ) => void;
   updateFilters: (
     mode: Mode,
     address: Address,
-    filters: Partial<APIParams.FetchNFTs>,
+    filters: Partial<APIParams.FetchNFTs>
   ) => void;
   resetFilters: (mode: Mode, address: Address) => void;
 }

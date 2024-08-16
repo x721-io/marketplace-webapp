@@ -2,16 +2,14 @@ import { Address } from "wagmi";
 import { BigNumberish } from "ethers";
 import { Collection } from "@/types/entitites";
 
-
 export type RoundType =
-    | "U2UMintRoundFCFS"
-    | "U2UMintRoundWhitelist"
-    | "U2UMintRoundZero"
-    | "U2UPremintRoundFCFS"
-    | "U2UPremintRoundWhitelist"
-    | "U2UPremintRoundZero"
-    | "U2UMintRoundWhitelistCustomized"
-
+  | "U2UMintRoundFCFS"
+  | "U2UMintRoundWhitelist"
+  | "U2UMintRoundZero"
+  | "U2UPremintRoundFCFS"
+  | "U2UPremintRoundWhitelist"
+  | "U2UPremintRoundZero"
+  | "U2UMintRoundWhitelistCustomized";
 
 export type RoundStatus = "MINTING" | "ENDED" | "UPCOMING" | "CLAIM";
 

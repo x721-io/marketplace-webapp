@@ -36,7 +36,7 @@ export const useRoundsWithStatus = (rounds: Round[]) => {
 
   const activeRoundIndex = useMemo(() => {
     const mintingRoundIndex = roundsWithStatus.findIndex(
-      (round) => round.status === "MINTING",
+      (round) => round.status === "MINTING"
     );
     if (mintingRoundIndex > -1) return mintingRoundIndex;
 
@@ -53,7 +53,7 @@ export const useRoundsWithStatus = (rounds: Round[]) => {
 
   const activeRound = useMemo(
     () => roundsWithStatus[activeRoundIndex],
-    [roundsWithStatus, activeRoundIndex],
+    [roundsWithStatus, activeRoundIndex]
   );
 
   return {

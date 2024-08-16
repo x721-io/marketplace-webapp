@@ -4,7 +4,6 @@ import { NFT } from "@/types";
 import { parseEther } from "ethers";
 import { Address } from "wagmi";
 
-
 export const useSellURC721 = (nft: NFT) => {
   return async (price: number, quoteToken: Address) => {
     const { hash } = await writeContract({
@@ -23,11 +22,7 @@ export const useSellURC721 = (nft: NFT) => {
 };
 
 export const useSellURC1155 = (nft: NFT) => {
-  return async (
-      price: number,
-      quoteToken: Address,
-      quantity: any,
-  ) => {
+  return async (price: number, quoteToken: Address, quantity: any) => {
     const { hash } = await writeContract({
       abi: contracts.erc1155Market.abi,
       address: contracts.erc1155Market.address,
@@ -50,7 +45,9 @@ export const useCancelSellURC721 = (nft: NFT) => {
       abi: contracts.erc721Market.abi,
       address: contracts.erc721Market.address,
       functionName: "cancelAsk",
-      args: [nft.collection.address, nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
+      args: [
+        nft.collection.address,
+        nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
       ],
     });
     return waitForTransaction({ hash });

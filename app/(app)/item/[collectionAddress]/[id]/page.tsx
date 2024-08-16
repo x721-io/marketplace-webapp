@@ -26,7 +26,7 @@ export default function NFTPage() {
       "nft-details",
       { collectionAddress: String(collectionAddress), id: String(id) },
     ],
-    ([_, params]) => api.fetchNFTById(params),
+    ([_, params]) => api.fetchNFTById(params)
   );
 
   const { data: marketData } = useSWR(
@@ -40,13 +40,13 @@ export default function NFTPage() {
         bidListPage: 1,
         bidListLimit: 100,
       }),
-    { refreshInterval: 10000 },
+    { refreshInterval: 10000 }
   );
 
   const { data: metaData } = useSWRImmutable(
     !!item?.tokenUri ? item.tokenUri : null,
     (uri) => api.getNFTMetaData(uri),
-    { refreshInterval: 600000 },
+    { refreshInterval: 600000 }
   );
 
   if (isLoading) {
