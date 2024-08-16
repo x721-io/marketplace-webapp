@@ -12,6 +12,7 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@next/third-parties": "^14.2.4",
     "@rarible/types": "~0.9.16",
     "@types/dompurify": "^3.0.5",
     "axios": "^1.6.1",

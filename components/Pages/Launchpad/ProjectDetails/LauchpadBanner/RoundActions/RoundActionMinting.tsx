@@ -156,8 +156,12 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
         collectionAddress: collection.address,
       });
     } catch (e: any) {
-      toast.error(`Error report: ${e?.message || e}`);
       console.error(e);
+      if (e.message.includes("rejected")) {
+        toast.error(`Error report: User rejected the transaction`);
+      } else {
+        toast.error(`Error report: Unexpected error. Try again later`);
+      }
     } finally {
       setLoading(false);
     }
