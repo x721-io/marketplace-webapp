@@ -111,17 +111,17 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
     const handleMouseUp = () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
-      if (scrollRef && scrollRef.current) {
-        const currentScrollLeft = scrollRef.current.scrollLeft;
-        const children = scrollRef.current.children;
-        const nearestIndex = Array.from(children)
-          .map((ele, i) => {
-            const eleLeft = ele.getBoundingClientRect().left;
-            return { amount: Math.abs(eleLeft - currentScrollLeft), index: i };
-          })
-          .sort((a, b) => a.amount - b.amount)[0].index;
-        setCurrentIndex(nearestIndex);
-      }
+      // if (scrollRef && scrollRef.current) {
+      //   const currentScrollLeft = scrollRef.current.scrollLeft;
+      //   const children = scrollRef.current.children;
+      //   const nearestIndex = Array.from(children)
+      //     .map((ele, i) => {
+      //       const eleLeft = ele.getBoundingClientRect().left;
+      //       return { amount: Math.abs(eleLeft - currentScrollLeft), index: i };
+      //     })
+      //     .sort((a, b) => a.amount - b.amount)[0].index;
+      //   setCurrentIndex(nearestIndex);
+      // }
       resetCursor(ele);
     };
 
@@ -183,8 +183,8 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
           setAutoplay(true);
         }
       }}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
+      // onMouseDown={handleMouseDown}
+      // onTouchStart={handleTouchStart}
       className="w-full h-full relative cursor-grab"
     >
       <button
