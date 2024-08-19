@@ -23,7 +23,10 @@ export default function VerifyAccountModal({
         reponseVerify?.listVerify[key] === false
       ) {
         switch (key) {
-          case "avatar" || "verifyEmail" || "bio" || "twitterLink":
+          case "verifyEmail":
+          case "bio":
+          case "twitterLink":
+          case "avatar":
             router.push("/profile");
             break;
           case "ownerOrCreater":

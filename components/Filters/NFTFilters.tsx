@@ -14,6 +14,7 @@ import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { Address } from "wagmi";
 import MyRadio from "../X721UIKits/Radio";
+import MyCheckbox from "../X721UIKits/Checkbox";
 
 export type FilterType = "price" | "type" | "status";
 
@@ -106,7 +107,7 @@ export default function NFTFilters({
             <div className="flex gap-3 items-center">
               <MyRadio
                 id="status-all"
-                value=""
+                value="status-all"
                 checked={localFilters.sellStatus === undefined}
                 onChange={() =>
                   handleChange({ sellStatus: undefined, updateOnChange: true })
@@ -116,14 +117,14 @@ export default function NFTFilters({
             </div>
             <div className="flex gap-3 items-center">
               <MyRadio
-                id="status-buy"
+                id="AskNew"
                 value="AskNew"
                 checked={localFilters.sellStatus === "AskNew"}
                 onChange={() =>
                   handleChange({ sellStatus: "AskNew", updateOnChange: true })
                 }
               />
-              <Label htmlFor="type-buy">Buy now</Label>
+              <Label htmlFor="AskNew">Buy now</Label>
             </div>
           </div>
         </Collapsible>
@@ -167,6 +168,7 @@ export default function NFTFilters({
           </Button>
         </Collapsible>
       )}
+      <MyCheckbox checked={true} onChange={() => {}} />
       {!!traitsFilter?.length && (
         <Collapsible header="Properties">
           {traitsFilter.map((item) => (
