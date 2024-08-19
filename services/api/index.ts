@@ -7,6 +7,14 @@ const BASE_REQUEST_OPTIONS = {
     redirect: "follow",
   },
 };
+export const nextAPI = axios.create({
+  baseURL: "/api",
+  ...BASE_REQUEST_OPTIONS,
+});
+nextAPI.interceptors.request.use(
+  (config) => config,
+  (error) => Promise.reject(error)
+);
 
 const marketplaceApi = axios.create({
   baseURL: BASE_API_URL,

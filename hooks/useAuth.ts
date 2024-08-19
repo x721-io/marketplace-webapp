@@ -9,7 +9,11 @@ import { APIParams } from "@/services/api/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { CHAIN_ID } from "@/config/constants";
 import { AuthenticationContext } from "@/app/auth-provider";
-import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
+import {
+  clearAuthCookiesAction,
+  getAuthCookiesAction,
+  setAuthCookiesAction,
+} from "@/actions";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();

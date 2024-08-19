@@ -1,5 +1,7 @@
+"use client";
+
 import { APIParams, APIResponse } from "@/services/api/types";
-import { marketplaceApi } from "@/services/api";
+import { getMarketplaceApi, marketplaceApi } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { Address } from "wagmi";
 import { useCallback, useContext, useMemo } from "react";
@@ -7,10 +9,19 @@ import { parseQueries, sanitizeObject } from "@/utils";
 import { parseUnits } from "ethers";
 import { tokens } from "@/config/tokens";
 import { AuthenticationContext } from "@/app/auth-provider";
+import {
+  clearAuthCookiesAction,
+  getAuthCookiesAction,
+  handleAuthentication,
+} from "@/actions";
+import { useRouter } from "next/navigation";
+import useAuthStore, { clearProfile } from "@/store/auth/store";
 
 export const useMarketplaceApi = () => {
+  const { setProfile } = useAuthStore();
   const { credentials } = useContext(AuthenticationContext);
   const bearerToken = credentials?.accessToken;
+  const router = useRouter();
 
   // Bearer token - Support directly passing token via function call or getting from auth store
   const authHeader = useCallback(
@@ -201,10 +212,20 @@ export const useMarketplaceApi = () => {
         );
       },
 
-      viewProfile: (
+      viewProfile: async (
         id: Address | string
-      ): Promise<APIResponse.ProfileDetails> =>
-        marketplaceApi.get(API_ENDPOINTS.PROFILE + `/${id}`, authHeader()),
+      ): Promise<APIResponse.ProfileDetails | void> => {
+        const response = await handleAuthentication();
+        const axiosClient = getMarketplaceApi();
+        if (response.status === "fail") {
+          clearAuthCookiesAction();
+          clearProfile();
+          return router.push("/");
+        }
+        axiosClient.defaults.headers.common.Authorization =
+          response.bearerToken;
+        return axiosClient.get(API_ENDPOINTS.PROFILE + `/${id}`);
+      },
 
       fetchUsers: async (
         params: APIParams.FetchUsers
@@ -217,11 +238,24 @@ export const useMarketplaceApi = () => {
       verifyAccount: (): Promise<APIResponse.VerifyAccount> =>
         marketplaceApi.post(API_ENDPOINTS.LIST_VERIFY, {}, authHeader()),
 
-      fetchEmailVerify: (
+      fetchEmailVerify: async (
         params: APIParams.FetchEmailVerify
-      ): Promise<APIResponse.FetchEmailVerify> =>
-        marketplaceApi.post(API_ENDPOINTS.VERIFY_EMAIL, params, authHeader()),
-
+      ): Promise<APIResponse.FetchEmailVerify | void> => {
+        const response = await handleAuthentication();
+        const axiosClient = getMarketplaceApi();
+        if (response.status === "fail") {
+          clearAuthCookiesAction();
+          clearProfile();
+          return router.push("/");
+        }
+        axiosClient.defaults.headers.common.Authorization =
+          response.bearerToken;
+        return axiosClient.post(
+          API_ENDPOINTS.VERIFY_EMAIL,
+          params,
+          authHeader()
+        );
+      },
       followUser: ({
         userId,
         accessToken,
