@@ -6,7 +6,6 @@ import NFTActions from "./NFTActions";
 import { useNFTMarketStatus } from "@/hooks/useMarket";
 import { formatUnits } from "ethers";
 import Link from "next/link";
-import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import {
@@ -17,6 +16,8 @@ import {
 import { formatDisplayedNumber } from "@/utils";
 import { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function NFTMarketData({
   nft,
@@ -61,7 +62,7 @@ export default function NFTMarketData({
           )}
         </div>
 
-        <Tooltip content={nft.name} placement="bottom">
+        <a data-tooltip-id="nft-name" data-tooltip-content={nft.name}>
           <div className="desktop:max-w-[350px] tablet:max-w-[350px] w-full overflow-hidden">
             <Text
               className="font-bold text-primary desktop:text-body-40 tablet:text-body-40 text-body-24 text-ellipsis"
@@ -74,7 +75,8 @@ export default function NFTMarketData({
               {nft.name}
             </Text>
           </div>
-        </Tooltip>
+          <Tooltip id="nft-name" />
+        </a>
 
         {!!nft.creator && (
           <Text className="text-secondary" variant="body-16">

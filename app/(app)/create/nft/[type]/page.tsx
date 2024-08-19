@@ -11,7 +11,6 @@ import { AssetType, FormState, Trait } from "@/types";
 import { classNames } from "@/utils/string";
 import useSWR from "swr";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-// import { Tooltip } from 'flowbite-react';
 import Link from "next/link";
 import { toast } from "react-toastify";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
@@ -23,8 +22,9 @@ import PlusCircleIcon from "@/components/Icon/PlusCircle";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { formRulesCreateNFT } from "@/config/form/rules";
 import { Accordion } from "@/components/X721UIKits/Accordion";
-import Tooltip from "@/components/X721UIKits/Tooltip";
 import useAuthStore from "@/store/auth/store";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function CreateNftPage() {
   const { profile } = useAuthStore();
@@ -339,11 +339,15 @@ export default function CreateNftPage() {
                                 : "text-tertiary bg-surface-soft"
                             )}
                           >
-                            <Tooltip content={c.label} placement="top">
+                            <a
+                              data-tooltip-id={c.label}
+                              data-tooltip-content={c.label}
+                            >
                               <Text className="text-body-18 font-bold text-primary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">
-                                {c.label} 123
+                                {c.label}
                               </Text>
-                            </Tooltip>
+                              <Tooltip id={c.label} />
+                            </a>
                             <Text className="text-body-12 text-secondary text-ellipsis w-[7rem] break-all whitespace-nowrap overflow-hidden">
                               {c.type}
                             </Text>

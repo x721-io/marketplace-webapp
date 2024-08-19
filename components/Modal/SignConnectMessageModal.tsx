@@ -1,4 +1,3 @@
-import { Tooltip } from "flowbite-react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { useAccount, useSignMessage } from "wagmi";
@@ -8,8 +7,10 @@ import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { signMessage } from "@wagmi/core";
+import { Tooltip } from "react-tooltip";
 import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
+import "react-tooltip/dist/react-tooltip.css";
 
 interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -50,7 +51,7 @@ export default function SignConnectMessageModal({
       const credentials = await onAuth(date, signature);
       const profile = await api.viewProfile(address);
 
-      if (!profile.acceptedTerms) {
+      if (!profile?.acceptedTerms) {
         // Not registered
         onSignup();
       } else {
@@ -88,14 +89,18 @@ export default function SignConnectMessageModal({
             <Text className="font-semibold text-error text-center text-heading-sm">
               Error report
             </Text>
-            <Tooltip content={error?.message || authError} placement="bottom">
+            <a
+              data-tooltip-id="error-report-msg"
+              data-tooltip-content={error?.message || authError}
+            >
               <Text
                 className="max-w-full text-secondary text-center text-ellipsis"
                 variant="body-18"
               >
                 {error?.message || authError}
               </Text>
-            </Tooltip>
+              <Tooltip id="error-report-msg" />
+            </a>
 
             <div>
               <Button

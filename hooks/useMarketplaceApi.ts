@@ -7,13 +7,8 @@ import { Address } from "wagmi";
 import { useCallback, useContext, useMemo } from "react";
 import { parseQueries, sanitizeObject } from "@/utils";
 import { parseUnits } from "ethers";
-import { tokens } from "@/config/tokens";
 import { AuthenticationContext } from "@/app/auth-provider";
-import {
-  clearAuthCookiesAction,
-  getAuthCookiesAction,
-  handleAuthentication,
-} from "@/actions";
+import { clearAuthCookiesAction, handleAuthentication } from "@/actions";
 import { useRouter } from "next/navigation";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
 
@@ -36,10 +31,22 @@ export const useMarketplaceApi = () => {
       connect: (params: APIParams.Connect): Promise<APIResponse.Connect> =>
         marketplaceApi.post(API_ENDPOINTS.CONNECT, params),
 
-      updateProfile: (
+      updateProfile: async (
         params: APIParams.UpdateProfile
-      ): Promise<APIResponse.ProfileDetails> => {
-        return marketplaceApi.post(API_ENDPOINTS.PROFILE, params, authHeader());
+      ): Promise<APIResponse.ProfileDetails | null> => {
+        const response = await handleAuthentication();
+        const axiosClient = getMarketplaceApi();
+
+        if (response.status === "fail") {
+          clearAuthCookiesAction();
+          clearProfile();
+          router.push("/");
+          return null;
+        }
+
+        axiosClient.defaults.headers.common.Authorization =
+          response.bearerToken;
+        return axiosClient.post(API_ENDPOINTS.PROFILE, params);
       },
 
       resendEmail: (
@@ -110,10 +117,22 @@ export const useMarketplaceApi = () => {
           authHeader()
         ),
 
-      createNFT: (
+      createNFT: async (
         params: APIParams.CreateNFT
-      ): Promise<APIResponse.CreateNFT> =>
-        marketplaceApi.post(API_ENDPOINTS.NFT, params, authHeader()),
+      ): Promise<APIResponse.CreateNFT | void> => {
+        const response = await handleAuthentication();
+        const axiosClient = getMarketplaceApi();
+
+        if (response.status === "fail") {
+          clearAuthCookiesAction();
+          clearProfile();
+          return router.push("/");
+        }
+
+        axiosClient.defaults.headers.common.Authorization =
+          response.bearerToken;
+        return axiosClient.post(API_ENDPOINTS.NFT, params);
+      },
 
       fetchNFTs: (
         params: APIParams.FetchNFTs
@@ -256,15 +275,23 @@ export const useMarketplaceApi = () => {
           authHeader()
         );
       },
-      followUser: ({
+      followUser: async ({
         userId,
         accessToken,
-      }: APIParams.FollowUser): Promise<APIResponse.FollowUser> =>
-        marketplaceApi.post(
-          API_ENDPOINTS.FOLLOW + `/${userId}`,
-          {},
-          authHeader(accessToken)
-        ),
+      }: APIParams.FollowUser): Promise<APIResponse.FollowUser | void> => {
+        const response = await handleAuthentication();
+        const axiosClient = getMarketplaceApi();
+
+        if (response.status === "fail") {
+          clearAuthCookiesAction();
+          clearProfile();
+          return router.push("/");
+        }
+
+        axiosClient.defaults.headers.common.Authorization =
+          response.bearerToken;
+        return axiosClient.post(API_ENDPOINTS.FOLLOW + `/${userId}`, {});
+      },
       getTotalCountById: (params: APIParams.CountNumber): Promise<number> =>
         marketplaceApi.post(API_ENDPOINTS.TOTAL_COUNT, params),
       getFloorPrice: (params: {

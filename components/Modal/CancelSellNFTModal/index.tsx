@@ -1,9 +1,4 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-  Tooltip,
-} from "flowbite-react";
+import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
 import { useCancelSellNFT } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Button from "@/components/Button";

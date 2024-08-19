@@ -11,7 +11,6 @@ import {
   ALLOWED_VIDEO_TYPES,
 } from "@/config/constants";
 import { formatDisplayedNumber } from "@/utils";
-import { Tooltip } from "flowbite-react";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";

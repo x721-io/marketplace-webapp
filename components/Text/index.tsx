@@ -2,7 +2,8 @@
 
 import { classNames } from "@/utils/string";
 import { typography } from "@/config/theme";
-import { Tooltip } from "flowbite-react";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 type VariantType = keyof typeof typography;
 interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
@@ -29,7 +30,10 @@ export default function Text({
 
   if (showTooltip) {
     return (
-      <Tooltip content={labelTooltip} placement="bottom">
+      <a
+        data-tooltip-id={labelTooltip ?? "label-tooltip"}
+        data-tooltip-content={labelTooltip}
+      >
         <p
           className={classNames(
             className,
@@ -41,7 +45,8 @@ export default function Text({
         >
           {children}
         </p>
-      </Tooltip>
+        <Tooltip id={labelTooltip ?? "label-tooltip"} />
+      </a>
     );
   }
 
