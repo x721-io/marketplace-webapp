@@ -7,10 +7,7 @@ import Textarea from "@/components/Form/Textarea";
 import Button from "@/components/Button";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import {
-  useCreateCollection,
-  useUpdateCollection,
-} from "@/hooks/useCollection";
+import useCollection, { useUpdateCollection } from "@/hooks/useCollection";
 import { randomWord } from "@rarible/types";
 import useAuthStore from "@/store/auth/store";
 import { BASE_API_URL } from "@/config/api";
@@ -40,7 +37,7 @@ export default function CreateNFTCollectionPage() {
   const [uploading, setUploading] = useState(false);
   const api = useMarketplaceApi();
   const creator = useAuthStore((state) => state.profile?.id);
-  const { onCreateCollectionContract } = useCreateCollection();
+  const { createCollection } = useCollection();
   const { onCreateCollection } = useUpdateCollection();
   const {
     handleSubmit,
@@ -105,27 +102,34 @@ export default function CreateNFTCollectionPage() {
 
       toast.update(toastId, { render: "Sending transaction", type: "info" });
 
-      const tx = await onCreateCollectionContract(type, args);
-      await Promise.all([
-        waitForTransaction({ hash: tx.hash }),
-
+      try {
+        const response = await createCollection(type, args);
         onCreateCollection({
           ...data,
           type,
-          txCreationHash: tx.hash,
+          txCreationHash: response.transactionHash,
           creator,
-        }),
-      ]);
+        });
 
-      toast.update(toastId, {
-        render: "Collection created successfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 5000,
-        closeButton: true,
-      });
-      resetForm();
-      router.push("/explore/collections");
+        toast.update(toastId, {
+          render: "Collection created successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+          closeButton: true,
+        });
+        resetForm();
+        router.push("/explore/collections");
+      } catch (err: any) {
+        toast.update(toastId, {
+          render: `Error report: ${err.message}`,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          closeButton: true,
+        });
+        setLoading(false);
+      }
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error creating collection: ${e.message ?? e}`,
@@ -135,7 +139,6 @@ export default function CreateNFTCollectionPage() {
         closeButton: true,
       });
       console.error(e);
-    } finally {
       setLoading(false);
     }
   };

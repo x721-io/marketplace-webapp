@@ -15,15 +15,10 @@ import { numberRegex } from "@/utils/regex";
 import { tokens } from "@/config/tokens";
 import ERC20TokenApproval from "@/components/ERC20TokenApproval";
 import { toast } from "react-toastify";
-import {
-  useBuyURC1155UsingNative,
-  useBuyURC1155UsingURC20,
-  useBuyURC721UsingNative,
-  useBuyURC721UsingURC20,
-} from "@/hooks/useBuyNFT";
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import useBuyNFT from "@/hooks/useBuyNFT";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -31,6 +26,12 @@ interface Props extends MyModalProps {
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
+  const {
+    buyURC1155UsingNative,
+    buyURC1155UsingURC20,
+    buyURC721UsingNative,
+    buyURC721UsingURC20,
+  } = useBuyNFT({ nft });
   const api = useMarketplaceApi();
   const { address } = useAccount();
   const {
@@ -69,22 +70,20 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     price:
       nft.collection.type === "ERC721"
         ? BigInt(saleData?.price || "0")
-        : BigInt(saleData?.price || "0") * BigInt(quantity || "0"),
+        : BigInt(saleData?.price || "0") *
+          BigInt(quantity && !isNaN(quantity) ? quantity : "0"),
     onSuccess: (data) => {
       if (!saleData?.price || isNaN(Number(saleData?.price))) return;
       const priceBigint =
         nft.collection.type === "ERC721"
           ? BigInt(saleData?.price || "0")
-          : BigInt(saleData?.price || "0") * BigInt(quantity || "0");
+          : BigInt(saleData?.price || "0") *
+            BigInt(quantity && !isNaN(quantity) ? quantity : "0");
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
       setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
     },
   });
-  const onBuyURC721UsingNative = useBuyURC721UsingNative(nft);
-  const onBuyURC1155UsingNative = useBuyURC1155UsingNative(nft);
-  const onBuyURC721UsingURC20 = useBuyURC721UsingURC20(nft);
-  const onBuyURC1155UsingURC20 = useBuyURC1155UsingURC20();
 
   const {
     allowance: allowanceBalance,
@@ -111,61 +110,122 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
 
   const totalPriceBN = useMemo(() => {
     if (!quantity) return BigInt(0);
-    return BigInt(saleData?.price || "0") * BigInt(quantity);
+    return (
+      BigInt(saleData?.price || "0") *
+      BigInt(quantity && !isNaN(quantity) ? quantity : "0")
+    );
   }, [quantity, saleData]);
 
   const isDisableBuy = useMemo(() => {
     if ((tokenBalance?.value || 0) < BigInt(saleData?.price || 0)) return true;
   }, [saleData, tokenBalance]);
 
-  const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
+  const handleBuyURC721UsingNative = async () => {
     if (!saleData) return;
     setLoading(true);
     try {
-      switch (nft.collection.type) {
-        case "ERC721":
-          if (quoteToken === tokens.wu2u.address) {
-            await onBuyURC721UsingNative(
-              BigInt(saleData.price) + BigInt(buyerFee)
-            );
-          } else {
-            await onBuyURC721UsingURC20(
-              quoteToken,
-              BigInt(saleData.price) + BigInt(buyerFee)
-            );
-          }
-          break;
-        case "ERC1155":
-          if (quoteToken === tokens.wu2u.address) {
-            await onBuyURC1155UsingNative(
-              saleData?.operationId,
-              BigInt(saleData.price) + BigInt(buyerFee),
-              quantity
-            );
-          } else {
-            await onBuyURC1155UsingURC20(saleData?.operationId, quantity);
-          }
-          break;
-        default:
-          break;
-      }
-      await api.getFloorPrice({ address: nft.collection.address });
+      await buyURC721UsingNative(BigInt(saleData.price) + BigInt(buyerFee));
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
       });
       onClose?.();
-    } catch (e: any) {
-      toast.error(`Error report: ${e.message}`, {
+    } catch (err: any) {
+      toast.error(`Error report: ${err.message}`, {
+        autoClose: 2500,
+        closeButton: true,
+      });
+      onClose?.();
+    }
+  };
+
+  const handleBuyURC721UsingURC20 = async () => {
+    if (!saleData) return;
+    setLoading(true);
+    try {
+      await buyURC721UsingURC20(
+        quoteToken,
+        BigInt(saleData.price) + BigInt(buyerFee)
+      );
+      toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
       });
       onClose?.();
-      console.error(e);
-    } finally {
-      setLoading(false);
-      reset();
+    } catch (err: any) {
+      toast.error(`Error report: ${err.message}`, {
+        autoClose: 2500,
+        closeButton: true,
+      });
+      onClose?.();
     }
+  };
+
+  const handleBuyURC1155UsingNative = async (quantity: number) => {
+    if (!saleData) return;
+    setLoading(true);
+    try {
+      await buyURC1155UsingNative(
+        saleData?.operationId,
+        BigInt(saleData.price) + BigInt(buyerFee),
+        quantity
+      );
+      toast.success(`Order has been fulfilled successfully`, {
+        autoClose: 1000,
+        closeButton: true,
+      });
+      onClose?.();
+    } catch (err: any) {
+      toast.error(`Error report: ${err.message}`, {
+        autoClose: 2500,
+        closeButton: true,
+      });
+      onClose?.();
+    }
+  };
+
+  const handleBuyURC1155UsingURC20 = async (quantity: number) => {
+    if (!saleData) return;
+    setLoading(true);
+    try {
+      await buyURC1155UsingURC20(saleData?.operationId, quantity);
+      toast.success(`Order has been fulfilled successfully`, {
+        autoClose: 1000,
+        closeButton: true,
+      });
+      onClose?.();
+    } catch (err: any) {
+      toast.error(`Error report: ${err.message}`, {
+        autoClose: 2500,
+        closeButton: true,
+      });
+      onClose?.();
+    }
+  };
+
+  const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
+    if (!saleData) return;
+    await api.getFloorPrice({ address: nft.collection.address });
+    switch (nft.collection.type) {
+      case "ERC721":
+        if (quoteToken === tokens.wu2u.address) {
+          await handleBuyURC721UsingNative();
+        } else {
+          await handleBuyURC721UsingURC20();
+        }
+        break;
+      case "ERC1155":
+        if (quoteToken === tokens.wu2u.address) {
+          await handleBuyURC1155UsingNative(quantity);
+        } else {
+          await handleBuyURC1155UsingURC20(quantity);
+        }
+        break;
+      default:
+        break;
+    }
+    setLoading(false);
+    reset();
   };
 
   const handleApproveMinAmount = () => {

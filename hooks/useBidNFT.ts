@@ -3,19 +3,27 @@ import { Address } from "wagmi";
 import { readContract, waitForTransaction, writeContract } from "@wagmi/core";
 import { contracts } from "@/config/contracts";
 import { parseEther } from "ethers";
+import { getTransactionErrorMsg } from "@/utils/transaction";
 
 export const useBidURC721UsingNative = (nft: NFT) => {
-  const onBidERC721 = (price: any, value: any) =>
-    writeContract({
-      ...contracts.erc721Market,
-      functionName: "createBidUsingEth",
-      args: [
-        nft.collection.address,
-        (nft.u2uId ? nft.u2uId : nft.id) as any,
-        price,
-      ],
-      value,
-    });
+  const onBidERC721 = async (price: any, value: any) => {
+    try {
+      const tx = await writeContract({
+        ...contracts.erc721Market,
+        functionName: "createBidUsingEth",
+        args: [
+          nft.collection.address,
+          (nft.u2uId ? nft.u2uId : nft.id) as any,
+          price,
+        ],
+        value,
+      });
+      const response = await waitForTransaction(tx);
+      return response;
+    } catch (err: any) {
+      throw getTransactionErrorMsg(err);
+    }
+  };
 
   const onBidURC721UsingNative = async (price: any) => {
     const totalPrice = parseEther(price);
@@ -26,8 +34,8 @@ export const useBidURC721UsingNative = (nft: NFT) => {
     });
 
     const totalCost = totalPrice + buyerFee;
-    const { hash } = await onBidERC721(totalPrice, totalCost);
-    return waitForTransaction({ hash });
+    const { transactionHash } = await onBidERC721(totalPrice, totalCost);
+    return waitForTransaction({ hash: transactionHash });
   };
   return onBidURC721UsingNative;
 };

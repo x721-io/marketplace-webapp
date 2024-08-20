@@ -6,6 +6,7 @@ import { writeContract, waitForTransaction } from "@wagmi/core";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MARKETPLACE_URL } from "@/config/constants";
 import { parseImageUrl } from "@/utils/nft";
+import { getTransactionErrorMsg } from "@/utils/transaction";
 
 export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi();
@@ -44,7 +45,7 @@ export const useCreateNFT = (type: AssetType) => {
 
     const { metadataHash } = await api.uploadMetadata(metadata);
 
-    const mintERC721 = () => {
+    const mintERC721 = async () => {
       const tokenArgs = {
         tokenId: BigInt(BigInt(u2uId).toString()),
         tokenURI: metadataHash,
@@ -52,17 +53,22 @@ export const useCreateNFT = (type: AssetType) => {
         royalties: [{ account: address, value: royaltiesBigInt }],
         signatures: ["0x"] as Address[],
       };
-
-      return writeContract({
-        address: collection,
-        abi: contracts.erc721Proxy.abi,
-        functionName: "mintAndTransfer",
-        args: [tokenArgs, address],
-        value: BigInt(0) as any,
-      });
+      try {
+        const tx = await writeContract({
+          address: collection,
+          abi: contracts.erc721Proxy.abi,
+          functionName: "mintAndTransfer",
+          args: [tokenArgs, address],
+          value: BigInt(0) as any,
+        });
+        const response = await waitForTransaction(tx);
+        return response;
+      } catch (err: any) {
+        throw getTransactionErrorMsg(err);
+      }
     };
 
-    const mintERC1155 = () => {
+    const mintERC1155 = async () => {
       const tokenArgs = {
         tokenId: BigInt(u2uId),
         tokenURI: metadataHash,
@@ -71,35 +77,39 @@ export const useCreateNFT = (type: AssetType) => {
         royalties: [{ account: address, value: royaltiesBigInt }],
         signatures: ["0x"] as Address[],
       };
-
-      return writeContract({
-        address: collection,
-        abi: contracts.erc1155Proxy.abi,
-        functionName: "mintAndTransfer",
-        args: [tokenArgs, address, amount],
-        value: BigInt(0) as any,
-      });
+      try {
+        const tx = await writeContract({
+          address: collection,
+          abi: contracts.erc1155Proxy.abi,
+          functionName: "mintAndTransfer",
+          args: [tokenArgs, address, amount],
+          value: BigInt(0) as any,
+        });
+        const response = await waitForTransaction(tx);
+        return response;
+      } catch (err: any) {
+        throw getTransactionErrorMsg(err);
+      }
     };
 
-    const tx = await (type === "ERC721" ? mintERC721() : mintERC1155());
-
-    const createNFTParams = {
-      id: id.toString(),
-      u2uId: BigInt(u2uId).toString(),
-      name,
-      ipfsHash: metadataHash,
-      tokenUri: metadataHash,
-      collectionId: collection,
-      txCreationHash: tx.hash,
-      image,
-      creatorId: userId,
-      traits: traits,
-    };
-
-    await Promise.all([
-      waitForTransaction({ hash: tx.hash }),
-      api.createNFT(createNFTParams),
-    ]);
+    try {
+      const response = await (type === "ERC721" ? mintERC721() : mintERC1155());
+      const createNFTParams = {
+        id: id.toString(),
+        u2uId: BigInt(u2uId).toString(),
+        name,
+        ipfsHash: metadataHash,
+        tokenUri: metadataHash,
+        collectionId: collection,
+        txCreationHash: response.transactionHash,
+        image,
+        creatorId: userId,
+        traits: traits,
+      };
+      await api.createNFT(createNFTParams);
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   return { onCreateNFT };

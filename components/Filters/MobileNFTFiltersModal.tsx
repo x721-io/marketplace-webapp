@@ -1,4 +1,4 @@
-import { Checkbox, CustomFlowbiteTheme, Label } from "flowbite-react";
+import { CustomFlowbiteTheme, Label } from "flowbite-react";
 import { FilterProps } from "@/components/Filters/NFTFilters";
 import React from "react";
 import Collapsible from "@/components/Collapsible";
@@ -13,6 +13,7 @@ import { tokenOptions } from "@/config/tokens";
 import { Address } from "wagmi";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import MyRadio from "../X721UIKits/Radio";
+import MyCheckbox from "../X721UIKits/Checkbox";
 
 export default function MobileNFTFiltersModal({
   baseFilters = ["price", "type", "status"],
@@ -153,9 +154,9 @@ export default function MobileNFTFiltersModal({
                     key={trait.value}
                     className="flex items-center gap-2 py-2"
                   >
-                    <Checkbox
+                    <MyCheckbox
                       id={`trait-${trait.value}`}
-                      checked={isTraitSelected(item.key, trait.value)}
+                      checked={isTraitSelected(item.key, trait.value) ?? false}
                       onChange={() => handleSelectTrait(item.key, trait.value)}
                     />
                     <Label

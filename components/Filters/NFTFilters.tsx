@@ -14,7 +14,6 @@ import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { Address } from "wagmi";
 import MyRadio from "../X721UIKits/Radio";
-import MyCheckbox from "../X721UIKits/Checkbox";
 
 export type FilterType = "price" | "type" | "status";
 
@@ -168,7 +167,6 @@ export default function NFTFilters({
           </Button>
         </Collapsible>
       )}
-      <MyCheckbox checked={true} onChange={() => {}} />
       {!!traitsFilter?.length && (
         <Collapsible header="Properties">
           {traitsFilter.map((item) => (

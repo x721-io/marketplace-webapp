@@ -1,7 +1,14 @@
 "use client";
 
 import ChevronDownIcon from "@/components/Icon/ChevronDown";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type CarouselRootProps = {
   autoPlay?: boolean;
@@ -15,6 +22,14 @@ type CarouselItemProps = {
   children: React.ReactNode;
 };
 
+type CarouselContextType = {
+  isMouseUp: boolean;
+};
+
+const CarouselContext = createContext<CarouselContextType>({
+  isMouseUp: false,
+});
+
 const CarouselRoot: React.FC<CarouselRootProps> = ({
   autoPlay = true,
   pauseOnHover = true,
@@ -22,7 +37,8 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   initCurrentIndex = 0,
   slideIntervalInMs = 5000,
 }) => {
-  let interval: any = null;
+  const interval = useRef<any>(null);
+  const [isMouseUp, setMouseUp] = useState(false);
   const [totalItem, setTotalItem] = useState(0);
   const [isAutoplay, setAutoplay] = useState(autoPlay);
   const [currentIndex, setCurrentIndex] = useState(initCurrentIndex);
@@ -30,15 +46,15 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
 
   useEffect(() => {
     if (isAutoplay) {
-      interval = setInterval(
+      interval.current = setInterval(
         () => setCurrentIndex((prev) => prev + 1),
         slideIntervalInMs
       );
-      return () => clearInterval(interval);
+      return () => clearInterval(interval.current);
     } else {
-      if (interval) {
-        clearInterval(interval);
-        interval = null;
+      if (interval.current) {
+        clearInterval(interval.current);
+        interval.current = null;
       }
     }
   }, [isAutoplay, slideIntervalInMs]);
@@ -89,6 +105,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   };
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setMouseUp(false);
     const ele = scrollRef.current;
     if (!ele) {
       return;
@@ -111,17 +128,22 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
     const handleMouseUp = () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
-      // if (scrollRef && scrollRef.current) {
-      //   const currentScrollLeft = scrollRef.current.scrollLeft;
-      //   const children = scrollRef.current.children;
-      //   const nearestIndex = Array.from(children)
-      //     .map((ele, i) => {
-      //       const eleLeft = ele.getBoundingClientRect().left;
-      //       return { amount: Math.abs(eleLeft - currentScrollLeft), index: i };
-      //     })
-      //     .sort((a, b) => a.amount - b.amount)[0].index;
-      //   setCurrentIndex(nearestIndex);
+      // if(scrollRef && scrollRef.current) {
+      //   const children = scrollRef.current.children
+      //   const nearest = Array.from(children).map((child, i) => {
+      //     const currScrollLeft = scrollRef.current!.scrollLeft + 5
+      //     const distanceToScrolLLeft = child.getBoundingClientRect().right - currScrollLeft
+      //     const a = {
+      //       distance: Math.abs(distanceToScrolLLeft),
+      //       index: i
+      //     }
+      //     console.log(currScrollLeft)
+      //     console.log()
+      //     return a
+      //   }).sort((a, b) => a.distance - b.distance)[0].index
+      //   console.log({nearest})
       // }
+      setMouseUp(true);
       resetCursor(ele);
     };
 
@@ -172,59 +194,71 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   };
 
   return (
-    <div
-      onMouseEnter={() => {
-        if (pauseOnHover && autoPlay) {
-          setAutoplay(false);
-        }
-      }}
-      onMouseLeave={() => {
-        if (autoPlay && autoPlay) {
-          setAutoplay(true);
-        }
-      }}
-      // onMouseDown={handleMouseDown}
-      // onTouchStart={handleTouchStart}
-      className="w-full h-full relative cursor-grab"
-    >
-      <button
-        onClick={handlePrev}
-        className="-left-[20px] rotate-[90deg]  absolute w-[40px] h-[40px] bg-[rgba(255,255,255,0.6)] hover:bg-[white] rounded-full top-[50%] -translate-y-[25%]"
-      >
-        <ChevronDownIcon className="scale-[0.6]" />
-      </button>
+    <CarouselContext.Provider value={{ isMouseUp }}>
       <div
-        ref={scrollRef}
-        className="h-full flex overflow-x-hidden gap-[5px] snap-x snap-mandatory"
+        onMouseEnter={() => {
+          if (pauseOnHover && autoPlay) {
+            setAutoplay(false);
+          }
+        }}
+        onMouseLeave={() => {
+          if (autoPlay && autoPlay) {
+            setAutoplay(true);
+          }
+        }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        className="w-full h-full relative cursor-grab"
       >
-        {children}
+        <button
+          onClick={handlePrev}
+          className="-left-[20px] rotate-[90deg]  absolute w-[40px] h-[40px] bg-[rgba(255,255,255,0.6)] hover:bg-[white] rounded-full top-[50%] -translate-y-[25%] z-[10]"
+        >
+          <ChevronDownIcon className="scale-[0.6]" />
+        </button>
+        <div
+          ref={scrollRef}
+          className="h-full flex overflow-x-hidden gap-[5px] snap-x snap-mandatory"
+        >
+          {children}
+        </div>
+        <button
+          onClick={handleNext}
+          className="right-[0%] z-[10] translate-x-[20px] rotate-[-90deg] absolute w-[40px] h-[40px] bg-[rgba(255,255,255,0.6)] hover:bg-[white] rounded-full top-[50%] -translate-y-[25%]"
+        >
+          <ChevronDownIcon className="scale-[0.6]" />
+        </button>
+        <div className="absolute w-full bottom-0 h-[30px] flex items-center justify-center gap-3">
+          {Array(totalItem)
+            .fill("")
+            .map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  opacity: currentIndex === i ? 1 : 0.5,
+                }}
+                className="w-[22px] h-[4px] bg-[white] rounded-md"
+              ></div>
+            ))}
+        </div>
       </div>
-      <button
-        onClick={handleNext}
-        className="right-[0%] translate-x-[20px] rotate-[-90deg] absolute w-[40px] h-[40px] bg-[rgba(255,255,255,0.6)] hover:bg-[white] rounded-full top-[50%] -translate-y-[25%]"
-      >
-        <ChevronDownIcon className="scale-[0.6]" />
-      </button>
-      <div className="absolute w-full bottom-0 h-[30px] flex items-center justify-center gap-3">
-        {Array(totalItem)
-          .fill("")
-          .map((_, i) => (
-            <div
-              key={i}
-              style={{
-                opacity: currentIndex === i ? 1 : 0.5,
-              }}
-              className="w-[22px] h-[4px] bg-[white] rounded-md"
-            ></div>
-          ))}
-      </div>
-    </div>
+    </CarouselContext.Provider>
   );
 };
 
 const CarouselItem: React.FC<CarouselItemProps> = ({ children }) => {
+  const { isMouseUp } = useContext(CarouselContext);
   return (
-    <div className="w-[100%] h-[100%] flex-shrink-0 flex items-center justify-center pointer-events-none select-none">
+    <div
+      style={
+        isMouseUp
+          ? {
+              scrollSnapAlign: "start",
+            }
+          : {}
+      }
+      className="w-[100%] h-[100%] flex-shrink-0 flex items-center justify-center [&_img]:pointer-events-none [&_img]:select-none relative"
+    >
       {children}
     </div>
   );
