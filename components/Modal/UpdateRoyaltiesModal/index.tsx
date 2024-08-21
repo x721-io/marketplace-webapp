@@ -14,7 +14,6 @@ import { MAX_ROYALTIES } from "@/config/constants";
 import { Address } from "wagmi";
 import { isAddress } from "ethers";
 import { toast } from "react-toastify";
-import { bigint } from "zod";
 
 interface Props extends ModalProps {
   collection: Collection;
