@@ -2,11 +2,10 @@ import { Address, useAccount } from "wagmi";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { AssetType } from "@/types";
-import { writeContract, waitForTransaction } from "@wagmi/core";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MARKETPLACE_URL } from "@/config/constants";
 import { parseImageUrl } from "@/utils/nft";
-import { getTransactionErrorMsg } from "@/utils/transaction";
+import { Web3Functions } from "@/services/web3";
 
 export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi();
@@ -54,17 +53,16 @@ export const useCreateNFT = (type: AssetType) => {
         signatures: ["0x"] as Address[],
       };
       try {
-        const tx = await writeContract({
+        const response = await Web3Functions.writeContract({
           address: collection,
           abi: contracts.erc721Proxy.abi,
           functionName: "mintAndTransfer",
           args: [tokenArgs, address],
           value: BigInt(0) as any,
         });
-        const response = await waitForTransaction(tx);
         return response;
       } catch (err: any) {
-        throw getTransactionErrorMsg(err);
+        throw err;
       }
     };
 
@@ -78,17 +76,16 @@ export const useCreateNFT = (type: AssetType) => {
         signatures: ["0x"] as Address[],
       };
       try {
-        const tx = await writeContract({
+        const response = await Web3Functions.writeContract({
           address: collection,
           abi: contracts.erc1155Proxy.abi,
           functionName: "mintAndTransfer",
           args: [tokenArgs, address, amount],
           value: BigInt(0) as any,
         });
-        const response = await waitForTransaction(tx);
         return response;
       } catch (err: any) {
-        throw getTransactionErrorMsg(err);
+        throw err;
       }
     };
 

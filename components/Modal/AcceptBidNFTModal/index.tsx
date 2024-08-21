@@ -110,9 +110,9 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         closeButton: true,
         isLoading: false,
       });
-    } catch (e) {
+    } catch (e: any) {
       toast.update(toastId, {
-        render: "Failed to approve marketplace contract",
+        render: `Failed to approve marketplace contract. Error report: ${e.message}`,
         type: "error",
         autoClose: 1000,
         closeButton: true,

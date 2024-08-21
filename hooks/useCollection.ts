@@ -1,9 +1,8 @@
 import { contracts } from "@/config/contracts";
-import { waitForTransaction, writeContract } from "@wagmi/core";
 import { APIParams } from "@/services/api/types";
 import { AssetType } from "@/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import { getTransactionErrorMsg } from "@/utils/transaction";
+import { Web3Functions } from "@/services/web3";
 
 export default function useCollection() {
   const createCollection = async (
@@ -20,11 +19,10 @@ export default function useCollection() {
       data = { ...data, ...contracts.erc1155Factory };
     }
     try {
-      const tx = await writeContract(data as any);
-      const response = await waitForTransaction(tx);
+      const response = await Web3Functions.writeContract(data as any);
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 
