@@ -1,4 +1,4 @@
-import { Checkbox, CustomFlowbiteTheme, Label, Radio } from "flowbite-react";
+import { Label } from "flowbite-react";
 import { FilterProps } from "@/components/Filters/NFTFilters";
 import React from "react";
 import Collapsible from "@/components/Collapsible";
@@ -12,6 +12,8 @@ import Select from "../Form/Select";
 import { tokenOptions } from "@/config/tokens";
 import { Address } from "wagmi";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
+import MyRadio from "../X721UIKits/Radio";
+import MyCheckbox from "../X721UIKits/Checkbox";
 
 export default function MobileNFTFiltersModal({
   baseFilters = ["price", "type", "status"],
@@ -48,7 +50,7 @@ export default function MobileNFTFiltersModal({
             <Text className="text-secondary font-semibold mb-2">Type</Text>
             <div className="flex items-center gap-7 flex-wrap">
               <div className="flex gap-3 items-center">
-                <Radio
+                <MyRadio
                   id="type-all"
                   value=""
                   checked={localFilters.type === undefined}
@@ -57,7 +59,7 @@ export default function MobileNFTFiltersModal({
                 <Label htmlFor="type-all">All</Label>
               </div>
               <div className="flex gap-3 items-center">
-                <Radio
+                <MyRadio
                   id="type-single"
                   value="ERC721"
                   checked={localFilters.type === "ERC721"}
@@ -66,7 +68,7 @@ export default function MobileNFTFiltersModal({
                 <Label htmlFor="type-single">Single</Label>
               </div>
               <div className="flex gap-3 items-center">
-                <Radio
+                <MyRadio
                   id="type-multiple"
                   value="ERC1155"
                   checked={localFilters.type === "ERC1155"}
@@ -82,7 +84,7 @@ export default function MobileNFTFiltersModal({
             <Text className="text-secondary font-semibold mb-2">Status</Text>
             <div className="flex items-center gap-7 flex-wrap">
               <div className="flex gap-3 items-center">
-                <Radio
+                <MyRadio
                   id="status-all"
                   value=""
                   checked={localFilters.sellStatus === undefined}
@@ -91,7 +93,7 @@ export default function MobileNFTFiltersModal({
                 <Label htmlFor="status-all">All</Label>
               </div>
               <div className="flex gap-3 items-center">
-                <Radio
+                <MyRadio
                   id="status-buy"
                   value="AskNew"
                   checked={localFilters.sellStatus === "AskNew"}
@@ -152,9 +154,9 @@ export default function MobileNFTFiltersModal({
                     key={trait.value}
                     className="flex items-center gap-2 py-2"
                   >
-                    <Checkbox
+                    <MyCheckbox
                       id={`trait-${trait.value}`}
-                      checked={isTraitSelected(item.key, trait.value)}
+                      checked={isTraitSelected(item.key, trait.value) ?? false}
                       onChange={() => handleSelectTrait(item.key, trait.value)}
                     />
                     <Label

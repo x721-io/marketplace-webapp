@@ -12,8 +12,9 @@ import { formatUnits } from "ethers";
 import { formatDisplayedNumber } from "@/utils";
 import { findTokenByAddress } from "@/utils/token";
 import React from "react";
-import { Tooltip } from "flowbite-react";
 import Icon from "@/components/Icon";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 interface MarketEventProps extends React.HTMLAttributes<HTMLDivElement> {
   event: MarketEvent;
@@ -110,20 +111,21 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
               Sold
               {event.collection?.type === "ERC1155" &&
                 ` ${event.quantity} edition(s) `}
-              <Tooltip
-                content={
+              <a
+                data-tooltip-id="nft-name"
+                data-tooltip-content={
                   event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)
                 }
-                placement="bottom"
               >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {event.NFT?.name || shortenAddress(`${event.id}`, 6, 10)}
                 </span>
-              </Tooltip>
+                <Tooltip id="nft-name" />
+              </a>
               to
-              <Tooltip
-                content={getDisplayedUserName(event.to)}
-                placement="bottom"
+              <a
+                data-tooltip-id="sold-to"
+                data-tooltip-content={getDisplayedUserName(event.to)}
               >
                 <Link
                   className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis"
@@ -131,20 +133,22 @@ export default function NFTMarketEvent({ event, ...rest }: MarketEventProps) {
                 >
                   {getDisplayedUserName(event.to)}
                 </Link>
-              </Tooltip>
+                <Tooltip id="sold-to" />
+              </a>
               for
-              <Tooltip
-                content={formatDisplayedNumber(
+              <a
+                data-tooltip-id="sold-for-amt"
+                data-tooltip-content={formatDisplayedNumber(
                   formatUnits(event.price, token?.decimal)
                 )}
-                placement="bottom"
               >
                 <span className="font-semibold text-primary w-auto overflow-hidden whitespace-nowrap block max-w-[100px] text-ellipsis">
                   {formatDisplayedNumber(
                     formatUnits(event.price, token?.decimal)
                   )}
                 </span>
-              </Tooltip>
+                <Tooltip id="sold-for-amt" />
+              </a>
               <Image
                 width={20}
                 height={20}

@@ -139,10 +139,10 @@ export default function SellNFTModal({
         isLoading: false,
       });
       onClose?.();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       toast.update(toastId, {
-        render: "Your NFT has been unsold",
+        render: `Your NFT has been unsold. Error report: ${e.message}`,
         type: "error",
         autoClose: 1000,
         closeButton: true,
@@ -167,9 +167,9 @@ export default function SellNFTModal({
         closeButton: true,
         isLoading: false,
       });
-    } catch (e) {
+    } catch (e: any) {
       toast.update(toastId, {
-        render: "Failed to approve token",
+        render: `Failed to approve token. Error report: ${e.message}`,
         type: "error",
         autoClose: 1000,
         closeButton: true,
@@ -193,10 +193,10 @@ export default function SellNFTModal({
         closeButton: true,
         isLoading: false,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       toast.update(toastId, {
-        render: "Failed to approve token",
+        render: `Failed to approve token. Error report: ${e.message}`,
         type: "error",
         autoClose: 1000,
         closeButton: true,

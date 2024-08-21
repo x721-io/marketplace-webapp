@@ -15,7 +15,8 @@ import WETH_ABI from "@/abi/WETH";
 import { useMemo, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { toast } from "react-toastify";
-import { Tooltip } from "flowbite-react";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function TokenBalances() {
   const [claiming, setClaiming] = useState(false);
@@ -102,11 +103,15 @@ export default function TokenBalances() {
                   height={30}
                   className="w-6 h-6 rounded-full"
                 />
-                <Tooltip content={balance} placement="bottom">
+                <a
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content="Hello world!"
+                >
                   <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
                     {balance}
                   </p>
-                </Tooltip>
+                </a>
+                <Tooltip id="my-tooltip" />
                 <span className="text-secondary">{token.symbol}</span>
               </div>
               {token.address === tokens.wu2u.address && (

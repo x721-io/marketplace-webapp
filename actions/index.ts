@@ -1,5 +1,6 @@
 "use server";
 
+import { getTranslations } from "next-intl/server";
 import { APIResponse } from "@/services/api/types";
 import {
   clearAuthCookies,
@@ -7,11 +8,18 @@ import {
   setAuthCookies,
 } from "@/services/cookies-server";
 
-// import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS } from "@/config/api";
 // import { marketplaceApi } from '@/services/api';
 // import { clearAuthCookies } from '@/services/cookies-client';
 // import { getAuthCookies } from '@/services/cookies-server';
-// import { Axios } from 'axios';
+import {
+  Axios,
+  AxiosHeaders,
+  AxiosHeaderValue,
+  AxiosInstance,
+  HeadersDefaults,
+} from "axios";
+import { getMarketplaceApi, marketplaceApi } from "@/services/api";
 // import { getTranslations } from 'next-intl/server';
 
 export const setAuthCookiesAction = async ({
@@ -31,91 +39,100 @@ export const setAuthCookiesAction = async ({
 };
 
 export const getAuthCookiesAction = async () => {
-  getAuthCookies();
+  return getAuthCookies();
 };
 
 export const clearAuthCookiesAction = async () => {
   clearAuthCookies();
 };
 
-// export const handleRouteAuthentication = async (
-//   request: Request,
-//   client: Axios,
-// ) => {
-//   const url = new URL(request.url);
-//   if (url.pathname === API_ENDPOINTS.CONNECT) {
-//     return;
-//   }
-//   const { accessToken, refreshToken } = getAuthCookies();
+export const handleAuthentication = async (): Promise<
+  | {
+      status: "success";
+      bearerToken: string;
+    }
+  | { status: "fail"; error: string }
+> => {
+  const { accessToken, refreshToken } = getAuthCookies();
+  if (!accessToken) {
+    if (!refreshToken) {
+      clearAuthCookies();
+      return { status: "fail", error: "Token expired" };
+    } else {
+      try {
+        const credentials: APIResponse.Connect = await marketplaceApi.post(
+          API_ENDPOINTS.REFRESH,
+          {
+            refresh_token: getAuthCookies().refreshToken,
+          }
+        );
+        console.log("--------");
+        console.log("TOKEN REFRESHED");
+        console.log("NEW TOKEN", credentials);
+        console.log("--------");
 
-//   // console.log('accessToken', accessToken);
-//   // console.log('refreshToken', refreshToken);
-//   // Handle Access token expires
-//   if (!accessToken) {
-//     if (!refreshToken) {
-//       clearAuthCookies();
-//     } else {
-//       try {
-//         const credentials: Credential = await marketplaceApi.post(
-//           API_ENDPOINTS.REFRESH,
-//           {
-//             refresh_token: refreshToken,
-//           },
-//         );
-//         console.log('--------');
-//         console.log('TOKEN REFRESHED');
-//         console.log('NEW TOKEN', credentials);
-//         console.log('--------');
+        const {
+          accessToken,
+          accessTokenExpire,
+          refreshToken,
+          refreshTokenExpire,
+          userId,
+        } = credentials;
 
-//         setAuthCookies(credentials);
+        setAuthCookies({
+          accessToken,
+          accessTokenExpire,
+          refreshToken,
+          refreshTokenExpire,
+          userId,
+        });
+        return { status: "success", bearerToken: `Bearer ${accessToken}` };
+      } catch (e: any) {
+        console.log("--------");
+        console.log("ERROR REFRESHING", e.message);
+        console.log("--------");
+        clearAuthCookies();
+        return { status: "fail", error: "Token expired" };
+      }
+    }
+  } else {
+    return { status: "success", bearerToken: `Bearer ${accessToken}` };
+  }
+};
 
-//         client.defaults.headers.common.Authorization = `Bearer ${credentials.accessToken}`;
-//       } catch (e: any) {
-//         console.log('--------');
-//         console.log('ERROR REFRESHING', e.message);
-//         console.log('--------');
+export const parseRequestParams = async (request: Request) => {
+  const url = new URL(request.url);
+  let params;
 
-//         clearAuthCookies();
-//       }
-//     }
-//   } else {
-//     client.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-//   }
-// };
+  try {
+    if (request.method === "GET") {
+      params = null;
+    } else if (
+      request.headers.get("Content-Type")?.includes("multipart/form-data")
+    ) {
+      params = await request.formData();
+    } else {
+      params = await request.json();
+    }
+  } catch (e: any) {
+    params = {};
+    console.log("Error transforming params:", e.message);
+  }
 
-// export const parseRequestParams = async (request: Request) => {
-//   const url = new URL(request.url);
-//   let params;
+  return { url: url.pathname + url.search, params, pathname: url.pathname };
+};
 
-//   try {
-//     if (request.method === 'GET') {
-//       params = null;
-//     } else if (
-//       request.headers.get('Content-Type')?.includes('multipart/form-data')
-//     ) {
-//       params = await request.formData();
-//     } else {
-//       params = await request.json();
-//     }
-//   } catch (e: any) {
-//     params = {};
-//     console.log('Error transforming params:', e.message);
-//   }
+export const translateApiMessages = async (
+  pathname: string,
+  type: "error" | "success"
+) => {
+  const t = await getTranslations("api");
+  const [translationKey] =
+    Object.entries(API_ENDPOINTS).find(([, endpoint]) => {
+      return pathname === "/api" + endpoint;
+    }) || [];
 
-//   return { url: url.pathname + url.search, params, pathname: url.pathname };
-// };
-
-// export const translateApiMessages = async (
-//   pathname: string,
-//   type: 'error' | 'success',
-// ) => {
-//   const t = await getTranslations('api');
-//   const [translationKey] =
-//     Object.entries(CLIENT_ENDPOINTS).find(([, endpoint]) => {
-//       return pathname === '/api' + endpoint;
-//     }) || [];
-
-//   return t(type, {
-//     action: translationKey?.split('_').join(' ') || 'Perform Request',
-//   });
-// };
+  return t(type, {
+    action: translationKey?.split("_").join(" ") || "Perform Request",
+  });
+};

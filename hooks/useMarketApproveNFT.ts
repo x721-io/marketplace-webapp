@@ -2,9 +2,9 @@ import { Address, useContractRead } from "wagmi";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { NFT } from "@/types";
-import { waitForTransaction, writeContract } from "@wagmi/core";
 import { useMemo } from "react";
 import { tokens } from "@/config/tokens";
+import { Web3Functions } from "@/services/web3";
 
 export const useMarketApproveNFT = (nft: NFT) => {
   const type = nft.collection.type;
@@ -53,27 +53,35 @@ export const useMarketApproveNFT = (nft: NFT) => {
   ]);
 
   const onApproveTokenForAll = async () => {
-    const { hash } = await writeContract({
-      address: nft.collection.address,
-      abi: (type === "ERC721"
-        ? contracts.erc721Base.abi
-        : contracts.erc1155Base.abi) as any,
-      functionName: "setApprovalForAll",
-      args: [marketContract.address, true],
-      value: BigInt(0) as any,
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        address: nft.collection.address,
+        abi: (type === "ERC721"
+          ? contracts.erc721Base.abi
+          : contracts.erc1155Base.abi) as any,
+        functionName: "setApprovalForAll",
+        args: [marketContract.address, true],
+        value: BigInt(0) as any,
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   const onApprovalTokenForSingle = async () => {
-    const { hash } = await writeContract({
-      address: nft.collection.address,
-      abi: contracts.erc721Base.abi,
-      functionName: "approve",
-      args: [contracts.erc721Market.address, BigInt(nft.u2uId)],
-      value: BigInt(0) as any,
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        address: nft.collection.address,
+        abi: contracts.erc721Base.abi,
+        functionName: "approve",
+        args: [contracts.erc721Market.address, BigInt(nft.u2uId ?? nft.id)],
+        value: BigInt(0) as any,
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   return {

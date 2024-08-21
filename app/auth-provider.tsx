@@ -1,7 +1,8 @@
 "use client";
 
+import { clearAuthCookiesAction } from "@/actions";
 import { APIResponse } from "@/services/api/types";
-import useAuthStore from "@/store/auth/store";
+import useAuthStore, { clearProfile } from "@/store/auth/store";
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import useSWR from "swr";
@@ -25,7 +26,7 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { setProfile, profile } = useAuthStore();
+  const { setProfile } = useAuthStore();
   const [isAuthenticated, setAuthenticated] = useState(false);
   const { data, isLoading } = useSWR("/api/auth/refresh", authenticate);
   const [credentials, setCredentials] = useState<APIResponse.Connect | null>(
@@ -38,6 +39,9 @@ export default function AuthProvider({
         setProfile(data.profile);
         setCredentials(data.credentials);
         setAuthenticated(true);
+      } else {
+        clearAuthCookiesAction();
+        clearProfile();
       }
     }
   }, [data, !isLoading]);

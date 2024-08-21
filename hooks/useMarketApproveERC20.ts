@@ -1,17 +1,11 @@
-import {
-  Address,
-  erc20ABI,
-  useContractRead,
-  useContractReads,
-  useContractWrite,
-} from "wagmi";
+import { Address, erc20ABI, useContractRead } from "wagmi";
 import { useMemo } from "react";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { AssetType } from "@/types";
-import { waitForTransaction, writeContract } from "@wagmi/core";
 import { tokens } from "@/config/tokens";
 import { isAddress } from "ethers";
+import { Web3Functions } from "@/services/web3";
 
 export const useMarketApproveERC20 = (
   token: Address,
@@ -38,13 +32,17 @@ export const useMarketApproveERC20 = (
   }, [allowance, token, totalCost]);
 
   const onApproveToken = async (allowance: bigint) => {
-    const { hash } = await writeContract({
-      abi: erc20ABI,
-      address: token,
-      functionName: "approve",
-      args: [marketContract.address, allowance],
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: erc20ABI,
+        address: token,
+        functionName: "approve",
+        args: [marketContract.address, allowance],
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return {
     isTokenApproved,

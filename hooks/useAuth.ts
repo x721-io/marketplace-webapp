@@ -65,6 +65,7 @@ export const useAuth = () => {
     async (params: APIParams.UpdateProfile) => {
       if (!bearerToken) return;
       const profile = await api.updateProfile(params);
+      if (!profile) return;
       setProfile(profile);
     },
     [bearerToken, address]

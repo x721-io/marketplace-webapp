@@ -22,7 +22,11 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
   const getComponentByCurrTabIndex = () => {
     switch (currTabIndex) {
       case 0:
-        return <OwnersTab nft={nft} marketData={marketData} />;
+        return (
+          <div className="max-h-[400px] overflow-y-auto">
+            <OwnersTab nft={nft} marketData={marketData} />
+          </div>
+        );
       case 1:
         return <OverviewTab metaData={metaData} nft={nft} />;
       case 2:

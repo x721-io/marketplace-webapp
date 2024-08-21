@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Label, Radio } from "flowbite-react";
+import { Label } from "flowbite-react";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
@@ -13,6 +13,8 @@ import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { Address } from "wagmi";
+import MyRadio from "../X721UIKits/Radio";
+import MyCheckbox from "../X721UIKits/Checkbox";
 
 export type FilterType = "price" | "type" | "status";
 
@@ -56,18 +58,26 @@ export default function NFTFilters({
         <Collapsible header="Type" isOpen>
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
-              <Radio
+              {/* <Radio
                 id="type-all"
                 value=""
                 checked={localFilters.type === undefined}
                 onChange={() =>
                   handleChange({ type: undefined, updateOnChange: true })
                 }
+              /> */}
+              <MyRadio
+                checked={localFilters.type === undefined}
+                onChange={() =>
+                  handleChange({ type: undefined, updateOnChange: true })
+                }
+                id="type-all"
+                value=""
               />
               <Label htmlFor="type-all">All</Label>
             </div>
             <div className="flex gap-3 items-center">
-              <Radio
+              <MyRadio
                 id="type-single"
                 value="ERC721"
                 checked={localFilters.type === "ERC721"}
@@ -78,7 +88,7 @@ export default function NFTFilters({
               <Label htmlFor="type-single">Single edition</Label>
             </div>
             <div className="flex gap-3 items-center">
-              <Radio
+              <MyRadio
                 id="type-multiple"
                 value="ERC1155"
                 checked={localFilters.type === "ERC1155"}
@@ -95,9 +105,9 @@ export default function NFTFilters({
         <Collapsible header="Status" isOpen>
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
-              <Radio
+              <MyRadio
                 id="status-all"
-                value=""
+                value="status-all"
                 checked={localFilters.sellStatus === undefined}
                 onChange={() =>
                   handleChange({ sellStatus: undefined, updateOnChange: true })
@@ -106,15 +116,15 @@ export default function NFTFilters({
               <Label htmlFor="status-all">All</Label>
             </div>
             <div className="flex gap-3 items-center">
-              <Radio
-                id="status-buy"
+              <MyRadio
+                id="AskNew"
                 value="AskNew"
                 checked={localFilters.sellStatus === "AskNew"}
                 onChange={() =>
                   handleChange({ sellStatus: "AskNew", updateOnChange: true })
                 }
               />
-              <Label htmlFor="type-buy">Buy now</Label>
+              <Label htmlFor="AskNew">Buy now</Label>
             </div>
           </div>
         </Collapsible>
@@ -164,9 +174,9 @@ export default function NFTFilters({
             <div key={item.key}>
               {item.traits.map((trait) => (
                 <div key={trait.value} className="flex items-center gap-2 py-2">
-                  <Checkbox
+                  <MyCheckbox
                     id={`trait-${trait.value}`}
-                    checked={isTraitSelected(item.key, trait.value)}
+                    checked={isTraitSelected(item.key, trait.value) ?? false}
                     onChange={() =>
                       handleSelectTrait(item.key, trait.value, true)
                     }

@@ -68,7 +68,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   } = useCalculateFee({
     collectionAddress: nft.collection.address,
     tokenId: nft.u2uId || nft.id,
-    price: parseUnits(price || "0", token?.decimal),
+    price: parseUnits(
+      price && !isNaN(Number(price)) ? price : "0",
+      token?.decimal
+    ),
     onSuccess: (data) => {
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
@@ -89,7 +92,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   } = useMarketApproveERC20(
     token?.address as Address,
     nft.collection.type,
-    parseUnits(price || "0", token?.decimal) + buyerFee
+    parseUnits(price && !isNaN(Number(price)) ? price : "0", token?.decimal) +
+      buyerFee
   );
 
   const formRules = {
@@ -174,9 +178,9 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     } catch (e: any) {
       console.error(e);
       toast.update(toastId, {
-        render: "Bid placed failed",
+        render: `Bid placed failed. Error report: ${e.message}`,
         type: "error",
-        autoClose: 1000,
+        autoClose: 5000,
         closeButton: true,
         isLoading: false,
       });
@@ -344,7 +348,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
-                price={parseUnits(price || "0", token?.decimal)}
+                price={parseUnits(
+                  price && !isNaN(Number(price)) ? price : "0",
+                  token?.decimal
+                )}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
                 buyerFee={buyerFee}

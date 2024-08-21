@@ -1,10 +1,4 @@
-import {
-  CustomFlowbiteTheme,
-  Modal,
-  ModalProps,
-  Tooltip,
-} from "flowbite-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { FormState, NFT } from "@/types";
@@ -20,22 +14,12 @@ import { writeContract } from "@wagmi/core";
 import { Address, erc721ABI } from "wagmi";
 import ERC1155 from "@/abi/ERC1155";
 import { toast } from "react-toastify";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   nft: NFT;
   marketData?: NFTMarketData;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function TransferNFTModal({
   nft,
@@ -125,14 +109,8 @@ export default function TransferNFTModal({
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      size="lg"
-      show={show}
-      onClose={onClose}
-    >
-      <Modal.Body className="p-10">
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body className="py-5 px-[30px]">
         <form
           className="w-full flex flex-col gap-6"
           onSubmit={handleSubmit(onSubmit)}
@@ -178,7 +156,7 @@ export default function TransferNFTModal({
             </Button>
           </div>
         </form>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

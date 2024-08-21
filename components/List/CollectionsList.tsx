@@ -1,4 +1,3 @@
-import { Tooltip } from "flowbite-react";
 import { formatEther, formatUnits } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
@@ -15,6 +14,8 @@ import {
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
 import MySpinner from "../X721UIKits/Spinner";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 interface Props {
   isLoading?: boolean;
@@ -113,11 +114,15 @@ export default function CollectionsList({
                   <div className="pt-8 px-3 pb-4 flex justify-between">
                     <div className="flex gap-2 w-full flex-col">
                       <div className="flex gap-1 items-center">
-                        <Tooltip content={c.name} placement="bottom">
+                        <a
+                          data-tooltip-id={c.name ?? ""}
+                          data-tooltip-content={c.name ?? ""}
+                        >
                           <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">
                             {c.name}
                           </Text>
-                        </Tooltip>
+                          <Tooltip id={c.name ?? ""} />
+                        </a>
                         {c.creators &&
                         c.creators.length > 0 &&
                         c.creators[0].user.accountStatus &&
