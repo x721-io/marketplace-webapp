@@ -1,11 +1,10 @@
-import { Modal, ModalProps } from "flowbite-react";
 import Text from "../Text";
 import Button from "../Button";
-import VerifyIcon from "../Icon/Verify";
 import { useRouter } from "next/navigation";
 import Icon from "../Icon";
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
-interface FormState extends ModalProps {
+interface FormState extends MyModalProps {
   reponseVerify?: Record<string, any>;
 }
 
@@ -41,14 +40,8 @@ export default function VerifyAccountModal({
   };
 
   return (
-    <Modal
-      dismissible
-      onClose={onClose}
-      position="center"
-      show={show}
-      size="sm"
-    >
-      <Modal.Body>
+    <MyModal.Root onClose={onClose} position="center" show={show}>
+      <MyModal.Body>
         <div className="flex flex-col gap-4 p-3">
           {reponseVerify?.accountStatus ? (
             <Text className="text-body-24 font-normal text-success">
@@ -76,7 +69,7 @@ export default function VerifyAccountModal({
 
           <Button onClick={handleVerifyAccount}>Continue</Button>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

@@ -2,7 +2,6 @@ import { Address, useContractRead } from "wagmi";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { NFT } from "@/types";
-import { waitForTransaction, writeContract } from "@wagmi/core";
 import { useMemo } from "react";
 import { tokens } from "@/config/tokens";
 import { Web3Functions } from "@/services/web3";

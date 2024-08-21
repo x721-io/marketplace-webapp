@@ -11,7 +11,7 @@ import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { AssetType, NFT } from "@/types";
 import { useTransactionStatus } from "@/hooks/useTransactionStatus";
-import { BigNumberish, isAddress, parseEther } from "ethers";
+import { isAddress, parseEther } from "ethers";
 import { readContract, waitForTransaction, writeContract } from "@wagmi/core";
 import { tokens } from "@/config/tokens";
 

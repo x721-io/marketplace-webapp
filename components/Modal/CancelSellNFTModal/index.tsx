@@ -1,30 +1,18 @@
-import { CustomFlowbiteTheme, Modal, ModalProps } from "flowbite-react";
-import { useCancelSellNFT } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useAuthStore from "@/store/auth/store";
 import { NFT } from "@/types/entitites";
 import { APIResponse } from "@/services/api/types";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { toast } from "react-toastify";
 import { useCancelSellURC1155, useCancelSellURC721 } from "@/hooks/useSellNFT";
+import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   nft: NFT;
   marketData?: NFTMarketData;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function CancelSellNFTModal({
   nft,
@@ -74,14 +62,8 @@ export default function CancelSellNFTModal({
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      size="lg"
-      show={show}
-      onClose={onClose}
-    >
-      <Modal.Body className="p-10">
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body className="pb-5">
         <div className="flex flex-col justify-center gap-4 items-center">
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="font-bold">
@@ -112,7 +94,7 @@ export default function CancelSellNFTModal({
             </div>
           </div>
         </div>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }

@@ -15,7 +15,6 @@ import WETH_ABI from "@/abi/WETH";
 import { useMemo, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { toast } from "react-toastify";
-// import { Tooltip } from "flowbite-react";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 

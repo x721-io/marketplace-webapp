@@ -1,13 +1,7 @@
-import {
-  Checkbox,
-  CustomFlowbiteTheme,
-  Label,
-  Modal,
-  ModalProps,
-} from "flowbite-react";
+import { Label } from "flowbite-react";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Button from "@/components/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { sleep } from "@/utils";
@@ -17,21 +11,12 @@ import { toast } from "react-toastify";
 import { FormState } from "@/types";
 import { formRulesSigupModal } from "@/config/form/rules";
 import { AuthenticationContext } from "@/app/auth-provider";
+import { MyModal, MyModalProps } from "../X721UIKits/Modal";
+import MyCheckbox from "../X721UIKits/Checkbox";
 
-interface Props extends ModalProps {
+interface Props extends MyModalProps {
   onSignupSuccess?: (accessToken?: string) => void;
 }
-
-const modalTheme: CustomFlowbiteTheme["modal"] = {
-  content: {
-    inner:
-      "relative rounded-lg bg-white shadow flex flex-col h-auto max-h-[600px] desktop:max-h-[800px] tablet:max-h-[800px]",
-    base: "relative w-full desktop:p-10 tablet:p-6 p-4 ",
-  },
-  body: {
-    base: "p-0 flex-1 overflow-auto",
-  },
-};
 
 export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const { credentials } = useContext(AuthenticationContext);
@@ -64,16 +49,10 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   };
 
   return (
-    <Modal
-      theme={modalTheme}
-      dismissible
-      show={show}
-      onClose={onClose}
-      size="lg"
-    >
-      <Modal.Body>
+    <MyModal.Root show={show} onClose={onClose}>
+      <MyModal.Body>
         <form onSubmit={handleSubmit(onSignup)}>
-          <div className="max-w-[400px] mx-auto flex flex-col gap-4 py-8">
+          <div className="max-w-[400px] px-[15px] mx-auto flex flex-col gap-4 py-8">
             <Text
               className="font-semibold text-primary text-center"
               variant="heading-md"
@@ -98,7 +77,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
               />
 
               <div className="flex gap-5 items-center">
-                <Checkbox
+                <MyCheckbox
                   id="accept"
                   checked={acceptedTerms}
                   onChange={() => setAcceptedTerms(!acceptedTerms)}
@@ -137,7 +116,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
             </div>
           </div>
         </form>
-      </Modal.Body>
-    </Modal>
+      </MyModal.Body>
+    </MyModal.Root>
   );
 }
