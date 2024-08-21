@@ -1,6 +1,5 @@
 "use client";
 
-import { CustomFlowbiteTheme } from "flowbite-react";
 import Button from "@/components/Button";
 import Image from "next/image";
 import defaultSlider1 from "@/assets/images/default-slider-1.png";
@@ -11,31 +10,6 @@ import defaultSlider5 from "@/assets/images/default-slider-5.png";
 import Link from "next/link";
 import { CAMPAIGN_URL } from "@/config/constants";
 import { MyCarousel } from "@/components/X721UIKits/Carousel";
-
-const carouselTheme: CustomFlowbiteTheme["carousel"] = {
-  root: {
-    base: "relative h-full w-full",
-    leftControl:
-      "absolute top-0 desktop:left-[-17px] tablet:left-[-10px] left-[-5px] flex h-full items-center justify-center focus:outline-none",
-    rightControl:
-      "absolute top-0 desktop:right-[-17px] tablet:right-[-10px] right-[-5px] flex h-full items-center justify-center focus:outline-none",
-  },
-  control: {
-    base: "inline-flex h-8 w-8 items-center justify-center rounded-full bg-surface-soft/70 group-hover:bg-surface-soft group-focus:outline-none group-focus:ring-4 group-focus:ring-white sm:h-10 sm:w-10",
-    icon: "h-4 w-4 text-black/70 sm:h-5 sm:w-5",
-  },
-  indicators: {
-    active: {
-      off: "bg-white/50 hover:bg-white",
-      on: "bg-white",
-    },
-    base: "h-1 w-5 rounded-full",
-    wrapper: "absolute bottom-3 left-1/2 flex -translate-x-1/2 space-x-3",
-  },
-  item: {
-    base: "absolute px-3 desktop:px-1 top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2",
-  },
-};
 
 export default function CarouselBanner() {
   const sliderImages = [

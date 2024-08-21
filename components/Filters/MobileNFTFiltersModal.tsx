@@ -1,4 +1,4 @@
-import { CustomFlowbiteTheme, Label } from "flowbite-react";
+import { Label } from "flowbite-react";
 import { FilterProps } from "@/components/Filters/NFTFilters";
 import React from "react";
 import Collapsible from "@/components/Collapsible";
