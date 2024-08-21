@@ -1,8 +1,8 @@
 import { contracts } from "@/config/contracts";
-import { readContract, waitForTransaction, writeContract } from "@wagmi/core";
+import { readContract } from "@wagmi/core";
 import { NFT } from "@/types";
 import { Address } from "wagmi";
-import { getTransactionErrorMsg } from "@/utils/transaction";
+import { Web3Functions } from "@/services/web3";
 
 export default function useBuyNFT({ nft }: { nft: NFT }) {
   const buyURC721UsingNative = async (price: any) => {
@@ -16,17 +16,16 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
           (nft.u2uId || nft.id) as any,
         ],
       });
-      const { hash } = await writeContract({
+      const response = await Web3Functions.writeContract({
         abi: contracts.erc721Market.abi,
         address: contracts.erc721Market.address,
         functionName: "buyUsingEth",
         args: [nft.collection.address, (nft.u2uId || nft.id) as any],
         value: BigInt(price) + buyerFee,
       });
-      const response = await waitForTransaction({ hash });
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 
@@ -47,23 +46,22 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
         ],
       });
 
-      const { hash } = await writeContract({
+      const response = await Web3Functions.writeContract({
         abi: contracts.erc1155Market.abi,
         address: contracts.erc1155Market.address,
         functionName: "buyUsingEth",
         args: [BigInt(operationId), BigInt(quantity)],
         value: totalPrice + buyerFee,
       });
-      const response = await waitForTransaction({ hash });
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 
   const buyURC721UsingURC20 = async (quoteToken: Address, price: any) => {
     try {
-      const { hash } = await writeContract({
+      const response = await Web3Functions.writeContract({
         abi: contracts.erc721Market.abi,
         address: contracts.erc721Market.address,
         functionName: "buy",
@@ -74,10 +72,9 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
           BigInt(price),
         ],
       });
-      const response = await waitForTransaction({ hash });
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 
@@ -86,17 +83,16 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
     quantity: number
   ) => {
     try {
-      const { hash } = await writeContract({
+      const response = await Web3Functions.writeContract({
         abi: contracts.erc1155Market.abi,
         address: contracts.erc1155Market.address,
         functionName: "buy",
         args: [BigInt(operationId), BigInt(quantity)],
         value: BigInt(0) as any,
       });
-      const response = await waitForTransaction({ hash });
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 

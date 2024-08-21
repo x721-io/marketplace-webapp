@@ -14,6 +14,7 @@
   "dependencies": {
     "@rarible/types": "~0.9.16",
     "@types/dompurify": "^3.0.5",
+    "abitype": "^1.0.6",
     "axios": "^1.6.1",
     "cookies-next": "^4.2.1",
     "date-fns": "^2.30.0",

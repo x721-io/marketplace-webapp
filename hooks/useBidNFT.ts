@@ -1,15 +1,15 @@
 import { NFT } from "@/types";
 import { Address } from "wagmi";
-import { readContract, waitForTransaction, writeContract } from "@wagmi/core";
 import { contracts } from "@/config/contracts";
 import { parseEther } from "ethers";
-import { getTransactionErrorMsg } from "@/utils/transaction";
+import { Web3Functions } from "@/services/web3";
 
 export const useBidURC721UsingNative = (nft: NFT) => {
   const onBidERC721 = async (price: any, value: any) => {
     try {
-      const tx = await writeContract({
-        ...contracts.erc721Market,
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc721Market.abi,
+        address: contracts.erc721Market.address,
         functionName: "createBidUsingEth",
         args: [
           nft.collection.address,
@@ -18,52 +18,67 @@ export const useBidURC721UsingNative = (nft: NFT) => {
         ],
         value,
       });
-      const response = await waitForTransaction(tx);
       return response;
     } catch (err: any) {
-      throw getTransactionErrorMsg(err);
+      throw err;
     }
   };
 
   const onBidURC721UsingNative = async (price: any) => {
     const totalPrice = parseEther(price);
-    const [_, buyerFee] = await readContract({
-      ...contracts.feeDistributorContract,
+    const [_, buyerFee] = await Web3Functions.readContract({
+      abi: contracts.feeDistributorContract.abi,
+      address: contracts.feeDistributorContract.address,
       functionName: "calculateFee",
       args: [totalPrice, nft.collection.address, (nft.u2uId || nft.id) as any],
     });
 
     const totalCost = totalPrice + buyerFee;
-    const { transactionHash } = await onBidERC721(totalPrice, totalCost);
-    return waitForTransaction({ hash: transactionHash });
+    try {
+      const response = await onBidERC721(totalPrice, totalCost);
+      return response.transactionHash;
+    } catch (err) {
+      throw err;
+    }
   };
   return onBidURC721UsingNative;
 };
 
 export const useBidURC1155UsingNative = (nft: NFT) => {
-  const onBidERC1155 = (pricePerUnit: any, quantity: any, value: any) =>
-    writeContract({
-      ...contracts.erc1155Market,
-      functionName: "createOfferUsingEth",
-      args: [
-        nft.collection.address,
-        (nft.u2uId ? nft.u2uId : nft.id) as any,
-        quantity,
-        pricePerUnit,
-      ],
-      value,
-    });
+  const onBidERC1155 = async (pricePerUnit: any, quantity: any, value: any) => {
+    try {
+      const response = await Web3Functions.writeContract({
+        ...contracts.erc1155Market,
+        functionName: "createOfferUsingEth",
+        args: [
+          nft.collection.address,
+          (nft.u2uId ? nft.u2uId : nft.id) as any,
+          quantity,
+          pricePerUnit,
+        ],
+        value,
+      });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  };
   const onBidURC1155UsingNative = async (price: string, quantity: any) => {
     const totalPrice = parseEther(price) * BigInt(quantity ?? 0);
     const pricePerUnit = parseEther(price);
-    const [_, buyerFee] = await readContract({
-      ...contracts.feeDistributorContract,
+    const [_, buyerFee] = await Web3Functions.readContract({
+      abi: contracts.feeDistributorContract.abi,
+      address: contracts.feeDistributorContract.address,
       functionName: "calculateFee",
       args: [totalPrice, nft.collection.address, (nft.u2uId || nft.id) as any],
     });
     const totalCost = totalPrice + buyerFee;
-    const { hash } = await onBidERC1155(pricePerUnit, quantity, totalCost);
-    return waitForTransaction({ hash });
+    try {
+      const response = await onBidERC1155(pricePerUnit, quantity, totalCost);
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   return onBidURC1155UsingNative;
@@ -71,8 +86,9 @@ export const useBidURC1155UsingNative = (nft: NFT) => {
 
 export const useBidURC721UsingURC20 = (nft: NFT) => {
   const onBidURC721UsingURC20 = async (price: any, quoteToken: Address) => {
-    const { hash } = await writeContract({
-      ...contracts.erc721Market,
+    const response = await Web3Functions.writeContract({
+      abi: contracts.erc721Market.abi,
+      address: contracts.erc721Market.address,
       functionName: "createBid",
       args: [
         nft.collection.address,
@@ -81,7 +97,7 @@ export const useBidURC721UsingURC20 = (nft: NFT) => {
         parseEther(price),
       ],
     });
-    return waitForTransaction({ hash });
+    return response;
   };
   return onBidURC721UsingURC20;
 };
@@ -92,73 +108,98 @@ export const useBidURC1155UsingURC20 = (nft: NFT) => {
     quoteToken: Address,
     quantity: string
   ) => {
-    const { hash } = await writeContract({
-      ...contracts.erc1155Market,
-      functionName: "createOffer",
-      args: [
-        nft.collection.address,
-        (nft.u2uId ? nft.u2uId : nft.id) as any,
-        quantity as any,
-        quoteToken,
-        parseEther(price),
-      ],
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc1155Market.abi,
+        address: contracts.erc1155Market.address,
+        functionName: "createOffer",
+        args: [
+          nft.collection.address,
+          (nft.u2uId ? nft.u2uId : nft.id) as any,
+          quantity as any,
+          quoteToken,
+          parseEther(price),
+        ],
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return onBidURC1155UsingURC20;
 };
 
 export const useCancelBidURC721 = (nft: NFT) => {
   const onCancelBidURC721 = async () => {
-    const { hash } = await writeContract({
-      ...contracts.erc721Market,
-      functionName: "cancelBid",
-      args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any],
-      value: BigInt(0) as any,
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc721Market.abi,
+        address: contracts.erc721Market.address,
+        functionName: "cancelBid",
+        args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any],
+        value: BigInt(0) as any,
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return onCancelBidURC721;
 };
 
 export const useCancelBidURC1155 = () => {
   const onCancelBidURC1155 = async (operationId?: string) => {
-    const { hash } = await writeContract({
-      ...contracts.erc1155Market,
-      functionName: "cancelOffer",
-      args: [operationId as any],
-      value: BigInt(0) as any,
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc1155Market.abi,
+        address: contracts.erc1155Market.address,
+        functionName: "cancelOffer",
+        args: [operationId as any],
+        value: BigInt(0) as any,
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return onCancelBidURC1155;
 };
 
 export const useAcceptBidURC721 = (nft: NFT) => {
   const onAcceptBidURC721 = async (bidder: Address, quoteToken: Address) => {
-    const { hash } = await writeContract({
-      ...contracts.erc721Market,
-      functionName: "acceptBid",
-      args: [
-        nft.collection.address,
-        nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
-        bidder,
-        quoteToken,
-      ],
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc721Market.abi,
+        address: contracts.erc721Market.address,
+        functionName: "acceptBid",
+        args: [
+          nft.collection.address,
+          nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
+          bidder,
+          quoteToken,
+        ],
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return onAcceptBidURC721;
 };
 
 export const useAcceptBidURC1155 = () => {
   const onAcceptBidURC1155 = async (offerId: string, quantity: number) => {
-    const { hash } = await writeContract({
-      ...contracts.erc1155Market,
-      functionName: "acceptOffer",
-      args: [BigInt(offerId), BigInt(quantity)],
-    });
-    return waitForTransaction({ hash });
+    try {
+      const response = await Web3Functions.writeContract({
+        abi: contracts.erc1155Market.abi,
+        address: contracts.erc1155Market.address,
+        functionName: "acceptOffer",
+        args: [BigInt(offerId), BigInt(quantity)],
+      });
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
   };
   return onAcceptBidURC1155;
 };
