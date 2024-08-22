@@ -16,6 +16,7 @@ import Icon from "@/components/Icon";
 import { useFetchUserList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useUserFilterStore } from "@/store/filters/users/store";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import { useGetUsers } from "@/hooks/useQuery";
 
 export default function ExploreUsersPage() {
   const filtersTimeout = useRef<any>(null);
@@ -24,7 +25,7 @@ export default function ExploreUsersPage() {
   const [decouncedFilters, setDebouncedFilters] = useState<any>(filters);
   const myId = useAuthStore((state) => state.profile?.id);
   const { data, size, isLoading, setSize, mutate, error } =
-    useFetchUserList(decouncedFilters);
+    useGetUsers(decouncedFilters);
 
   const { isLoadingMore, list: users } = useInfiniteScroll({
     data,

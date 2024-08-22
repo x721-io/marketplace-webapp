@@ -1,6 +1,5 @@
 "use server";
 
-import { getTranslations } from "next-intl/server";
 import { APIResponse } from "@/services/api/types";
 import {
   clearAuthCookies,
@@ -122,22 +121,22 @@ export const parseRequestParams = async (request: Request) => {
   return { url: url.pathname + url.search, params, pathname: url.pathname };
 };
 
-export const translateApiMessages = async (
-  pathname: string,
-  type: "error" | "success"
-) => {
-  const t = await getTranslations("api");
-  const [translationKey] =
-    Object.entries(API_ENDPOINTS).find(([, endpoint]) => {
-      return pathname === "/api" + endpoint;
-    }) || [];
+// export const translateApiMessages = async (
+//   pathname: string,
+//   type: "error" | "success"
+// ) => {
+//   const t = await getTranslations("api");
+//   const [translationKey] =
+//     Object.entries(API_ENDPOINTS).find(([, endpoint]) => {
+//       return pathname === "/api" + endpoint;
+//     }) || [];
 
-  return t(type, {
-    action: translationKey?.split("_").join(" ") || "Perform Request",
-  });
-};
+//   return t(type, {
+//     action: translationKey?.split("_").join(" ") || "Perform Request",
+//   });
+// };
 
-export const getTransactionErrorMessage = async (err: any): Promise<any> => {
-  const t = await getTranslations();
-  return { errMsg: "Rejected" };
-};
+// export const getTransactionErrorMessage = async (err: any): Promise<any> => {
+//   const t = await getTranslations();
+//   return { errMsg: "Rejected" };
+// };

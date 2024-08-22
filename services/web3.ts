@@ -33,7 +33,7 @@ async function write<
       address,
       abi: abi as any,
       functionName,
-      args: [...args],
+      args: args as any,
       value,
     });
     const response = await waitForTransaction(tx);
@@ -59,7 +59,7 @@ async function read<
       address,
       abi: abi as any,
       functionName,
-      args: [...args],
+      args: args as any,
     })) as AbiParametersToPrimitiveTypes<abiFunction["outputs"], "outputs">;
     return res;
   } catch (err: any) {
