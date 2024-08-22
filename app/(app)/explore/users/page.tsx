@@ -3,7 +3,7 @@
 import Text from "@/components/Text";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getUserAvatarImage,
   getUserCoverImage,
@@ -18,10 +18,13 @@ import { useUserFilterStore } from "@/store/filters/users/store";
 import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ExploreUsersPage() {
+  const filtersTimeout = useRef<any>(null);
+
   const { filters } = useUserFilterStore();
+  const [decouncedFilters, setDebouncedFilters] = useState<any>(filters);
   const myId = useAuthStore((state) => state.profile?.id);
   const { data, size, isLoading, setSize, mutate, error } =
-    useFetchUserList(filters);
+    useFetchUserList(decouncedFilters);
 
   const { isLoadingMore, list: users } = useInfiniteScroll({
     data,
@@ -29,6 +32,15 @@ export default function ExploreUsersPage() {
     page: size,
     onNext: () => setSize(size + 1),
   });
+
+  useEffect(() => {
+    if (filtersTimeout.current) {
+      clearInterval(filtersTimeout.current);
+    }
+    filtersTimeout.current = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 200);
+  }, [filters]);
 
   if (isLoading) {
     return (

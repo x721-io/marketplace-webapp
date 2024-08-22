@@ -13,8 +13,10 @@ export default function CreatedNFTs({
   wallet,
   onUpdateAmount,
   userId,
+  isShow = true,
 }: {
   wallet: Address;
+  isShow?: boolean;
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
   userId: string;
 }) {
@@ -54,7 +56,16 @@ export default function CreatedNFTs({
   }, [totalCreated, onUpdateAmount]);
 
   return (
-    <div className="w-full py-7">
+    <div
+      style={
+        !isShow
+          ? {
+              display: "none",
+            }
+          : {}
+      }
+      className="w-full py-7"
+    >
       <Button
         onClick={() => toggleFilter()}
         className={classNames(

@@ -47,6 +47,8 @@ export const useFetchCollectionListByUser = (id: string) => {
   );
 };
 
+let timeout = null;
+
 export const useFetchNFTList = (filters: APIParams.FetchNFTs) => {
   const api = useMarketplaceApi();
 
