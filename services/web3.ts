@@ -5,7 +5,6 @@ import {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from "abitype";
-import { getTransactionErrorMsg } from "@/utils/transaction";
 import {
   Address,
   readContract,
@@ -13,6 +12,7 @@ import {
   writeContract,
 } from "@wagmi/core";
 import { TransactionReceipt } from "viem";
+import { getTransactionErrorMsg } from "@/utils/transaction";
 
 async function write<
   abi extends Abi,
@@ -39,7 +39,7 @@ async function write<
     const response = await waitForTransaction(tx);
     return response;
   } catch (err: any) {
-    throw getTransactionErrorMsg(err);
+    throw new Error(getTransactionErrorMsg(err));
   }
 }
 

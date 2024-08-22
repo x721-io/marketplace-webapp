@@ -82,37 +82,6 @@ export default function ProfilePage() {
     );
   }
 
-  const getComponentByCurrTabIndex = () => {
-    switch (currTabIndex) {
-      case 0:
-        return (
-          <OwnedNFTs wallet={user.publicKey} onUpdateAmount={setOwnedAmount} />
-        );
-      case 1:
-        return (
-          <OnSaleNFTs wallet={user.publicKey} onUpdateAmount={setSaleAmount} />
-        );
-      case 2:
-        return (
-          <CreatedNFTs
-            userId={user.id}
-            wallet={user.publicKey}
-            onUpdateAmount={setCreatedAmount}
-          />
-        );
-      case 3:
-        return (
-          <UserCollections
-            userId={user.id}
-            wallet={user.publicKey}
-            onUpdateAmount={setCreatedCollectionAmount}
-          />
-        );
-      case 4:
-        return <Activities wallet={user.publicKey} />;
-    }
-  };
-
   return (
     <div className="w-full mt-4 desktop:mt-0">
       <Profile onRefresh={mutate} user={user} />
@@ -142,7 +111,29 @@ export default function ProfilePage() {
             <div className="min-w-fit whitespace-nowrap">Activities</div>
           </MyTabs.Item>
         </MyTabs.Group>
-        {getComponentByCurrTabIndex()}
+
+        <OwnedNFTs
+          isShow={currTabIndex === 0}
+          wallet={user.publicKey}
+          onUpdateAmount={setOwnedAmount}
+        />
+        <OnSaleNFTs
+          isShow={currTabIndex === 1}
+          wallet={user.publicKey}
+          onUpdateAmount={setSaleAmount}
+        />
+        <CreatedNFTs
+          isShow={currTabIndex === 2}
+          userId={user.id}
+          wallet={user.publicKey}
+          onUpdateAmount={setCreatedAmount}
+        />
+        <UserCollections
+          isShow={currTabIndex === 3}
+          userId={user.id}
+          wallet={user.publicKey}
+          onUpdateAmount={setCreatedCollectionAmount}
+        />
       </div>
     </div>
   );

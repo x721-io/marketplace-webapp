@@ -23,7 +23,7 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
     switch (currTabIndex) {
       case 0:
         return (
-          <div className="max-h-[400px] overflow-y-auto">
+          <div className="max-h-[500px] overflow-y-auto pr-[20px]">
             <OwnersTab nft={nft} marketData={marketData} />
           </div>
         );
@@ -32,7 +32,11 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
       case 2:
         return <PropertiesTab metaData={metaData} />;
       case 3:
-        return <BidsTab marketData={marketData} nft={nft} />;
+        return (
+          <div className="max-h-[500px] overflow-y-auto pr-[20px]">
+            <BidsTab marketData={marketData} nft={nft} />
+          </div>
+        );
       case 4:
         return <ActivitiesTab nft={nft} />;
     }

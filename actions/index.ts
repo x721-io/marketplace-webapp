@@ -136,3 +136,8 @@ export const translateApiMessages = async (
     action: translationKey?.split("_").join(" ") || "Perform Request",
   });
 };
+
+export const getTransactionErrorMessage = async (err: any): Promise<any> => {
+  const t = await getTranslations();
+  return { errMsg: "Rejected" };
+};

@@ -14,10 +14,12 @@ export default function UserCollections({
   onUpdateAmount,
   userId,
   wallet,
+  isShow = true,
 }: {
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
   userId: string;
   wallet: Address;
+  isShow: boolean;
 }) {
   const { id } = useParams();
   const api = useMarketplaceApi();
@@ -53,7 +55,16 @@ export default function UserCollections({
   }, [totalCollections, onUpdateAmount]);
 
   return (
-    <div className="w-full py-7 overflow-x-auto">
+    <div
+      style={
+        !isShow
+          ? {
+              display: "none",
+            }
+          : {}
+      }
+      className="w-full py-7 overflow-x-auto"
+    >
       <CollectionsList
         error={error}
         isLoading={isLoading}

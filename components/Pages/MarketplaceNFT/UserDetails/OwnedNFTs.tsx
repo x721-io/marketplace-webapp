@@ -12,8 +12,10 @@ import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 export default function OwnedNFTs({
   wallet,
   onUpdateAmount,
+  isShow = true,
 }: {
   wallet: Address;
+  isShow?: boolean;
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const api = useMarketplaceApi();
@@ -48,7 +50,16 @@ export default function OwnedNFTs({
   }, [totalOwned, onUpdateAmount]);
 
   return (
-    <div className="w-full py-7">
+    <div
+      style={
+        !isShow
+          ? {
+              display: "none",
+            }
+          : {}
+      }
+      className="w-full py-7"
+    >
       <Button
         onClick={() => toggleFilter()}
         className={classNames(

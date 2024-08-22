@@ -234,16 +234,10 @@ export const useMarketplaceApi = () => {
       viewProfile: async (
         id: Address | string
       ): Promise<APIResponse.ProfileDetails | void> => {
-        const response = await handleAuthentication();
-        const axiosClient = getMarketplaceApi();
-        if (response.status === "fail") {
-          clearAuthCookiesAction();
-          clearProfile();
-          return router.push("/");
-        }
-        axiosClient.defaults.headers.common.Authorization =
-          response.bearerToken;
-        return axiosClient.get(API_ENDPOINTS.PROFILE + `/${id}`);
+        return marketplaceApi.get(
+          API_ENDPOINTS.PROFILE + `/${id}`,
+          authHeader()
+        );
       },
 
       fetchUsers: async (
