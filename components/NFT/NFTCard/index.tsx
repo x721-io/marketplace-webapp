@@ -56,6 +56,7 @@ export default function NFTCard({
               alt="image"
               width={220}
               height={220}
+              loading="lazy"
             />
             <audio className="absolute bottom-0 w-full h-[25px]" controls>
               <source
