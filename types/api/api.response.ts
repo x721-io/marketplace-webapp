@@ -29,4 +29,7 @@ export namespace NextAPIResponse {
   export type GetCollectionDetails = AxiosResponse<
     APISuccessfulResponse<APIResponse.CollectionDetails>
   >;
+  export type GetNftMarketData = AxiosResponse<
+    APISuccessfulResponse<APIResponse.NFTMarketData>
+  >;
 }

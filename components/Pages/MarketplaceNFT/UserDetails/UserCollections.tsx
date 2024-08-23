@@ -9,6 +9,7 @@ import {
   useFetchCollectionListByUser,
   useInfiniteScroll,
 } from "@/hooks/useInfiniteScroll";
+import { useGetTotalCountById } from "@/hooks/useQuery";
 
 export default function UserCollections({
   onUpdateAmount,
@@ -33,19 +34,10 @@ export default function UserCollections({
     onNext: () => setSize(size + 1),
   });
 
-  const { data: totalCollections } = useSWR(
-    [
-      "total_collections-data",
-      {
-        owner: String(wallet) as `0x${string}`,
-        mode: String(MODE_COLLECTIONS),
-      },
-    ],
-    ([_, params]) =>
-      api.getTotalCountById({
-        ...params,
-      }),
-    { refreshInterval: 0 }
+  const { data: totalCollections } = useGetTotalCountById(
+    "total_collections-data",
+    String(wallet) as `0x${string}`,
+    String(MODE_COLLECTIONS)
   );
 
   useEffect(() => {

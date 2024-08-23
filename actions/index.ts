@@ -123,6 +123,7 @@ export const parseRequestParams = async (request: Request) => {
     url: url.pathname.replace("/api", "") + url.search,
     params,
     pathname: url.pathname,
+    searchQuery: url.search,
   };
 };
 

@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { Address } from "wagmi";
 import { MODE_CREATED } from "@/config/constants";
 import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
+import { useGetTotalCountById } from "@/hooks/useQuery";
 
 export default function CreatedNFTs({
   wallet,
@@ -34,19 +35,10 @@ export default function CreatedNFTs({
     updateFilters,
   } = useFetchNFTsByUser(wallet, "created");
 
-  const { data: totalCreated } = useSWR(
-    [
-      "total_creator-data",
-      {
-        creatorAddress: String(wallet) as `0x${string}`,
-        mode: String(MODE_CREATED),
-      },
-    ],
-    ([_, params]) =>
-      api.getTotalCountById({
-        ...params,
-      }),
-    { refreshInterval: 0 }
+  const { data: totalCreated } = useGetTotalCountById(
+    "total_creator-data",
+    String(wallet) as `0x${string}`,
+    String(MODE_CREATED)
   );
 
   useEffect(() => {
