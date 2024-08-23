@@ -4,19 +4,19 @@ import { nextAPI } from "@/services/api";
 
 import { API_ENDPOINTS } from "@/config/api";
 import { Address, parseUnits } from "viem";
-import { User } from "@/types";
-import { AxiosResponse } from "axios";
 import { sanitizeObject } from "@/utils";
 import { APIParams, APIResponse } from "@/services/api/types";
 import useSWRInfinite from "swr/infinite";
+import { NextAPIResponse } from "@/types/api/api.response";
 
 export const useGetProfile = (id: Address | string) => {
-  const { data, error, isLoading, mutate } = useSWR<AxiosResponse<User>>(
-    `${API_ENDPOINTS.PROFILE}/${id}`,
-    nextAPI.get
-  );
+  const { data, error, isLoading, mutate } =
+    useSWR<NextAPIResponse.GetUserProfile>(
+      `${API_ENDPOINTS.PROFILE}/${id}`,
+      nextAPI.get
+    );
   return {
-    data: data?.data ?? null,
+    data: data?.data?.data ?? null,
     error,
     isLoading,
     mutate,
@@ -34,7 +34,7 @@ export const useGetUsers = (params: APIParams.FetchUsers) => {
       const response = await nextAPI.get(API_ENDPOINTS.USER, {
         params: sanitizeObject(params),
       });
-      return response.data;
+      return response.data.data;
     }
   );
 
@@ -68,7 +68,7 @@ export const useGetCollections = (params: APIParams.FetchCollections) => {
           max: bigintMax?.toString(),
         }),
       });
-      return response.data;
+      return response.data.data;
     }
   );
 
@@ -108,7 +108,7 @@ export const useGetNFTs = (params: APIParams.FetchNFTs) => {
           priceMax: bigintMax?.toString(),
         })
       );
-      return response.data;
+      return response.data.data;
     }
   );
 
@@ -126,31 +126,59 @@ export const useGetCollectionById = (
   id: string | null,
   onSuccess: (data: APIResponse.CollectionDetails) => void
 ) => {
-  const { data, error, isLoading, mutate } = useSWR<
-    AxiosResponse<APIResponse.CollectionDetails>
-  >(id ? `${API_ENDPOINTS.COLLECTIONS + `/${id}`}` : null, nextAPI.get, {
-    refreshInterval: 30000,
-    onSuccess: (data) => {
-      onSuccess(data.data);
-    },
-  });
+  const { data, error, isLoading, mutate } =
+    useSWR<NextAPIResponse.GetCollectionDetails>(
+      id ? `${API_ENDPOINTS.COLLECTIONS + `/${id}`}` : null,
+      nextAPI.get,
+      {
+        refreshInterval: 30000,
+        onSuccess: (data) => {
+          onSuccess(data.data.data);
+        },
+      }
+    );
   return {
-    data: data?.data ?? null,
+    data: data?.data?.data ?? null,
     error,
     isLoading,
     mutate,
   };
 };
 
-// const {
-//   data: collectionData,
-//   isLoading: isLoadingCollection,
-//   error: collectionError,
-// } = useSWR(!!id ? id : null, (id: string) => api.fetchCollectionById(id), {
-//   refreshInterval: 30000,
-//   onSuccess: (data) => {
-//     const collectionAddress = data?.collection.address;
-//     filterStore.createFiltersForCollection(collectionAddress);
-//     filterStore.updateFilters(collectionAddress, { collectionAddress });
-//   },
-// });
+export const useGetLaunchpadProjects = (
+  mode: "MINTING" | "UPCOMING" | "ENDED" | "CLAIM"
+) => {
+  const { data, error, isLoading, mutate } = useSWR<any>(
+    `${API_ENDPOINTS.LAUNCHPAD}/${mode}`,
+    () => {
+      return nextAPI.get(API_ENDPOINTS.LAUNCHPAD, { params: { mode } });
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
+  return {
+    data: data?.data?.data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};
+
+export const useGetLaunchpadProjectById = (id: string | null) => {
+  const { data, error, isLoading, mutate } = useSWR<any>(
+    id ? `${API_ENDPOINTS.LAUNCHPAD}/${id}` : null,
+    () => {
+      return nextAPI.get(`${API_ENDPOINTS.LAUNCHPAD}/${id}`);
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
+  return {
+    data: data?.data?.data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};

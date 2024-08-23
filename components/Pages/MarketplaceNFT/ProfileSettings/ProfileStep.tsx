@@ -14,8 +14,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { MARKETPLACE_URL } from "@/config/constants";
+import { useUpdateProfile } from "@/hooks/useMutate";
 
 export default function ProfileStep() {
+  const { trigger: updateProfile } = useUpdateProfile();
   const profile = useAuthStore((state) => state.profile);
   const [showPopup, setShowPopup] = useState(false);
   const { onUpdateProfile, onVerifyAccount } = useAuth();
@@ -53,7 +55,7 @@ export default function ProfileStep() {
     const toastId = toast.loading("Uploading Profile...", { type: "info" });
 
     try {
-      await onUpdateProfile(params);
+      await updateProfile(params);
 
       toast.update(toastId, {
         render: "Profile updated successfully",

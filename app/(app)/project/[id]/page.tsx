@@ -3,19 +3,17 @@
 import ProjectPageBanner from "components/Pages/Launchpad/ProjectDetails/LauchpadBanner";
 import ProjectPageDescriptions from "@/components/Pages/Launchpad/ProjectDetails/LaunchpadDescriptions";
 import ProjectMintSchedule from "@/components/Pages/Launchpad/ProjectDetails/MintSchedule";
-import useSWR from "swr";
 import { useParams } from "next/navigation";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import { ClipLoader } from "react-spinners";
 import { colors } from "@/config/theme";
+import { useGetLaunchpadProjectById } from "@/hooks/useQuery";
 
 export default function ProjectPage() {
   const { id } = useParams();
   const api = useLaunchpadApi();
-  const { data, isLoading } = useSWR(
-    !!id ? id : null,
-    (id: string) => api.fetchProjectById(id),
-    { revalidateOnFocus: false }
+  const { data, isLoading } = useGetLaunchpadProjectById(
+    !!id ? (id as string) : null
   );
 
   if (isLoading) {
