@@ -10,6 +10,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { CHAIN_ID } from "@/config/constants";
 import { AuthenticationContext } from "@/app/auth-provider";
 import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
+import { useConnectAPI } from "./useMutate";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
@@ -19,6 +20,7 @@ export const useAuth = () => {
   const { isConnected, address } = useAccount();
   const acceptedTerms = useAuthStore((state) => state.profile?.acceptedTerms);
   const userWallet = useAuthStore((state) => state.profile?.publicKey);
+  const { trigger: connectAPIMutate } = useConnectAPI();
 
   const isCorrectWallet = useMemo(() => {
     if (!userWallet || !address) return false;
@@ -47,8 +49,7 @@ export const useAuth = () => {
   const onAuth = useCallback(
     async (date: string, message: Address) => {
       if (!address) return;
-
-      const credentials = await api.connect({
+      const credentials = await connectAPIMutate({
         date,
         publicKey: address,
         signature: message,

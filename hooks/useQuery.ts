@@ -293,6 +293,36 @@ export const useGetCollectionsByUser = (
   };
 };
 
+export const useGetCollectionsByUserInfinite = (userId: string) => {
+  const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
+    (index) => ({
+      userId,
+      page: index + 1,
+    }),
+    async (params: { userId: string; page: number }) => {
+      const response = await nextAPI.get(
+        API_ENDPOINTS.USER_COLLECTIONS + `/${params.userId}`,
+        {
+          params: {
+            hasBase: false,
+            page: params.page,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  return {
+    data: data ?? [],
+    error,
+    isLoading,
+    size,
+    setSize,
+    mutate,
+  };
+};
+
 export const useGetNftById = (params: APIParams.FetchNFTDetails) => {
   const { data, error, isLoading, mutate } = useSWR(
     API_ENDPOINTS.NFT + parseQueries(params),

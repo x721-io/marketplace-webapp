@@ -1,15 +1,14 @@
 import CollectionsList from "@/components/List/CollectionsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import useSWR from "swr";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { MODE_COLLECTIONS } from "@/config/constants";
 import { Address } from "wagmi";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import {
-  useFetchCollectionListByUser,
-  useInfiniteScroll,
-} from "@/hooks/useInfiniteScroll";
-import { useGetTotalCountById } from "@/hooks/useQuery";
+  useGetCollectionsByUserInfinite,
+  useGetTotalCountById,
+} from "@/hooks/useQuery";
 
 export default function UserCollections({
   onUpdateAmount,
@@ -26,7 +25,7 @@ export default function UserCollections({
   const api = useMarketplaceApi();
 
   const { data, isLoading, setSize, size, error } =
-    useFetchCollectionListByUser(String(id));
+    useGetCollectionsByUserInfinite(String(id));
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
     loading: isLoading,

@@ -1,9 +1,9 @@
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { useFilterByUser } from "@/store/filters/byUser/store";
 import { useMemo } from "react";
 import { APIParams } from "@/services/api/types";
-import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Address } from "wagmi";
+import { useGetNFTs } from "./useQuery";
 
 export const useFetchNFTsByUser = (
   wallet: Address,
@@ -25,7 +25,7 @@ export const useFetchNFTsByUser = (
       };
     }, [filterStore, wallet]);
 
-  const { error, isLoading, setSize, size, data } = useFetchNFTList(filters);
+  const { error, isLoading, setSize, size, data } = useGetNFTs(filters);
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
     loading: isLoading,
