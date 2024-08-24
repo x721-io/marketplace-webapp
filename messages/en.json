@@ -44,5 +44,15 @@
       "ShortURL": "Short URL",
       "Description": "Description (optional)"
     }
+  },
+  "api": {
+    "error": "Failed to {action}",
+    "success": "{action} successfully"
+  },
+  "web3": {
+    "error": {
+      "rejected": "User rejected the transaction",
+      "other": "Unexcted error. Please try again later"
+    }
   }
 }

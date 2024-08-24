@@ -4,13 +4,11 @@ import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Text from "@/components/Text";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Icon from "@/components/Icon";
 import { AssetType, FormState, Trait } from "@/types";
 import { classNames } from "@/utils/string";
-import useSWR from "swr";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
@@ -25,28 +23,25 @@ import { Accordion } from "@/components/X721UIKits/Accordion";
 import useAuthStore from "@/store/auth/store";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import { useUploadFile, useValidateInput } from "@/hooks/useMutate";
+import { useGetCollectionsByUser } from "@/hooks/useQuery";
 
 export default function CreateNftPage() {
+  const validateTimeout = useRef<any>(null);
   const { profile } = useAuthStore();
   const type = useParams().type.toString().toUpperCase() as AssetType;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [validating, setValidating] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const api = useMarketplaceApi();
   const { onCreateNFT } = useCreateNFT(type || "ERC721");
   const userId = profile?.id;
-  const { data } = useSWR(
-    userId || null,
-    (userId) =>
-      api.fetchCollectionsByUser({
-        page: 1,
-        limit: 1000,
-        userId,
-        hasBase: true,
-      }),
-    { refreshInterval: 3600 * 1000 }
-  );
+  const { data } = useGetCollectionsByUser(!!userId, {
+    page: 1,
+    limit: 1000,
+    userId: userId as string,
+    hasBase: true,
+  });
   const {
     handleSubmit,
     register,
@@ -61,6 +56,9 @@ export default function CreateNftPage() {
   } = useForm<FormState.CreateNFT>({
     defaultValues: { traits: [{ trait_type: "", value: "" }] },
   });
+
+  const { trigger: uploadFileMutate } = useUploadFile();
+  const { trigger: validateInputMutate } = useValidateInput();
 
   const media = watch("media");
   const isNonImageNFT = useMemo(() => {
@@ -148,7 +146,7 @@ export default function CreateNftPage() {
     });
 
     try {
-      const { fileHashes } = await api.uploadFile(media);
+      const { fileHashes } = await uploadFileMutate({ files: media });
       toast.update(createNFTToast, { render: "Sending transaction" });
 
       const [media1, media2] = fileHashes;
@@ -197,7 +195,7 @@ export default function CreateNftPage() {
         } else {
           clearErrors("collection");
         }
-        const existed = await api.validateInput({
+        const existed = await validateInputMutate({
           key: "nftName",
           value: value.name,
           collectionId: getValues("collection"),
@@ -221,8 +219,15 @@ export default function CreateNftPage() {
 
   useEffect(() => {
     const subscription = watch(async (value, { name, type }) => {
-      if (!name) return;
-      handleValidateInput(name, value);
+      const collection = getValues("collection");
+      if (!name || !collection) return;
+      if (validateTimeout.current) {
+        clearTimeout(validateTimeout.current);
+      }
+      validateTimeout.current = setTimeout(
+        () => handleValidateInput(name, value),
+        200
+      );
     });
     return () => subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -314,7 +319,7 @@ export default function CreateNftPage() {
                           <PlusCircleIcon width={24} height={24} />
                           <span className="font-bold">
                             Create{" "}
-                            <span className="text-tertiary font-normal">
+                            <span className="t  ext-tertiary font-normal">
                               {" "}
                               {type === "ERC721" ? "ERC721" : "ERC1155"}
                             </span>

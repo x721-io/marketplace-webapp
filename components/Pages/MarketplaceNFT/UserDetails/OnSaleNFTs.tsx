@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { Address } from "wagmi";
 import { MODE_ON_SALES } from "@/config/constants";
 import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
+import { useGetTotalCountById } from "@/hooks/useQuery";
 
 export default function OnSaleNFTs({
   wallet,
@@ -32,16 +33,10 @@ export default function OnSaleNFTs({
     updateFilters,
   } = useFetchNFTsByUser(wallet, "onSale");
 
-  const { data: totalOnSales } = useSWR(
-    [
-      "total_on_sales-data",
-      { owner: String(wallet) as `0x${string}`, mode: String(MODE_ON_SALES) },
-    ],
-    ([_, params]) =>
-      api.getTotalCountById({
-        ...params,
-      }),
-    { refreshInterval: 0 }
+  const { data: totalOnSales } = useGetTotalCountById(
+    "total_on_sales-data",
+    String(wallet) as `0x${string}`,
+    String(MODE_ON_SALES)
   );
 
   useEffect(() => {

@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import useSWR from "swr";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import Text from "@/components/Text";
 import { formatDisplayedNumber } from "@/utils";
 import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
@@ -15,31 +13,22 @@ import Profile from "@/components/Pages/MarketplaceNFT/UserDetails/Profile";
 import { useFilterByUser } from "@/store/filters/byUser/store";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import { useGetProfile } from "@/hooks/useQuery";
 
 export default function ProfilePage() {
-  const api = useMarketplaceApi();
   const { id } = useParams();
-
-  const {
-    data: user,
-    isLoading,
-    error,
-    mutate,
-  } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
-    revalidateOnFocus: false,
-  });
   const filterStore = useFilterByUser();
-
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
   const [createdAmount, setCreatedAmount] = useState(0);
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
   const [currTabIndex, setCurrTabIndex] = useState(0);
+  const { data: user, isLoading, error, mutate } = useGetProfile(id as string);
 
   useEffect(() => {
     const userAddress = user?.publicKey;
+    console.log({ user });
     if (!userAddress) return;
-
     if (!filterStore[userAddress]) {
       filterStore.createFiltersForUser(user?.publicKey);
       filterStore.updateFilters("created", userAddress, {
@@ -134,6 +123,7 @@ export default function ProfilePage() {
           wallet={user.publicKey}
           onUpdateAmount={setCreatedCollectionAmount}
         />
+        <Activities isShow={currTabIndex === 4} wallet={user.publicKey} />
       </div>
     </div>
   );

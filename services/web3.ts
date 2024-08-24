@@ -12,7 +12,8 @@ import {
   writeContract,
 } from "@wagmi/core";
 import { TransactionReceipt } from "viem";
-import { getTransactionErrorMsg } from "@/utils/transaction";
+import { getUserLocale } from "./locale";
+import { getWeb3ErrorMsg } from "@/utils/transaction";
 
 async function write<
   abi extends Abi,
@@ -33,13 +34,14 @@ async function write<
       address,
       abi: abi as any,
       functionName,
-      args: [...args],
+      args: args as any,
       value,
     });
     const response = await waitForTransaction(tx);
     return response;
   } catch (err: any) {
-    throw new Error(getTransactionErrorMsg(err));
+    const errMsg = await getWeb3ErrorMsg(err);
+    throw new Error(errMsg);
   }
 }
 
@@ -59,11 +61,12 @@ async function read<
       address,
       abi: abi as any,
       functionName,
-      args: [...args],
+      args: args as any,
     })) as AbiParametersToPrimitiveTypes<abiFunction["outputs"], "outputs">;
     return res;
   } catch (err: any) {
-    throw getTransactionErrorMsg(err);
+    const errMsg = await getWeb3ErrorMsg(err);
+    throw new Error(errMsg);
   }
 }
 

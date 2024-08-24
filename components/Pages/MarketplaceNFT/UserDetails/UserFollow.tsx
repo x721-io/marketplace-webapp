@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import { useFollowUser } from "@/hooks/useMutate";
 
 export interface Props {
   isFollowed?: boolean;
@@ -14,22 +14,21 @@ export interface Props {
 }
 
 export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
-  const api = useMarketplaceApi();
   const { isValidSession } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const { trigger: followUserMutate } = useFollowUser();
 
   const isFollowing = useMemo(() => {
     if (!isValidSession) return false;
     return isFollowed;
   }, [isFollowed, isValidSession]);
 
-  const handleFollow = async (accessToken?: string) => {
+  const handleFollow = async () => {
     try {
       setLoading(true);
-      await api.followUser({
+      await followUserMutate({
         userId: userId,
-        accessToken,
       });
       onRefresh();
       toast.success(
@@ -44,7 +43,7 @@ export default function UserFollow({ isFollowed, userId, onRefresh }: Props) {
   };
 
   return (
-    <ConnectWalletButton action={(accessToken) => handleFollow(accessToken)}>
+    <ConnectWalletButton action={(_) => handleFollow()}>
       <Button
         variant={isFollowing ? "secondary" : "primary"}
         scale="sm"

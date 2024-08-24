@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { Address } from "wagmi";
 import { MODE_OWNED } from "@/config/constants";
 import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
+import { useGetTotalCountById } from "@/hooks/useQuery";
 
 export default function OwnedNFTs({
   wallet,
@@ -31,16 +32,10 @@ export default function OwnedNFTs({
     updateFilters,
   } = useFetchNFTsByUser(wallet, "owned");
 
-  const { data: totalOwned } = useSWR(
-    [
-      "total_owner-data",
-      { owner: String(wallet) as `0x${string}`, mode: String(MODE_OWNED) },
-    ],
-    ([_, params]) =>
-      api.getTotalCountById({
-        ...params,
-      }),
-    { refreshInterval: 0 }
+  const { data: totalOwned } = useGetTotalCountById(
+    "total_owner-data",
+    String(wallet) as `0x${string}`,
+    String(MODE_OWNED)
   );
 
   useEffect(() => {

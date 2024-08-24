@@ -100,6 +100,7 @@ export default function CollectionsList({
                       alt="Cover"
                       width={1200}
                       height={256}
+                      loading="lazy"
                     />
                     <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white">
                       <Image
@@ -108,6 +109,7 @@ export default function CollectionsList({
                         alt="Avatar"
                         width={60}
                         height={60}
+                        loading="lazy"
                       />
                     </div>
                   </div>

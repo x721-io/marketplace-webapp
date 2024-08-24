@@ -73,8 +73,8 @@ const TabItem = ({
       case "underline":
         return {
           borderBottom: active ? "2px solid #252525" : "none",
+          opacity: active ? 1 : 0.5,
         };
-        break;
     }
   };
 

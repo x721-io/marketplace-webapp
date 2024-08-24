@@ -10,14 +10,17 @@ import {
   useFetchCollectionList,
   useInfiniteScroll,
 } from "@/hooks/useInfiniteScroll";
+import { useGetCollections } from "@/hooks/useQuery";
 
 export default function ExploreCollectionsPage() {
   const filtersTimeout = useRef<any>(null);
   const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
     useCollectionFilterStore((state) => state);
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
-  const { data, size, setSize, isLoading, error } =
-    useFetchCollectionList(decouncedFilters);
+  // const { data, size, setSize, isLoading, error } =
+  //   useFetchCollectionList(decouncedFilters);
+  const { data, size, isLoading, setSize, error } =
+    useGetCollections(decouncedFilters);
 
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,

@@ -2,15 +2,18 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import useSWR from "swr";
 import Text from "@/components/Text";
 import NFTData from "@/components/NFT/NFTData";
 import NFTMarketData from "@/components/Pages/MarketplaceNFT/NFTDetails/MarketData";
 import NFTImage from "@/components/Pages/MarketplaceNFT/NFTDetails/NFTImage";
 import Icon from "@/components/Icon";
 import React from "react";
-import useSWRImmutable from "swr/immutable";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import {
+  useGetMarketDataByNftId,
+  useGetNftById,
+  useGetNftMetadata,
+} from "@/hooks/useQuery";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -21,33 +24,17 @@ export default function NFTPage() {
     data: item,
     isLoading,
     error,
-  } = useSWRImmutable(
-    [
-      "nft-details",
-      { collectionAddress: String(collectionAddress), id: String(id) },
-    ],
-    ([_, params]) => api.fetchNFTById(params)
+  } = useGetNftById({
+    collectionAddress: String(collectionAddress),
+    id: String(id),
+  });
+
+  const { data: marketData } = useGetMarketDataByNftId(
+    collectionAddress as string,
+    id as string
   );
 
-  const { data: marketData } = useSWR(
-    [
-      "nft-market-data",
-      { collectionAddress: String(collectionAddress), id: String(id) },
-    ],
-    ([_, params]) =>
-      api.fetchMarketDataByNFT({
-        ...params,
-        bidListPage: 1,
-        bidListLimit: 100,
-      }),
-    { refreshInterval: 10000 }
-  );
-
-  const { data: metaData } = useSWRImmutable(
-    !!item?.tokenUri ? item.tokenUri : null,
-    (uri) => api.getNFTMetaData(uri),
-    { refreshInterval: 600000 }
-  );
+  const { data: metaData } = useGetNftMetadata(item);
 
   if (isLoading) {
     return (

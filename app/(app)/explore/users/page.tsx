@@ -13,9 +13,10 @@ import UserFollow from "@/components/Pages/MarketplaceNFT/UserDetails/UserFollow
 import { formatDisplayedNumber } from "@/utils";
 import useAuthStore from "@/store/auth/store";
 import Icon from "@/components/Icon";
-import { useFetchUserList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useUserFilterStore } from "@/store/filters/users/store";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import { useGetUsers } from "@/hooks/useQuery";
 
 export default function ExploreUsersPage() {
   const filtersTimeout = useRef<any>(null);
@@ -24,7 +25,7 @@ export default function ExploreUsersPage() {
   const [decouncedFilters, setDebouncedFilters] = useState<any>(filters);
   const myId = useAuthStore((state) => state.profile?.id);
   const { data, size, isLoading, setSize, mutate, error } =
-    useFetchUserList(decouncedFilters);
+    useGetUsers(decouncedFilters);
 
   const { isLoadingMore, list: users } = useInfiniteScroll({
     data,
@@ -87,6 +88,7 @@ export default function ExploreUsersPage() {
                   alt="Cover"
                   width={1200}
                   height={256}
+                  loading="lazy"
                 />
                 <div className="absolute rounded-full w-[60px] h-[60px] top-16 left-4 border-2 border-white">
                   <Image
@@ -95,6 +97,7 @@ export default function ExploreUsersPage() {
                     alt="Avatar"
                     width={60}
                     height={60}
+                    loading="lazy"
                   />
                 </div>
               </div>

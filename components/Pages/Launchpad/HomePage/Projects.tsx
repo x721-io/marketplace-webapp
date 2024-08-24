@@ -4,33 +4,17 @@ import Tabs from "@/components/Tabs";
 import { useMemo, useState } from "react";
 import HomePageProjectList from "./LaunchpadList";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
-import useSWR from "swr";
+import { useGetLaunchpadProjects } from "@/hooks/useQuery";
 
 export default function HomePageProjectTabs() {
   const api = useLaunchpadApi();
-  const { data: mintingProjects } = useSWR(
-    "mintingProjects",
-    () => api.fetchProjects({ mode: "MINTING" }),
-    { revalidateOnFocus: false }
-  );
+  const { data: mintingProjects } = useGetLaunchpadProjects("MINTING");
 
-  const { data: comingProjects } = useSWR(
-    "upcomingProjects",
-    () => api.fetchProjects({ mode: "UPCOMING" }),
-    { revalidateOnFocus: false }
-  );
+  const { data: comingProjects } = useGetLaunchpadProjects("UPCOMING");
 
-  const { data: endedProjects } = useSWR(
-    "endedProjects",
-    () => api.fetchProjects({ mode: "ENDED" }),
-    { revalidateOnFocus: false }
-  );
+  const { data: endedProjects } = useGetLaunchpadProjects("ENDED");
 
-  const { data: claimableProjects } = useSWR(
-    "claimProjects",
-    () => api.fetchProjects({ mode: "CLAIM" }),
-    { revalidateOnFocus: false }
-  );
+  const { data: claimableProjects } = useGetLaunchpadProjects("CLAIM");
 
   const [current, setCurrent] = useState(1);
 

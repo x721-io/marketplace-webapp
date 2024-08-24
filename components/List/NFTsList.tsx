@@ -109,11 +109,8 @@ export default function NFTsList({
             </Link>
           )}
 
-          {items.map((item) => (
-            <div
-              className="h-full"
-              key={item.collection.address + "-" + item.u2uId}
-            >
+          {items.map((item, i) => (
+            <div className="h-full" key={i + "-" + item.u2uId}>
               <NFTCard {...item} />
             </div>
           ))}

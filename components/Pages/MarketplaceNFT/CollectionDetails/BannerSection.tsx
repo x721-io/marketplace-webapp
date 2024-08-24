@@ -3,18 +3,19 @@
 import UploadIcon from "@/components/Icon/Upload";
 import React, { useMemo, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { toast } from "react-toastify";
 import useAuthStore from "@/store/auth/store";
 import { APIResponse } from "@/services/api/types";
 import { useAuth } from "@/hooks/useAuth";
 import { parseImageUrl } from "@/utils/nft";
+import { useUpdateCollection, useUploadFile } from "@/hooks/useMutate";
 
 interface Props {
   cover: string | StaticImageData;
   avatar: string | StaticImageData;
   creators?: APIResponse.CollectionDetails["collection"]["creators"];
   collectionId: string;
+  onUpdateSuccess: () => void;
 }
 
 export default function BannerSectionCollection({
@@ -22,10 +23,13 @@ export default function BannerSectionCollection({
   cover,
   avatar,
   creators,
+  onUpdateSuccess,
 }: Props) {
   const { isValidSession } = useAuth();
   const coverImageRef = useRef<HTMLInputElement>(null);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const { trigger: updateCollectionMutate } = useUpdateCollection();
+  const { trigger: uploadFileMutate } = useUploadFile();
   const isOwner = useMemo(() => {
     if (!creators || !wallet) return false;
     return (
@@ -36,15 +40,13 @@ export default function BannerSectionCollection({
     );
   }, [creators, wallet]);
 
-  const api = useMarketplaceApi();
-
   const handleInputImage = async (files: FileList | null) => {
     if (!files) return;
     const toastId = toast.loading("Uploading Cover image...", { type: "info" });
     try {
-      const { fileHashes } = await api.uploadFile(files[0]);
+      const { fileHashes } = await uploadFileMutate({ files: files[0] });
 
-      await api.updateCollection({
+      await updateCollectionMutate({
         id: collectionId,
         coverImage: parseImageUrl(fileHashes[0]),
       });
@@ -55,6 +57,7 @@ export default function BannerSectionCollection({
         autoClose: 1000,
         closeButton: true,
       });
+      onUpdateSuccess();
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error report: ${e.message || e}`,

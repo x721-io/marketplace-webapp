@@ -9,11 +9,15 @@ import SearchNFTTab from "./NFTTab";
 import { isMobile } from "react-device-detect";
 // import { useSearch, useSearchCollection, useSearchNft, useSearchUser } from "@/hooks/useSearch";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import useSWRMutation from "swr/mutation";
 import { useSearch } from "@/hooks/useSearch";
 import { useTranslations } from "next-intl";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import { MyModal } from "@/components/X721UIKits/Modal";
+import {
+  useSearchCollections,
+  useSearchNfts,
+  useSearchUsers,
+} from "@/hooks/useMutate";
 
 export default function SearchInput() {
   const t = useTranslations("Header");
@@ -36,23 +40,21 @@ export default function SearchInput() {
     data: collectionSearchData,
     isMutating: searchingCollection,
     reset: resetCollection,
-  } = useSWRMutation(text.collection || null, (text) =>
-    api.searchCollections(text)
-  );
+  } = useSearchCollections(text);
 
   const {
     trigger: searchNFTs,
     data: nftSearchData,
     isMutating: searchingNFT,
     reset: resetNft,
-  } = useSWRMutation(text.nft || null, (text) => api.searchNFTs(text));
+  } = useSearchNfts(text);
 
   const {
     trigger: searchUsers,
     data: userSearchData,
     isMutating: searchingUser,
     reset: resetUser,
-  } = useSWRMutation(text.user || null, (text) => api.searchUsers(text));
+  } = useSearchUsers(text);
 
   const handleSearch = () => {
     if (!searchKey || !text[searchKey]) return;

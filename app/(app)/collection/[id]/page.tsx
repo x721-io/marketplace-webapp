@@ -1,10 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import { useParams } from "next/navigation";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
-import useSWR from "swr";
-import { sanitizeObject } from "@/utils";
-import { APIParams, APIResponse } from "@/services/api/types";
+import { APIParams } from "@/services/api/types";
 import NFTsList from "@/components/List/NFTsList";
 import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
 import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection";
@@ -15,27 +12,23 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import { useFilterByCollection } from "@/store/filters/byCollection/store";
-import useSWRInfinite from "swr/infinite";
-import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Address } from "wagmi";
 import MySpinner from "@/components/X721UIKits/Spinner";
+import { useGetCollectionById, useGetNFTs } from "@/hooks/useQuery";
 
 export default function CollectionPage() {
   const { id } = useParams();
-  const api = useMarketplaceApi();
   const filterStore = useFilterByCollection((state) => state);
-
   const {
     data: collectionData,
     isLoading: isLoadingCollection,
     error: collectionError,
-  } = useSWR(!!id ? id : null, (id: string) => api.fetchCollectionById(id), {
-    refreshInterval: 30000,
-    onSuccess: (data) => {
-      const collectionAddress = data?.collection.address;
-      filterStore.createFiltersForCollection(collectionAddress);
-      filterStore.updateFilters(collectionAddress, { collectionAddress });
-    },
+    mutate,
+  } = useGetCollectionById(!!id ? (id as string) : null, (data) => {
+    const collectionAddress = data?.collection.address;
+    filterStore.createFiltersForCollection(collectionAddress);
+    filterStore.updateFilters(collectionAddress, { collectionAddress });
   });
 
   const { showFilters, filters, toggleFilter, resetFilters, updateFilters } =
@@ -69,7 +62,7 @@ export default function CollectionPage() {
     setSize,
     size,
     data,
-  } = useFetchNFTList(filters);
+  } = useGetNFTs(filters);
 
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
@@ -112,6 +105,7 @@ export default function CollectionPage() {
   return (
     <div className="w-full relative">
       <BannerSectionCollection
+        onUpdateSuccess={mutate}
         collectionId={collectionData.collection.id}
         creators={collectionData.collection.creators}
         cover={getCollectionBannerImage(collectionData.collection)}

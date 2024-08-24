@@ -4,14 +4,17 @@ import NFTsList from "@/components/List/NFTsList";
 import { useNFTFilterStore } from "@/store/filters/items/store";
 import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useEffect, useRef, useState } from "react";
+import { useGetNFTs } from "@/hooks/useQuery";
 
 export default function ExploreNFTsPage() {
   const filtersTimeout = useRef<any>(null);
   const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
     useNFTFilterStore();
   const [decouncedFilters, setDebouncedFilters] = useState<any>(filters);
+  // const { error, isLoading, setSize, size, data } =
+  //   useFetchNFTList(decouncedFilters);
   const { error, isLoading, setSize, size, data } =
-    useFetchNFTList(decouncedFilters);
+    useGetNFTs(decouncedFilters);
 
   useEffect(() => {
     if (filtersTimeout.current) {

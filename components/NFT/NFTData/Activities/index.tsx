@@ -1,25 +1,20 @@
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import React, { useState } from "react";
-import useSWR from "swr";
 import Text from "@/components/Text";
 import { NFT } from "@/types";
 import NFTMarketEvent from "./MarketEvent";
+import { useGetNftEvents } from "@/hooks/useQuery";
 
 export default function ActivitiesTab({ nft }: { nft: NFT }) {
   const api = useMarketplaceApi();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
-
-  const { data, isLoading } = useSWR(
-    {
-      page,
-      limit,
-      tokenId: nft.u2uId ? nft.u2uId : nft.id,
-      collectionAddress: nft.collection.address,
-    },
-    (params) => api.fetchNFTEvents(params),
-    { refreshInterval: 10000 }
-  );
+  const { data, isLoading } = useGetNftEvents({
+    page,
+    limit,
+    tokenId: nft.u2uId ? nft.u2uId : nft.id,
+    collectionAddress: nft.collection.address,
+  });
 
   return (
     <div className="py-7 overflow-x-auto">

@@ -6,11 +6,15 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MARKETPLACE_URL } from "@/config/constants";
 import { parseImageUrl } from "@/utils/nft";
 import { Web3Functions } from "@/services/web3";
+import { useCreateNFTAPI, useUploadMetadata } from "./useMutate";
 
 export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi();
   const { address } = useAccount();
   const userId = useAuthStore((state) => state.profile?.id);
+  const { trigger: createNFTMutate } = useCreateNFTAPI();
+
+  const { trigger: uploadMetadataMutate } = useUploadMetadata();
 
   // const proxyContract = type === 'ERC721' ? contracts.erc721Proxy : contracts.erc1155Proxy
 
@@ -42,7 +46,7 @@ export const useCreateNFT = (type: AssetType) => {
       attributes: traits,
     };
 
-    const { metadataHash } = await api.uploadMetadata(metadata);
+    const { metadataHash } = await uploadMetadataMutate(metadata);
 
     const mintERC721 = async () => {
       const tokenArgs = {
@@ -103,7 +107,7 @@ export const useCreateNFT = (type: AssetType) => {
         creatorId: userId,
         traits: traits,
       };
-      await api.createNFT(createNFTParams);
+      await createNFTMutate(createNFTParams);
     } catch (err: any) {
       throw err;
     }

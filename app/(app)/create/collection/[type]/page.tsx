@@ -6,7 +6,7 @@ import Input from "@/components/Form/Input";
 import Textarea from "@/components/Form/Textarea";
 import Button from "@/components/Button";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useCollection, { useUpdateCollection } from "@/hooks/useCollection";
 import { randomWord } from "@rarible/types";
 import useAuthStore from "@/store/auth/store";
@@ -15,18 +15,21 @@ import Icon from "@/components/Icon";
 import { toast } from "react-toastify";
 import { AssetType, FormState } from "@/types";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { noSpecialCharacterRegex } from "@/utils/regex";
 import { parseImageUrl } from "@/utils/nft";
-import { waitForTransaction } from "@wagmi/core";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { CHAIN_ID } from "@/config/constants";
 import { formRulesCreateCollection } from "@/config/form/rules";
 import { useTranslations } from "next-intl";
+import {
+  useCreateCollection,
+  useUploadFile,
+  useValidateInput,
+} from "@/hooks/useMutate";
 
 export default function CreateNFTCollectionPage() {
+  const validateTimeout = useRef<any>(null);
   const t = useTranslations("CreateCollection");
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
@@ -35,10 +38,11 @@ export default function CreateNFTCollectionPage() {
   const [loading, setLoading] = useState(false);
   const [validating, setValidating] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const api = useMarketplaceApi();
   const creator = useAuthStore((state) => state.profile?.id);
   const { createCollection } = useCollection();
-  const { onCreateCollection } = useUpdateCollection();
+  const { trigger: createCollectionMutate } = useCreateCollection();
+  const { trigger: uploadFileMutate } = useUploadFile();
+  const { trigger: validateInputMutate } = useValidateInput();
   const {
     handleSubmit,
     register,
@@ -58,7 +62,7 @@ export default function CreateNFTCollectionPage() {
     }
     setUploading(true);
     try {
-      await toast.promise(api.uploadFile(file), {
+      await toast.promise(uploadFileMutate({ files: file }), {
         pending: "Uploading image...",
         success: {
           render: (data) => {
@@ -104,7 +108,7 @@ export default function CreateNFTCollectionPage() {
 
       try {
         const response = await createCollection(type, args);
-        onCreateCollection({
+        await createCollectionMutate({
           ...data,
           type,
           txCreationHash: response.transactionHash,
@@ -150,7 +154,7 @@ export default function CreateNFTCollectionPage() {
     try {
       setValidating(true);
       if (name === "name" && !!value.name) {
-        const existed = await api.validateInput({
+        const existed = await validateInputMutate({
           key: "collectionName",
           value: value.name,
         });
@@ -163,7 +167,7 @@ export default function CreateNFTCollectionPage() {
       }
 
       if (name === "shortUrl" && !!value.shortUrl) {
-        const existed = await api.validateInput({
+        const existed = await validateInputMutate({
           key: "collectionShortUrl",
           value: value.shortUrl,
         });
@@ -182,7 +186,13 @@ export default function CreateNFTCollectionPage() {
   useEffect(() => {
     const subscription = watch(async (value, { name, type }) => {
       if (!name) return;
-      handleValidateInput(name, value);
+      if (validateTimeout.current) {
+        clearTimeout(validateTimeout.current);
+      }
+      validateTimeout.current = setTimeout(
+        () => handleValidateInput(name, value),
+        200
+      );
     });
     return () => subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
