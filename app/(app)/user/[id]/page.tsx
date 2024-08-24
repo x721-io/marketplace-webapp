@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import useSWR from "swr";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import Text from "@/components/Text";
 import { formatDisplayedNumber } from "@/utils";
 import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
@@ -18,19 +16,8 @@ import MySpinner from "@/components/X721UIKits/Spinner";
 import { useGetProfile } from "@/hooks/useQuery";
 
 export default function ProfilePage() {
-  const api = useMarketplaceApi();
   const { id } = useParams();
-
-  // const {
-  //   data: user,
-  //   isLoading,
-  //   error,
-  //   mutate,
-  // } = useSWR([id], (userId) => api.viewProfile(userId.toString()), {
-  //   revalidateOnFocus: false,
-  // });
   const filterStore = useFilterByUser();
-
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
   const [createdAmount, setCreatedAmount] = useState(0);
@@ -136,6 +123,7 @@ export default function ProfilePage() {
           wallet={user.publicKey}
           onUpdateAmount={setCreatedCollectionAmount}
         />
+        <Activities isShow={currTabIndex === 4} wallet={user.publicKey} />
       </div>
     </div>
   );

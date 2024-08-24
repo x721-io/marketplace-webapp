@@ -5,12 +5,12 @@ import { SIGN_MESSAGE } from "@/config/constants";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
-import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { signMessage } from "@wagmi/core";
 import { Tooltip } from "react-tooltip";
 import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import "react-tooltip/dist/react-tooltip.css";
+import { useGetProfileMutate } from "@/hooks/useMutate";
 
 interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -23,13 +23,13 @@ export default function SignConnectMessageModal({
   onClose,
   onSignup,
 }: Props) {
-  const api = useMarketplaceApi();
   const { address } = useAccount();
   const { isError, isLoading, signMessageAsync, error } = useSignMessage();
   const { setProfile } = useAuthStore();
   const { onAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
+  const { trigger: getProfileMutate } = useGetProfileMutate();
 
   const handleSignMessage = useCallback(async () => {
     setAuthError("");
@@ -49,7 +49,7 @@ export default function SignConnectMessageModal({
         : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
 
       const credentials = await onAuth(date, signature);
-      const profile = await api.viewProfile(address);
+      const profile = await getProfileMutate({ address });
 
       if (!profile?.acceptedTerms) {
         // Not registered

@@ -12,10 +12,10 @@ import {
   getCollectionBannerImage,
 } from "@/utils/string";
 import { useFilterByCollection } from "@/store/filters/byCollection/store";
-import { useFetchNFTList, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Address } from "wagmi";
 import MySpinner from "@/components/X721UIKits/Spinner";
-import { useGetCollectionById } from "@/hooks/useQuery";
+import { useGetCollectionById, useGetNFTs } from "@/hooks/useQuery";
 
 export default function CollectionPage() {
   const { id } = useParams();
@@ -24,6 +24,7 @@ export default function CollectionPage() {
     data: collectionData,
     isLoading: isLoadingCollection,
     error: collectionError,
+    mutate,
   } = useGetCollectionById(!!id ? (id as string) : null, (data) => {
     const collectionAddress = data?.collection.address;
     filterStore.createFiltersForCollection(collectionAddress);
@@ -61,7 +62,7 @@ export default function CollectionPage() {
     setSize,
     size,
     data,
-  } = useFetchNFTList(filters);
+  } = useGetNFTs(filters);
 
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
@@ -104,6 +105,7 @@ export default function CollectionPage() {
   return (
     <div className="w-full relative">
       <BannerSectionCollection
+        onUpdateSuccess={mutate}
         collectionId={collectionData.collection.id}
         creators={collectionData.collection.creators}
         cover={getCollectionBannerImage(collectionData.collection)}

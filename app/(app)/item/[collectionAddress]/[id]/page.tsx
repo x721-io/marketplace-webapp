@@ -8,9 +8,12 @@ import NFTMarketData from "@/components/Pages/MarketplaceNFT/NFTDetails/MarketDa
 import NFTImage from "@/components/Pages/MarketplaceNFT/NFTDetails/NFTImage";
 import Icon from "@/components/Icon";
 import React from "react";
-import useSWRImmutable from "swr/immutable";
 import MySpinner from "@/components/X721UIKits/Spinner";
-import { useGetMarketDataByNftId, useGetNftMetadata } from "@/hooks/useQuery";
+import {
+  useGetMarketDataByNftId,
+  useGetNftById,
+  useGetNftMetadata,
+} from "@/hooks/useQuery";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -21,13 +24,10 @@ export default function NFTPage() {
     data: item,
     isLoading,
     error,
-  } = useSWRImmutable(
-    [
-      "nft-details",
-      { collectionAddress: String(collectionAddress), id: String(id) },
-    ],
-    ([_, params]) => api.fetchNFTById(params)
-  );
+  } = useGetNftById({
+    collectionAddress: String(collectionAddress),
+    id: String(id),
+  });
 
   const { data: marketData } = useGetMarketDataByNftId(
     collectionAddress as string,

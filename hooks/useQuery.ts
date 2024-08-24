@@ -2,17 +2,17 @@ import useSWR from "swr";
 import { nextAPI } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { Address, parseUnits } from "viem";
-import { sanitizeObject } from "@/utils";
+import { parseQueries, sanitizeObject } from "@/utils";
 import { APIParams, APIResponse } from "@/services/api/types";
 import useSWRInfinite from "swr/infinite";
 import { NextAPIResponse } from "@/types/api/api.response";
 import useSWRImmutable from "swr/immutable";
 import axios from "axios";
 
-export const useGetProfile = (id: Address | string) => {
+export const useGetProfile = (address: Address | string) => {
   const { data, error, isLoading, mutate } =
     useSWR<NextAPIResponse.GetUserProfile>(
-      `${API_ENDPOINTS.PROFILE}/${id}`,
+      `${API_ENDPOINTS.PROFILE}/${address}`,
       nextAPI.get
     );
   return {
@@ -261,6 +261,85 @@ export const useGetTotalCountById = (
   );
   return {
     data: data?.data?.data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};
+
+export const useGetCollectionsByUser = (
+  enabled: boolean,
+  params: APIParams.FetchCollectionById
+) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    enabled ? [API_ENDPOINTS.USER_COLLECTIONS, params] : null,
+    async (key: any) => {
+      const params = key[1] as APIParams.FetchCollectionById;
+      const response = await nextAPI.get(
+        `${
+          API_ENDPOINTS.USER_COLLECTIONS +
+          `/${params.userId}` +
+          parseQueries(params)
+        }`
+      );
+      return response.data.data as APIResponse.FetchCollections;
+    }
+  );
+  return {
+    data: data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};
+
+export const useGetNftById = (params: APIParams.FetchNFTDetails) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    API_ENDPOINTS.NFT + parseQueries(params),
+    async (url: string) => {
+      const response = await nextAPI.get(url);
+      return response.data.data as APIResponse.NFTDetails;
+    }
+  );
+  return {
+    data: data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};
+
+export const useGetUserActivities = (
+  params: APIParams.UserActivities | null
+) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    params ? [API_ENDPOINTS.USER_ACTIVITIES, params] : null,
+    async ([_, params]: [string, APIParams.UserActivities]) => {
+      const response = await nextAPI.post(
+        API_ENDPOINTS.USER_ACTIVITIES,
+        params
+      );
+      return response.data.data as APIResponse.UserActivities;
+    }
+  );
+  return {
+    data: data ?? null,
+    error,
+    isLoading,
+    mutate,
+  };
+};
+
+export const useGetNftEvents = (params: APIParams.NFTEvents) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    [API_ENDPOINTS.NFT_EVENTS, params],
+    async ([url, params]: [string, APIParams.NFTEvents]) => {
+      const response = await nextAPI.post(url, params);
+      return response.data.data as APIResponse.NFTEvents;
+    }
+  );
+  return {
+    data: data ?? null,
     error,
     isLoading,
     mutate,

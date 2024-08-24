@@ -20,7 +20,6 @@ import {
 } from "axios";
 import { getMarketplaceApi, marketplaceApi } from "@/services/api";
 import { getTranslations } from "next-intl/server";
-// import { getTranslations } from 'next-intl/server';
 
 export const setAuthCookiesAction = async ({
   accessToken,
@@ -140,11 +139,6 @@ export const translateApiMessages = async (
   return t(type, {
     action: translationKey?.split("_").join(" ") || "Perform Request",
   });
-};
-
-export const getTransactionErrorMessage = async (err: any): Promise<any> => {
-  const t = await getTranslations();
-  return { errMsg: "Rejected" };
 };
 
 export const handleRouteAuthentication = async (
