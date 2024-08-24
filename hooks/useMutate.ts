@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "@/config/api";
 import { User } from "@/types";
 import { APIParams, APIResponse } from "@/services/api/types";
 import useSWRMutation from "swr/mutation";
+import { Address } from "viem";
 
 export const useGetProfileMutate = () => {
   const { trigger, data, isMutating, reset } = useSWRMutation(
@@ -248,6 +249,55 @@ export const useFollowUser = () => {
         {}
       );
       return response.data.data as APIResponse.FollowUser;
+    }
+  );
+  return {
+    trigger,
+    data,
+    isMutating,
+    reset,
+  };
+};
+
+export const useGenerateTokenId = () => {
+  const { trigger, data, isMutating, reset } = useSWRMutation(
+    API_ENDPOINTS.TOKEN_ID,
+    async (
+      _: string,
+      {
+        arg,
+      }: {
+        arg: { collectionAddress: Address };
+      }
+    ) => {
+      const { collectionAddress } = arg;
+      const response = await nextAPI.get(
+        API_ENDPOINTS.TOKEN_ID + `?collectionAddress=${collectionAddress}`
+      );
+      return response.data.data as APIResponse.GenerateTokenId;
+    }
+  );
+  return {
+    trigger,
+    data,
+    isMutating,
+    reset,
+  };
+};
+
+export const useConnectAPI = () => {
+  const { trigger, data, isMutating, reset } = useSWRMutation(
+    API_ENDPOINTS.CONNECT,
+    async (
+      _: string,
+      {
+        arg,
+      }: {
+        arg: APIParams.Connect;
+      }
+    ) => {
+      const response = await nextAPI.post(API_ENDPOINTS.CONNECT, arg);
+      return response.data.data as APIResponse.Connect;
     }
   );
   return {

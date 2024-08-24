@@ -19,7 +19,6 @@ export default function OwnedNFTs({
   isShow?: boolean;
   onUpdateAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const api = useMarketplaceApi();
   const {
     isLoadingMore,
     isLoading,

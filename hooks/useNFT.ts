@@ -6,7 +6,11 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MARKETPLACE_URL } from "@/config/constants";
 import { parseImageUrl } from "@/utils/nft";
 import { Web3Functions } from "@/services/web3";
-import { useCreateNFTAPI, useUploadMetadata } from "./useMutate";
+import {
+  useCreateNFTAPI,
+  useGenerateTokenId,
+  useUploadMetadata,
+} from "./useMutate";
 
 export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi();
@@ -15,6 +19,7 @@ export const useCreateNFT = (type: AssetType) => {
   const { trigger: createNFTMutate } = useCreateNFTAPI();
 
   const { trigger: uploadMetadataMutate } = useUploadMetadata();
+  const { trigger: generateTokenIdMutate } = useGenerateTokenId();
 
   // const proxyContract = type === 'ERC721' ? contracts.erc721Proxy : contracts.erc1155Proxy
 
@@ -32,7 +37,9 @@ export const useCreateNFT = (type: AssetType) => {
     } = params;
     const royaltiesBigInt = BigInt(Number(Number(royalties).toFixed(2)) * 100);
 
-    const { id, u2uId } = await api.generateTokenId(collection);
+    const { id, u2uId } = await generateTokenIdMutate({
+      collectionAddress: collection,
+    });
 
     const metadata = {
       id: id,
