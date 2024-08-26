@@ -6,7 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 export default function UserItemSkeleton() {
   return (
-    <div className="h-[220px]">
+    <div className="h-[220px] pt-[10px] px-[10px] rounded-xl border border-1 border-soft">
       <SkeletonTheme
         height={"42%"}
         width={"100%"}

@@ -6,7 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 export default function NFTCardSkeleton() {
   return (
-    <div className="h-[295px]">
+    <div className="h-[295px] pt-[10px] px-[10px] rounded-xl border border-1 border-soft">
       <SkeletonTheme
         height={"75%"}
         width={"100%"}
