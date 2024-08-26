@@ -16,6 +16,8 @@ import Icon from "@/components/Icon";
 import MySpinner from "../X721UIKits/Spinner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import CollectionItem from "../CollectionItem";
+import CollectionItemSkeleton from "../CollectionItem/skeleton";
 
 interface Props {
   isLoading?: boolean;
@@ -42,8 +44,17 @@ export default function CollectionsList({
 
   if (isLoading) {
     return (
-      <div className="w-full h-56 flex justify-center items-center">
-        <MySpinner />
+      <div
+        className={classNames(
+          "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:grid-cols-2 tablet:gap-4 grid-cols-1 gap-3",
+          showFilter ? "desktop:grid-cols-3" : "desktop:grid-cols-4"
+        )}
+      >
+        {Array(20)
+          .fill("")
+          .map((_, i) => (
+            <CollectionItemSkeleton key={i} />
+          ))}
       </div>
     );
   }
@@ -90,94 +101,14 @@ export default function CollectionsList({
         {Array.isArray(collections) &&
           collections.map((c, index) => {
             let link = c.shortUrl || c.id || c.address || c.name;
-            return (
-              <Link key={c.id} href={`/collection/${link}`}>
-                <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
-                  <div className="relative">
-                    <Image
-                      className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover w-full h-24"
-                      src={getCollectionBannerImage(c)}
-                      alt="Cover"
-                      width={1200}
-                      height={256}
-                      loading="lazy"
-                    />
-                    <div className="absolute rounded-full w-14 h-14 top-16 left-4 border-2 border-white">
-                      <Image
-                        className="cursor-pointer rounded-full object-cover w-full h-full"
-                        src={getCollectionAvatarImage(c)}
-                        alt="Avatar"
-                        width={60}
-                        height={60}
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                  <div className="pt-8 px-3 pb-4 flex justify-between">
-                    <div className="flex gap-2 w-full flex-col">
-                      <div className="flex gap-1 items-center">
-                        <a
-                          data-tooltip-id={c.name ?? ""}
-                          data-tooltip-content={c.name ?? ""}
-                        >
-                          <Text className="font-medium text-ellipsis whitespace-nowrap text-gray-900 max-w-[100px] overflow-hidden break-words">
-                            {c.name}
-                          </Text>
-                          <Tooltip id={c.name ?? ""} />
-                        </a>
-                        {c.creators &&
-                        c.creators.length > 0 &&
-                        c.creators[0].user.accountStatus &&
-                        c.isVerified ? (
-                          <Icon name="verify-active" width={16} height={16} />
-                        ) : (
-                          <Icon name="verify-disable" width={16} height={16} />
-                        )}
-                      </div>
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">
-                            Owners
-                          </Text>
-                          <Text className="text-body-12">{c.totalOwner}</Text>
-                        </div>
-                        <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">
-                            Items
-                          </Text>
-                          <Text className="text-body-12 ">{c.totalNft}</Text>
-                        </div>
-                        <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">
-                            Volume
-                          </Text>
-                          <Text className="text-body-12">
-                            {formatDisplayedNumber(formatUnits(c.volumn || 0))}{" "}
-                            U2U
-                          </Text>
-                        </div>
-                        <div className="flex items-center gap-1 flex-col">
-                          <Text className="text-body-12 text-secondary">
-                            Floor
-                          </Text>
-                          <Text className="text-body-12">
-                            {formatDisplayedNumber(c.floorPrice || 0)} U2U
-                          </Text>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            );
+            return <CollectionItem c={c} key={c.id} link={link} />;
           })}
+        {isLoadMore &&
+          Array(20)
+            .fill("")
+            .map((_, i) => <CollectionItemSkeleton key={i} />)}
       </div>
       <div className="flex justify-center items-center">
-        {isLoadMore && (
-          <div className="w-full h-56 flex justify-center items-center">
-            <MySpinner />
-          </div>
-        )}
         {!currentHasNext && (
           <div className="w-full h-36 flex justify-center items-center">
             No more data
