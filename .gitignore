@@ -4,5 +4,5 @@
 .next
 .env.local
 .env
-package-lock.json
 yarn.lock
+package-lock.json

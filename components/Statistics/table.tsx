@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   ColumnDef,
@@ -11,11 +11,29 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { makeData, CollectionChartItem } from "./makeData";
+import { useCollectionFilterStore } from "@/store/filters/collections/store";
+import { useGetCollections } from "@/hooks/useQuery";
+import { Collection } from "@/types";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { formatDisplayedNumber } from "@/utils";
+import { formatEther } from "viem";
+import { getCollectionAvatarImage } from "@/utils/string";
 
 //custom sorting logic for one of our enum columns
 
 function CollectionsTable() {
+  const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
+    useCollectionFilterStore((state) => state);
+  const { data, size, isLoading, setSize, error } = useGetCollections({
+    limit: 20,
+    page: 0,
+  });
+  const { isLoadingMore, list: collections } = useInfiniteScroll({
+    data,
+    loading: isLoading,
+    page: size,
+    onNext: () => setSize(size + 1),
+  });
   const rerender = React.useReducer(() => ({}), {})[1];
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -28,28 +46,48 @@ function CollectionsTable() {
     );
   };
 
-  const columns = React.useMemo<ColumnDef<CollectionChartItem>[]>(
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const columns = React.useMemo<ColumnDef<Collection>[]>(
     () => [
       {
         header: () => renderHeader("#"),
         accessorKey: "index",
-        cell: (info) => info.getValue(),
+        // cell: (info) => info.getValue(),
         size: 60,
+        cell: (info) => {
+          return info.row.index + 1;
+        },
         //this column will sort in ascending order by default since it is a string column
       },
       {
         accessorFn: (row) => row.name,
         id: "name",
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          const avatarURL = getCollectionAvatarImage(info.row.original);
+          return (
+            <div className="flex items-center gap-8">
+              <img
+                src={avatarURL ?? ""}
+                width={40}
+                className="rounded-md"
+                alt={info.row.original.id}
+              />
+              {info.row.original.name}
+            </div>
+          );
+        },
         header: () => renderHeader("Collection"),
-        size: 400,
-
+        size: 450,
         sortUndefined: "last", //force undefined values to the end
         sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
       },
       {
         accessorKey: "floorPrice",
         header: () => renderHeader("Floor price"),
+        cell: (info) => info.getValue(),
         size: 150,
         //this column will sort in descending order by default since it is a number column
       },
@@ -57,11 +95,24 @@ function CollectionsTable() {
         accessorKey: "floorChange",
         header: () => renderHeader("Floor change"),
         size: 150,
+        cell: (info) => {
+          const value = info.getValue() as number;
+          if (value < 0) {
+            return <span className="text-[#E31B1B]">{value}%</span>;
+          }
+          return <span className="text-[#21AE46]">+{value}%</span>;
+        },
         sortUndefined: "last", //force undefined values to the end
       },
       {
-        accessorKey: "volume",
+        accessorKey: "volumn",
         header: () => renderHeader("Volume"),
+        cell: (info) => {
+          const value = info.getValue() as string;
+          return `${formatDisplayedNumber(
+            formatEther(info.getValue() ? BigInt(value) : BigInt(0))
+          )} U2U`;
+        },
         size: 150,
         // sortingFn: sortStatusFn, //use our custom sorting function for this enum column
       },
@@ -69,16 +120,23 @@ function CollectionsTable() {
         accessorKey: "volumeChange",
         header: () => renderHeader("Volume change"),
         size: 150,
+        cell: (info) => {
+          const value = info.getValue() as number;
+          if (value < 0) {
+            return <span className="text-[#E31B1B]">{value}%</span>;
+          }
+          return <span className="text-[#21AE46]">+{value}%</span>;
+        },
         // enableSorting: false, //disable sorting for this column
       },
       {
-        accessorKey: "itemsAmt",
+        accessorKey: "totalNft",
         header: () => renderHeader("Items"),
         size: 150,
         invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
       },
       {
-        accessorKey: "ownersAmt",
+        accessorKey: "totalOwner",
         header: () => renderHeader("Owners"),
         size: 150,
         // sortingFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
@@ -86,13 +144,9 @@ function CollectionsTable() {
     ],
     []
   );
-
-  const [data, setData] = React.useState(() => makeData(1_000));
-  const refreshData = () => setData(() => makeData(100_000)); //stress test with 100k rows
-
   const table = useReactTable({
     columns,
-    data,
+    data: collections.concatenatedData,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(), //client-side sorting
@@ -113,10 +167,8 @@ function CollectionsTable() {
   });
 
   //access sorting state from the table instance
-  console.log(table.getState().sorting);
-
   return (
-    <div className="p-2 w-full">
+    <div className="py-2 w-full">
       <div className="h-2" />
       <table className="w-full">
         <thead>
@@ -132,6 +184,7 @@ function CollectionsTable() {
                         width: header.getSize(),
                       },
                     }}
+                    className="px-[20px]"
                   >
                     {header.isPlaceholder ? null : (
                       <div
@@ -168,33 +221,31 @@ function CollectionsTable() {
           ))}
         </thead>
         <tbody>
-          {table
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map((row) => {
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td key={cell.id} className="h-10">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr
+                onClick={() => alert(row.original.id)}
+                key={row.id}
+                className="h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+              >
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <td className="px-[20px]" key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
     </div>
   );
