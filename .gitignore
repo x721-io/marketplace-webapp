@@ -4,3 +4,5 @@
 .next
 .env.local
 .env
+yarn.lock
+package-lock.json
