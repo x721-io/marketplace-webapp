@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="">
       <HomePageBanner />
-      <Statistics />
+      <Statistics disableFilters={true} />
     </div>
   );
 }

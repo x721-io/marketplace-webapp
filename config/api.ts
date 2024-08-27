@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
   CONNECT: "/auth/connect",
   PROFILE: "/user/profile",
   COLLECTIONS: "/collection",
+  COLLECTIONS_ANALYSIS: "/collection/analysis",
   USER_COLLECTIONS: "/collection/user",
   UPLOAD_IMAGE: "/common/upload-ipfs",
   TOKEN_ID: "/nft/tokenId",

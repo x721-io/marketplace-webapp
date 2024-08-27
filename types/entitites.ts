@@ -112,8 +112,9 @@ export interface Collection {
   creators: { userId: string; user: User }[];
   coverImage: string | null;
   avatar: string | null;
-  volumn: string;
+  volume: string;
   totalOwner: number;
+  volumeWei: string;
   totalNft: number;
   floorPrice: string;
   isVerified: boolean;
@@ -143,3 +144,20 @@ export enum AnalysisModeMinMax {
   floorPrice = "floorPrice",
   volume = "volume",
 }
+
+export type CollectionStatisticItem = {
+  volumeChange: number;
+  floorPriceChange: string;
+  id: string;
+  collectionId: string;
+  keyTime: string;
+  address: string;
+  type: string;
+  volume: string;
+  volumeWei: string;
+  floorPrice: string;
+  items: string;
+  owner: string;
+  createdAt: string;
+  collection: Collection;
+};

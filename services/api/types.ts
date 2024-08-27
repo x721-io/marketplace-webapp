@@ -97,6 +97,14 @@ export namespace APIParams {
     order?: string;
     orderBy?: string;
   }
+  export interface FetchCollectionsStatistics extends PaginationParams {
+    search?: string;
+    min?: string;
+    max?: string;
+    order?: string;
+    orderBy?: string;
+    type?: string;
+  }
 
   export interface FetchCollectionById extends PaginationParams {
     userId: string;
