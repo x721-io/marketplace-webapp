@@ -30,8 +30,9 @@ const Statistics: React.FC<Props> = ({
     orderBy: AnalysisModeSort.volume,
     order: "desc",
     type: AnalysisType.ONEDAY,
-    page: 0,
+    page: 1,
     limit: 10,
+    minMaxBy: "volume",
   });
   const [isShowFilters, setShowFilters] = useState(false);
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
@@ -39,7 +40,7 @@ const Statistics: React.FC<Props> = ({
   const { data, size, isLoading, setSize, error } = useGetCollectionsAnalysis({
     ...decouncedFilters,
     limit: 10,
-    page: 0,
+    page: 1,
   });
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
@@ -98,6 +99,9 @@ const Statistics: React.FC<Props> = ({
       orderBy: AnalysisModeSort.volume,
       order: "desc",
       type: AnalysisType.ONEDAY,
+      min: "",
+      max: "",
+      minMaxBy: "volume",
     });
   };
 
@@ -106,9 +110,15 @@ const Statistics: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setCurrentSorting({
-      field: "volume",
-      direction: "desc",
+    setFilters({
+      ...filters,
+      orderBy: AnalysisModeSort.volume,
+      order: "desc",
+      type: AnalysisType.ONEDAY,
+      min: "",
+      max: "",
+      minMaxBy: "volume",
+      limit: 10,
     });
   }, []);
 
@@ -149,6 +159,7 @@ const Statistics: React.FC<Props> = ({
                   ? currentSorting.field + "_" + currentSorting.direction
                   : ""
               }
+              isLoadingMore={isLoadingMore ?? false}
               isLoading={isLoading}
               collections={collections}
               setCurrentSorting={setCurrentSorting}

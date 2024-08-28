@@ -11,8 +11,9 @@ import {
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function CollectionsDesktopSkeleton() {
+function CollectionsDesktopSkeleton({ showHeader }: { showHeader: boolean }) {
   const renderHeader = (title: string) => {
+    if (!showHeader) return null;
     return (
       <div className="h-[48px] flex items-center text-[12px] text-[#16161A99] font-semibold uppercase">
         {title}
@@ -247,6 +248,7 @@ function CollectionsDesktopSkeleton() {
           </tr>
         ))}
       </thead>
+
       <tbody>
         {table.getRowModel().rows.map((row) => {
           return (

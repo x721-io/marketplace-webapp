@@ -14,12 +14,14 @@ import { getCollectionAvatarImage } from "@/utils/string";
 import CollectionsDesktopSkeleton from "./collections-desktop-skeleton";
 import { useRouter } from "next/navigation";
 import ArrowRightIcon from "../Icon/ArrowRight";
+import Text from "../Text";
 
 function CollectionsDesktop({
   collections,
   currentSorting,
   setCurrentSorting,
   isLoading,
+  isLoadingMore,
 }: {
   currentSorting: {
     field: string;
@@ -36,6 +38,7 @@ function CollectionsDesktop({
     currentHasNext: boolean;
   };
   isLoading: boolean;
+  isLoadingMore: boolean;
 }) {
   const router = useRouter();
   const data = useMemo(() => collections.concatenatedData, [collections]);
@@ -228,88 +231,98 @@ function CollectionsDesktop({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  if (!isLoading && table.getRowModel().rows.length === 0) {
+    return (
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
+        <Text className="text-secondary font-semibold text-body-18">
+          Nothing to show
+        </Text>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <CollectionsDesktopSkeleton showHeader />;
+  }
+
   return (
-    <div className="py-2 w-full">
-      <div className="h-2" />
-      {isLoading ? (
-        <CollectionsDesktopSkeleton />
-      ) : (
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, i) => {
+    <div className="pt-2 pb-5 w-full">
+      <table className="w-full">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, i) => {
+                return (
+                  <th
+                    key={header.id}
+                    {...{
+                      colSpan: header.colSpan,
+                      style: {
+                        width: header.getSize(),
+                      },
+                    }}
+                    className="px-[10px]"
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        className={
+                          header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : ""
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                        title={
+                          header.column.getCanSort()
+                            ? header.column.getNextSortingOrder() === "asc"
+                              ? "Sort ascending"
+                              : header.column.getNextSortingOrder() === "desc"
+                              ? "Sort descending"
+                              : "Clear sort"
+                            : undefined
+                        }
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody className="relative">
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr
+                onClick={() =>
+                  router.push(`/collection/${row.original.collection.id}`)
+                }
+                key={row.id}
+                className="h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+              >
+                {row.getVisibleCells().map((cell) => {
                   return (
-                    <th
-                      key={header.id}
-                      {...{
-                        colSpan: header.colSpan,
-                        style: {
-                          width: header.getSize(),
-                        },
-                      }}
-                      className="px-[10px]"
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : ""
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                              : undefined
-                          }
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: " 🔼",
-                            desc: " 🔽",
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
+                    <td className="px-[20px]" key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </th>
+                    </td>
                   );
                 })}
               </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => {
-              return (
-                <tr
-                  onClick={() =>
-                    router.push(`/collection/${row.original.collection.id}`)
-                  }
-                  key={row.id}
-                  className="h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td className="px-[20px]" key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+            );
+          })}
+        </tbody>
+      </table>
+      {isLoadingMore && <CollectionsDesktopSkeleton showHeader={false} />}
     </div>
   );
 }

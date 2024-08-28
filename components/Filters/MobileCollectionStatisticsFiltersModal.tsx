@@ -3,12 +3,17 @@ import Button from "@/components/Button";
 import { APIParams } from "@/services/api/types";
 import Input from "@/components/Form/Input";
 import Text from "@/components/Text";
-import { useCollectionFilters } from "@/hooks/useFilters";
+import {
+  useCollectionFilters,
+  useCollectionStatisticsFilters,
+} from "@/hooks/useFilters";
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { Address } from "wagmi";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
+import MyRadio from "../X721UIKits/Radio";
+import { Label } from "flowbite-react";
 
 interface Props extends MyModalProps {
   onApplyFilters: (filters: APIParams.FetchCollectionsStatistics) => void;
@@ -24,7 +29,7 @@ export default function MobileCollectionStatisticsFiltersModal({
   onResetFilters,
 }: Props) {
   const { setLocalFilters, handleApplyFilters, localFilters } =
-    useCollectionFilters(activeFilters, onApplyFilters);
+    useCollectionStatisticsFilters(activeFilters, onApplyFilters);
 
   return (
     <MyModal.Root
@@ -34,7 +39,34 @@ export default function MobileCollectionStatisticsFiltersModal({
     >
       <MyModal.Header>Filters</MyModal.Header>
       <MyModal.Body>
-        <Text className="font-semibold text-secondary mb-2">Volume</Text>
+        <Text className="font-semibold text-secondary mb-2"></Text>
+        <div className="flex items-center gap-7 flex-wrap mb-5">
+          <div className="flex gap-3 items-center">
+            <MyRadio
+              checked={localFilters.minMaxBy === "volume"}
+              onChange={() =>
+                setLocalFilters((state) => ({ ...state, minMaxBy: "volume" }))
+              }
+              id="type-all"
+              value=""
+            />
+            <Label htmlFor="type-all">Volume</Label>
+          </div>
+          <div className="flex gap-3 items-center">
+            <MyRadio
+              id="type-single"
+              value="ERC721"
+              checked={localFilters.minMaxBy === "floorPrice"}
+              onChange={() =>
+                setLocalFilters((state) => ({
+                  ...state,
+                  minMaxBy: "floorPrice",
+                }))
+              }
+            />
+            <Label htmlFor="type-single">Floor price</Label>
+          </div>
+        </div>
         <div className="flex items-center gap-4 mb-4">
           <Input
             name="min"
@@ -73,7 +105,7 @@ export default function MobileCollectionStatisticsFiltersModal({
               setLocalFilters({
                 min: "",
                 max: "",
-                quoteToken: tokens.wu2u.address,
+                minMaxBy: "volume",
               });
               onResetFilters?.();
               onClose?.();

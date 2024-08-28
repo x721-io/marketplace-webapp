@@ -112,9 +112,8 @@ export interface Collection {
   creators: { userId: string; user: User }[];
   coverImage: string | null;
   avatar: string | null;
-  volume: string;
+  volumn: string;
   totalOwner: number;
-  volumeWei: string;
   totalNft: number;
   floorPrice: string;
   isVerified: boolean;

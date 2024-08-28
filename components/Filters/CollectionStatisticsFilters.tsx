@@ -4,7 +4,7 @@ import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { APIParams } from "@/services/api/types";
-import React from "react";
+import React, { useState } from "react";
 import Collapsible from "../Collapsible";
 import { classNames } from "@/utils/string";
 import { useCollectionStatisticsFilters } from "@/hooks/useFilters";
@@ -12,6 +12,8 @@ import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions } from "@/config/tokens";
 import { Address } from "wagmi";
+import MyRadio from "../X721UIKits/Radio";
+import { Label } from "flowbite-react";
 
 export interface CollectionStatisticsFiltersProps {
   showFilters: boolean;
@@ -41,7 +43,34 @@ export default function CollectionStatisticsFilters({
           containerClass
         )}
       >
-        <Collapsible isOpen header="Volume" className="rounded-2xl border">
+        <Collapsible isOpen header="" className="rounded-2xl border">
+          <div className="flex items-center gap-7 flex-wrap mb-5">
+            <div className="flex gap-3 items-center">
+              <MyRadio
+                checked={localFilters.minMaxBy === "volume"}
+                onChange={() =>
+                  setLocalFilters((state) => ({ ...state, minMaxBy: "volume" }))
+                }
+                id="type-all"
+                value=""
+              />
+              <Label htmlFor="type-all">Volume</Label>
+            </div>
+            <div className="flex gap-3 items-center">
+              <MyRadio
+                id="type-single"
+                value="ERC721"
+                checked={localFilters.minMaxBy === "floorPrice"}
+                onChange={() =>
+                  setLocalFilters((state) => ({
+                    ...state,
+                    minMaxBy: "floorPrice",
+                  }))
+                }
+              />
+              <Label htmlFor="type-single">Floor price</Label>
+            </div>
+          </div>
           <div className="flex items-center gap-4 mb-4">
             <Input
               value={localFilters.min}
@@ -75,7 +104,7 @@ export default function CollectionStatisticsFilters({
             scale="sm"
             className="w-full"
             onClick={() => {
-              setLocalFilters({ min: "", max: "" });
+              setLocalFilters({ min: "", max: "", minMaxBy: "volume" });
               onResetFilters?.();
             }}
           >
