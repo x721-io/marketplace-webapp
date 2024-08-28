@@ -37,11 +37,12 @@ const Statistics: React.FC<Props> = ({
   const [isShowFilters, setShowFilters] = useState(false);
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
   const filtersTimeout = useRef<any>(null);
-  const { data, size, isLoading, setSize, error } = useGetCollectionsAnalysis({
-    ...decouncedFilters,
-    limit: 10,
-    page: 1,
-  });
+  const { data, size, isLoading, setSize, error, mutate } =
+    useGetCollectionsAnalysis({
+      ...decouncedFilters,
+      limit: 10,
+      page: 1,
+    });
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
     loading: isLoading,
@@ -123,7 +124,7 @@ const Statistics: React.FC<Props> = ({
   }, []);
 
   return (
-    <div className="flex justify-center gap-14 desktop:gap-0 tablet:gap-0 flex-col-reverse tablet:flex-row desktop:flex-row w-full px-4 py-8 tablet:px-20 tablet:py-8 desktop:px-20 desktop:py-8">
+    <div className="flex justify-center gap-14 desktop:gap-0 tablet:gap-0 flex-col-reverse tablet:flex-row desktop:flex-row w-full px-4 tablet:px-20 desktop:px-20">
       <div className="w-full p-5 rounded-xl border border-1 border-soft shadow-sm flex flex-col gap-5">
         <StatisticsHeader
           showFilters={!disableFilters}
@@ -161,7 +162,11 @@ const Statistics: React.FC<Props> = ({
               }
               isLoadingMore={isLoadingMore ?? false}
               isLoading={isLoading}
-              collections={collections}
+              collections={
+                isInfinite
+                  ? collections.concatenatedData
+                  : collections.concatenatedData.slice(0, 10)
+              }
               setCurrentSorting={setCurrentSorting}
               currentSorting={currentSorting}
             />
