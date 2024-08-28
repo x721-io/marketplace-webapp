@@ -35,6 +35,10 @@ export const useGetUsers = (params: APIParams.FetchUsers) => {
         params: sanitizeObject(params),
       });
       return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 
@@ -69,6 +73,10 @@ export const useGetCollections = (params: APIParams.FetchCollections) => {
         }),
       });
       return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 
@@ -109,6 +117,10 @@ export const useGetNFTs = (params: APIParams.FetchNFTs) => {
         })
       );
       return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 
@@ -310,6 +322,10 @@ export const useGetCollectionsByUserInfinite = (userId: string) => {
         }
       );
       return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 
@@ -396,6 +412,10 @@ export const useGetCollectionsAnalysis = (params: any) => {
         }),
       });
       return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 

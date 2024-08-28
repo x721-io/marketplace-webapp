@@ -15,6 +15,9 @@ import CollectionsDesktopSkeleton from "./collections-desktop-skeleton";
 import { useRouter } from "next/navigation";
 import ArrowRightIcon from "../Icon/ArrowRight";
 import Text from "../Text";
+import Image from "next/image";
+
+const emptyArray = [];
 
 function CollectionsDesktop({
   collections,
@@ -33,15 +36,12 @@ function CollectionsDesktop({
       direction: "asc" | "desc";
     } | null>
   >;
-  collections: {
-    concatenatedData: CollectionStatisticItem[];
-    currentHasNext: boolean;
-  };
+  collections: CollectionStatisticItem[];
   isLoading: boolean;
   isLoadingMore: boolean;
 }) {
   const router = useRouter();
-  const data = useMemo(() => collections.concatenatedData, [collections]);
+  const data = useMemo(() => collections ?? [], [collections]);
 
   const renderHeader = (
     title: string,
@@ -121,11 +121,11 @@ function CollectionsDesktop({
           );
           return (
             <div className="flex items-center justify-start gap-8">
-              <img
-                style={{
-                  width: "48px",
-                  height: "48px",
-                }}
+              <Image
+                width={48}
+                height={48}
+                loading="lazy"
+                placeholder="empty"
                 src={avatarURL ?? ""}
                 className="rounded-md"
                 alt={info.row.original.id}
@@ -170,7 +170,7 @@ function CollectionsDesktop({
         size: 150,
         enableSorting: false,
         cell: (info) => {
-          const value = info.getValue() as number;
+          const value = Number(info.getValue());
           if (!value || value === 0) return <div>-</div>;
           if (value < 0) {
             return <span className="text-[#E31B1B]">{value}%</span>;
@@ -198,7 +198,7 @@ function CollectionsDesktop({
         header: () => renderHeader("Volume change"),
         size: 150,
         cell: (info) => {
-          const value = info.getValue() as number;
+          const value = Number(info.getValue());
           if (!value || value === 0) return <div>-</div>;
           if (value < 0) {
             return <span className="text-[#E31B1B]">{value}%</span>;
@@ -227,7 +227,7 @@ function CollectionsDesktop({
 
   const table = useReactTable({
     columns,
-    data: data as CollectionStatisticItem[],
+    data: data,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -246,7 +246,7 @@ function CollectionsDesktop({
   }
 
   return (
-    <div className="pt-2 pb-5 w-full">
+    <div className="pt-2 w-full">
       <table className="w-full">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

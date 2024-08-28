@@ -27,6 +27,15 @@ const CollectionStatisticItemMobile = ({
   c: CollectionStatisticItemType;
   link: string | null;
 }) => {
+  const renderChangeVal = (valueStr: string) => {
+    const value = Number(valueStr);
+    if (!value || value === 0) return <div>-</div>;
+    if (value < 0) {
+      return <span className="text-[#E31B1B]">{value}%</span>;
+    }
+    return <span className="text-[#21AE46]">+{value}%</span>;
+  };
+
   return (
     <Link key={c.id} href={`/collection/${link}`}>
       <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all p-4">
@@ -75,7 +84,7 @@ const CollectionStatisticItemMobile = ({
             </div>
             <div className="w-full bg-surface-soft flex items-center justify-center py-2 rounded-e-[10px] gap-2">
               <span className="text-[16px] text-[#252525] font-semibold">
-                {c.floorPriceChange}%
+                {renderChangeVal(c.floorPriceChange)}
               </span>
             </div>
           </div>

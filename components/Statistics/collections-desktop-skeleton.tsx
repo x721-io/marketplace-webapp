@@ -11,6 +11,10 @@ import {
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
+const fakeData = Array(10)
+  .fill("")
+  .map((_, i) => {});
+
 function CollectionsDesktopSkeleton({ showHeader }: { showHeader: boolean }) {
   const renderHeader = (title: string) => {
     if (!showHeader) return null;
@@ -30,7 +34,7 @@ function CollectionsDesktopSkeleton({ showHeader }: { showHeader: boolean }) {
         size: 60,
         cell: () => {
           return (
-            <div className="w-[40px] h-[40px]">
+            <div className="w-[40px] h-[40px] ml-2">
               <SkeletonTheme
                 height={"100%"}
                 width={"100%"}
@@ -47,15 +51,30 @@ function CollectionsDesktopSkeleton({ showHeader }: { showHeader: boolean }) {
         id: "2",
         cell: () => {
           return (
-            <div className="w-[95%] h-[40px]">
+            <div className="w-[95%] h-[40px] flex gap-7 pl-4">
               <SkeletonTheme
-                height={"100%"}
-                width={"100%"}
+                height={"48px"}
+                width={"48px"}
                 baseColor="rgba(0,0,0,0.05)"
                 highlightColor="rgba(0,0,0,0.000001)"
               >
                 <Skeleton />
               </SkeletonTheme>
+              <div
+                style={{
+                  flex: 1,
+                  height: "50px",
+                }}
+              >
+                <SkeletonTheme
+                  height={"100%"}
+                  width={"100%"}
+                  baseColor="rgba(51, 40, 40, 0.05)"
+                  highlightColor="rgba(0,0,0,0.000001)"
+                >
+                  <Skeleton />
+                </SkeletonTheme>
+              </div>
             </div>
           );
         },
@@ -190,9 +209,7 @@ function CollectionsDesktopSkeleton({ showHeader }: { showHeader: boolean }) {
   );
   const table = useReactTable({
     columns,
-    data: Array(10)
-      .fill("")
-      .map((_, i) => {}),
+    data: fakeData,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
