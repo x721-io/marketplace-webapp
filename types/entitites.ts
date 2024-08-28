@@ -125,3 +125,38 @@ export interface Timeframe {
   hourEnd: number;
   minuteEnd: number;
 }
+
+export enum AnalysisType {
+  ONEDAY = "ONEDAY",
+  ONEWEEK = "ONEWEEK",
+  ONEMONTH = "ONEMONTH",
+}
+
+export enum AnalysisModeSort {
+  floorPrice = "floorPrice",
+  volume = "volume",
+  owner = "owner",
+  items = "items",
+}
+
+export enum AnalysisModeMinMax {
+  floorPrice = "floorPrice",
+  volume = "volume",
+}
+
+export type CollectionStatisticItem = {
+  volumeChange: number;
+  floorPriceChange: string;
+  id: string;
+  collectionId: string;
+  keyTime: string;
+  address: string;
+  type: string;
+  volume: string;
+  volumeWei: string;
+  floorPrice: string;
+  items: string;
+  owner: string;
+  createdAt: string;
+  collection: Collection;
+};

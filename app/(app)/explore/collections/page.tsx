@@ -6,10 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import MobileCollectionFiltersModal from "@/components/Filters/MobileCollectionFiltersModal";
 import { useCollectionFilterStore } from "@/store/filters/collections/store";
-import {
-  useFetchCollectionList,
-  useInfiniteScroll,
-} from "@/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useGetCollections } from "@/hooks/useQuery";
 
 export default function ExploreCollectionsPage() {

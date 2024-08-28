@@ -375,3 +375,36 @@ export const useGetNftEvents = (params: APIParams.NFTEvents) => {
     mutate,
   };
 };
+
+export const useGetCollectionsAnalysis = (params: any) => {
+  const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
+    (index) => ({
+      ...params,
+      page: index + 1,
+    }),
+
+    async (params) => {
+      const { min, max, minMaxBy } = params;
+      const bigintMin = min !== undefined && min !== "" ? min : undefined;
+      const bigintMax = max !== undefined && max !== "" ? max : undefined;
+      const response = await nextAPI.get(API_ENDPOINTS.COLLECTIONS_ANALYSIS, {
+        params: sanitizeObject({
+          ...params,
+          min: bigintMin?.toString(),
+          max: bigintMax?.toString(),
+          minMaxBy: bigintMin ? minMaxBy : "",
+        }),
+      });
+      return response.data.data;
+    }
+  );
+
+  return {
+    data: data ?? [],
+    error,
+    isLoading,
+    size,
+    setSize,
+    mutate,
+  };
+};

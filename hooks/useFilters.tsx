@@ -136,3 +136,43 @@ export const useCollectionFilters = (
     setLocalFilters,
   };
 };
+
+export const useCollectionStatisticsFilters = (
+  activeFilters: APIParams.FetchCollectionsStatistics,
+  onApplyFilters?: (filters: APIParams.FetchCollectionsStatistics) => void
+) => {
+  const [localFilters, setLocalFilters] =
+    useState<APIParams.FetchCollectionsStatistics>(activeFilters);
+
+  const handleApplyFilters = () => {
+    const { min, max } = localFilters;
+    if (
+      (min !== "" && min !== undefined) ||
+      (max !== "" && max !== undefined)
+    ) {
+      if ((isNaN(Number(min)) && !!min) || (isNaN(Number(max)) && !!max)) {
+        return toast.error("Please input a valid number");
+      }
+
+      if (Number(min) < 0 || Number(max) < 0) {
+        return toast.error("Volume cannot be negative");
+      }
+
+      if (Number(min) > Number(max) && max?.trim() !== "") {
+        return toast.error("Minimum volume cannot be greater than maximum one");
+      }
+    }
+
+    onApplyFilters?.(localFilters);
+  };
+
+  useEffect(() => {
+    setLocalFilters(activeFilters);
+  }, [activeFilters]);
+
+  return {
+    localFilters,
+    handleApplyFilters,
+    setLocalFilters,
+  };
+};
