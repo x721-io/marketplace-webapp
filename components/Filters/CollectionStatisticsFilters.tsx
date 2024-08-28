@@ -41,7 +41,7 @@ export default function CollectionStatisticsFilters({
           containerClass
         )}
       >
-        <Collapsible isOpen header="Floor Price" className="rounded-2xl border">
+        <Collapsible isOpen header="Volume" className="rounded-2xl border">
           <div className="flex items-center gap-4 mb-4">
             <Input
               value={localFilters.min}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -14,8 +14,6 @@ import { getCollectionAvatarImage } from "@/utils/string";
 import CollectionsDesktopSkeleton from "./collections-desktop-skeleton";
 import { useRouter } from "next/navigation";
 import ArrowRightIcon from "../Icon/ArrowRight";
-
-//custom sorting logic for one of our enum columns
 
 function CollectionsDesktop({
   collections,
@@ -34,12 +32,13 @@ function CollectionsDesktop({
     } | null>
   >;
   collections: {
-    concatenatedData: any[];
+    concatenatedData: CollectionStatisticItem[];
     currentHasNext: boolean;
   };
   isLoading: boolean;
 }) {
   const router = useRouter();
+  const data = useMemo(() => collections.concatenatedData, [collections]);
 
   const renderHeader = (
     title: string,
@@ -222,14 +221,13 @@ function CollectionsDesktop({
     ],
     []
   );
+
   const table = useReactTable({
     columns,
-    data: collections.concatenatedData as CollectionStatisticItem[],
-    debugTable: true,
+    data: data as CollectionStatisticItem[],
     getCoreRowModel: getCoreRowModel(),
   });
 
-  //access sorting state from the table instance
   return (
     <div className="py-2 w-full">
       <div className="h-2" />
@@ -250,7 +248,7 @@ function CollectionsDesktop({
                           width: header.getSize(),
                         },
                       }}
-                      className="px-[20px]"
+                      className="px-[10px]"
                     >
                       {header.isPlaceholder ? null : (
                         <div
@@ -290,7 +288,9 @@ function CollectionsDesktop({
             {table.getRowModel().rows.map((row) => {
               return (
                 <tr
-                  onClick={() => router.push(`/collection/${row.original.id}`)}
+                  onClick={() =>
+                    router.push(`/collection/${row.original.collection.id}`)
+                  }
                   key={row.id}
                   className="h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
                 >

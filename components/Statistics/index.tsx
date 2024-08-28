@@ -37,7 +37,7 @@ const Statistics: React.FC<Props> = ({
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
   const filtersTimeout = useRef<any>(null);
   const { data, size, isLoading, setSize, error } = useGetCollectionsAnalysis({
-    ...filters,
+    ...decouncedFilters,
     limit: 10,
     page: 0,
   });
@@ -57,10 +57,6 @@ const Statistics: React.FC<Props> = ({
     }, 200);
   }, [filters]);
 
-  // useEffect(() => {
-  //   setSize(1);
-  // }, []);
-
   useEffect(() => {
     if (currentSorting) {
       switch (currentSorting.field) {
@@ -69,7 +65,6 @@ const Statistics: React.FC<Props> = ({
             ...filters,
             orderBy: AnalysisModeSort.floorPrice,
             order: currentSorting.direction,
-            type: AnalysisType.ONEMONTH,
           });
           break;
         case "volume":
@@ -77,7 +72,6 @@ const Statistics: React.FC<Props> = ({
             ...filters,
             orderBy: AnalysisModeSort.volume,
             order: currentSorting.direction,
-            type: AnalysisType.ONEMONTH,
           });
           break;
         case "owner":
@@ -85,7 +79,6 @@ const Statistics: React.FC<Props> = ({
             ...filters,
             orderBy: AnalysisModeSort.owner,
             order: currentSorting.direction,
-            type: AnalysisType.ONEMONTH,
           });
           break;
         case "items":
@@ -93,7 +86,6 @@ const Statistics: React.FC<Props> = ({
             ...filters,
             orderBy: AnalysisModeSort.items,
             order: currentSorting.direction,
-            type: AnalysisType.ONEMONTH,
           });
           break;
       }
@@ -126,7 +118,7 @@ const Statistics: React.FC<Props> = ({
         <StatisticsHeader
           showFilters={!disableFilters}
           filters={filters}
-          toggleFilter={(state) => setShowFilters(!isShowFilters)}
+          toggleFilter={() => setShowFilters(!isShowFilters)}
           updateFilters={updateFilters}
         />
         <div className="flex gap-6 flex-col desktop:flex-row">

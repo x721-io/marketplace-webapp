@@ -20,7 +20,7 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowRightIcon from "../Icon/ArrowRight";
 
-const CollectionStatisticItem = ({
+const CollectionStatisticItemMobile = ({
   c,
   link,
 }: {
@@ -85,4 +85,4 @@ const CollectionStatisticItem = ({
   );
 };
 
-export default CollectionStatisticItem;
+export default CollectionStatisticItemMobile;

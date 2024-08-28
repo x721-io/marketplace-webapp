@@ -385,15 +385,14 @@ export const useGetCollectionsAnalysis = (params: any) => {
 
     async (params) => {
       const { min, max } = params;
-      const bigintMin =
-        min !== undefined && min !== "" ? parseUnits(min, 18) : undefined;
-      const bigintMax =
-        max !== undefined && max !== "" ? parseUnits(max, 18) : undefined;
+      const bigintMin = min !== undefined && min !== "" ? min : undefined;
+      const bigintMax = max !== undefined && max !== "" ? max : undefined;
       const response = await nextAPI.get(API_ENDPOINTS.COLLECTIONS_ANALYSIS, {
         params: sanitizeObject({
           ...params,
           min: bigintMin?.toString(),
           max: bigintMax?.toString(),
+          minMaxBy: bigintMin ? "volume" : "",
         }),
       });
       return response.data.data;

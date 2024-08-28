@@ -155,11 +155,11 @@ export const useCollectionStatisticsFilters = (
       }
 
       if (Number(min) < 0 || Number(max) < 0) {
-        return toast.error("Price cannot be negative");
+        return toast.error("Volume cannot be negative");
       }
 
       if (Number(min) > Number(max) && max?.trim() !== "") {
-        return toast.error("Minimum price cannot be greater than maximum one");
+        return toast.error("Minimum volume cannot be greater than maximum one");
       }
     }
 

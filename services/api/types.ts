@@ -104,6 +104,7 @@ export namespace APIParams {
     order?: string;
     orderBy?: string;
     type?: string;
+    minMaxBy?: string;
   }
 
   export interface FetchCollectionById extends PaginationParams {

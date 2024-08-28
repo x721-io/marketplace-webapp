@@ -38,10 +38,6 @@ export default function StatisticsHeader({
     return toggleFilter();
   };
 
-  const searchText = useMemo(() => {
-    return filters.search;
-  }, [, filters.search]);
-
   const handleInputText = (value: any) => {
     return updateFilters({ search: value });
   };
@@ -94,7 +90,7 @@ export default function StatisticsHeader({
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
           onChange={(e) => handleInputText(e.target.value)}
-          value={searchText}
+          value={filters.search}
           className="py-4 h-14"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"

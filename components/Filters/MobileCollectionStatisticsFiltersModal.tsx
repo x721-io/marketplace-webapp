@@ -34,7 +34,7 @@ export default function MobileCollectionStatisticsFiltersModal({
     >
       <MyModal.Header>Filters</MyModal.Header>
       <MyModal.Body>
-        <Text className="font-semibold text-secondary mb-2">Floor price</Text>
+        <Text className="font-semibold text-secondary mb-2">Volume</Text>
         <div className="flex items-center gap-4 mb-4">
           <Input
             name="min"

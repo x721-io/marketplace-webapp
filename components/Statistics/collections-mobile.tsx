@@ -1,20 +1,25 @@
 "use client";
 
 import React from "react";
-import CollectionStatisticItem from "./collection-statistic-item";
+import CollectionStatisticItemMobile from "./collection-statistic-item-mobile";
+import { CollectionStatisticItem } from "@/types";
 
 function CollectionsMobile({
   collections,
 }: {
   collections: {
-    concatenatedData: any[];
+    concatenatedData: CollectionStatisticItem[];
     currentHasNext: boolean;
   };
 }) {
   return (
     <div className="py-2 w-full flex flex-col gap-5">
       {collections.concatenatedData.map((item) => (
-        <CollectionStatisticItem c={item} link={`${item.id}`} key={item.id} />
+        <CollectionStatisticItemMobile
+          c={item}
+          link={`${item.collection.id}`}
+          key={item.collection.id}
+        />
       ))}
     </div>
   );

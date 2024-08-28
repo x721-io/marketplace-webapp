@@ -192,7 +192,6 @@ function CollectionsDesktopSkeleton() {
     data: Array(10)
       .fill("")
       .map((_, i) => {}),
-    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
@@ -258,7 +257,7 @@ function CollectionsDesktopSkeleton() {
             >
               {row.getVisibleCells().map((cell) => {
                 return (
-                  <td className="px-[20px]" key={cell.id}>
+                  <td className="px-[5px]" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 );
