@@ -1,23 +1,13 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import React, { Dispatch, SetStateAction } from "react";
 import { CollectionStatisticItem } from "@/types";
 import { formatDisplayedNumber } from "@/utils";
 import { formatEther } from "viem";
 import { getCollectionAvatarImage } from "@/utils/string";
-import CollectionsDesktopSkeleton from "./collections-desktop-skeleton";
-import { useRouter } from "next/navigation";
-import ArrowRightIcon from "../Icon/ArrowRight";
 import Text from "../Text";
 import Image from "next/image";
-
-const emptyArray = [];
+import MyTable, { MyTableColumn } from "../X721UIKits/Table";
 
 function CollectionsDesktop({
   collections,
@@ -40,198 +30,178 @@ function CollectionsDesktop({
   isLoading: boolean;
   isLoadingMore: boolean;
 }) {
-  const router = useRouter();
-  const data = useMemo(() => collections ?? [], [collections]);
-
-  const renderHeader = (
-    title: string,
-    sorting?: {
-      field: string;
-    }
-  ) => {
-    const isSorted =
-      sorting && currentSorting && currentSorting.field === sorting.field;
-    return (
-      <div
-        onClick={() => {
-          if (!sorting) return;
-          if (currentSorting && currentSorting.field === sorting.field) {
-            const newCurrSorting: { field: string; direction: "asc" | "desc" } =
-              {
-                ...currentSorting,
-                direction: currentSorting.direction === "asc" ? "desc" : "asc",
-              };
-            setCurrentSorting(newCurrSorting);
-          } else {
-            setCurrentSorting({
-              field: sorting.field,
-              direction: "desc",
-            });
-          }
-        }}
-        style={{
-          cursor: sorting ? "pointer" : "default",
-          color: isSorted ? "black" : "#16161A99",
-        }}
-        className="h-[48px] flex justify-start items-center"
-      >
-        <div
-          className="flex justify-start items-center text-[12px] font-semibold uppercase gap-[2px] pl-[10px] pr-[5px] py-[5px] rounded-md"
-          style={{
-            background: isSorted ? "#f5f5f5" : "transparent",
-          }}
-        >
-          {title}{" "}
-          {sorting &&
-            currentSorting &&
-            currentSorting.field === sorting.field &&
-            (currentSorting.direction === "desc" ? (
-              <ArrowRightIcon className="rotate-[90deg]" width={14} />
-            ) : (
-              <ArrowRightIcon className="-rotate-[90deg]" width={14} />
-            ))}
-        </div>
-      </div>
-    );
-  };
-
-  const columns = React.useMemo<ColumnDef<CollectionStatisticItem>[]>(
-    () => [
-      {
-        header: () => renderHeader("#"),
-        accessorKey: "index",
-        // cell: (info) => info.getValue(),
-        size: 60,
-        cell: (info) => {
-          return (
-            <span className="text-[#65636F] text-[14px] font-medium">
-              {info.row.index + 1}
+  const columns: MyTableColumn[] = [
+    {
+      dataKey: "",
+      title: "#",
+      width: 60,
+      render: (_, __, index) => {
+        return (
+          <span className="text-[#65636F] text-[14px] font-medium">
+            {index + 1}
+          </span>
+        );
+      },
+    },
+    {
+      dataKey: "collection.name",
+      title: "Name",
+      width: 450,
+      render: (rowData: CollectionStatisticItem, cellData: any) => {
+        const avatarURL = getCollectionAvatarImage(rowData.collection);
+        return (
+          <div className="flex items-center justify-start gap-8">
+            <Image
+              width={48}
+              height={48}
+              loading="lazy"
+              placeholder="empty"
+              src={avatarURL ?? ""}
+              className="rounded-md"
+              alt={rowData.collection.id}
+            />
+            <span className="font-semibold text-[16px] text-[#252525]">
+              {cellData}
             </span>
-          );
-        },
-        enableSorting: false,
-        //this column will sort in ascending order by default since it is a string column
+          </div>
+        );
       },
-      {
-        accessorFn: (row) => row.collection.name,
-        id: "name",
-        cell: (info) => {
-          const avatarURL = getCollectionAvatarImage(
-            info.row.original.collection
-          );
-          return (
-            <div className="flex items-center justify-start gap-8">
-              <Image
-                width={48}
-                height={48}
-                loading="lazy"
-                placeholder="empty"
-                src={avatarURL ?? ""}
-                className="rounded-md"
-                alt={info.row.original.id}
-              />
-              <span className="font-semibold text-[16px] text-[#252525]">
-                {info.row.original.collection.name}
-              </span>
-            </div>
-          );
-        },
-        header: () => renderHeader("Collection"),
-        size: 450,
-        enableSorting: false,
+    },
+    {
+      dataKey: "floorPrice",
+      title: "Floor price",
+      render: (_, cellData: any) => {
+        return cellData && Number(cellData) > 0 ? (
+          <div>
+            <span className="text-[#252525] font-semibold text-[16px]">
+              {formatDisplayedNumber(cellData as number)}
+            </span>
+            <span className="text-[#6A6A6A] font-medium text-[16px]">
+              &nbsp;U2U
+            </span>
+          </div>
+        ) : (
+          <div>-</div>
+        );
       },
-      {
-        accessorKey: "floorPrice",
-        header: () =>
-          renderHeader("Floor price", {
-            field: "floorPrice",
-          }),
-        cell: (info) => {
-          const value = info.getValue();
-          return value && Number(value) > 0 ? (
-            <div>
-              <span className="text-[#252525] font-semibold text-[16px]">
-                {formatDisplayedNumber(value as number)}
-              </span>
-              <span className="text-[#6A6A6A] font-medium text-[16px]">
-                &nbsp;U2U
-              </span>
-            </div>
-          ) : (
-            <div>-</div>
-          );
-        },
-        size: 150,
-        enableSorting: false,
+      width: 150,
+      sorting:
+        currentSorting?.field === "floorPrice"
+          ? {
+              direction: currentSorting.direction,
+              sortFn: () =>
+                setCurrentSorting({
+                  field: "floorPrice",
+                  direction:
+                    currentSorting.direction === "asc" ? "desc" : "asc",
+                }),
+            }
+          : {
+              direction: "unset",
+              sortFn: () =>
+                setCurrentSorting({ field: "floorPrice", direction: "desc" }),
+            },
+    },
+    {
+      dataKey: "floorPriceChange",
+      title: "Floor change",
+      width: 150,
+      render: (_, cellData: any) => {
+        const value = Number(cellData);
+        if (!value || value === 0) return <div>-</div>;
+        if (value < 0) {
+          return <span className="text-[#E31B1B]">{value}%</span>;
+        }
+        return <span className="text-[#21AE46]">+{value}%</span>;
       },
-      {
-        accessorKey: "floorPriceChange",
-        header: () => renderHeader("Floor change"),
-        size: 150,
-        enableSorting: false,
-        cell: (info) => {
-          const value = Number(info.getValue());
-          if (!value || value === 0) return <div>-</div>;
-          if (value < 0) {
-            return <span className="text-[#E31B1B]">{value}%</span>;
-          }
-          return <span className="text-[#21AE46]">+{value}%</span>;
-        },
+    },
+    {
+      dataKey: "volumeWei",
+      title: "Volume",
+      width: 150,
+      render: (_, cellData: any) => {
+        const value = cellData as string;
+        return `${formatDisplayedNumber(
+          formatEther(cellData ? BigInt(value) : BigInt(0))
+        )} U2U`;
       },
-      {
-        accessorKey: "volumeWei",
-        header: () =>
-          renderHeader("Volume", {
-            field: "volume",
-          }),
-        cell: (info) => {
-          const value = info.getValue() as string;
-          return `${formatDisplayedNumber(
-            formatEther(info.getValue() ? BigInt(value) : BigInt(0))
-          )} U2U`;
-        },
-        size: 150,
-        enableSorting: false,
+      sorting:
+        currentSorting?.field === "volume"
+          ? {
+              direction: currentSorting.direction,
+              sortFn: () =>
+                setCurrentSorting({
+                  field: "volume",
+                  direction:
+                    currentSorting.direction === "asc" ? "desc" : "asc",
+                }),
+            }
+          : {
+              direction: "unset",
+              sortFn: () =>
+                setCurrentSorting({ field: "volume", direction: "desc" }),
+            },
+    },
+    {
+      dataKey: "volumeChange",
+      title: "Volume change",
+      width: 150,
+      render: (_, cellData: any) => {
+        const value = Number(cellData);
+        if (!value || value === 0) return <div>-</div>;
+        if (value < 0) {
+          return <span className="text-[#E31B1B]">{value}%</span>;
+        }
+        return <span className="text-[#21AE46]">+{value}%</span>;
       },
-      {
-        accessorKey: "volumeChange",
-        header: () => renderHeader("Volume change"),
-        size: 150,
-        cell: (info) => {
-          const value = Number(info.getValue());
-          if (!value || value === 0) return <div>-</div>;
-          if (value < 0) {
-            return <span className="text-[#E31B1B]">{value}%</span>;
-          }
-          return <span className="text-[#21AE46]">+{value}%</span>;
-        },
-        enableSorting: false,
-      },
-      {
-        accessorKey: "items",
-        header: () => renderHeader("Items", { field: "items" }),
-        size: 150,
-        cell: (info) => formatDisplayedNumber(info.getValue() as number),
-        enableSorting: false,
-      },
-      {
-        accessorKey: "owner",
-        header: () => renderHeader("Owners", { field: "owner" }),
-        size: 150,
-        cell: (info) => formatDisplayedNumber(info.getValue() as number),
-        enableSorting: false,
-      },
-    ],
-    []
-  );
+    },
+    {
+      dataKey: "items",
+      title: "Items",
+      width: 150,
+      render: (_, cellData: any) => formatDisplayedNumber(cellData as number),
+      sorting:
+        currentSorting?.field === "items"
+          ? {
+              direction: currentSorting.direction,
+              sortFn: () =>
+                setCurrentSorting({
+                  field: "items",
+                  direction:
+                    currentSorting.direction === "asc" ? "desc" : "asc",
+                }),
+            }
+          : {
+              direction: "unset",
+              sortFn: () =>
+                setCurrentSorting({ field: "items", direction: "desc" }),
+            },
+    },
+    {
+      dataKey: "owner",
+      title: "Owners",
+      width: 150,
+      render: (_, cellData: any) => formatDisplayedNumber(cellData as number),
+      sorting:
+        currentSorting?.field === "owner"
+          ? {
+              direction: currentSorting.direction,
+              sortFn: () =>
+                setCurrentSorting({
+                  field: "owner",
+                  direction:
+                    currentSorting.direction === "asc" ? "desc" : "asc",
+                }),
+            }
+          : {
+              direction: "unset",
+              sortFn: () =>
+                setCurrentSorting({ field: "owner", direction: "desc" }),
+            },
+    },
+  ];
 
-  const table = useReactTable({
-    columns,
-    data: data,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  if (!isLoading && table.getRowModel().rows.length === 0) {
+  if (!isLoading && collections.length === 0) {
     return (
       <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed">
         <Text className="text-secondary font-semibold text-body-18">
@@ -241,88 +211,15 @@ function CollectionsDesktop({
     );
   }
 
-  if (isLoading) {
-    return <CollectionsDesktopSkeleton showHeader />;
-  }
-
   return (
     <div className="pt-2 w-full">
-      <table className="w-full">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header, i) => {
-                return (
-                  <th
-                    key={header.id}
-                    {...{
-                      colSpan: header.colSpan,
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                    className="px-[10px]"
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : ""
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                              ? "Sort descending"
-                              : "Clear sort"
-                            : undefined
-                        }
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="relative">
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr
-                onClick={() =>
-                  router.push(`/collection/${row.original.collection.id}`)
-                }
-                key={row.id}
-                className="h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
-              >
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <td className="px-[20px]" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      {isLoadingMore && <CollectionsDesktopSkeleton showHeader={false} />}
+      <MyTable
+        columns={columns}
+        data={collections}
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+      />
+      {/* {isLoadingMore && <CollectionsDesktopSkeleton showHeader={false} />} */}
     </div>
   );
 }
