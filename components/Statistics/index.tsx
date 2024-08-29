@@ -27,12 +27,9 @@ const Statistics: React.FC<Props> = ({
     direction: "asc" | "desc";
   } | null>(null);
   const [filters, setFilters] = useState<APIParams.FetchCollectionsStatistics>({
-    orderBy: AnalysisModeSort.volume,
-    order: "desc",
     type: AnalysisType.ONEDAY,
     page: 1,
     limit: 10,
-    minMaxBy: "volume",
   });
   const [isShowFilters, setShowFilters] = useState(false);
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
