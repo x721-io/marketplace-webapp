@@ -9,6 +9,7 @@ import Text from "../Text";
 import Image from "next/image";
 import MyTable, { MyTableColumn } from "../X721UIKits/Table";
 import Link from "next/link";
+import BlurImage from "../X721UIKits/BlurImage";
 
 function CollectionsDesktop({
   collections,
@@ -52,11 +53,10 @@ function CollectionsDesktop({
         const avatarURL = getCollectionAvatarImage(rowData.collection);
         return (
           <div className="flex items-center justify-start gap-8">
-            <Image
+            <BlurImage
               width={48}
               height={48}
               loading="lazy"
-              placeholder="empty"
               src={avatarURL ?? ""}
               className="rounded-md"
               alt={rowData.collection.id}
@@ -216,7 +216,12 @@ function CollectionsDesktop({
   }
 
   return (
-    <div className="pt-2 pb-5 w-full">
+    <div
+      style={{
+        minHeight: "calc(100vh - 350px)",
+      }}
+      className="py-2 w-full"
+    >
       <MyTable
         columns={columns}
         data={collections}

@@ -78,14 +78,14 @@ export default function SearchInput() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, text]);
 
-  const getComponentByCurrTabIndex = () => {
+  const getComponentByCurrTabIndex = (onclose: () => void) => {
     switch (activeTab) {
       case 0:
         return (
           <SearchCollectionTab
             loading={searchingCollection}
             data={collectionSearchData}
-            onClose={() => setOpenModal(false)}
+            onClose={() => onclose()}
           />
         );
       case 1:
@@ -93,7 +93,7 @@ export default function SearchInput() {
           <SearchNFTTab
             loading={searchingNFT}
             data={nftSearchData}
-            onClose={() => setOpenModal(false)}
+            onClose={() => onclose()}
           />
         );
       case 2:
@@ -101,7 +101,7 @@ export default function SearchInput() {
           <SearchUserTab
             loading={searchingUser}
             data={userSearchData}
-            onClose={() => setOpenModal(false)}
+            onClose={() => onclose()}
           />
         );
     }
@@ -152,7 +152,7 @@ export default function SearchInput() {
                         </div>
                       </MyTabs.Item>
                     </MyTabs.Group>
-                    {getComponentByCurrTabIndex()}
+                    {getComponentByCurrTabIndex(onclose)}
                   </>
                 )}
               />
@@ -190,7 +190,7 @@ export default function SearchInput() {
                   </div>
                 </MyTabs.Item>
               </MyTabs.Group>
-              {getComponentByCurrTabIndex()}
+              {getComponentByCurrTabIndex(onclose)}
             </>
           )}
         />
