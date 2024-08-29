@@ -5,6 +5,8 @@ import { FC, useCallback, useMemo } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
+const placeholderArr = Array(10).fill("");
+
 export type MyTableColumn = {
   title: string;
   dataKey: string;
@@ -147,22 +149,20 @@ const MyTable: FC<MyTableProps> = ({
       </div>
       <div className="w-full flex flex-col">
         {isLoading &&
-          Array(10)
-            .fill("")
-            .map((_, index) => (
-              <div
-                key={index}
-                className="w-full flex items-center h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
-              >
-                {columns.map((col) => renderSkeletonCel(col))}
-              </div>
-            ))}
+          placeholderArr.map((_, index) => (
+            <div
+              key={index}
+              className="w-full flex items-center h-[72px] hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+            >
+              {columns.map((col) => renderSkeletonCel(col))}
+            </div>
+          ))}
 
         {!isLoading &&
           data.map((dataItem, dataIndex) => (
             <div
               key={dataIndex}
-              className="w-full flex items-center h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+              className="w-full flex items-center h-[72px] hover:bg-[rgba(0,0,0,0.05)] transition-colors"
             >
               {columns.map((col) => renderCel(col, dataItem, dataIndex))}
             </div>
@@ -170,16 +170,14 @@ const MyTable: FC<MyTableProps> = ({
 
         {isLoadingMore &&
           !isLoading &&
-          Array(10)
-            .fill("")
-            .map((_, index) => (
-              <div
-                key={index}
-                className="w-full flex items-center h-[72px] cursor-pointer hover:bg-[rgba(0,0,0,0.05)] transition-colors"
-              >
-                {columns.map((col) => renderSkeletonCel(col))}
-              </div>
-            ))}
+          placeholderArr.map((_, index) => (
+            <div
+              key={index}
+              className="w-full flex items-center h-[72px] hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+            >
+              {columns.map((col) => renderSkeletonCel(col))}
+            </div>
+          ))}
       </div>
     </div>
   );
