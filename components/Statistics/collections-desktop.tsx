@@ -8,6 +8,7 @@ import { getCollectionAvatarImage } from "@/utils/string";
 import Text from "../Text";
 import Image from "next/image";
 import MyTable, { MyTableColumn } from "../X721UIKits/Table";
+import Link from "next/link";
 
 function CollectionsDesktop({
   collections,
@@ -60,9 +61,12 @@ function CollectionsDesktop({
               className="rounded-md"
               alt={rowData.collection.id}
             />
-            <span className="font-semibold text-[16px] text-[#252525]">
+            <Link
+              href={`/collection/${rowData.collection.id}`}
+              className="font-semibold cursor-pointer hover:underline text-[16px] text-[#252525]"
+            >
               {cellData}
-            </span>
+            </Link>
           </div>
         );
       },
@@ -212,14 +216,13 @@ function CollectionsDesktop({
   }
 
   return (
-    <div className="pt-2 w-full">
+    <div className="pt-2 pb-5 w-full">
       <MyTable
         columns={columns}
         data={collections}
         isLoading={isLoading}
         isLoadingMore={isLoadingMore}
       />
-      {/* {isLoadingMore && <CollectionsDesktopSkeleton showHeader={false} />} */}
     </div>
   );
 }
