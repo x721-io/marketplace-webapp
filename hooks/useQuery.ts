@@ -90,12 +90,18 @@ export const useGetCollections = (params: APIParams.FetchCollections) => {
   };
 };
 
-export const useGetNFTs = (params: APIParams.FetchNFTs) => {
+export const useGetNFTs = (
+  params: APIParams.FetchNFTs,
+  enabled: boolean = true
+) => {
   const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
-    (index) => ({
-      ...params,
-      page: index + 1,
-    }),
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
     async (params) => {
       const { priceMin, priceMax, quoteToken } = params;
       const bigintMin =
@@ -392,12 +398,18 @@ export const useGetNftEvents = (params: APIParams.NFTEvents) => {
   };
 };
 
-export const useGetCollectionsAnalysis = (params: any) => {
+export const useGetCollectionsAnalysis = (
+  params: any,
+  enabled: boolean = true
+) => {
   const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
-    (index) => ({
-      ...params,
-      page: index + 1,
-    }),
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
 
     async (params) => {
       const { min, max, minMaxBy } = params;

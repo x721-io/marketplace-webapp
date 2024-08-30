@@ -22,6 +22,7 @@ const Statistics: React.FC<Props> = ({
   isInfinite = false,
   disableFilters = false,
 }) => {
+  const [isInitial, setInitial] = useState(true);
   const [currentSorting, setCurrentSorting] = useState<{
     field: string;
     direction: "asc" | "desc";
@@ -35,11 +36,14 @@ const Statistics: React.FC<Props> = ({
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
   const filtersTimeout = useRef<any>(null);
   const { data, size, isLoading, setSize, error, mutate } =
-    useGetCollectionsAnalysis({
-      ...decouncedFilters,
-      limit: 10,
-      page: 1,
-    });
+    useGetCollectionsAnalysis(
+      {
+        ...decouncedFilters,
+        limit: 10,
+        page: 1,
+      },
+      !!decouncedFilters
+    );
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
     loading: isLoading,

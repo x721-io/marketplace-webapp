@@ -125,7 +125,7 @@ export default function OwnersTab({
                   </div>
                 </div>
                 <ConnectWalletButton showConnectButton>
-                  {owner.publicKey.toLowerCase() ===
+                  {owner?.publicKey?.toLowerCase() ===
                   userWallet?.toLowerCase() ? (
                     <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[90px] tablet:w-[120px] desktop:w-[120px] text-center">
                       This is me

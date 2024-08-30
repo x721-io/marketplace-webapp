@@ -14,7 +14,7 @@ function BlurImage(props: any) {
       alt={props.alt}
       className={cn(
         props.className,
-        "duration-500 ease",
+        "duration-300 ease",
         isLoading ? "bg-[rgba(0,0,0,0.3)] animate-pulse" : ""
       )}
       onLoadingComplete={() => setLoading(false)}
