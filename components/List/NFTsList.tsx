@@ -10,8 +10,6 @@ import { AssetType, NFT } from "@/types";
 import Link from "next/link";
 import Button from "../Button";
 import useAuthStore from "@/store/auth/store";
-import MySpinner from "../X721UIKits/Spinner";
-import "react-loading-skeleton/dist/skeleton.css";
 import NFTCardSkeleton from "../NFT/NFTCard/skeleton";
 
 interface Props {

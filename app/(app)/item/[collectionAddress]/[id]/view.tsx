@@ -17,7 +17,8 @@ export default function NFTView({ item }: { item: NFT }) {
   const { data: marketData, isLoading: isLoadingMarketData } =
     useGetMarketDataByNftId(collectionAddress as string, id as string);
 
-  const { data: metaData } = useGetNftMetadata(item);
+  const { data: metaData, isLoading: isLoadingMetadata } =
+    useGetNftMetadata(item);
 
   if (!item) {
     return (
@@ -52,7 +53,12 @@ export default function NFTView({ item }: { item: NFT }) {
           />
         </div>
         <div className="flex mt-[34px] desktop:w-[700px] tablet:w-full desktop:pl-14">
-          <NFTData marketData={marketData} nft={item} metaData={metaData} />
+          <NFTData
+            marketData={marketData}
+            nft={item}
+            metaData={metaData}
+            isLoadingMetadata={isLoadingMetadata}
+          />
         </div>
       </div>
     </div>

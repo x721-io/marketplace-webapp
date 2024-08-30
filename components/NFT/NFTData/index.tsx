@@ -11,10 +11,16 @@ import { useState } from "react";
 interface Props {
   nft: NFT;
   metaData?: NFTMetadata;
+  isLoadingMetadata?: boolean;
   marketData?: APIResponse.NFTMarketData;
 }
 
-export default function NFTData({ nft, metaData, marketData }: Props) {
+export default function NFTData({
+  nft,
+  metaData,
+  isLoadingMetadata = false,
+  marketData,
+}: Props) {
   const [currTabIndex, setCurrTabIndex] = useState(
     nft.collection.type === "ERC1155" ? 0 : 1
   );
@@ -28,7 +34,13 @@ export default function NFTData({ nft, metaData, marketData }: Props) {
           </div>
         );
       case 1:
-        return <OverviewTab metaData={metaData} nft={nft} />;
+        return (
+          <OverviewTab
+            isLoadingMetadata={isLoadingMetadata}
+            metaData={metaData}
+            nft={nft}
+          />
+        );
       case 2:
         return <PropertiesTab metaData={metaData} />;
       case 3:
