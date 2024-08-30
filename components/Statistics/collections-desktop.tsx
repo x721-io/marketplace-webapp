@@ -216,12 +216,7 @@ function CollectionsDesktop({
   }
 
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 350px)",
-      }}
-      className="py-2 w-full"
-    >
+    <div className="py-2 w-full">
       <MyTable
         columns={columns}
         data={collections}

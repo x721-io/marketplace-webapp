@@ -23,12 +23,18 @@ export const useGetProfile = (address: Address | string) => {
   };
 };
 
-export const useGetUsers = (params: APIParams.FetchUsers) => {
+export const useGetUsers = (
+  params: APIParams.FetchUsers,
+  enabled: boolean = true
+) => {
   const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
-    (index) => ({
-      ...params,
-      page: index + 1,
-    }),
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
 
     async (params) => {
       const response = await nextAPI.get(API_ENDPOINTS.USER, {
@@ -52,12 +58,18 @@ export const useGetUsers = (params: APIParams.FetchUsers) => {
   };
 };
 
-export const useGetCollections = (params: APIParams.FetchCollections) => {
+export const useGetCollections = (
+  params: APIParams.FetchCollections,
+  enabled: boolean = true
+) => {
   const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
-    (index) => ({
-      ...params,
-      page: index + 1,
-    }),
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
 
     async (params) => {
       const { min, max } = params;

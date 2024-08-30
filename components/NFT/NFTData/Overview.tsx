@@ -1,15 +1,19 @@
 import Text from "@/components/Text";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { NFT, NFTMetadata, Royalty } from "@/types";
 import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
-import { classNames, shortenAddress } from "@/utils/string";
+import { shortenAddress } from "@/utils/string";
 import Image from "next/image";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function OverviewTab({
   metaData,
   nft,
+  isLoadingMetadata = false,
 }: {
   metaData?: NFTMetadata;
+  isLoadingMetadata?: boolean;
   nft: NFT;
 }) {
   const { data: royalties } = useReadNFTRoyalties(nft);
@@ -30,7 +34,18 @@ export default function OverviewTab({
         <Text className="text-primary font-bold mb-4" variant="body-16">
           Description
         </Text>
-        {!metaData?.description ? (
+        {isLoadingMetadata ? (
+          <div className="w-full">
+            <SkeletonTheme
+              height={"200px"}
+              width={"100%"}
+              baseColor="rgba(0,0,0,0.05)"
+              highlightColor="rgba(0,0,0,0.000001)"
+            >
+              <Skeleton />
+            </SkeletonTheme>
+          </div>
+        ) : !metaData?.description ? (
           <div className="p-7 rounded-2xl border border-disabled border-dashed">
             <Text className="text-secondary text-center text-sm">
               Nothing to show
