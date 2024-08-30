@@ -3,11 +3,9 @@
 import Tabs from "@/components/Tabs";
 import { useMemo, useState } from "react";
 import HomePageProjectList from "./LaunchpadList";
-import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import { useGetLaunchpadProjects } from "@/hooks/useQuery";
 
 export default function HomePageProjectTabs() {
-  const api = useLaunchpadApi();
   const { data: mintingProjects } = useGetLaunchpadProjects("MINTING");
 
   const { data: comingProjects } = useGetLaunchpadProjects("UPCOMING");

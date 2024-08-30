@@ -1,54 +1,75 @@
-"use client";
+import Text from "@/components/Text";
+import { API_ENDPOINTS } from "@/config/api";
+import { marketplaceApi } from "@/services/api";
+import { Project } from "@/types";
+import ProjectView from "./view";
+import { Metadata } from "next";
 
-import ProjectPageBanner from "components/Pages/Launchpad/ProjectDetails/LauchpadBanner";
-import ProjectPageDescriptions from "@/components/Pages/Launchpad/ProjectDetails/LaunchpadDescriptions";
-import ProjectMintSchedule from "@/components/Pages/Launchpad/ProjectDetails/MintSchedule";
-import { useParams } from "next/navigation";
-import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
-import { ClipLoader } from "react-spinners";
-import { colors } from "@/config/theme";
-import { useGetLaunchpadProjectById } from "@/hooks/useQuery";
-
-export default function ProjectPage() {
-  const { id } = useParams();
-  const api = useLaunchpadApi();
-  const { data, isLoading } = useGetLaunchpadProjectById(
-    !!id ? (id as string) : null
-  );
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen w-full flex justify-center items-center">
-        <ClipLoader color={colors.info} />
-      </div>
-    );
+const getProjectData = async (
+  id: string
+): Promise<
+  { status: "success"; data: Project | null } | { status: "error" }
+> => {
+  try {
+    const data = (await marketplaceApi.get(
+      `${API_ENDPOINTS.LAUNCHPAD}/${id}`
+    )) as Project | null;
+    return {
+      status: "success",
+      data,
+    };
+  } catch (err) {
+    return {
+      status: "error",
+    };
   }
+};
 
-  if (!data) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const response = await getProjectData(params.id);
+  if (response.status === "success" && response.data) {
+    return {
+      title: `${response.data.name} | X721`,
+      openGraph: {
+        images: [response.data.logo],
+      },
+    };
+  }
+  return {
+    title: `Error | X721`,
+  };
+}
+
+export default async function ProjectPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const response = await getProjectData(params.id);
+
+  if (response.status === "error") {
     return (
       <div className="w-full h-96 flex justify-center items-center">
-        <p className="text-heading-sm">Project not found!</p>
+        <Text variant="heading-xs" className="text-center">
+          Network Error!
+          <br />
+          Please try again later
+        </Text>
       </div>
     );
   }
 
-  return (
-    <div className="px-4 tablet:px-7 desktop:px-20">
-      <div className="mb-20 mt-10">
-        <ProjectPageBanner project={data} />
+  if (!response.data) {
+    return (
+      <div className="w-full h-96 flex justify-center items-center">
+        <Text variant="heading-xs">Project not found!</Text>
       </div>
+    );
+  }
 
-      <div className="flex items-start gap-6 flex-col desktop:flex-row tablet:flex-row w-full">
-        <div className="flex-1 w-full desktop:w-auto tablet:w-auto">
-          <ProjectPageDescriptions project={data} />
-        </div>
-        <div className="flex-1 w-full desktop:w-auto tablet:w-auto">
-          <ProjectMintSchedule
-            rounds={data.rounds}
-            collection={data.collection}
-          />
-        </div>
-      </div>
-    </div>
-  );
+  return <ProjectView data={response.data} />;
 }
