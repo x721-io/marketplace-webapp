@@ -17,14 +17,18 @@ import { formatDisplayedNumber } from "@/utils";
 import { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
 import { Tooltip } from "react-tooltip";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "react-tooltip/dist/react-tooltip.css";
 
 export default function NFTMarketData({
   nft,
   marketData,
+  isLoading,
 }: {
   nft: NFT;
   marketData?: APIResponse.NFTMarketData;
+  isLoading: boolean;
 }) {
   const type = nft.collection.type;
 
@@ -33,10 +37,6 @@ export default function NFTMarketData({
     () => findTokenByAddress(marketData?.sellInfo[0]?.quoteToken),
     [marketData?.sellInfo]
   );
-
-  if (!marketData) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col gap-10 desktop:w-auto tablet:w-full">
@@ -90,26 +90,52 @@ export default function NFTMarketData({
           </Text>
         )}
 
-        {type === "ERC721" && (
-          <div className="flex items-center gap-2">
-            <Text className="text-secondary" variant="body-16">
-              Current Owner:
-            </Text>
-            <Link
-              className="hover:underline flex items-center gap-1"
-              href={getUserLink(marketData.owners[0])}
-            >
-              <Image
-                width={56}
-                height={56}
-                className="w-6 h-6 rounded-full"
-                src={getUserAvatarImage(marketData.owners[0])}
-                alt="avatar"
-              />
-              {getDisplayedUserName(marketData.owners[0])}
-            </Link>
-          </div>
-        )}
+        {type === "ERC721" &&
+          (isLoading ? (
+            <div className="w-[100%] h-[25px] flex gap-2">
+              <div className="w-[30%] h-[100%]">
+                <SkeletonTheme
+                  height={"100%"}
+                  width={"100%"}
+                  baseColor="rgba(0,0,0,0.05)"
+                  highlightColor="rgba(0,0,0,0.000001)"
+                >
+                  <Skeleton />
+                </SkeletonTheme>
+              </div>
+              <div className="flex-1 h-[100%]">
+                <SkeletonTheme
+                  height={"100%"}
+                  width={"100%"}
+                  baseColor="rgba(0,0,0,0.05)"
+                  highlightColor="rgba(0,0,0,0.000001)"
+                >
+                  <Skeleton />
+                </SkeletonTheme>
+              </div>
+            </div>
+          ) : (
+            marketData && (
+              <div className="flex items-center gap-2">
+                <Text className="text-secondary" variant="body-16">
+                  Current Owner:
+                </Text>
+                <Link
+                  className="hover:underline flex items-center gap-1"
+                  href={getUserLink(marketData.owners[0])}
+                >
+                  <Image
+                    width={56}
+                    height={56}
+                    className="w-6 h-6 rounded-full"
+                    src={getUserAvatarImage(marketData.owners[0])}
+                    alt="avatar"
+                  />
+                  {getDisplayedUserName(marketData.owners[0])}
+                </Link>
+              </div>
+            )
+          ))}
       </div>
 
       <div className="inline-flex gap-3">
@@ -130,14 +156,25 @@ export default function NFTMarketData({
       <div className="bg-surface-soft shadow rounded-2xl p-3">
         <div className="p-4">
           <div className="flex justify-between items-start">
-            <div>
+            <div className="w-[100%]">
               <Text
                 className="text-secondary mb-2 font-semibold"
                 variant="body-16"
               >
                 {type === "ERC1155" && "Best "}Price
               </Text>
-              {isOnSale ? (
+              {isLoading ? (
+                <div className="w-[100%] h-[40px]">
+                  <SkeletonTheme
+                    height={"100%"}
+                    width={"100%"}
+                    baseColor="rgba(0,0,0,0.05)"
+                    highlightColor="rgba(0,0,0,0.000001)"
+                  >
+                    <Skeleton />
+                  </SkeletonTheme>
+                </div>
+              ) : isOnSale ? (
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">

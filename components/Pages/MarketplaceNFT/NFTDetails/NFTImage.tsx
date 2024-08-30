@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useMemo } from "react";
 import {
   ALLOWED_AUDIO_TYPES,
@@ -7,6 +6,7 @@ import {
 } from "@/config/constants";
 import { NFT } from "@/types";
 import { convertImageUrl } from "@/utils/nft";
+import BlurImage from "@/components/X721UIKits/BlurImage";
 
 export default function NFTImage({ item }: { item: NFT }) {
   const displayMedia = useMemo(
@@ -39,7 +39,7 @@ export default function NFTImage({ item }: { item: NFT }) {
       case "audio":
         return (
           <div className="desktop:w-[640px] desktop:h-[614px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px] relative">
-            <Image
+            <BlurImage
               src={item?.image || ""}
               alt=""
               width={512}
@@ -71,7 +71,7 @@ export default function NFTImage({ item }: { item: NFT }) {
       case "image":
         return (
           <div className="desktop:w-[640px] desktop:h-[614px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px]">
-            <Image
+            <BlurImage
               src={displayMedia}
               alt=""
               width={512}

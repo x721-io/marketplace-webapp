@@ -15,6 +15,7 @@ import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
+import BlurImage from "@/components/X721UIKits/BlurImage";
 
 export default function NFTCard({
   name,
@@ -76,7 +77,7 @@ export default function NFTCard({
         );
       case "image":
         return (
-          <Image
+          <BlurImage
             className="cursor-pointer rounded-xl object-cover w-full desktop:h-[220px] tablet:h-[180px] h-[130px] "
             src={displayMedia}
             alt="image"

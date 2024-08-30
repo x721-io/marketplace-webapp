@@ -106,8 +106,7 @@ export const useInfiniteScroll = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
+      const { scrollTop, clientHeight, scrollHeight } = document.body;
       if (
         scrollTop > scrollHeight - clientHeight - offset &&
         !isLoadingMore &&

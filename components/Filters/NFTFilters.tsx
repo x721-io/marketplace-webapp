@@ -58,14 +58,6 @@ export default function NFTFilters({
         <Collapsible header="Type" isOpen>
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
-              {/* <Radio
-                id="type-all"
-                value=""
-                checked={localFilters.type === undefined}
-                onChange={() =>
-                  handleChange({ type: undefined, updateOnChange: true })
-                }
-              /> */}
               <MyRadio
                 checked={localFilters.type === undefined}
                 onChange={() =>
