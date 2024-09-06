@@ -2,16 +2,11 @@
 
 import React from "react";
 import ProjectSlide from "./LaunchpadSlide";
-import useSWR from "swr";
-import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import { MyCarousel } from "@/components/X721UIKits/Carousel";
+import { useGetLaunchpadProjects } from "@/hooks/useQuery";
 
 export default function HomePageBanner() {
-  const api = useLaunchpadApi();
-  const { data } = useSWR("comingProjects", () => api.fetchProjects(), {
-    revalidateOnFocus: false,
-  });
-
+  const { data } = useGetLaunchpadProjects();
   return (
     <div className="w-full h-[530px] desktop:h-[500px] tablet:h-[500px] mx-auto p-2">
       {Array.isArray(data) && (

@@ -176,12 +176,12 @@ export const useGetCollectionById = (
 };
 
 export const useGetLaunchpadProjects = (
-  mode: "MINTING" | "UPCOMING" | "ENDED" | "CLAIM"
+  mode?: "MINTING" | "UPCOMING" | "ENDED" | "CLAIM"
 ) => {
   const { data, error, isLoading, mutate } = useSWR(
     `${API_ENDPOINTS.LAUNCHPAD}/${mode}`,
     () => {
-      return nextAPI.get(API_ENDPOINTS.LAUNCHPAD, { params: { mode } });
+      return nextAPI.get(API_ENDPOINTS.LAUNCHPAD, mode && { params: { mode } });
     },
     {
       revalidateOnFocus: false,

@@ -22,7 +22,7 @@ import useBuyNFT from "@/hooks/useBuyNFT";
 
 interface Props extends MyModalProps {
   nft: NFT;
-  saleData?: MarketEvent;
+  saleData: MarketEvent;
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
@@ -43,7 +43,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     formState: { errors },
   } = useForm<FormState.BuyNFT>({
     defaultValues: {
-      quoteToken: saleData?.quoteToken,
+      quoteToken: saleData.quoteToken,
     },
   });
   const [price, quantity, quoteToken, allowance] = watch([
@@ -53,7 +53,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     "allowance",
   ]);
   const token = useMemo(
-    () => findTokenByAddress(saleData?.quoteToken),
+    () => findTokenByAddress(saleData.quoteToken),
     [saleData]
   );
   const [loading, setLoading] = useState(false);
@@ -69,15 +69,15 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     tokenId: nft.u2uId || nft.id,
     price:
       nft.collection.type === "ERC721"
-        ? BigInt(saleData?.price || "0")
-        : BigInt(saleData?.price || "0") *
+        ? BigInt(saleData.price || "0")
+        : BigInt(saleData.price || "0") *
           BigInt(quantity && !isNaN(quantity) ? quantity : "0"),
     onSuccess: (data) => {
-      if (!saleData?.price || isNaN(Number(saleData?.price))) return;
+      if (!saleData.price || isNaN(Number(saleData.price))) return;
       const priceBigint =
         nft.collection.type === "ERC721"
-          ? BigInt(saleData?.price || "0")
-          : BigInt(saleData?.price || "0") *
+          ? BigInt(saleData.price || "0")
+          : BigInt(saleData.price || "0") *
             BigInt(quantity && !isNaN(quantity) ? quantity : "0");
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
@@ -111,13 +111,13 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const totalPriceBN = useMemo(() => {
     if (!quantity) return BigInt(0);
     return (
-      BigInt(saleData?.price || "0") *
+      BigInt(saleData.price || "0") *
       BigInt(quantity && !isNaN(quantity) ? quantity : "0")
     );
   }, [quantity, saleData]);
 
   const isDisableBuy = useMemo(() => {
-    if ((tokenBalance?.value || 0) < BigInt(saleData?.price || 0)) return true;
+    if ((tokenBalance?.value || 0) < BigInt(saleData.price || 0)) return true;
   }, [saleData, tokenBalance]);
 
   const handleBuyURC721UsingNative = async () => {
@@ -166,7 +166,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     setLoading(true);
     try {
       await buyURC1155UsingNative(
-        saleData?.operationId,
+        saleData.operationId,
         BigInt(saleData.price) + BigInt(buyerFee),
         quantity
       );
@@ -188,7 +188,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!saleData) return;
     setLoading(true);
     try {
-      await buyURC1155UsingURC20(saleData?.operationId, quantity);
+      await buyURC1155UsingURC20(saleData.operationId, quantity);
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
