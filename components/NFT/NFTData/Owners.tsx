@@ -146,12 +146,14 @@ export default function OwnersTab({
                   )}
                 </ConnectWalletButton>
 
-                <BuyNFTModal
-                  saleData={owner.sellInfo}
-                  nft={nft}
-                  show={modals[owner.id]}
-                  onClose={() => setModals({ ...modals, [owner.id]: false })}
-                />
+                {owner.sellInfo && (
+                  <BuyNFTModal
+                    saleData={owner.sellInfo}
+                    nft={nft}
+                    show={modals[owner.id]}
+                    onClose={() => setModals({ ...modals, [owner.id]: false })}
+                  />
+                )}
               </div>
             );
           })
