@@ -25,7 +25,7 @@ import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
 interface Props extends MyModalProps {
   nft: NFT;
-  marketData?: NFTMarketData;
+  marketData: NFTMarketData;
 }
 
 export default function SellNFTModal({

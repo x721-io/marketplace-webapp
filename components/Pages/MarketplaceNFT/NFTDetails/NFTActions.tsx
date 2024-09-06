@@ -72,24 +72,30 @@ export default function NFTActions({
               </Button>
             </div>
           )}
-          <SellNFTModal
-            marketData={marketData}
-            nft={nft}
-            show={showSellModal}
-            onClose={() => setShowSellModal(false)}
-          />
-          <CancelSellNFTModal
-            nft={nft}
-            marketData={marketData}
-            show={showCancelSellModal}
-            onClose={() => setShowCancelSellModal(false)}
-          />
-          <TransferNFTModal
-            nft={nft}
-            marketData={marketData}
-            show={showTransferModal}
-            onClose={() => setShowTransferModal(false)}
-          />
+          {marketData && (
+            <SellNFTModal
+              marketData={marketData}
+              nft={nft}
+              show={showSellModal}
+              onClose={() => setShowSellModal(false)}
+            />
+          )}
+          {marketData && (
+            <CancelSellNFTModal
+              nft={nft}
+              marketData={marketData}
+              show={showCancelSellModal}
+              onClose={() => setShowCancelSellModal(false)}
+            />
+          )}
+          {marketData && (
+            <TransferNFTModal
+              nft={nft}
+              marketData={marketData}
+              show={showTransferModal}
+              onClose={() => setShowTransferModal(false)}
+            />
+          )}
         </ConnectWalletButton>
       </div>
     );
@@ -124,12 +130,15 @@ export default function NFTActions({
         </Button>
       )}
 
-      <BuyNFTModal
-        saleData={saleData}
-        nft={nft}
-        show={showBuyModal}
-        onClose={() => setShowBuyModal(false)}
-      />
+      {saleData && (
+        <BuyNFTModal
+          saleData={saleData}
+          nft={nft}
+          show={showBuyModal}
+          onClose={() => setShowBuyModal(false)}
+        />
+      )}
+
       <BidNFTModal
         marketData={marketData}
         nft={nft}
