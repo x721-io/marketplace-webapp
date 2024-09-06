@@ -214,12 +214,13 @@ export default function ProfileStep() {
             trust on X721
           </Text>
           <Button
+            disabled={profile?.accountStatus}
             onClick={() => handleGetVerify()}
             variant="secondary"
             scale="sm"
             className="w-full tablet:w-auto desktop:w-auto"
           >
-            Get Verified
+            {profile?.accountStatus ? 'Account Verified' : 'Get Verified'}
           </Button>
         </div>
       </div>
