@@ -6,4 +6,4 @@
 .env
 yarn.lock
 package-lock.json
-docker-compose.yml
+docker-compose.yaml
