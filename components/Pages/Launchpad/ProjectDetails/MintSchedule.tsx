@@ -1,3 +1,4 @@
+import React from "react";
 import Collapsible from "@/components/Collapsible";
 import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import Icon from "@/components/Icon";
