@@ -133,7 +133,7 @@ const RoundSchedule = ({
             </div>
 
             <p className="text-body-12 text-secondary">
-              Start:{" "}
+              Start:
               {format(new Date(round?.start || 0), "yyyy/M/dd - hh:mm a")}
             </p>
             <p className="text-body-12 text-secondary">
@@ -175,7 +175,6 @@ const RoundSchedule = ({
                 "yyyy/M/dd - hh:mm a"
               )}
             </p>
-
             {claimable &&
               Number(claimableAmount) > 0 &&
               Number(startClaim) !== 0 && (
