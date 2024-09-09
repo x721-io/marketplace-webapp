@@ -42,7 +42,7 @@ export default function Input({
         );
       case "sm":
         return classNames(
-          "text-body-14 rounded-xl min-w-72 h-10 px-4 py-2",
+          "text-body-14 rounded-xl h-10 px-4 py-2",
           !!prependIcon && "ps-9",
           !!appendIcon && "pe-9"
         );

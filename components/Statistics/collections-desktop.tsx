@@ -114,9 +114,17 @@ function CollectionsDesktop({
         const value = Number(cellData);
         if (!value || value === 0) return <div>-</div>;
         if (value < 0) {
-          return <span className="text-[#E31B1B]">{value}%</span>;
+          return (
+            <span className="text-[#E31B1B]">
+              -{parseFloat(value.toString()).toFixed(2)}%
+            </span>
+          );
         }
-        return <span className="text-[#21AE46]">+{value}%</span>;
+        return (
+          <span className="text-[#21AE46]">
+            +{parseFloat(value.toString()).toFixed(2)}%
+          </span>
+        );
       },
     },
     {
@@ -154,9 +162,17 @@ function CollectionsDesktop({
         const value = Number(cellData);
         if (!value || value === 0) return <div>-</div>;
         if (value < 0) {
-          return <span className="text-[#E31B1B]">{value}%</span>;
+          return (
+            <span className="text-[#E31B1B]">
+              -{parseFloat(value.toString()).toFixed(2)}%
+            </span>
+          );
         }
-        return <span className="text-[#21AE46]">+{value}%</span>;
+        return (
+          <span className="text-[#21AE46]">
+            +{parseFloat(value.toString()).toFixed(2)}%
+          </span>
+        );
       },
     },
     {
