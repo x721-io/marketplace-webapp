@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { APIResponse } from "./api/types";
+import { MARKETPLACE_URL } from "@/config/constants";
 
 export const setAuthCookies = ({
   accessToken,
@@ -10,12 +11,15 @@ export const setAuthCookies = ({
 }: APIResponse.Connect) => {
   cookies().set("accessToken", accessToken, {
     expires: accessTokenExpire,
+    domain: MARKETPLACE_URL,
   });
   cookies().set("refreshToken", refreshToken, {
     expires: refreshTokenExpire,
+    domain: MARKETPLACE_URL,
   });
   cookies().set("userId", userId, {
     expires: accessTokenExpire,
+    domain: MARKETPLACE_URL,
   });
 };
 
