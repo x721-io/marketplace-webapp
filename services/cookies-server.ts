@@ -10,12 +10,15 @@ export const setAuthCookies = ({
 }: APIResponse.Connect) => {
   cookies().set("accessToken", accessToken, {
     expires: accessTokenExpire,
+    domain: ".uniultra.xyz",
   });
   cookies().set("refreshToken", refreshToken, {
     expires: refreshTokenExpire,
+    domain: ".uniultra.xyz",
   });
   cookies().set("userId", userId, {
     expires: accessTokenExpire,
+    domain: ".uniultra.xyz",
   });
 };
 
