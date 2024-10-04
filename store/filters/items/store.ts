@@ -5,6 +5,7 @@ import { tokens } from "@/config/tokens";
 
 export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
   showFilters: false,
+  gridMode: 1,
   filters: {
     traits: [],
     type: undefined,
@@ -42,6 +43,11 @@ export const useNFTFilterStore = create(
         set((state) => ({
           ...DEFAULT_NFT_FILTERS_STATE,
           showFilters: state.showFilters,
+        })),
+      changeGridMode: (gridMode: number) =>
+        set((state) => ({
+          ...DEFAULT_NFT_FILTERS_STATE,
+          gridMode,
         })),
     }),
     { name: "nft-filter" }

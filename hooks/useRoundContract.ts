@@ -1,5 +1,5 @@
 import { AssetType, Collection, Round } from "@/types";
-import { waitForTransaction, writeContract } from "@wagmi/core";
+import { waitForTransaction, writeContract } from "wagmi/actions";
 import { getRoundAbi } from "@/utils";
 import { formatUnits } from "ethers";
 import { contracts } from "@/config/contracts";

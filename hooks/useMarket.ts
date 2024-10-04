@@ -12,7 +12,7 @@ import useAuthStore from "@/store/auth/store";
 import { AssetType, NFT } from "@/types";
 import { useTransactionStatus } from "@/hooks/useTransactionStatus";
 import { isAddress, parseEther } from "ethers";
-import { readContract, waitForTransaction, writeContract } from "@wagmi/core";
+import { readContract, waitForTransaction, writeContract } from "wagmi/actions";
 import { tokens } from "@/config/tokens";
 
 interface FeeData {

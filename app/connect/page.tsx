@@ -7,7 +7,7 @@ import Icon from "@/components/Icon";
 import SignConnectMessageModal from "@/components/Modal/SignConnectMessageModal";
 import SignupModal from "@/components/Modal/SignupModal";
 import { useRouter } from "next/navigation";
-import { connect } from "@wagmi/core";
+import { connect } from "wagmi/actions";
 import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ConnectPage() {

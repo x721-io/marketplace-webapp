@@ -1,7 +1,7 @@
 "use client";
 
 import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { disconnect } from "@wagmi/core";
+import { disconnect } from "wagmi/actions";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
 import { useCallback, useContext, useMemo } from "react";

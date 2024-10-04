@@ -2,10 +2,11 @@ import { NFT, Royalty } from "@/types";
 import { useMemo } from "react";
 import { formatUnits } from "ethers";
 import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
-import { Address } from "wagmi";
+import { Address, erc20ABI, useAccount, useContractRead } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import Image from "next/image";
 import Text from "../Text";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props {
   mode: "buyer" | "seller";
@@ -18,6 +19,7 @@ interface Props {
   sellerFee: bigint;
   royaltiesFee: bigint;
   netReceived: bigint;
+  tokenBalance: bigint;
 }
 
 export default function FeeCalculator({
@@ -31,7 +33,9 @@ export default function FeeCalculator({
   sellerFee,
   royaltiesFee,
   netReceived,
+  tokenBalance,
 }: Props) {
+  const { address } = useAccount();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 
   const { data: royalties } = useReadNFTRoyalties(nft);
@@ -50,7 +54,7 @@ export default function FeeCalculator({
   return (
     <div className="w-full p-4 border border-disabled rounded-2xl flex flex-col gap-3">
       {mode === "seller" ? (
-        <>
+        <div>
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
               Origin fee (Seller): {sellerFeeRatio}%
@@ -121,9 +125,32 @@ export default function FeeCalculator({
               )}
             </div>
           </div>
-        </>
+        </div>
       ) : (
-        <>
+        <div className="w-full flex flex-col gap-3">
+          <div className="w-full flex items-center justify-between">
+            <p className="text-secondary">Your balance:</p>
+            <div className="flex items-center font-bold gap-1">
+              <Text
+                showTooltip
+                labelTooltip={formatUnits(buyerFee, token?.decimal)}
+                className="w-auto max-w-[80px]"
+              >
+                {formatUnits(tokenBalance ?? 0, token?.decimal)}
+              </Text>
+              <p className="text-secondary">{token?.symbol}</p>
+              {!!token?.logo && (
+                <Image
+                  className="w-5 h-5 rounded-full"
+                  src={token?.logo || ""}
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+              )}
+            </div>
+          </div>
+
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
               Origin fee (Buyer): {buyerFeeRatio}%
@@ -171,7 +198,7 @@ export default function FeeCalculator({
               )}
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

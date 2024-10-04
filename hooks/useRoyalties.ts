@@ -1,6 +1,6 @@
 import { contracts } from "@/config/contracts";
 import { Address, useContractRead } from "wagmi";
-import { waitForTransaction, writeContract } from "@wagmi/core";
+import { waitForTransaction, writeContract } from "wagmi/actions";
 import { NFT, Royalties } from "@/types";
 import { toast } from "react-toastify";
 

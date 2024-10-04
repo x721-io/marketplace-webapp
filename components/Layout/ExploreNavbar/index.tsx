@@ -3,6 +3,8 @@
 import { TabsRef } from "flowbite-react";
 import Button from "@/components/Button";
 import { usePathname, useRouter } from "next/navigation";
+import WindowIcon from "@mui/icons-material/Window";
+import AppsIcon from "@mui/icons-material/Apps";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Input from "@/components/Form/Input";
 import SliderIcon from "@/components/Icon/Sliders";
@@ -50,6 +52,8 @@ export default function ExploreSectionNavbar() {
     showFilters: showNFTFilters,
     toggleFilter: toggleNFTFilters,
     updateFilters: updateNFTFilters,
+    gridMode,
+    changeGridMode,
   } = useNFTFilterStore((state) => state);
 
   const {
@@ -224,6 +228,7 @@ export default function ExploreSectionNavbar() {
           ))}
         </MyTabs.Group>
       </div>
+
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
           onChange={(e) => handleInputText(e.target.value)}
@@ -239,7 +244,7 @@ export default function ExploreSectionNavbar() {
           <Dropdown.Root
             label=""
             icon={
-              <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+              <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl py-3 px-5 h-full cursor-pointer">
                 {sortOption.name}
                 <div className="rounded-lg p-1 bg-surface-medium">
                   <Icon name="chevronDown" width={14} height={14} />
@@ -253,6 +258,24 @@ export default function ExploreSectionNavbar() {
               </Dropdown.Item>
             ))}
           </Dropdown.Root>
+        </div>
+      )}
+      {pathname.includes("items") && (
+        <div className="order-5">
+          <MyTabs.Group
+            onActiveTabChange={(activeTab) => changeGridMode(activeTab)}
+          >
+            <MyTabs.Item active={gridMode === 1} tabIndex={1} key={1}>
+              <div className="w-full h-full text-gray-800">
+                <WindowIcon fontSize="small" color="inherit" />
+              </div>
+            </MyTabs.Item>
+            <MyTabs.Item active={gridMode === 2} tabIndex={2} key={1}>
+              <div className="w-full h-full text-gray-800">
+                <AppsIcon fontSize="medium" color="inherit" />
+              </div>
+            </MyTabs.Item>
+          </MyTabs.Group>
         </div>
       )}
     </div>

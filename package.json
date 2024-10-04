@@ -12,8 +12,13 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@faker-js/faker": "^8.4.1",
+    "@mui/icons-material": "^6.1.2",
+    "@mui/material": "^6.1.2",
     "@next/third-parties": "^14.2.4",
+    "@openzeppelin/merkle-tree": "^1.0.7",
     "@rarible/types": "~0.9.16",
     "@types/dompurify": "^3.0.5",
     "abitype": "^1.0.6",
@@ -25,7 +30,10 @@
     "ethers": "^6.8.1",
     "flowbite": "^2.1.1",
     "flowbite-react": "^0.6.4",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.4.0",
     "mime-types": "^2.1.35",
+    "moment": "^2.30.1",
     "next": "14.1.4",
     "next-intl": "^3.17.2",
     "react": "^18",
@@ -44,6 +52,7 @@
     "tailwindcss": "^3.3.5",
     "viem": "^1.18.9",
     "wagmi": "^1.4.6",
+    "web3": "^4.13.0",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

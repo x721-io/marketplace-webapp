@@ -1,6 +1,7 @@
 import { Address } from "wagmi";
 import { Trait } from "@/types/entitites";
 
+export const daysRanges = ["1_DAY", "7_DAYS", "30_DAYS", "90_DAYS"] as const;
 export namespace FormState {
   export interface SignUp {
     username: string;
@@ -36,10 +37,15 @@ export namespace FormState {
     traits: Trait[];
   }
 
+  export type DaysRange = (typeof daysRanges)[number];
   export interface SellNFT {
     price: number;
     quantity: number;
     quoteToken: Address;
+    start: number;
+    salt: string;
+    end: number;
+    daysRange: DaysRange;
   }
 
   export interface BuyNFT {
@@ -53,7 +59,10 @@ export namespace FormState {
     quoteToken: Address;
     price: string;
     quantity: string;
-    allowance: string;
+    start: number;
+    salt: string;
+    end: number;
+    daysRange: DaysRange;
   }
 
   export interface AcceptBidNFT {

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { transform } = require("typescript");
 const { colors, typography } = require("./config/theme");
 
 module.exports = {
@@ -42,6 +43,15 @@ module.exports = {
       },
       fontSize: {
         ...typography,
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.25s ease",
       },
     },
   },

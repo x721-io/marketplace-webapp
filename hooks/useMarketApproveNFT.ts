@@ -5,6 +5,7 @@ import { NFT } from "@/types";
 import { useMemo } from "react";
 import { tokens } from "@/config/tokens";
 import { Web3Functions } from "@/services/web3";
+import { contractNFTTransferProxy } from "./useMarketplaceV2";
 
 export const useMarketApproveNFT = (nft: NFT) => {
   const type = nft.collection.type;
@@ -18,7 +19,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
       ? contracts.erc721Base.abi
       : contracts.erc1155Base.abi) as any,
     functionName: "isApprovedForAll",
-    args: [wallet as Address, marketContract.address],
+    args: [wallet as Address, contractNFTTransferProxy],
     enabled: !!wallet,
     watch: true,
   });

@@ -1,5 +1,5 @@
 import { contracts } from "@/config/contracts";
-import { readContract } from "@wagmi/core";
+import { readContract } from "wagmi/actions";
 import { NFT } from "@/types";
 import { Address } from "wagmi";
 import { Web3Functions } from "@/services/web3";

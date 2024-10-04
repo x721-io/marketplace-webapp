@@ -5,13 +5,8 @@ import {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from "abitype";
-import {
-  Address,
-  readContract,
-  waitForTransaction,
-  writeContract,
-} from "@wagmi/core";
-import { TransactionReceipt } from "viem";
+import { readContract, waitForTransaction, writeContract } from "wagmi/actions";
+import { Address, TransactionReceipt } from "viem";
 import { getUserLocale } from "./locale";
 import { getWeb3ErrorMsg } from "@/utils/transaction";
 

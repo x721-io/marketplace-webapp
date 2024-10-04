@@ -1,6 +1,6 @@
 import useAuthStore from "@/store/auth/store";
 import { useEffect, useState } from "react";
-import { fetchBalance, FetchBalanceResult } from "@wagmi/core";
+import { fetchBalance, FetchBalanceResult } from "wagmi/actions";
 import { formatEther } from "ethers";
 import { Address } from "wagmi";
 

@@ -433,7 +433,8 @@ export default function CreateNftPage() {
                               >
                                 <Input
                                   value={value[index].trait_type}
-                                  containerClass="flex-1"
+                                  containerClass="w-[50%]"
+                                  scale="unset"
                                   placeholder="e.g. Size"
                                   onChange={(event) =>
                                     handleTraitInput(
@@ -445,7 +446,8 @@ export default function CreateNftPage() {
                                 />
                                 <Input
                                   value={value[index].value}
-                                  containerClass="flex-1"
+                                  containerClass="w-[50%]"
+                                  scale="unset"
                                   placeholder="e.g. M"
                                   onChange={(event) =>
                                     handleTraitInput(

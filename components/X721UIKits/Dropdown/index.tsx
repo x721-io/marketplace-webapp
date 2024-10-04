@@ -1,14 +1,7 @@
 "use client";
 
 import useOnScreen from "@/hooks/useOnScreen";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 type DropdownRootContextType = {
   onDropdownFullyRendered?: () => void;
@@ -20,10 +13,12 @@ function DropdownRoot({
   label,
   icon,
   children,
+  dropdownContainerClassName = "",
 }: {
   label: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  dropdownContainerClassName?: string;
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -82,8 +77,8 @@ function DropdownRoot({
             setOpen(!isOpen);
           }}
         >
-          <div>{label}</div>
-          <div>{icon}</div>
+          {label && label !== "" && <div>{label}</div>}
+          <div className="flex-1">{icon}</div>
         </div>
         {isOpen && (
           <div
@@ -99,7 +94,11 @@ function DropdownRoot({
                   }
             }
             ref={dropdownRef}
-            className="flex flex-col absolute top-[100%] text-[0.9rem] bg-[white] z-[100] shadow-sm rounded-sm border-solid border-[1px] border-[#E0E0E0]"
+            className={
+              dropdownContainerClassName +
+              ` flex flex-col absolute top-[100%] text-[0.9rem] bg-[white] z-[100] px-3 py-2
+            shadow-xl rounded-2xl border-solid border-[1px] border-[#E0E0E0] animate-fade-in`
+            }
           >
             {children}
           </div>
@@ -112,9 +111,11 @@ function DropdownRoot({
 function DropDownItem({
   children,
   onClick,
+  itemClassName = "",
 }: {
   children: React.ReactNode;
   onClick?: () => void;
+  itemClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isOnScreen = useOnScreen(ref);
@@ -133,7 +134,10 @@ function DropDownItem({
         e.stopPropagation();
         onClick && onClick();
       }}
-      className="w-[140px] px-[15px] py-[10px] cursor-pointer hover:bg-[#E0E0E0]"
+      className={
+        itemClassName +
+        " w-full px-[15px] py-[10px] cursor-pointer hover:bg-[#E0E0E0]"
+      }
     >
       {children}
     </div>

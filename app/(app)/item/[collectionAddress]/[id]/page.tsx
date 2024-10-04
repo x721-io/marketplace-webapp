@@ -31,6 +31,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const response = await getNftData(params);
   if (response.status === "success" && response.data) {
+    console.log(response.data.u2uId);
     return {
       title: `${response.data.name} | X721`,
       openGraph: {

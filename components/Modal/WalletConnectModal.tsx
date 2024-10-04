@@ -1,7 +1,7 @@
 import Text from "@/components/Text";
 import Icon from "@/components/Icon";
 import { Connector, useAccount, useConnect } from "wagmi";
-import { connect } from "@wagmi/core";
+import { connect } from "wagmi/actions";
 import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 

@@ -11,6 +11,7 @@ import Link from "next/link";
 import Button from "../Button";
 import useAuthStore from "@/store/auth/store";
 import NFTCardSkeleton from "../NFT/NFTCard/skeleton";
+import { useNFTFilterStore } from "@/store/filters/items/store";
 
 interface Props {
   items?: NFT[];
@@ -48,6 +49,7 @@ export default function NFTsList({
   currentHasNext,
 }: Props) {
   const myId = useAuthStore((state) => state.profile?.id);
+  const gridMode = useNFTFilterStore((state) => state.gridMode);
 
   const renderList = () => {
     if (error && !items) {
@@ -106,12 +108,18 @@ export default function NFTsList({
       <div className="w-full">
         <div
           className={classNames(
-            "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3",
+            "grid mt-4 mb-6 desktop:mt-0 desktop:mb-20 tablet:mt-0 tablet:mb-10 desktop:gap-3 tablet:gap-4 gap-3 transition-all",
             isMobile
-              ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
+              ? gridMode === 1
+                ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
+                : "desktop:grid-cols-9 tablet:grid-cols-5 grid-cols-3"
               : showFilters
-              ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
-              : "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
+              ? gridMode === 1
+                ? "desktop:grid-cols-4 tablet:grid-cols-2 grid-cols-1"
+                : "desktop:grid-cols-7 tablet:grid-cols-3 grid-cols-2"
+              : gridMode === 1
+              ? "desktop:grid-cols-6 tablet:grid-cols-3 grid-cols-2"
+              : "desktop:grid-cols-9 tablet:grid-cols-5 grid-cols-3"
           )}
         >
           {showCreateNFT && myId === userId && (

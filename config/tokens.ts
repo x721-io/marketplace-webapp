@@ -1,4 +1,5 @@
 import { Address } from "wagmi";
+import { ADDRESS_ZERO } from "./constants";
 
 interface Token {
   name: string;
@@ -9,11 +10,18 @@ interface Token {
 }
 
 export const tokens: Record<string, Token> = {
+  u2u: {
+    name: "U2U",
+    symbol: "U2U",
+    decimal: 18,
+    address: ADDRESS_ZERO,
+    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  },
   wu2u: {
     name: "Wrapped U2U",
     symbol: "WU2U",
     decimal: 18,
-    address: process.env.NEXT_PUBLIC_WU2U_CONTRACT as Address,
+    address: "0xDD7Dc2bBeB8f6a9e60C09aCd8174e4FcFAef0647",
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
   // weth: {
@@ -33,8 +41,5 @@ export const tokens: Record<string, Token> = {
 };
 
 export const tokenOptions = Object.values(tokens).map((token) => {
-  if (token.address === tokens.wu2u.address) {
-    return { label: "U2U", value: tokens.wu2u.address };
-  }
   return { label: token.symbol, value: token.address };
 });

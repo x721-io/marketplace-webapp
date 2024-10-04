@@ -5,7 +5,7 @@ import { SIGN_MESSAGE } from "@/config/constants";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
-import { signMessage } from "@wagmi/core";
+import { signMessage } from "wagmi/actions";
 import { Tooltip } from "react-tooltip";
 import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";

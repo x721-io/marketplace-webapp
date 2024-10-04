@@ -4,7 +4,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 
 export interface BaseInputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerClass?: string;
-  scale?: "md" | "lg" | "sm";
+  scale?: "md" | "lg" | "sm" | "unset";
   prependIcon?: React.ReactNode;
   prependIconContainerClass?: string;
   appendIcon?: React.ReactNode;
@@ -45,6 +45,12 @@ export default function Input({
           "text-body-14 rounded-xl h-10 px-4 py-2",
           !!prependIcon && "ps-9",
           !!appendIcon && "pe-9"
+        );
+      case "unset":
+        return classNames(
+          "text-body-16 rounded-2xl h-12 p-3",
+          !!prependIcon && "ps-10",
+          !!appendIcon && "pe-10"
         );
       case "md":
       default:

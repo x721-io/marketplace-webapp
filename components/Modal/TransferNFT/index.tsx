@@ -10,7 +10,7 @@ import useAuthStore from "@/store/auth/store";
 import { useForm } from "react-hook-form";
 import { numberRegex } from "@/utils/regex";
 import { isAddress, ZeroAddress } from "ethers";
-import { writeContract } from "@wagmi/core";
+import { writeContract } from "wagmi/actions";
 import { Address, erc721ABI } from "wagmi";
 import ERC1155 from "@/abi/ERC1155";
 import { toast } from "react-toastify";
