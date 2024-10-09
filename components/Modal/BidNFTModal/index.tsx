@@ -45,7 +45,7 @@ interface Props extends MyModalProps {
 }
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
-  const { getERC20Allowance, createBidOrder } = useMarketplaceV2(nft);
+  const { getERC20Allowance, createBidOrder, isApproving, isCreatingOrder, isSigningOrderData} = useMarketplaceV2(nft);
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
   const onBidURC721UsingNative = useBidURC721UsingNative(nft);
@@ -268,6 +268,33 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       getAllowance();
     }
   }, [quoteToken, show]);
+
+  useEffect(() => {
+    if (isApproving) {
+      toast.loading("Approving token for all...", {
+        type: "info",
+        toastId: "approve-all",
+      });
+    } else {
+      toast.dismiss("approve-all");
+    }
+    if (isSigningOrderData) {
+      toast.loading("Signing order data...", {
+        type: "info",
+        toastId: "sign-order-data",
+      }); 
+    } else {
+      toast.dismiss("sign-order-data");
+    }
+    if (isCreatingOrder) {
+      toast.loading("Creating a Bid...", {
+        type: "info",
+        toastId: "create-order",
+      });
+    } else {
+      toast.dismiss("create-order");
+    }
+  }, [isApproving, isSigningOrderData, isCreatingOrder]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
@@ -495,7 +522,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               disabled={!isTokenApproved}
               type={"submit"}
               className="w-full"
-              loading={loading}
+              loading={isApproving || isCreatingOrder || isSigningOrderData}
             >
               Place a Bid
             </Button>

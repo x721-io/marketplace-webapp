@@ -247,36 +247,40 @@ const useMarketplaceV2 = (nft: NFT) => {
     } as const;
 
     const takeValue = parseUnits(price.toString(), 18);
-    const sig = await signTypedDataAsync({
-      account: address,
-      domain: {
-        chainId: 2484,
-        name: "U2U",
-        version: "1",
-      },
-      types,
-      primaryType: "Order",
-      message: {
-        maker: address,
-        makeAsset: {
-          assetType: getNftAssetType(),
-          contractAddress: collectionAddress,
-          value: BigInt(quantity),
-          id: BigInt(nft.u2uId ?? nft.id),
+    try {
+      const sig = await signTypedDataAsync({
+        account: address,
+        domain: {
+          chainId: 2484,
+          name: "U2U",
+          version: "1",
         },
-        taker: "0x0000000000000000000000000000000000000000",
-        takeAsset: {
-          assetType: getTokenAssetType(quoteToken),
-          contractAddress: quoteToken,
-          value: takeValue,
-          id: BigInt(0),
+        types,
+        primaryType: "Order",
+        message: {
+          maker: address,
+          makeAsset: {
+            assetType: getNftAssetType(),
+            contractAddress: collectionAddress,
+            value: BigInt(quantity),
+            id: BigInt(nft.u2uId ?? nft.id),
+          },
+          taker: "0x0000000000000000000000000000000000000000",
+          takeAsset: {
+            assetType: getTokenAssetType(quoteToken),
+            contractAddress: quoteToken,
+            value: takeValue,
+            id: BigInt(0),
+          },
+          salt: BigInt(salt),
+          start: BigInt(start),
+          end: BigInt(end),
         },
-        salt: BigInt(salt),
-        start: BigInt(start),
-        end: BigInt(end),
-      },
-    });
-    return sig;
+      });
+      return sig;
+    } catch (err: any) {
+      return null;
+    }
   };
 
   const signBidOrderData = async (
@@ -347,6 +351,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     params: FormState.SellNFT | FormState.BidNFT,
     sig: `0x${string}`,
     encodedData: `0x${string}`,
+    taker: Address,
     orderType: "BID" | "SELL"
   ) => {
     if (!address) return false;
@@ -354,6 +359,30 @@ const useMarketplaceV2 = (nft: NFT) => {
     const { address: collectionAddress } = collection;
     const { end, price, quantity, quoteToken, start, salt } = params;
     const takeValue = parseUnits(price.toString(), 18);
+    const makeAsset = {
+      assetType: getNftAssetType(),
+      contractAddress: collectionAddress,
+      value: BigInt(quantity).toString(),
+      id: nft.u2uId ?? nft.id,
+    };
+    const takeAsset = {
+      assetType: getTokenAssetType(quoteToken),
+      contractAddress: quoteToken,
+      value: takeValue.toString(),
+      id: BigInt(0).toString(),
+    };
+    const {
+      assetType: make_asset_type,
+      contractAddress: make_asset_address,
+      value: make_asset_value,
+      id: make_asset_id,
+    } = makeAsset;
+    const {
+      assetType: take_asset_type,
+      contractAddress: take_asset_address,
+      value: take_asset_value,
+      id: take_asset_id,
+    } = takeAsset;
     try {
       await fetch("http://localhost:3001/create-order", {
         method: "POST",
@@ -362,18 +391,15 @@ const useMarketplaceV2 = (nft: NFT) => {
         },
         body: JSON.stringify({
           maker: address,
-          makeAsset: {
-            assetType: getNftAssetType(),
-            contractAddress: collectionAddress,
-            value: BigInt(quantity).toString(),
-            id: nft.u2uId ?? nft.id,
-          },
-          takeAsset: {
-            assetType: getTokenAssetType(quoteToken),
-            contractAddress: quoteToken,
-            value: takeValue.toString(),
-            id: BigInt(0).toString(),
-          },
+          make_asset_type,
+          make_asset_id,
+          make_asset_address,
+          make_asset_value,
+          taker,
+          take_asset_type,
+          take_asset_address,
+          take_asset_value,
+          take_asset_id,
           salt,
           start: start.toString(),
           end: end.toString(),
@@ -389,7 +415,14 @@ const useMarketplaceV2 = (nft: NFT) => {
   };
 
   const createSellOrder = async (
-    params: FormState.SellNFT
+    params: FormState.SellNFT,
+    onApproveSuccess: () => void,
+    onSignSuccess: () => void,
+    onCreateOrderAPISuccess: () => void,
+    onRequestError: (
+      requestType: "approve" | "sign" | "create_order_api",
+      error: Error
+    ) => void
   ): Promise<boolean> => {
     if (!address) return false;
 
@@ -398,8 +431,12 @@ const useMarketplaceV2 = (nft: NFT) => {
       setApproving(true);
       const result = await approveAll();
       setApproving(false);
-      if (!result) return false;
+      if (!result) {
+        onRequestError("approve", new Error("Failed to approve"));
+        return false
+      };
     }
+    onApproveSuccess();
 
     const encodedData = getSellOrderEncodedData(params);
     if (!encodedData) return false;
@@ -407,13 +444,24 @@ const useMarketplaceV2 = (nft: NFT) => {
     setIsSigningOrderData(true);
     const sig = await signSellOrderData(params);
     setIsSigningOrderData(false);
-    if (!sig) return false;
+    if (!sig) {
+      onRequestError("sign", new Error("Failed to sign order data"));
+      return false;
+    }
+    onSignSuccess();
 
     setCreatingOrder(true);
     const result = true;
-    // const result = await createOrderAPI(params, sig, encodedData, "SELL");
+    // const result = await createOrderAPI(
+    //   params,
+    //   sig,
+    //   encodedData,
+    //   ADDRESS_ZERO,
+    //   "SELL"
+    // );
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setCreatingOrder(false);
+    onCreateOrderAPISuccess();
     return result;
   };
 
@@ -444,8 +492,14 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!sig) return false;
 
     setCreatingOrder(true);
-    const result = true;
-    // const result = await createOrderAPI(params, sig, encodedData, "BID");
+    // const result = true;
+    const result = await createOrderAPI(
+      params,
+      sig,
+      encodedData,
+      marketData.owners[0].signer,
+      "BID"
+    );
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setCreatingOrder(false);
     return result;
@@ -456,6 +510,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     createSellOrder,
     createBidOrder,
     approveAll,
+    signSellOrderData,
     checkIfApprovedForAll,
     isApproving,
     isSigningOrderData,

@@ -11,3 +11,11 @@
 body {
   font-family: "SFPro", "system-ui", "Arial";
 }
+
+.react-toggle--checked .react-toggle-track {
+  background-color: #9575CD !important;
+}
+
+.react-toggle-thumb {
+  transform: scale(0.7) !important;
+}

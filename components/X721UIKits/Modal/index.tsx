@@ -73,10 +73,10 @@ const ModalHeader = ({ children }: { children: React.ReactNode }) => {
   const { onClose } = useContext(MyModalContext);
 
   return (
-    <div className="w-full flex items-center justify-between px-[20px] pb-[20px] font-bold text-[1.2rem] border-solid border-b-[1px] border-[rbga(0,0,0,0.5)]">
+    <div className="w-full flex items-center justify-between px-[20px] pb-[20px] font-bold text-[1.2rem]">
       <div className="flex-1">{children}</div>
       <div onClick={onClose}>
-        <CloseIcon color="black" width={20} />
+        <CloseIcon width={20} />
       </div>
     </div>
   );

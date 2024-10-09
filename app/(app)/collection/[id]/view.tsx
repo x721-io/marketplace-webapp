@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { APIParams, APIResponse } from "@/services/api/types";
 import NFTsList from "@/components/List/NFTsList";
+import Toggle from "react-toggle";
 import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
 import InformationSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/InformationSection";
 import FiltersSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/FiltersCollectionSection";
@@ -15,6 +16,7 @@ import { useFilterByCollection } from "@/store/filters/byCollection/store";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Address } from "wagmi";
 import { useGetNFTs } from "@/hooks/useQuery";
+import "react-toggle/style.css";
 
 export default function CollectionView({
   collectionData,
@@ -24,6 +26,7 @@ export default function CollectionView({
   const router = useRouter();
   const filterStore = useFilterByCollection((state) => state);
   const [isInitial, setInitial] = useState(true);
+  const [isSweeping, setSweeping] = useState(false) 
 
   useEffect(() => {
     const collectionAddress = collectionData.collection.address;
@@ -114,6 +117,16 @@ export default function CollectionView({
             error={listError}
           />
         </div>
+      </div>
+
+      <div className="fixed w-full h-[80px] bg-[white] bottom-0 left-0 z-[100] border-solid border-t-[1px] flex items-center px-16 gap-5">
+        <div className='text-lg font-extrabold text-[black]'>Sweep</div>
+        <Toggle
+          defaultChecked={isSweeping}
+          checked={isSweeping}
+          icons={false}
+          onChange={() => setSweeping(!isSweeping)}
+        />
       </div>
     </div>
   );

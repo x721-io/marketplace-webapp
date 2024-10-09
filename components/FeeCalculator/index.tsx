@@ -54,7 +54,7 @@ export default function FeeCalculator({
   return (
     <div className="w-full p-4 border border-disabled rounded-2xl flex flex-col gap-3">
       {mode === "seller" ? (
-        <div>
+        <div className="w-full flex flex-col gap-3">
           <div className="w-full flex items-center justify-between">
             <p className="text-secondary">
               Origin fee (Seller): {sellerFeeRatio}%

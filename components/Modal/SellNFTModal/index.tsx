@@ -29,6 +29,7 @@ import Image from "next/image";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 import { genRandomNumber } from "@/utils";
 import { Address, erc20ABI, useAccount, useContractRead } from "wagmi";
+import StepsModal from "@/components/X721UIKits/StepsModal";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -41,7 +42,7 @@ export default function SellNFTModal({
   marketData,
   onClose,
 }: Props) {
-  const { createSellOrder, isApproving, isCreatingOrder, isSigningOrderData } =
+  const { createSellOrder, isApproving, isCreatingOrder, isSigningOrderData, signSellOrderData } =
     useMarketplaceV2(nft);
   const api = useMarketplaceApi();
   const [loading, setLoading] = useState(false);
@@ -79,6 +80,14 @@ export default function SellNFTModal({
     "daysRange",
     "salt",
   ]);
+  const [currentFormState, setCurrentFormState] = useState<"INPUT" | "CREATE">(
+    "INPUT"
+  );
+  const [currentStep, setCurrentStep] = useState(0);
+  const [errorStep, setErrorStep] = useState<{
+    stepIndex: number;
+    reason: string;
+  } | null>(null);
   const { address } = useAccount();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [isApprovedForAll, setApprovedForAll] = useState(false);
@@ -147,11 +156,9 @@ export default function SellNFTModal({
     },
   };
 
-  const onSubmit = async ({
-    price,
-    quoteToken,
-    quantity,
-  }: FormState.SellNFT) => {
+  const onSubmit = async () => {
+    setErrorStep(null);
+    setCurrentFormState("CREATE");
     const params: FormState.SellNFT = {
       daysRange,
       end,
@@ -161,7 +168,41 @@ export default function SellNFTModal({
       start,
       salt,
     };
-    await createSellOrder(params);
+    const onApproveSuccess = () => {
+      setCurrentStep(1);
+    };
+    const onSignSuccess = () => {
+      setCurrentStep(2);
+    };
+    const onCreateOrderAPISuccess = () => {
+      // alert(true)
+      setCurrentStep(3);
+    };
+    const onRequestError = (requestType: "approve" | "sign" | "create_order_api" ,error: Error) => {
+      let errorStepIndex = -1;
+      switch(requestType) {
+        case "approve":
+          errorStepIndex = 0;
+          break;
+        case "sign":
+          errorStepIndex = 1;
+          break;
+        case "create_order_api":
+          errorStepIndex = 2;
+          break;
+      }
+      setErrorStep({
+        stepIndex: errorStepIndex,
+        reason: error.message,
+      });
+    };
+    await createSellOrder(
+      params,
+      onApproveSuccess,
+      onSignSuccess,
+      onCreateOrderAPISuccess,
+      onRequestError,
+    );
 
     // const toastId = toast.loading("Preparing data...", { type: "info" });
     // setLoading(true);
@@ -239,7 +280,7 @@ export default function SellNFTModal({
       toast.dismiss("sign-order-data");
     }
     if (isCreatingOrder) {
-      toast.loading("Creating order...", {
+      toast.loading("Creating a sell order...", {
         type: "info",
         toastId: "create-order",
       });
@@ -257,173 +298,193 @@ export default function SellNFTModal({
     // getIfApprovedForAll()
   }, [nft]);
 
+const onRetry = async () => {
+  const params: FormState.SellNFT = {
+    daysRange,
+    end,
+    price,
+    quoteToken,
+    quantity,
+    start,
+    salt,
+  };
+  setErrorStep(null)
+  setCurrentStep(0)
+  onSubmit()
+}
+
   return (
-    <MyModal.Root show={show} onClose={onClose}>
-      <MyModal.Body className="py-10 px-[30px]">
-        <div className="flex flex-col justify-center items-center gap-4">
-          <form
-            className="w-full flex flex-col gap-6"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="font-bold">
-              <Text className="mb-3" variant="heading-xs">
-                Sell NFT
-              </Text>
-              <Text className="text-secondary" variant="body-16">
-                Creating sell order for{" "}
-                <span className="text-primary font-bold">{nft.name}</span> from{" "}
-                <span className="text-primary font-bold">
-                  {nft.collection.name}
-                </span>{" "}
-                collection
-              </Text>
-            </div>
-
-            <div className="w-full flex flex-col">
-              <label className="text-body-14 text-secondary font-semibold mb-1">
-                Price
-              </label>
-              <div className="w-full relative rounded-2xl">
-                <Dropdown.Root
-                  dropdownContainerClassName="w-full"
-                  label=""
-                  icon={
-                    <div className="w-full bg-surface-soft flex items-center justify-center gap-3 rounded-2xl px-2 h-full cursor-pointer">
-                      <div className="flex-1 flex justify-between text-[0.95rem] items-center">
-                        <div>
-                          <Input
-                            onClick={(e) => e.stopPropagation()}
-                            placeholder="Enter price"
-                            className="w-full outline-none border-none"
-                            maxLength={18}
-                            size={18}
-                            error={!!errors.price}
-                            register={register("price", formRules.price)}
-                            type="number"
-                          />
-                        </div>
-                        <div>{token?.symbol}</div>
-                      </div>
-                      <div className="rounded-lg p-1">
-                        <Icon name="chevronDown" width={14} height={14} />
-                      </div>
-                    </div>
-                  }
-                >
-                  {Object.keys(tokens).map((key) => (
-                    <Dropdown.Item
-                      key={tokens[key].symbol}
-                      onClick={() =>
-                        setValue("quoteToken", tokens[key].address)
-                      }
-                    >
-                      <div className="w-full flex items-center gap-2">
-                        <Image
-                          src={tokens[key].logo}
-                          alt="token-image"
-                          className="rounded-full"
-                          width={22}
-                          height={22}
-                        />
-                        {tokens[key].name}
-                      </div>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Root>
-              </div>
-            </div>
-
-            {nft.collection.type === "ERC1155" ? (
-              <div>
-                <Text className="text-secondary font-semibold mb-1">
-                  Quantity
+    <>
+      <MyModal.Root
+        show={show && currentFormState === "INPUT"}
+        onClose={onClose}
+      >
+        <MyModal.Body className="py-10 px-[30px]">
+          <div className="flex flex-col justify-center items-center gap-4">
+            <form
+              className="w-full flex flex-col gap-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="font-bold">
+                <Text className="mb-3" variant="heading-xs">
+                  Sell NFT
                 </Text>
-                <Input
-                  maxLength={3}
-                  size={3}
-                  error={!!errors.quantity}
-                  register={register("quantity", formRules.quantity)}
-                  containerClass="mb-4"
-                  appendIcon={
-                    <Text className="mr-5">Owned: {ownerData?.quantity}</Text>
-                  }
-                />
+                <Text className="text-secondary" variant="body-16">
+                  Creating sell order for{" "}
+                  <span className="text-primary font-bold">{nft.name}</span>{" "}
+                  from{" "}
+                  <span className="text-primary font-bold">
+                    {nft.collection.name}
+                  </span>{" "}
+                  collection
+                </Text>
+              </div>
+
+              <div className="w-full flex flex-col">
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  Price
+                </label>
+                <div className="w-full relative rounded-2xl">
+                  <Dropdown.Root
+                    dropdownContainerClassName="w-full"
+                    label=""
+                    icon={
+                      <div className="w-full bg-surface-soft flex items-center justify-center gap-3 rounded-2xl px-2 h-full cursor-pointer">
+                        <div className="flex-1 flex justify-between text-[0.95rem] items-center">
+                          <div>
+                            <Input
+                              onClick={(e) => e.stopPropagation()}
+                              placeholder="Enter price"
+                              className="w-full outline-none border-none"
+                              maxLength={18}
+                              size={18}
+                              error={!!errors.price}
+                              register={register("price", formRules.price)}
+                              type="number"
+                            />
+                          </div>
+                          <div>{token?.symbol}</div>
+                        </div>
+                        <div className="rounded-lg p-1">
+                          <Icon name="chevronDown" width={14} height={14} />
+                        </div>
+                      </div>
+                    }
+                  >
+                    {Object.keys(tokens).map((key) => (
+                      <Dropdown.Item
+                        key={tokens[key].symbol}
+                        onClick={() =>
+                          setValue("quoteToken", tokens[key].address)
+                        }
+                      >
+                        <div className="w-full flex items-center gap-2">
+                          <Image
+                            src={tokens[key].logo}
+                            alt="token-image"
+                            className="rounded-full"
+                            width={22}
+                            height={22}
+                          />
+                          {tokens[key].name}
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Root>
+                </div>
+              </div>
+
+              {nft.collection.type === "ERC1155" ? (
+                <div>
+                  <Text className="text-secondary font-semibold mb-1">
+                    Quantity
+                  </Text>
+                  <Input
+                    maxLength={3}
+                    size={3}
+                    error={!!errors.quantity}
+                    register={register("quantity", formRules.quantity)}
+                    containerClass="mb-4"
+                    appendIcon={
+                      <Text className="mr-5">Owned: {ownerData?.quantity}</Text>
+                    }
+                  />
+                  <FeeCalculator
+                    mode="seller"
+                    nft={nft}
+                    price={parseUnits(
+                      String(Number(price || 0) * Number(quantity || 0)),
+                      token?.decimal
+                    )}
+                    quoteToken={token?.address}
+                    sellerFee={sellerFee}
+                    buyerFee={buyerFee}
+                    sellerFeeRatio={sellerFeeRatio}
+                    buyerFeeRatio={buyerFeeRatio}
+                    netReceived={netReceived}
+                    tokenBalance={tokenBalance ?? BigInt(0)}
+                    royaltiesFee={royaltiesFee}
+                  />
+                </div>
+              ) : (
                 <FeeCalculator
                   mode="seller"
                   nft={nft}
-                  price={parseUnits(
-                    String(Number(price || 0) * Number(quantity || 0)),
-                    token?.decimal
-                  )}
                   quoteToken={token?.address}
+                  price={parseUnits(String(price || 0), token?.decimal)}
                   sellerFee={sellerFee}
                   buyerFee={buyerFee}
                   sellerFeeRatio={sellerFeeRatio}
                   buyerFeeRatio={buyerFeeRatio}
                   netReceived={netReceived}
-                  tokenBalance={tokenBalance ?? BigInt(0)}
                   royaltiesFee={royaltiesFee}
+                  tokenBalance={tokenBalance ?? BigInt(0)}
                 />
-              </div>
-            ) : (
-              <FeeCalculator
-                mode="seller"
-                nft={nft}
-                quoteToken={token?.address}
-                price={parseUnits(String(price || 0), token?.decimal)}
-                sellerFee={sellerFee}
-                buyerFee={buyerFee}
-                sellerFeeRatio={sellerFeeRatio}
-                buyerFeeRatio={buyerFeeRatio}
-                netReceived={netReceived}
-                royaltiesFee={royaltiesFee}
-                tokenBalance={tokenBalance ?? BigInt(0)}
-              />
-            )}
-            <div className="w-full flex flex-col">
-              <label className="text-body-14 text-secondary font-semibold mb-1">
-                Expiration date
-              </label>
-              <div className="w-full relative rounded-2xl">
-                <Dropdown.Root
-                  dropdownContainerClassName="w-full"
-                  label=""
-                  icon={
-                    <div className="w-[100%] relative bg-surface-soft flex items-center justify-center gap-3 rounded-2xl py-3 px-5 h-full cursor-pointer">
-                      <div className="flex-1 flex justify-between text-[0.95rem]">
-                        <div>{moment(end).format("MM.DD.YYYY HH:mm A")}</div>
-                        <div>
-                          {daysRange.replaceAll("_", " ").toLowerCase()}
+              )}
+              <div className="w-full flex flex-col">
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  Expiration date
+                </label>
+                <div className="w-full relative rounded-2xl">
+                  <Dropdown.Root
+                    dropdownContainerClassName="w-full"
+                    label=""
+                    icon={
+                      <div className="w-[100%] relative bg-surface-soft flex items-center justify-center gap-3 rounded-2xl py-3 px-5 h-full cursor-pointer">
+                        <div className="flex-1 flex justify-between text-[0.95rem]">
+                          <div>{moment(end).format("MM.DD.YYYY HH:mm A")}</div>
+                          <div>
+                            {daysRange.replaceAll("_", " ").toLowerCase()}
+                          </div>
+                        </div>
+                        <div className="rounded-lg p-1">
+                          <Icon name="chevronDown" width={14} height={14} />
                         </div>
                       </div>
-                      <div className="rounded-lg p-1">
-                        <Icon name="chevronDown" width={14} height={14} />
-                      </div>
-                    </div>
-                  }
-                >
-                  {daysRanges.map((item) => (
-                    <Dropdown.Item
-                      key={item}
-                      onClick={() => {
-                        setValue("daysRange", item);
-                        const newEnd =
-                          start +
-                          parseInt(item.split("_")[0]) * 24 * 60 * 60 * 1000;
-                        setValue("end", newEnd);
-                      }}
-                    >
-                      <div className="w-full flex items-center gap-2">
-                        {item.replaceAll("_", " ").toLowerCase()}
-                      </div>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Root>
+                    }
+                  >
+                    {daysRanges.map((item) => (
+                      <Dropdown.Item
+                        key={item}
+                        onClick={() => {
+                          setValue("daysRange", item);
+                          const newEnd =
+                            start +
+                            parseInt(item.split("_")[0]) * 24 * 60 * 60 * 1000;
+                          setValue("end", newEnd);
+                        }}
+                      >
+                        <div className="w-full flex items-center gap-2">
+                          {item.replaceAll("_", " ").toLowerCase()}
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Root>
+                </div>
               </div>
-            </div>
 
-            <FormValidationMessages errors={errors} />
-            {/* {isApprovedForAll ? (
+              <FormValidationMessages errors={errors} />
+              {/* {isApprovedForAll ? (
               <Button type={"submit"} className="w-full" loading={loading}>
                 Put on sale
               </Button>
@@ -436,16 +497,38 @@ export default function SellNFTModal({
                 handleApproveTokenForSingle={handleApproveTokenForSingle}
               />
             )} */}
-            <Button
-              type={"submit"}
-              className="w-full"
-              loading={isCreatingOrder || isApproving || isSigningOrderData}
-            >
-              Put on sale
-            </Button>
-          </form>
-        </div>
-      </MyModal.Body>
-    </MyModal.Root>
+              <Button
+                type={"submit"}
+                className="w-full"
+                loading={isCreatingOrder || isApproving || isSigningOrderData}
+              >
+                Put on sale
+              </Button>
+            </form>
+          </div>
+        </MyModal.Body>
+      </MyModal.Root>
+      <StepsModal
+        erorStep={errorStep}
+        isOpen={currentFormState === "CREATE"}
+        onClose={() => setCurrentFormState("INPUT")}
+        currentStep={currentStep}
+        onRetry={onRetry}
+        steps={[
+          {
+            title: "Approve NFT",
+            description: "Approve NFT for all",
+          },
+          {
+            title: "Sign order data",
+            description: "Sign order data",
+          },
+          {
+            title: "Create sell order",
+            description: "Create sell order",
+          },
+        ]}
+      />
+    </>
   );
 }
