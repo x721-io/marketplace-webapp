@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google'
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import "tailwindcss/tailwind.css";
@@ -17,6 +18,11 @@ export const metadata: Metadata = {
   description: "X721 Marketplace",
 };
 
+const font = Inter({
+  weight: ['100','200','300', '400','500','600','700','800','900'],
+  subsets: ['latin'],
+})
+
 export default async function RootLayout({
   children,
 }: {
@@ -26,7 +32,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale}>
-      <body>
+      <body className={font.className}>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <ErrorBoundary>

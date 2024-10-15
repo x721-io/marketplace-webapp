@@ -17,13 +17,20 @@ export const tokens: Record<string, Token> = {
     address: ADDRESS_ZERO,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
+  // wu2u: {
+  //   name: "Wrapped U2U",
+  //   symbol: "WU2U",
+  //   decimal: 18,
+  //   address: "0xDD7Dc2bBeB8f6a9e60C09aCd8174e4FcFAef0647",
+  //   logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  // },
   wu2u: {
     name: "Wrapped U2U",
     symbol: "WU2U",
     decimal: 18,
-    address: "0xDD7Dc2bBeB8f6a9e60C09aCd8174e4FcFAef0647",
+    address: "0x79538ce1712498fd1b9a9861e62acb257d7506fc",
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
-  },
+  }
   // weth: {
   //   name: "WETH",
   //   symbol: "WETH",

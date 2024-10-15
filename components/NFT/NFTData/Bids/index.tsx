@@ -22,7 +22,7 @@ export default function BidsTab({
             return (
               <NFTBidEvent
                 key={event.id}
-                event={event}
+                event={event as any}
                 nft={nft}
                 isOwner={isOwner}
               />

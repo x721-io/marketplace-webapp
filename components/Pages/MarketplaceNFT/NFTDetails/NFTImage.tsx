@@ -38,7 +38,7 @@ export default function NFTImage({ item }: { item: NFT }) {
     switch (fileType) {
       case "audio":
         return (
-          <div className="desktop:w-[640px] desktop:h-[614px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px] relative">
+          <div className="desktop:w-[800px] desktop:h-[774px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px] relative">
             <BlurImage
               src={item?.image || ""}
               alt=""
@@ -61,7 +61,7 @@ export default function NFTImage({ item }: { item: NFT }) {
       case "video":
         return (
           <video
-            className="desktop:w-[640px] desktop:h-[614px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px] rounded-2xl mb-10"
+            className="desktop:w-[800px] desktop:h-[774px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px] rounded-2xl mb-10"
             controls
           >
             <source src={displayMedia} type={`${fileType}/${fileExtension}`} />
@@ -70,7 +70,7 @@ export default function NFTImage({ item }: { item: NFT }) {
         );
       case "image":
         return (
-          <div className="desktop:w-[640px] desktop:h-[614px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px]">
+          <div className="desktop:w-[850px] desktop:h-[825px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px]">
             <BlurImage
               src={displayMedia}
               alt=""

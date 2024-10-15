@@ -1,47 +1,47 @@
 import { useCancelBidNFT } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
-import { NFT, MarketEvent } from "@/types";
+import { NFT, MarketEventV2 } from "@/types";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 
 interface Props extends MyModalProps {
   nft: NFT;
-  bid?: MarketEvent | undefined;
+  bid?: MarketEventV2 | undefined;
 }
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
-  const { onCancelBid, isLoading, error, isSuccess } = useCancelBidNFT(nft);
+  // const { onCancelBid, isLoading, error, isSuccess } = useCancelBidNFT(nft);
 
   const handleCancelBid = async () => {
     if (!bid) return;
     try {
-      onCancelBid(bid.operationId);
+      // onCancelBid(bid);
     } catch (e: any) {
       console.error(e);
     }
   };
 
-  useEffect(() => {
-    if (error) {
-      toast.error(`Error report: ${error.message}`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     toast.error(`Error report: ${error.message}`, {
+  //       autoClose: 1000,
+  //       closeButton: true,
+  //     });
+  //   }
+  // }, [error]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(`Bid cancelled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-      onClose?.();
-    }
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success(`Bid cancelled successfully`, {
+  //       autoClose: 1000,
+  //       closeButton: true,
+  //     });
+  //     onClose?.();
+  //   }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
+  // }, [isSuccess]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
@@ -68,7 +68,7 @@ export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
             <Button
               className="flex-1"
               onClick={handleCancelBid}
-              loading={isLoading}
+              // loading={isLoading}
             >
               Yes
             </Button>

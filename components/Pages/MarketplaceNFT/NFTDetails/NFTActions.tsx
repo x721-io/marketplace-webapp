@@ -13,6 +13,8 @@ import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import TransferNFTModal from "@/components/Modal/TransferNFT";
 import { useWrongNetwork } from "@/hooks/useAuth";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import { toast } from "react-toastify";
 
 export default function NFTActions({
   nft,
@@ -30,13 +32,13 @@ export default function NFTActions({
     if (!marketData) return;
     return marketData.bidInfo?.find((bid) => {
       return (
-        !!bid.to?.publicKey &&
+        !!bid.Maker?.publicKey &&
         !!wallet &&
-        bid.to?.publicKey?.toLowerCase() === wallet?.toLowerCase()
+        bid.Maker?.publicKey?.toLowerCase() === wallet?.toLowerCase()
       );
     });
   }, [marketData, wallet]);
-
+  const { cancelOrder } = useMarketplaceV2(nft);
   const [showSellModal, setShowSellModal] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
@@ -44,6 +46,20 @@ export default function NFTActions({
   const [showCancelBidModal, setShowCancelBidModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const { isWrongNetwork, switchToCorrectNetwork } = useWrongNetwork();
+  const [isCancelling, setCancelling] = useState(false);
+
+  const handleCancelOrder = async () => {
+    if (!marketData || !marketData.sellInfo[0]) return;
+    try {
+      setCancelling(true);
+      await cancelOrder(marketData.sellInfo[0]);
+    } catch (err: any) {
+      toast.error(`Error report: User rejected`);
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   if (isOwner) {
     return (
       <div className="w-full">
@@ -53,8 +69,9 @@ export default function NFTActions({
         <ConnectWalletButton showConnectButton className="w-full">
           {isOnSale && isSeller ? (
             <Button
+              loading={isCancelling}
               className="w-full"
-              onClick={() => setShowCancelSellModal(true)}
+              onClick={handleCancelOrder}
             >
               Cancel listing
             </Button>
@@ -126,7 +143,7 @@ export default function NFTActions({
           variant="outlined"
           onClick={() => setShowBidModal(true)}
         >
-          Place a bid
+          Make offer
         </Button>
       )}
 

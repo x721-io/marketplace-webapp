@@ -21,11 +21,13 @@ type StepsModalProps = {
     stepIndex: number;
     reason: string;
   } | null;
+  title?: string;
   onRetry?: () => void;
 };
 
 const StepsModal: React.FC<StepsModalProps> = ({
   currentStep,
+  title = "",
   isOpen,
   onClose,
   steps,
@@ -46,7 +48,7 @@ const StepsModal: React.FC<StepsModalProps> = ({
             <ErrorIcon
               htmlColor="#ffffff"
               style={{
-                fontSize: "39px",
+                fontSize: "40px",
               }}
             />
           </div>
@@ -92,9 +94,9 @@ const StepsModal: React.FC<StepsModalProps> = ({
       }}
     >
       <MyModal.Header>
-        <h1 className="text-[white] font-bold">Sell NFT</h1>
+        <h1 className="text-[white] font-bold">{title}</h1>
       </MyModal.Header>
-      <MyModal.Body className="bg-[#252525] pb-5">
+      <MyModal.Body className="bg-[#252525] pb-3">
         <div className="w-full flex flex-col bg-[#252525] text-[white]">
           {steps.map((step, i) => (
             <div className="w-full flex items-center gap-5" key={i}>
@@ -114,24 +116,25 @@ const StepsModal: React.FC<StepsModalProps> = ({
                   className="w-[1px] h-[30px]"
                 ></div>
               </div>
-              <div className="flex-1 flex flex-col gap-3">
-                <div className="font-bold text-[white] text-[1.2rem]">
+              <div className="flex-1 flex flex-col gap-0">
+                <div className="font-bold text-[white] text-[1.1rem]">
                   {step.title}
                 </div>
                 {getStepState(i).state === "error" && (
-                  <div className="font-medium text-[#EF5350] text-[1rem]">
+                  <div className="font-medium text-[#EF5350] text-[1rem] mt-1">
                     {erorStep?.reason}
                   </div>
                 )}
                 {getStepState(i).state === "error" && (
                   <div className="font-medium text-[1rem]">
-                    <Button
+                    <button
+                    className="h-[35px] bg-[#000] px-8 rounded-md mt-2"
                       onClick={() => {
                         onRetry && onRetry();
                       }}
                     >
                       Retry
-                    </Button>
+                    </button>
                   </div>
                 )}
               </div>

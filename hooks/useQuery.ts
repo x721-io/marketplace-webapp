@@ -115,7 +115,7 @@ export const useGetNFTs = (
       };
     },
     async (params) => {
-      const { priceMin, priceMax, quoteToken } = params;
+      const { priceMin, priceMax, quoteToken, orderType, orderStatus, sellStatus } = params;
       const bigintMin =
         priceMin !== undefined && priceMin !== ""
           ? parseUnits(priceMin, 18)
@@ -128,8 +128,8 @@ export const useGetNFTs = (
         API_ENDPOINTS.SEARCH_NFT,
         sanitizeObject({
           ...params,
-          sellStatus:
-            Number(priceMin) || Number(priceMax) ? "AskNew" : params.sellStatus,
+          orderStatus: orderStatus ?? null,
+          orderType: orderType ?? null,
           priceMin: bigintMin?.toString(),
           priceMax: bigintMax?.toString(),
         })
@@ -234,7 +234,7 @@ export const useGetMarketDataByNftId = (
     { refreshInterval: 10000 }
   );
   return {
-    data: data?.data?.data ?? null,
+    data: (data?.data?.data as APIResponse.NFTMarketData) ?? null,
     error,
     isLoading,
     mutate,

@@ -53,7 +53,7 @@ const ModalRoot: React.FC<MyModalProps> = ({
           }
         }}
         style={getStyleByPos()}
-        className={`fixed overflow-hidden top-0 left-0 z-[500] w-screen h-screen bg-[rgba(0,0,0,0.25)] flex ${className}`}
+        className={`fixed overflow-hidden top-0 left-0 z-[500] w-screen h-screen bg-[rgba(0,0,0,0.25)] flex ${className} animate-fade-in`}
       >
         <div
           style={{

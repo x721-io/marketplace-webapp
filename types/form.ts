@@ -46,6 +46,8 @@ export namespace FormState {
     salt: string;
     end: number;
     daysRange: DaysRange;
+    netPrice: number;
+    totalPrice: number;
   }
 
   export interface BuyNFT {
@@ -63,6 +65,8 @@ export namespace FormState {
     salt: string;
     end: number;
     daysRange: DaysRange;
+    netPrice: number;
+    totalPrice: number;
   }
 
   export interface AcceptBidNFT {

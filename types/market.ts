@@ -44,6 +44,41 @@ export interface MarketEvent {
   timestamp: number;
 }
 
+export interface MarketEventV2 {
+  id: string;
+  index: number;
+  sig: string;
+  makeAssetType: number;
+  makeAssetAddress: Address;
+  makeAssetValue: string;
+  makeAssetId: string;
+  takeAssetType: 1;
+  takeAssetAddress: Address;
+  takeAssetValue: string;
+  takeAssetId: string;
+  salt: string;
+  start: number;
+  end: number;
+  dataOrder: string;
+  orderStatus: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
+  orderType: "SINGLE" | "BULK" | "BID";
+  root: string;
+  proof: string[];
+  tokenId: string;
+  collectionId: string;
+  quantity: number;
+  price: string;
+  priceNum: number;
+  netPrice: string;
+  netPriceNum: number;
+  createAt: string;
+  updatedAt: string;
+  quoteToken: Address;
+  filled: number;
+  Maker: User | null;
+  Taker: User | null;
+}
+
 export type Royalty = { account: Address; value: bigint };
 
 export type Royalties = Royalty[];

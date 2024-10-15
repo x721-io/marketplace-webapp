@@ -120,7 +120,7 @@ export default function CollectionView({
       </div>
 
       <div className="fixed w-full h-[80px] bg-[white] bottom-0 left-0 z-[100] border-solid border-t-[1px] flex items-center px-16 gap-5">
-        <div className='text-lg font-extrabold text-[black]'>Sweep</div>
+        <div className='text-lg font-semibold text-[black]'>Sweep</div>
         <Toggle
           defaultChecked={isSweeping}
           checked={isSweeping}

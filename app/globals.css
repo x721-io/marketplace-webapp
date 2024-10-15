@@ -9,7 +9,7 @@
 
 /* In your css file where you want to use the font */
 body {
-  font-family: "SFPro", "system-ui", "Arial";
+  /* font-family: "SFPro", "system-ui", "Arial"; */
 }
 
 .react-toggle--checked .react-toggle-track {

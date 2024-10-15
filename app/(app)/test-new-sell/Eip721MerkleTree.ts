@@ -1,4 +1,5 @@
 import { signTypedData } from "wagmi/actions";
+import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
   TypedDataEncoder,
   AbiCoder,
@@ -7,41 +8,41 @@ import {
   concat,
   TypedDataField,
 } from "ethers";
-import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
-import { encodeAbiParameters } from "viem";
+import { Address, encodeAbiParameters, parseUnits } from "viem";
 import { CreateBulkOrderItemInput, Order } from "../test-new-buy/page";
 import { tree } from "next/dist/build/templates/app-page";
-import { MerkleTree } from "@openzeppelin/merkle-tree/dist/merkletree";
 import { fillArray } from "./utils";
+import { ListingItem } from "../test-merkle/page";
+import { FormState, NFT } from "@/types";
+import { ADDRESS_ZERO } from "@/config/constants";
 
-type BulkOrderElements<T> =
-  | [T, T]
-  | [BulkOrderElements<T>, BulkOrderElements<T>];
+// { name: "index", type: "int16" },
+// { name: "makeAssetAddress", type: "address" },
+// { name: "makeAssetId", type: "uint256" },
+// { name: "makeAssetValue", type: "uint256" },
+// { name: "makeAssetType", type: "uint256" },
+// { name: "takeAssetAddress", type: "address" },
+// { name: "takeAssetId", type: "uint256" },
+// { name: "takeAssetValue", type: "uint256" },
+// { name: "takeAssetType", type: "uint256" },
 
-// const getTree = (leaves: string[], defaultLeafHash: string) =>
-//   new MerkleTree(leaves.map(hexToBuffer), bufferKeccak, {
-//     complete: true,
-//     sort: false,
-//     hashLeaves: false,
-//     fillDefaultHash: hexToBuffer(defaultLeafHash),
-//   });
+export type TestType = {
+  index: number;
+  maker: Address;
+  makeAssetAddress: Address;
+  makeAssetId: bigint;
+  makeAssetValue: bigint;
+  makeAssetType: bigint;
+  taker: Address;
+  takeAssetAddress: Address;
+  takeAssetId: bigint;
+  takeAssetValue: bigint;
+  takeAssetType: bigint;
+}
 
-export const encodeProof = (
-  key: number,
-  proof: string[],
-  signature = `0x${"ff".repeat(64)}`
-) => {
-  return concat([
-    signature,
-    `0x${key.toString(16).padStart(6, "0")}`,
-    AbiCoder.defaultAbiCoder().encode([`uint256[${proof.length}]`], [proof]),
-  ]);
-};
-
-export class Eip712MerkleTree<T extends Record<string, any>> {
-  private tree: StandardMerkleTree<any>;
-  private elements: T[] = [];
-  private encoder: TypedDataEncoder;
+export class Eip712MerkleTree {
+  public tree: SimpleMerkleTree;
+  public proofs: string[][] = [];
 
   // get completedSize() {
   //   return Math.pow(2, this.depth);
@@ -59,26 +60,11 @@ export class Eip712MerkleTree<T extends Record<string, any>> {
   //   return fillArray([...leaves], this.completedSize, this.defaultLeaf);
   // }
 
-  get root() {
-    return this.tree.root;
-  }
-
   // getProof(leaf: T) {
   //   const proof = this.tree.getProof(leaf);
   //   const root = this.tree.root;
   //   return { leaf, proof, root };
   // }
-
-  getProof(index: number) {
-    const proof = this.tree.getProof(index);
-    const root = this.tree.root;
-    console.log({ proof });
-    return { proof, root };
-  }
-
-  getDataToSign(): T[] {
-    return this.elements;
-  }
 
   // getBulkOrderHash() {
   //   const structHash = this.encoder.hashStruct("BulkOrder", {
@@ -98,23 +84,47 @@ export class Eip712MerkleTree<T extends Record<string, any>> {
   //   return structHash;
   // }
 
-  constructor(_elements: T[], types: Record<string, Array<TypedDataField>>) {
-    // const values = orders.map((order) => {
-    //   const encodedOrderData = this.getEncodedOrderData(order);
-    //   return keccak256(encodedOrderData);
-    // });
+  constructor(_elements: Array<TestType>) {
+    // order.index,
+    // order.makeAsset.contractAddress,
+    // order.makeAsset.id,
+    // order.makeAsset.value,
+    // order.makeAsset.assetType,
+    // order.takeAsset.contractAddress,
+    // order.takeAsset.id,
+    // order.takeAsset.value,
+    // order.takeAsset.assetType
 
-    let values: [string][] = [];
-
-    this.elements = _elements;
-    this.encoder = TypedDataEncoder.from(types);
-
-    this.elements.forEach((ele) => {
-      const hashedLeafData = this.encoder.hash(ele);
-      values.push([hashedLeafData]);
+    const encodedDatas = _elements.map((ele, i) => {
+      return keccak256(
+        encodeAbiParameters(
+          [
+            { name: "index", type: "int16" },
+            { name: "makeAssetAddress", type: "address" },
+            { name: "makeAssetId", type: "uint256" },
+            { name: "makeAssetValue", type: "uint256" },
+            { name: "makeAssetType", type: "uint256" },
+            { name: "takeAssetAddress", type: "address" },
+            { name: "takeAssetId", type: "uint256" },
+            { name: "takeAssetValue", type: "uint256" },
+            { name: "takeAssetType", type: "uint256" },
+          ],
+          [
+            i,
+            ele.makeAssetAddress,
+            BigInt(ele.makeAssetId),
+            BigInt(ele.makeAssetValue),
+            BigInt(ele.makeAssetType),
+            ele.takeAssetAddress,
+            BigInt(ele.takeAssetId),
+            ele.takeAssetValue,
+            BigInt(ele.takeAssetType),
+          ]
+        )
+      );
     });
 
-    this.tree = StandardMerkleTree.of(values, ["string"]);
+    this.tree = SimpleMerkleTree.of(encodedDatas);
 
     console.log("---------");
     console.log("Merke Tree");
@@ -122,26 +132,9 @@ export class Eip712MerkleTree<T extends Record<string, any>> {
     console.log(this.tree);
     console.log("---------");
     console.log("Merkle Root: " + this.tree.root);
-
-    console.log("Proof 1: " + this.tree.getProof(values[0]));
-    console.log("Proof 2: " + this.tree.getProof(values[1]));
-
-    const verified = this.tree.verify(values[0], this.tree.getProof(values[0]));
+    const verified = this.tree.verify(0, this.tree.getProof(0));
 
     alert(verified);
-  }
-
-  generateLeafHash(element: T) {
-    return keccak256(this.encoder.hash(element));
-  }
-
-  getLeafHash(index: number) {
-    const a = this.tree.leafHash;
-    return this.tree.leafHash;
-  }
-
-  getRoot(): string {
-    return this.tree.root;
   }
 
   // sign(orders: CreateBulkOrderItemInput[]) {

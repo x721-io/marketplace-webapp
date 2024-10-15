@@ -42,7 +42,7 @@ export default function NavbarMenu() {
                 aria-current="page"
                 target={nav.external ? "_blank" : undefined}
               >
-                {nav.label}
+                {nav.label} 123
               </Link>
             </li>
           )

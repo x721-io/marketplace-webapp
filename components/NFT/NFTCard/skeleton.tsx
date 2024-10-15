@@ -1,12 +1,20 @@
 "use client";
 
+import { useNFTFilterStore } from "@/store/filters/items/store";
 import React from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function NFTCardSkeleton() {
+  const gridMode = useNFTFilterStore((state) => state.gridMode);
+
   return (
-    <div className="h-[295px] pt-[10px] px-[10px] rounded-xl border border-1 border-soft">
+    <div
+      style={{
+        height: gridMode === 1 ? "400px" : "280px",
+      }}
+      className="pt-[10px] px-[10px] rounded-xl border border-1 border-soft"
+    >
       <SkeletonTheme
         height={"75%"}
         width={"100%"}

@@ -16,6 +16,7 @@ import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
+import { useNFTFilterStore } from "@/store/filters/items/store";
 
 export default function NFTCard({
   name,
@@ -28,6 +29,7 @@ export default function NFTCard({
   quoteToken,
   creator,
 }: NFT) {
+  const gridMode = useNFTFilterStore((state) => state.gridMode);
   const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
@@ -76,15 +78,27 @@ export default function NFTCard({
           </video>
         );
       case "image":
-        return (
-          <BlurImage
-            className="cursor-pointer rounded-xl object-cover w-full desktop:h-[220px] tablet:h-[180px] h-[130px] "
-            src={displayMedia}
-            alt="image"
-            width={220}
-            height={220}
-          />
-        );
+        if (gridMode == 1) {
+          return (
+            <BlurImage
+              className="cursor-pointer rounded-xl object-cover w-full desktop:h-[320px] tablet:h-[180px]"
+              src={displayMedia}
+              alt="image"
+              width={220}
+              height={220}
+            />
+          );
+        } else {
+          return (
+            <BlurImage
+              className="cursor-pointer rounded-xl object-cover w-full desktop:h-[200px] tablet:h-[180px]"
+              src={displayMedia}
+              alt="image"
+              width={220}
+              height={220}
+            />
+          );
+        }
     }
   };
 
@@ -104,7 +118,7 @@ export default function NFTCard({
         );
       case "AskNew":
         return (
-          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
+          <Text className="text-body-12 px-4 py-2 rounded-lg bg-surface-soft text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
             On sale for:{" "}
             <span className="text-primary font-semibold">
               {formatDisplayedNumber(
@@ -128,12 +142,12 @@ export default function NFTCard({
       key={id}
       href={`/item/${collection.address}/${id}`}
       className={
-        "h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md border-soft transition-all"
+        "h-full flex flex-col rounded-xl px-2 py-2 gap-2 border border-1 hover:shadow-md border-surface transition-all"
       }
     >
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        <Text className="text-secondary text-body-12">{name}</Text>
+        <Text className="text-black text-[1.05rem] py-2 font-bold whitespace-nowrap text-ellipsis overflow-hidden">{name}</Text>
         {creator?.accountStatus && collection?.isVerified ? (
           <Icon name="verified" width={16} height={16} />
         ) : (

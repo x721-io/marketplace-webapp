@@ -1,10 +1,12 @@
 "use client";
 
-import { writeContract } from "wagmi/actions";
+import { readContract, signTypedData, writeContract } from "wagmi/actions";
 import { Address, encodeAbiParameters } from "viem";
 import { useEffect, useState } from "react";
 import { useAccount, useSignTypedData } from "wagmi";
 import { genRandomNumber } from "../test-new-sell/page";
+import { ADDRESS_ZERO } from "@/config/constants";
+import { Eip712MerkleTree, TestType } from "../test-new-sell/Eip721MerkleTree";
 
 const abi = [
   { type: "constructor", stateMutability: "nonpayable", inputs: [] },
@@ -965,542 +967,88 @@ const abi = [
   },
 ] as const;
 
-export type Order = {
-  id: number;
-  created_at: string;
-  maker: Address;
-  make_asset_type: number;
-  make_asset_address: Address;
-  make_asset_value: string;
-  make_asset_id: string;
-  take_asset_type: number;
-  take_asset_address: Address;
-  take_asset_value: string;
-  take_asset_id: string;
-  salt: string;
-  start: string;
-  end: string;
-  nonce: number;
-  sig: string;
-  data: string;
-  taker: string;
-  type: "SELL" | "BID";
-  status: "OPEN " | "FILLED" | "CANCELLED";
-};
-
-export type OrderAsset = {
-  assetType: number;
-  contractAddress: Address;
-  value: bigint;
+export type ListingItem = {
+  index: number;
   id: string;
+  amount: string;
+  price: string;
 };
 
-export type CreateBulkOrderItemInput = {
-  maker: Address;
-  makeAsset: OrderAsset;
-  takeAsset: OrderAsset;
-  start: string;
-  end: string;
-};
-
-export default function TestNewBuy() {
+export default function TestMerkle() {
   const { signTypedDataAsync } = useSignTypedData();
   const { address } = useAccount();
   const exchangeContract = "0x4Ca21c461Ee818e4B880D86991aF43dC873B7F1f";
-  const [orders, setOrders] = useState<Order[]>([]);
+  const items: TestType[] = [
+    {
+      index: 0,
+      maker: address ?? ADDRESS_ZERO,
+      makeAssetAddress: "0x0000000000000000000000000000000000000000",
+      makeAssetId: BigInt(0),
+      makeAssetValue: BigInt(1),
+      makeAssetType: BigInt(3),
+      taker: "0x0000000000000000000000000000000000000000",
+      takeAssetAddress: "0x0000000000000000000000000000000000000000",
+      takeAssetId: BigInt(0),
+      takeAssetValue: BigInt(1),
+      takeAssetType: BigInt(3),
+    },
+    {
+      index: 1,
+      maker: address ?? ADDRESS_ZERO,
+      makeAssetAddress: "0x0000000000000000000000000000000000000000",
+      makeAssetId: BigInt(1),
+      makeAssetValue: BigInt(1),
+      makeAssetType: BigInt(3),
+      taker: "0x0000000000000000000000000000000000000000",
+      takeAssetAddress: "0x0000000000000000000000000000000000000000",
+      takeAssetId: BigInt(0),
+      takeAssetValue: BigInt(1),
+      takeAssetType: BigInt(3),
+    },
+  ];
 
-  useEffect(() => {
-    const getOrders = async () => {
-      const response = await fetch("http://localhost:3001/get-orders", {
-        method: "GET",
-      });
-      const json = await response.json();
-      setOrders(json);
-    };
-    getOrders();
-  }, []);
+  const generateTree = () => {
+    const tree = new Eip712MerkleTree(items);
+  };
 
-  // const buyAll = async () => {
-  //   if (!address) return;
-  //   const leftInputs: any[] = [];
-  //   const rightInputs: any[] = [];
-  //   orders.forEach((order) => {
-  //     leftInputs.push({
-  //       orderType: 0,
-  //       order: {
-  //         maker: order.maker as Address,
-  //         makeAsset: {
-  //           assetType: order.make_asset_type,
-  //           contractAddress: order.make_asset_address as Address,
-  //           value: BigInt(order.make_asset_value),
-  //           id: BigInt(order.make_asset_id),
-  //         },
-  //         taker: "0x0000000000000000000000000000000000000000",
-  //         takeAsset: {
-  //           assetType: order.take_asset_type,
-  //           contractAddress: order.take_asset_address as Address,
-  //           value: BigInt(order.take_asset_value),
-  //           id: BigInt(order.take_asset_id),
-  //         },
-  //         data: order.data as Address,
-  //         salt: BigInt(order.salt),
-  //         start: BigInt(order.start),
-  //         end: BigInt(order.end),
-  //         originFee: {
-  //           receiver: exchangeContract,
-  //           amount: BigInt("500"),
-  //         },
-  //       },
-  //       root: "0x",
-  //       proof: [],
-  //       index: 0,
-  //       nonce: BigInt(order.nonce.toString()),
-  //       sig: order.sig as Address,
-  //     });
-  //     rightInputs.push({
-  //       orderType: 0,
-  //       order: {
-  //         maker: address,
-  //         makeAsset: {
-  //           assetType: order.take_asset_type,
-  //           contractAddress: order.take_asset_address as Address,
-  //           value: BigInt(order.take_asset_value),
-  //           id: BigInt(order.take_asset_id),
-  //         },
-  //         taker: order.maker as Address,
-  //         takeAsset: {
-  //           assetType: order.make_asset_type,
-  //           contractAddress: order.make_asset_address as Address,
-  //           value: BigInt(order.make_asset_value),
-  //           id: BigInt(order.make_asset_id),
-  //         },
-  //         salt: BigInt(0),
-  //         start: BigInt(order.start),
-  //         end: BigInt(order.end),
-  //         originFee: {
-  //           receiver: exchangeContract,
-  //           amount: BigInt("500"),
-  //         },
-  //         root: "0x",
-  //         proof: [],
-  //         index: 0,
-  //         data: "0x",
-  //       },
-  //       nonce: BigInt(order.nonce.toString()),
-  //       sig: order.sig as Address,
-  //     });
-  //   });
-
-  //   console.log(leftInputs);
-
-  //   await writeContract({
-  //     abi,
-  //     address: exchangeContract,
-  //     functionName: "matchOrders",
-  //     value: BigInt("2000000000000000000"),
-  //     args: [
-  //       [
-  //         {
-  //           order: {
-  //             maker: orders[0].maker as Address,
-  //             makeAsset: {
-  //               assetType: orders[0].make_asset_type,
-  //               contractAddress: orders[0].make_asset_address as Address,
-  //               value: BigInt(orders[0].make_asset_value),
-  //               id: BigInt(orders[0].make_asset_id),
-  //             },
-  //             taker: "0x0000000000000000000000000000000000000000",
-  //             takeAsset: {
-  //               assetType: orders[0].take_asset_type,
-  //               contractAddress: orders[0].take_asset_address as Address,
-  //               value: BigInt(orders[0].take_asset_value),
-  //               id: BigInt(orders[0].take_asset_id),
-  //             },
-  //             data: orders[0].data as Address,
-  //             salt: BigInt(orders[0].salt),
-  //             start: BigInt(orders[0].start),
-  //             end: BigInt(orders[0].end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //           },
-  //           nonce: BigInt(orders[0].nonce.toString()),
-  //           sig: orders[0].sig as Address,
-  //         },
-  //         {
-  //           order: {
-  //             maker: orders[1].maker as Address,
-  //             makeAsset: {
-  //               assetType: orders[1].make_asset_type,
-  //               contractAddress: orders[1].make_asset_address as Address,
-  //               value: BigInt(orders[1].make_asset_value),
-  //               id: BigInt(orders[1].make_asset_id),
-  //             },
-  //             taker: "0x0000000000000000000000000000000000000000",
-  //             takeAsset: {
-  //               assetType: orders[1].take_asset_type,
-  //               contractAddress: orders[1].take_asset_address as Address,
-  //               value: BigInt(orders[1].take_asset_value),
-  //               id: BigInt(orders[1].take_asset_id),
-  //             },
-  //             data: orders[1].data as Address,
-  //             salt: BigInt(orders[1].salt),
-  //             start: BigInt(orders[1].start),
-  //             end: BigInt(orders[1].end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //           },
-  //           nonce: BigInt(orders[1].nonce.toString()),
-  //           sig: orders[1].sig as Address,
-  //         },
-  //       ],
-  //       [
-  //         {
-  //           order: {
-  //             maker: address,
-  //             makeAsset: {
-  //               assetType: orders[0].take_asset_type,
-  //               contractAddress: orders[0].take_asset_address as Address,
-  //               value: BigInt(orders[0].take_asset_value),
-  //               id: BigInt(orders[0].take_asset_id),
-  //             },
-  //             taker: orders[0].maker as Address,
-  //             takeAsset: {
-  //               assetType: orders[0].make_asset_type,
-  //               contractAddress: orders[0].make_asset_address as Address,
-  //               value: BigInt(orders[0].make_asset_value),
-  //               id: BigInt(orders[0].make_asset_id),
-  //             },
-  //             salt: BigInt(0),
-  //             start: BigInt(orders[0].start),
-  //             end: BigInt(orders[0].end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             data: "0x",
-  //           },
-  //           nonce: BigInt(orders[0].nonce.toString()),
-  //           sig: orders[0].sig as Address,
-  //         },
-  //         {
-  //           order: {
-  //             maker: address,
-  //             makeAsset: {
-  //               assetType: orders[1].take_asset_type,
-  //               contractAddress: orders[1].take_asset_address as Address,
-  //               value: BigInt(orders[1].take_asset_value),
-  //               id: BigInt(orders[1].take_asset_id),
-  //             },
-  //             taker: orders[1].maker as Address,
-  //             takeAsset: {
-  //               assetType: orders[1].make_asset_type,
-  //               contractAddress: orders[1].make_asset_address as Address,
-  //               value: BigInt(orders[1].make_asset_value),
-  //               id: BigInt(orders[1].make_asset_id),
-  //             },
-  //             salt: BigInt(0),
-  //             start: BigInt(orders[1].start),
-  //             end: BigInt(orders[1].end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             data: "0x",
-  //           },
-  //           nonce: BigInt(orders[1].nonce.toString()),
-  //           sig: orders[1].sig as Address,
-  //         },
-  //       ],
-  //     ],
-  //   });
-  // };
-
-  const buy = async (order: Order) => {
+  const verify = async () => {
     if (!address) return;
-    await writeContract({
-      abi,
-      address: exchangeContract,
-      functionName: "matchOrders",
-      args: [
-        [
-          {
-            orderType: 0,
-            maker: order.maker as Address,
-            makeAsset: {
-              assetType: order.make_asset_type,
-              contractAddress: order.make_asset_address as Address,
-              value: BigInt(order.make_asset_value),
-              id: BigInt(order.make_asset_id),
-            },
-            taker: "0x0000000000000000000000000000000000000000",
-            takeAsset: {
-              assetType: order.take_asset_type,
-              contractAddress: order.take_asset_address as Address,
-              value: BigInt(order.take_asset_value),
-              id: BigInt(order.take_asset_id),
-            },
-            data: order.data as Address,
-            salt: BigInt(order.salt),
-            start: BigInt(order.start),
-            end: BigInt(order.end),
-            originFee: {
-              receiver: exchangeContract,
-              amount: BigInt("500"),
-            },
-            royaltyFee: {
-              receiver: "0xD1167a4f576155f8B074fb0a4DED3B22C5590af4",
-              amount: BigInt("500"),
-            },
-            index: 0,
-            proof: [],
-            root: "0x0000000000000000000000000000000000000000000000000000000000000000",
-            sig: "0x",
-          },
-        ],
-        [
-          {
-            orderType: 0,
-            maker: address,
-            makeAsset: {
-              assetType: order.take_asset_type,
-              contractAddress: order.take_asset_address as Address,
-              value: BigInt(order.take_asset_value),
-              id: BigInt(order.take_asset_id),
-            },
-            taker: order.maker as Address,
-            takeAsset: {
-              assetType: order.make_asset_type,
-              contractAddress: order.make_asset_address as Address,
-              value: BigInt(order.make_asset_value),
-              id: BigInt(order.make_asset_id),
-            },
-            salt: BigInt(0),
-            start: BigInt(order.start),
-            end: BigInt(order.end),
-            originFee: {
-              receiver: exchangeContract,
-              amount: BigInt("500"),
-            },
-            royaltyFee: {
-              receiver: "0xD1167a4f576155f8B074fb0a4DED3B22C5590af4",
-              amount: BigInt("500"),
-            },
-            data: "0x",
-            index: 0,
-            proof: [],
-            root: "0x0000000000000000000000000000000000000000000000000000000000000000",
-            sig: order.sig as Address,
-          },
-        ],
+  };
+
+  const signTree = async () => {
+    if (!address) return;
+    const types = {
+      Listing: [{ name: "root", type: "bytes32" }],
+      BulkOrder: [
+        { name: "maker", type: "address" },
+        { name: "root", type: "bytes32" },
       ],
+    } as const;
+
+    const tree = new Eip712MerkleTree(items);
+
+    const root = tree.tree.root;
+    const sig = await signTypedDataAsync({
+      account: address,
+      domain: {
+        chainId: 2484,
+        name: "U2U",
+        version: "1",
+      },
+      types,
+      primaryType: "BulkOrder",
+      message: {
+        maker: address,
+        root: root as any,
+      },
     });
   };
 
-  // const acceptBid = async (order: Order) => {
-  //   if (!address) return;
-
-  //   const salt = genRandomNumber(8, 10);
-  //   const types = {
-  //     Asset: [
-  //       { name: "assetType", type: "uint8" },
-  //       { name: "contractAddress", type: "address" },
-  //       { name: "value", type: "uint256" },
-  //       { name: "id", type: "uint256" },
-  //     ],
-  //     Fee: [
-  //       { name: "receiver", type: "address" },
-  //       { name: "amount", type: "uint96" },
-  //     ],
-  //     Order: [
-  //       { name: "maker", type: "address" },
-  //       { name: "makeAsset", type: "Asset" },
-  //       { name: "taker", type: "address" },
-  //       { name: "takeAsset", type: "Asset" },
-  //       { name: "salt", type: "uint256" },
-  //       { name: "start", type: "int256" },
-  //       { name: "end", type: "int256" },
-  //     ],
-  //   } as const;
-
-  //   const encodedData = encodeAbiParameters(
-  //     [
-  //       { name: "maker", type: "address" },
-  //       { name: "makeAssetType", type: "uint8" },
-  //       { name: "makeAssetContract", type: "address" },
-  //       { name: "makeAssetValue", type: "uint256" },
-  //       { name: "makeAssetId", type: "uint256" },
-  //       { name: "taker", type: "address" },
-  //       { name: "takeAssetType", type: "uint8" },
-  //       { name: "takeAssetContract", type: "address" },
-  //       { name: "takeAssetValue", type: "uint256" },
-  //       { name: "takeAssetId", type: "uint256" },
-  //     ],
-  //     [
-  //       address,
-  //       order.take_asset_type,
-  //       order.take_asset_address as Address,
-  //       BigInt(order.take_asset_value),
-  //       BigInt(order.take_asset_id),
-  //       "0x0000000000000000000000000000000000000000",
-  //       order.make_asset_type,
-  //       order.make_asset_address,
-  //       BigInt(order.make_asset_value),
-  //       BigInt(order.make_asset_id),
-  //     ]
-  //   );
-
-  //   const sig = await signTypedDataAsync({
-  //     account: address,
-  //     domain: {
-  //       chainId: 2484,
-  //       name: "U2U",
-  //       version: "1",
-  //     },
-  //     types,
-  //     primaryType: "Order",
-  //     message: {
-  //       maker: address,
-  //       makeAsset: {
-  //         assetType: order.take_asset_type,
-  //         contractAddress: order.take_asset_address as Address,
-  //         value: BigInt(order.take_asset_value),
-  //         id: BigInt(order.take_asset_id),
-  //       },
-  //       taker: "0x0000000000000000000000000000000000000000",
-  //       takeAsset: {
-  //         assetType: order.make_asset_type,
-  //         contractAddress: order.make_asset_address as Address,
-  //         value: BigInt(order.make_asset_value),
-  //         id: BigInt(order.make_asset_id),
-  //       },
-  //       salt: BigInt(0),
-  //       start: BigInt(order.start),
-  //       end: BigInt(order.end),
-  //     },
-  //   });
-
-  //   await writeContract({
-  //     abi,
-  //     address: exchangeContract,
-  //     functionName: "directAcceptBid",
-  //     args: [
-  //       {
-  //         bidInput: {
-  //           orderType: 2,
-  //           order: {
-  //             maker: order.maker as Address,
-  //             makeAsset: {
-  //               assetType: order.make_asset_type,
-  //               contractAddress: order.make_asset_address as Address,
-  //               value: BigInt(order.make_asset_value),
-  //               id: BigInt(order.make_asset_id),
-  //             },
-  //             taker: order.taker as Address,
-  //             takeAsset: {
-  //               assetType: order.take_asset_type,
-  //               contractAddress: order.take_asset_address as Address,
-  //               value: BigInt(order.take_asset_value),
-  //               id: BigInt(order.take_asset_id),
-  //             },
-  //             data: order.data as Address,
-  //             salt: BigInt(order.salt),
-  //             start: BigInt(order.start),
-  //             end: BigInt(order.end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             index: 0,
-  //             proof: [],
-  //             root: "0x",
-  //           },
-  //           nonce: BigInt(order.nonce.toString()),
-  //           sig: order.sig as Address,
-  //         },
-  //         sellInput: {
-  //           orderType: 0,
-  //           order: {
-  //             maker: order.taker as Address,
-  //             makeAsset: {
-  //               assetType: order.take_asset_type,
-  //               contractAddress: order.take_asset_address as Address,
-  //               value: BigInt(order.take_asset_value),
-  //               id: BigInt(order.take_asset_id),
-  //             },
-  //             taker: "0x0000000000000000000000000000000000000000",
-  //             takeAsset: {
-  //               assetType: order.make_asset_type,
-  //               contractAddress: order.make_asset_address as Address,
-  //               value: BigInt(order.make_asset_value),
-  //               id: BigInt(order.make_asset_id),
-  //             },
-  //             data: "0x",
-  //             salt: BigInt(0),
-  //             start: BigInt(order.start),
-  //             end: BigInt(order.end),
-  //             originFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             royaltyFee: {
-  //               receiver: exchangeContract,
-  //               amount: BigInt("500"),
-  //             },
-  //             index: 0,
-  //             proof: [],
-  //             root: "0x",
-  //           },
-  //           nonce: BigInt(order.nonce.toString()),
-  //           sig: sig,
-  //         },
-  //       },
-  //     ],
-  //   });
-  // };
-
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {orders?.length > 0 &&
-        orders.map((o) => (
-          <div key={o.id}>
-            {o.id}. {o.maker}, {o.take_asset_value} | &nbsp;
-            <button
-              onClick={() => {
-                if (o.type === "SELL") {
-                  buy(o);
-                } else {
-                  // acceptBid(o);
-                }
-              }}
-            >
-              {o.type === "SELL" ? "Buy" : "Accept bid"}
-            </button>
-          </div>
-        ))}
+      <button onClick={generateTree}>Generate tree</button>
+      <button onClick={verify}>Verify</button>
+      <button onClick={signTree}>Sign</button>
     </div>
   );
 }

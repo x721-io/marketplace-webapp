@@ -253,7 +253,11 @@ export default function ExploreSectionNavbar() {
             }
           >
             {dropdownItems.map((item: any, i: any) => (
-              <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
+              <Dropdown.Item
+                itemClassName="!w-[205px]"
+                key={i}
+                onClick={() => handleChange(item.name)}
+              >
                 {item.name}
               </Dropdown.Item>
             ))}

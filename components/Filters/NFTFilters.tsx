@@ -100,9 +100,13 @@ export default function NFTFilters({
               <MyRadio
                 id="status-all"
                 value="status-all"
-                checked={localFilters.sellStatus === undefined}
+                checked={localFilters.orderStatus === undefined}
                 onChange={() =>
-                  handleChange({ sellStatus: undefined, updateOnChange: true })
+                  handleChange({
+                    orderStatus: undefined,
+                    orderType: undefined,
+                    updateOnChange: true,
+                  })
                 }
               />
               <Label htmlFor="status-all">All</Label>
@@ -111,9 +115,13 @@ export default function NFTFilters({
               <MyRadio
                 id="AskNew"
                 value="AskNew"
-                checked={localFilters.sellStatus === "AskNew"}
+                checked={localFilters.orderStatus === "OPEN"}
                 onChange={() =>
-                  handleChange({ sellStatus: "AskNew", updateOnChange: true })
+                  handleChange({
+                    orderStatus: "OPEN",
+                    orderType: "SINGLE",
+                    updateOnChange: true,
+                  })
                 }
               />
               <Label htmlFor="AskNew">Buy now</Label>

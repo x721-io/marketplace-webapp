@@ -7,7 +7,7 @@ import {
   NFTMetadata,
 } from "@/types/entitites";
 import { Address } from "wagmi";
-import { MarketEvent, MarketEventType } from "@/types/market";
+import { MarketEvent, MarketEventType, MarketEventV2 } from "@/types/market";
 import { Project, RoundStatus } from "@/types";
 import { FormState } from "@/types";
 
@@ -120,6 +120,8 @@ export namespace APIParams {
     priceMax?: string;
     priceMin?: string;
     sellStatus?: MarketEventType;
+    orderStatus?: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
+    orderType: "SINGLE" | "BULK" | "BID";
     owner?: Address;
     name?: string;
     quoteToken?: Address;
@@ -303,8 +305,8 @@ export namespace APIResponse {
   export type UserActivities = MarketEvent[];
 
   export interface NFTMarketData {
-    sellInfo: MarketEvent[];
-    bidInfo: MarketEvent[];
+    sellInfo: MarketEventV2[];
+    bidInfo: MarketEventV2[];
     owners: (Pick<
       User,
       | "username"

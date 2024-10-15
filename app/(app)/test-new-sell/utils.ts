@@ -24,6 +24,10 @@ export function getBulkOrderTree(
       ...orderComponents,
     ];
   }
-  const tree = new Eip712MerkleTree(elements);
+  const tree = new Eip712MerkleTree(elements, {
+    "123": [
+      {name}
+    ]
+  });
   return tree;
 }

@@ -26,8 +26,8 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
   const token = findTokenByAddress(event.quoteToken);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const isBidder = useMemo(() => {
-    if (!event.to || !wallet) return false;
-    return event.to.signer?.toLowerCase() === wallet.toLowerCase();
+    if (!event.from || !wallet) return false;
+    return event.from.signer?.toLowerCase() === wallet.toLowerCase();
   }, [event, wallet]);
   const [showAcceptBid, setShowAcceptBid] = useState(false);
   const [showCancelBid, setShowCancelBid] = useState(false);
@@ -55,8 +55,8 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
               href={getUserLink(event.to)}
               className="font-semibold hover:underline"
             >
-              {event.to?.username ||
-                shortenAddress(event.to?.signer ?? event.to?.publicKey)}
+              {event.from?.username ||
+                shortenAddress(event.from?.signer ?? event.from?.publicKey)}
             </Link>
             <p className="text-secondary">
               Bid

@@ -42,8 +42,13 @@ export default function SellNFTModal({
   marketData,
   onClose,
 }: Props) {
-  const { createSellOrder, isApproving, isCreatingOrder, isSigningOrderData, signSellOrderData } =
-    useMarketplaceV2(nft);
+  const {
+    createSellOrder,
+    isApproving,
+    isCreatingOrder,
+    isSigningOrderData,
+    signSellOrderData,
+  } = useMarketplaceV2(nft);
   const api = useMarketplaceApi();
   const [loading, setLoading] = useState(false);
   const type = nft.collection.type;
@@ -167,6 +172,8 @@ export default function SellNFTModal({
       quantity,
       start,
       salt,
+      netPrice: parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
+      totalPrice: parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
     };
     const onApproveSuccess = () => {
       setCurrentStep(1);
@@ -178,9 +185,12 @@ export default function SellNFTModal({
       // alert(true)
       setCurrentStep(3);
     };
-    const onRequestError = (requestType: "approve" | "sign" | "create_order_api" ,error: Error) => {
+    const onRequestError = (
+      requestType: "approve" | "sign" | "create_order_api",
+      error: Error
+    ) => {
       let errorStepIndex = -1;
-      switch(requestType) {
+      switch (requestType) {
         case "approve":
           errorStepIndex = 0;
           break;
@@ -201,7 +211,7 @@ export default function SellNFTModal({
       onApproveSuccess,
       onSignSuccess,
       onCreateOrderAPISuccess,
-      onRequestError,
+      onRequestError
     );
 
     // const toastId = toast.loading("Preparing data...", { type: "info" });
@@ -298,20 +308,11 @@ export default function SellNFTModal({
     // getIfApprovedForAll()
   }, [nft]);
 
-const onRetry = async () => {
-  const params: FormState.SellNFT = {
-    daysRange,
-    end,
-    price,
-    quoteToken,
-    quantity,
-    start,
-    salt,
+  const onRetry = async () => {
+    setErrorStep(null);
+    setCurrentStep(0);
+    onSubmit();
   };
-  setErrorStep(null)
-  setCurrentStep(0)
-  onSubmit()
-}
 
   return (
     <>
@@ -509,9 +510,13 @@ const onRetry = async () => {
         </MyModal.Body>
       </MyModal.Root>
       <StepsModal
+        title="Sell NFT"
         erorStep={errorStep}
         isOpen={currentFormState === "CREATE"}
-        onClose={() => setCurrentFormState("INPUT")}
+        onClose={() => {
+          setCurrentFormState("INPUT");
+          onClose && onClose();
+        }}
         currentStep={currentStep}
         onRetry={onRetry}
         steps={[
