@@ -1,4 +1,4 @@
-import { MarketEvent, NFT } from "@/types";
+import { MarketEvent, MarketEventV2, NFT } from "@/types";
 import {
   getUserAvatarImage,
   getUserLink,
@@ -10,24 +10,26 @@ import { format } from "date-fns";
 import { formatDisplayedNumber } from "@/utils";
 import { formatUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
-import AcceptBidNFTModal from "@/components/Modal/AcceptBidNFTModal";
+// import AcceptBidNFTModal from "@/components/Modal/AcceptBidNFTModal";
 import React, { useMemo, useState } from "react";
 import Button from "@/components/Button";
 import useAuthStore from "@/store/auth/store";
 import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isOwner: boolean;
-  event: MarketEvent;
+  event: MarketEventV2;
   nft: NFT;
 }
 
 export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
+  const { acceptBid, getOrderDetails } = useMarketplaceV2(nft);
   const token = findTokenByAddress(event.quoteToken);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const isBidder = useMemo(() => {
-    if (!event.from || !wallet) return false;
-    return event.from.signer?.toLowerCase() === wallet.toLowerCase();
+    if (!event.Maker || !wallet) return false;
+    return event.Maker?.signer?.toLowerCase() === wallet.toLowerCase();
   }, [event, wallet]);
   const [showAcceptBid, setShowAcceptBid] = useState(false);
   const [showCancelBid, setShowCancelBid] = useState(false);
@@ -36,13 +38,19 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
     return null;
   }
 
+  const handleAcceptBid = async () => {
+    const orderDetails = await getOrderDetails(event.sig, event.index);
+    if (!orderDetails) return;
+    await acceptBid(orderDetails);
+  };
+
   return (
     <div className="flex items-center justify-between" {...rest}>
       <div className="flex items-center gap-2">
-        <Link href={getUserLink(event.to)}>
+        <Link href={getUserLink(event.Maker)}>
           <Image
             className="w-10 h-10 rounded-full"
-            src={getUserAvatarImage(event.to)}
+            src={getUserAvatarImage(event.Maker)}
             alt="user"
             width={40}
             height={40}
@@ -52,11 +60,11 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
         <div className="flex flex-col">
           <div className="flex items-center gap-1 text-body-14">
             <Link
-              href={getUserLink(event.to)}
+              href={getUserLink(event.Maker)}
               className="font-semibold hover:underline"
             >
-              {event.from?.username ||
-                shortenAddress(event.from?.signer ?? event.from?.publicKey)}
+              {event.Maker?.username ||
+                shortenAddress(event.Maker?.signer ?? event.Maker?.publicKey)}
             </Link>
             <p className="text-secondary">
               Bid
@@ -89,7 +97,13 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
       </div>
 
       {isOwner && !isBidder && (
-        <Button onClick={() => setShowAcceptBid(true)} variant="text">
+        <Button
+          onClick={() => {
+            // setShowAcceptBid(true)
+            handleAcceptBid();
+          }}
+          variant="text"
+        >
           Accept
         </Button>
       )}
@@ -99,12 +113,12 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
         </Button>
       )}
 
-      <AcceptBidNFTModal
+      {/* <AcceptBidNFTModal
         nft={nft}
         bid={event}
         show={showAcceptBid}
         onClose={() => setShowAcceptBid(false)}
-      />
+      /> */}
       <CancelBidNFTModal
         nft={nft}
         bid={event}

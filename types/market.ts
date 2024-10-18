@@ -2,6 +2,19 @@ import { Address } from "wagmi";
 import { BigNumberish } from "ethers";
 import { Collection, User } from "@/types/entitites";
 
+export enum OrderStatus {
+  OPEN = 0,
+  CANCELLED = 1,
+  FILLED = 2,
+  PENDING = 3,
+}
+
+export enum OrderType {
+  SINGLE = 0,
+  BULK = 1,
+  BID = 2,
+}
+
 export type MarketEventType =
   | "AskNew"
   | "AskCancel"
@@ -44,10 +57,29 @@ export interface MarketEvent {
   timestamp: number;
 }
 
+
 export interface MarketEventV2 {
+  Maker: User | null;
+  Taker: User | null;
   id: string;
   index: number;
+  netPrice: string;
+  netPriceNum: number;
+  orderStatus: OrderStatus;
+  orderType: OrderType;
+  price: string;
+  priceNum: number;
+  quoteToken: Address;
   sig: string;
+  timestamp: number; 
+  quantity: number;
+}
+
+export interface PartialOrderDetails {
+  tokenId: string;
+  collectionId: string;
+  updatedAt: string;
+  filled: number;
   makeAssetType: number;
   makeAssetAddress: Address;
   makeAssetValue: string;
@@ -60,24 +92,11 @@ export interface MarketEventV2 {
   start: number;
   end: number;
   dataOrder: string;
-  orderStatus: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
-  orderType: "SINGLE" | "BULK" | "BID";
   root: string;
-  proof: string[];
-  tokenId: string;
-  collectionId: string;
-  quantity: number;
-  price: string;
-  priceNum: number;
-  netPrice: string;
-  netPriceNum: number;
-  createAt: string;
-  updatedAt: string;
-  quoteToken: Address;
-  filled: number;
-  Maker: User | null;
-  Taker: User | null;
-}
+  proof: string[]; 
+} 
+
+export interface OrderDetails extends PartialOrderDetails, MarketEventV2 {};
 
 export type Royalty = { account: Address; value: bigint };
 

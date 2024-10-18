@@ -38,7 +38,7 @@ export default function NFTActions({
       );
     });
   }, [marketData, wallet]);
-  const { cancelOrder } = useMarketplaceV2(nft);
+  const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
   const [showSellModal, setShowSellModal] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
@@ -52,7 +52,10 @@ export default function NFTActions({
     if (!marketData || !marketData.sellInfo[0]) return;
     try {
       setCancelling(true);
-      await cancelOrder(marketData.sellInfo[0]);
+      const { sig, index } = marketData.sellInfo[0];
+      const orderDeatails = await getOrderDetails(sig, index);
+      if (!orderDeatails) return;
+      await cancelOrder(orderDeatails);
     } catch (err: any) {
       toast.error(`Error report: User rejected`);
     } finally {

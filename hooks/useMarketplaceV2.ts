@@ -1,12 +1,10 @@
-import { Order } from "@/app/(app)/test-new-buy/page";
 import { ADDRESS_ZERO } from "@/config/constants";
 import { contracts } from "@/config/contracts";
 import { nextAPI } from "@/services/api";
 import { APIResponse } from "@/services/api/types";
 import { Web3Functions } from "@/services/web3";
-import { FormState, MarketEventV2, NFT } from "@/types";
-import { ta } from "date-fns/locale";
-import { parse } from "path";
+import { FormState, NFT, OrderDetails, OrderType } from "@/types";
+import { convertToUTCDateTS } from "@/utils";
 import { useState } from "react";
 import { Address, encodeAbiParameters, parseUnits } from "viem";
 import { useAccount, useSignTypedData } from "wagmi";
@@ -57,7 +55,7 @@ const abi = [
         indexed: false,
       },
       { type: "bytes", name: "sig", internalType: "bytes", indexed: false },
-      { type: "int16", name: "index", internalType: "int16", indexed: false },
+      { type: "uint16", name: "index", internalType: "uint16", indexed: false },
     ],
     anonymous: false,
   },
@@ -97,7 +95,7 @@ const abi = [
         indexed: false,
       },
       { type: "bytes", name: "sig", internalType: "bytes", indexed: false },
-      { type: "int16", name: "index", internalType: "int16", indexed: false },
+      { type: "uint16", name: "index", internalType: "uint16", indexed: false },
       {
         type: "uint256",
         name: "currentFilledValue",
@@ -264,11 +262,7 @@ const abi = [
             name: "makeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -284,11 +278,7 @@ const abi = [
             name: "takeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -307,7 +297,7 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           {
@@ -316,13 +306,13 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           { type: "bytes", name: "sig", internalType: "bytes" },
           { type: "bytes32", name: "root", internalType: "bytes32" },
           { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-          { type: "int16", name: "index", internalType: "int16" },
+          { type: "uint16", name: "index", internalType: "uint16" },
         ],
       },
     ],
@@ -349,11 +339,7 @@ const abi = [
             name: "makeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -369,11 +355,7 @@ const abi = [
             name: "takeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -392,7 +374,7 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           {
@@ -401,13 +383,13 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           { type: "bytes", name: "sig", internalType: "bytes" },
           { type: "bytes32", name: "root", internalType: "bytes32" },
           { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-          { type: "int16", name: "index", internalType: "int16" },
+          { type: "uint16", name: "index", internalType: "uint16" },
         ],
       },
     ],
@@ -439,11 +421,7 @@ const abi = [
                 name: "makeAsset",
                 internalType: "struct LibAsset.Asset",
                 components: [
-                  {
-                    type: "uint8",
-                    name: "assetType",
-                    internalType: "enum LibAsset.AssetType",
-                  },
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
                   {
                     type: "address",
                     name: "contractAddress",
@@ -459,11 +437,7 @@ const abi = [
                 name: "takeAsset",
                 internalType: "struct LibAsset.Asset",
                 components: [
-                  {
-                    type: "uint8",
-                    name: "assetType",
-                    internalType: "enum LibAsset.AssetType",
-                  },
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
                   {
                     type: "address",
                     name: "contractAddress",
@@ -486,7 +460,7 @@ const abi = [
                     name: "receiver",
                     internalType: "address",
                   },
-                  { type: "uint96", name: "amount", internalType: "uint96" },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
                 ],
               },
               {
@@ -499,13 +473,13 @@ const abi = [
                     name: "receiver",
                     internalType: "address",
                   },
-                  { type: "uint96", name: "amount", internalType: "uint96" },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
                 ],
               },
               { type: "bytes", name: "sig", internalType: "bytes" },
               { type: "bytes32", name: "root", internalType: "bytes32" },
               { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-              { type: "int16", name: "index", internalType: "int16" },
+              { type: "uint16", name: "index", internalType: "uint16" },
             ],
           },
           {
@@ -524,11 +498,7 @@ const abi = [
                 name: "makeAsset",
                 internalType: "struct LibAsset.Asset",
                 components: [
-                  {
-                    type: "uint8",
-                    name: "assetType",
-                    internalType: "enum LibAsset.AssetType",
-                  },
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
                   {
                     type: "address",
                     name: "contractAddress",
@@ -544,11 +514,7 @@ const abi = [
                 name: "takeAsset",
                 internalType: "struct LibAsset.Asset",
                 components: [
-                  {
-                    type: "uint8",
-                    name: "assetType",
-                    internalType: "enum LibAsset.AssetType",
-                  },
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
                   {
                     type: "address",
                     name: "contractAddress",
@@ -571,7 +537,7 @@ const abi = [
                     name: "receiver",
                     internalType: "address",
                   },
-                  { type: "uint96", name: "amount", internalType: "uint96" },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
                 ],
               },
               {
@@ -584,13 +550,13 @@ const abi = [
                     name: "receiver",
                     internalType: "address",
                   },
-                  { type: "uint96", name: "amount", internalType: "uint96" },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
                 ],
               },
               { type: "bytes", name: "sig", internalType: "bytes" },
               { type: "bytes32", name: "root", internalType: "bytes32" },
               { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-              { type: "int16", name: "index", internalType: "int16" },
+              { type: "uint16", name: "index", internalType: "uint16" },
             ],
           },
         ],
@@ -633,11 +599,7 @@ const abi = [
             name: "makeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -653,11 +615,7 @@ const abi = [
             name: "takeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -676,7 +634,7 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           {
@@ -685,13 +643,13 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           { type: "bytes", name: "sig", internalType: "bytes" },
           { type: "bytes32", name: "root", internalType: "bytes32" },
           { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-          { type: "int16", name: "index", internalType: "int16" },
+          { type: "uint16", name: "index", internalType: "uint16" },
         ],
       },
       {
@@ -710,11 +668,7 @@ const abi = [
             name: "makeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -730,11 +684,7 @@ const abi = [
             name: "takeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -753,7 +703,7 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           {
@@ -762,13 +712,13 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           { type: "bytes", name: "sig", internalType: "bytes" },
           { type: "bytes32", name: "root", internalType: "bytes32" },
           { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-          { type: "int16", name: "index", internalType: "int16" },
+          { type: "uint16", name: "index", internalType: "uint16" },
         ],
       },
     ],
@@ -907,11 +857,7 @@ const abi = [
             name: "makeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -927,11 +873,7 @@ const abi = [
             name: "takeAsset",
             internalType: "struct LibAsset.Asset",
             components: [
-              {
-                type: "uint8",
-                name: "assetType",
-                internalType: "enum LibAsset.AssetType",
-              },
+              { type: "uint8", name: "assetType", internalType: "uint8" },
               {
                 type: "address",
                 name: "contractAddress",
@@ -950,7 +892,7 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           {
@@ -959,13 +901,13 @@ const abi = [
             internalType: "struct X721Order.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
-              { type: "uint96", name: "amount", internalType: "uint96" },
+              { type: "uint256", name: "amount", internalType: "uint256" },
             ],
           },
           { type: "bytes", name: "sig", internalType: "bytes" },
           { type: "bytes32", name: "root", internalType: "bytes32" },
           { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
-          { type: "int16", name: "index", internalType: "int16" },
+          { type: "uint16", name: "index", internalType: "uint16" },
         ],
       },
     ],
@@ -1131,7 +1073,14 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0x5Ef45F98349e960753B768333c6f6F12169b8361";
+  "0xFf880Ba760f1fbB4513eA50a5f1493D0e25e0255";
+
+const domain = {
+  name: "X721Exchange",
+  version: "1",
+  chainId: 2484,
+  verifyingContract: contractExchangeV2Test,
+} as any;
 
 const useMarketplaceV2 = (nft: NFT) => {
   const { address } = useAccount();
@@ -1139,6 +1088,23 @@ const useMarketplaceV2 = (nft: NFT) => {
   const [isApproving, setApproving] = useState(false);
   const [isSigningOrderData, setIsSigningOrderData] = useState(false);
   const [isCreatingOrder, setCreatingOrder] = useState(false);
+  const [isDepositing, setDepositing] = useState(false);
+
+  const getOrderDetails = async (
+    sig: string,
+    index: number
+  ): Promise<OrderDetails | null> => {
+    try {
+      const body = {
+        sig,
+        index,
+      };
+      const response = await nextAPI.post("/order/verify ", body);
+      return response.data.data as OrderDetails;
+    } catch (err: any) {
+      return null;
+    }
+  };
 
   const getCollectionType = (): "ERC721" | "ERC1155" | null => {
     if (nft.collection.type !== "ERC721" && nft.collection.type !== "ERC1155")
@@ -1251,7 +1217,8 @@ const useMarketplaceV2 = (nft: NFT) => {
   const deposit = async (tokenAddress: Address, depositAmt: string) => {
     if (!address) return false;
     try {
-      const result = await Web3Functions.writeContract({
+      setDepositing(true);
+      await Web3Functions.writeContract({
         abi: erc20ABI,
         functionName: "deposit",
         address: tokenAddress,
@@ -1260,8 +1227,9 @@ const useMarketplaceV2 = (nft: NFT) => {
       });
       return true;
     } catch (err: any) {
-      alert(err);
       return false;
+    } finally {
+      setDepositing(false);
     }
   };
 
@@ -1351,7 +1319,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const { price, quantity, quoteToken, start, end, salt } = params;
+    const { quantity, quoteToken, start, end, salt, totalPrice } = params;
     const types = {
       Asset: [
         { name: "assetType", type: "uint8" },
@@ -1369,41 +1337,36 @@ const useMarketplaceV2 = (nft: NFT) => {
         { name: "taker", type: "address" },
         { name: "takeAsset", type: "Asset" },
         { name: "salt", type: "uint256" },
-        { name: "start", type: "int256" },
-        { name: "end", type: "int256" },
+        { name: "start", type: "uint256" },
+        { name: "end", type: "uint256" },
+        { name: "index", type: "uint16" },
       ],
     } as const;
-    const totalPrice =
-      parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125;
-    const takeValue = parseUnits(totalPrice.toString(), 18);
     try {
       const sig = await signTypedDataAsync({
         account: address,
-        domain: {
-          chainId: 2484,
-          name: "U2U",
-          version: "1",
-        },
+        domain,
         types,
         primaryType: "Order",
         message: {
           maker: address,
           makeAsset: {
             assetType: getNftAssetType(),
-            contractAddress: collectionAddress,
+            contractAddress: collectionAddress as Address,
             value: BigInt(quantity),
             id: BigInt(nft.u2uId ?? nft.id),
           },
           taker: "0x0000000000000000000000000000000000000000",
           takeAsset: {
             assetType: getTokenAssetType(quoteToken),
-            contractAddress: quoteToken,
-            value: takeValue,
+            contractAddress: quoteToken as Address,
+            value: BigInt(parseUnits(totalPrice.toString(), 18)),
             id: BigInt(0),
           },
           salt: BigInt(salt),
           start: BigInt(start),
           end: BigInt(end),
+          index: 1,
         },
       });
       return sig;
@@ -1432,14 +1395,15 @@ const useMarketplaceV2 = (nft: NFT) => {
         { name: "receiver", type: "address" },
         { name: "amount", type: "uint96" },
       ],
-      Bid: [
+      Order: [
         { name: "maker", type: "address" },
         { name: "makeAsset", type: "Asset" },
         { name: "taker", type: "address" },
         { name: "takeAsset", type: "Asset" },
         { name: "salt", type: "uint256" },
-        { name: "start", type: "int256" },
-        { name: "end", type: "int256" },
+        { name: "start", type: "uint256" },
+        { name: "end", type: "uint256" },
+        { name: "index", type: "uint16" },
       ],
     } as const;
     const bidValue =
@@ -1448,13 +1412,9 @@ const useMarketplaceV2 = (nft: NFT) => {
     try {
       const sig = await signTypedDataAsync({
         account: address,
-        domain: {
-          chainId: 2484,
-          name: "U2U",
-          version: "1",
-        },
+        domain,
         types,
-        primaryType: "Bid",
+        primaryType: "Order",
         message: {
           maker: address,
           makeAsset: {
@@ -1473,6 +1433,7 @@ const useMarketplaceV2 = (nft: NFT) => {
           salt: BigInt(salt),
           start: BigInt(start),
           end: BigInt(end),
+          index: 1,
         },
       });
       return sig;
@@ -1532,6 +1493,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         price: parseUnits(price.toString(), 18).toString(),
         totalPice: take_asset_value.toString(),
         netPrice: parseUnits(params.netPrice.toString(), 18).toString(),
+        index: 1,
       };
       console.log({ body });
       await nextAPI.post("/order/single", body);
@@ -1539,6 +1501,19 @@ const useMarketplaceV2 = (nft: NFT) => {
     } catch (err) {
       alert(err);
       return false;
+    }
+  };
+
+  const getOrderTypeIndex = (orderType: OrderType) => {
+    switch (orderType) {
+      case OrderType.SINGLE:
+        return 0;
+      case OrderType.BULK:
+        return 1;
+      case OrderType.BID:
+        return 2;
+      default:
+        return 0;
     }
   };
 
@@ -1550,7 +1525,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!address) return false;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const { end, price, quantity, quoteToken, start, salt } = params;
+    const { end, quantity, quoteToken, start, salt } = params;
     const makeAsset = {
       assetType: getTokenAssetType(quoteToken),
       contractAddress: quoteToken,
@@ -1568,13 +1543,13 @@ const useMarketplaceV2 = (nft: NFT) => {
       contractAddress: make_asset_address,
       value: make_asset_value,
       id: make_asset_id,
-    } = takeAsset;
+    } = makeAsset;
     const {
       assetType: take_asset_type,
       contractAddress: take_asset_address,
       value: take_asset_value,
       id: take_asset_id,
-    } = makeAsset;
+    } = takeAsset;
     try {
       const body = {
         makeAssetType: make_asset_type,
@@ -1593,7 +1568,9 @@ const useMarketplaceV2 = (nft: NFT) => {
         orderType: "BID",
         price: make_asset_value.toString(),
         netPrice: parseUnits(params.netPrice.toString(), 18).toString(),
+        index: 1,
       };
+      console.log({ body });
       await nextAPI.post("/order/single", body);
       return true;
     } catch (err) {
@@ -1630,6 +1607,8 @@ const useMarketplaceV2 = (nft: NFT) => {
     // if (!encodedData) return false;
 
     setIsSigningOrderData(true);
+    params.start = Math.floor(convertToUTCDateTS(params.start) / 1000);
+    params.end = Math.floor(convertToUTCDateTS(params.end) / 1000);
     const sig = await signSellOrderData(params);
     setIsSigningOrderData(false);
     if (!sig) {
@@ -1681,6 +1660,8 @@ const useMarketplaceV2 = (nft: NFT) => {
     // if (!encodedData) return false;
 
     setIsSigningOrderData(true);
+    params.start = Math.floor(convertToUTCDateTS(params.start) / 1000);
+    params.end = Math.floor(convertToUTCDateTS(params.end) / 1000);
     const sig = await signBidOrderData(params, nft, marketData);
     setIsSigningOrderData(false);
     if (!sig) {
@@ -1700,18 +1681,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     return result;
   };
 
-  const getOrderTypeIndex = (order: MarketEventV2) => {
-    switch (order.orderType) {
-      case "SINGLE":
-        return 0;
-      case "BULK":
-        return 1;
-      case "BID":
-        return 2;
-    }
-  };
-
-  const buySingle = async (order: MarketEventV2) => {
+  const buySingle = async (order: OrderDetails) => {
     if (!address || !order.Maker) return;
     if (order.quoteToken !== ADDRESS_ZERO) {
       const allowance = await getERC20Allowance(order.takeAssetAddress);
@@ -1722,7 +1692,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         );
       }
     }
-
+    // alert(getOrderTypeIndex(order.orderType));
     await writeContract({
       abi,
       address: contractExchangeV2Test,
@@ -1732,7 +1702,7 @@ const useMarketplaceV2 = (nft: NFT) => {
       args: [
         [
           {
-            orderType: getOrderTypeIndex(order),
+            orderType: getOrderTypeIndex(order.orderType),
             maker: order.Maker.signer,
             makeAsset: {
               assetType: order.makeAssetType,
@@ -1740,7 +1710,7 @@ const useMarketplaceV2 = (nft: NFT) => {
               value: BigInt(order.makeAssetValue),
               id: BigInt(order.makeAssetId),
             },
-            taker: "0x0000000000000000000000000000000000000000",
+            taker: ADDRESS_ZERO,
             takeAsset: {
               assetType: order.takeAssetType,
               contractAddress: order.takeAssetAddress as Address,
@@ -1751,22 +1721,22 @@ const useMarketplaceV2 = (nft: NFT) => {
             start: BigInt(order.start),
             end: BigInt(order.end),
             originFee: {
+              amount: BigInt(0),
               receiver: contractExchangeV2Test,
-              amount: BigInt("500"),
             },
             royaltyFee: {
               receiver: order.Maker.signer,
               amount: BigInt("0"),
             },
-            index: 0,
+            index: order.index,
             proof: [],
             root: order.root as Address,
-            sig: "0x",
+            sig: order.sig as any,
           },
         ],
         [
           {
-            orderType: 0,
+            orderType: getOrderTypeIndex(order.orderType),
             maker: address,
             makeAsset: {
               assetType: order.takeAssetType,
@@ -1785,24 +1755,24 @@ const useMarketplaceV2 = (nft: NFT) => {
             start: BigInt(order.start),
             end: BigInt(order.end),
             originFee: {
+              amount: BigInt(0),
               receiver: contractExchangeV2Test,
-              amount: BigInt("500"),
             },
             royaltyFee: {
               receiver: order.Maker.signer,
               amount: BigInt("0"),
             },
-            index: 0,
+            index: order.index,
             proof: [],
             root: order.root as Address,
-            sig: order.sig as Address,
+            sig: "0x",
           },
         ],
       ],
     });
   };
 
-  const cancelOrder = async (order: MarketEventV2) => {
+  const cancelOrder = async (order: OrderDetails) => {
     if (!address || !order.Maker) return;
     await writeContract({
       abi,
@@ -1810,7 +1780,7 @@ const useMarketplaceV2 = (nft: NFT) => {
       functionName: "cancelOrder",
       args: [
         {
-          orderType: getOrderTypeIndex(order),
+          orderType: getOrderTypeIndex(order.orderType),
           maker: order.Maker.signer,
           makeAsset: {
             assetType: order.makeAssetType,
@@ -1836,10 +1806,135 @@ const useMarketplaceV2 = (nft: NFT) => {
             receiver: order.Maker.signer,
             amount: BigInt("0"),
           },
-          index: 0,
+          index: order.index,
           proof: [],
           root: order.root as Address,
-          sig: "0x",
+          sig: order.sig as any,
+        },
+      ],
+    });
+  };
+
+  const acceptBid = async (order: OrderDetails) => {
+    if (!address || !order.Maker || !order.Taker) return;
+    const types = {
+      Asset: [
+        { name: "assetType", type: "uint8" },
+        { name: "contractAddress", type: "address" },
+        { name: "value", type: "uint256" },
+        { name: "id", type: "uint256" },
+      ],
+      Fee: [
+        { name: "receiver", type: "address" },
+        { name: "amount", type: "uint96" },
+      ],
+      Order: [
+        { name: "maker", type: "address" },
+        { name: "makeAsset", type: "Asset" },
+        { name: "taker", type: "address" },
+        { name: "takeAsset", type: "Asset" },
+        { name: "salt", type: "uint256" },
+        { name: "start", type: "uint256" },
+        { name: "end", type: "uint256" },
+        { name: "index", type: "uint16" },
+      ],
+    } as const;
+    const sellerSig = await signTypedDataAsync({
+      account: address,
+      domain,
+      types,
+      primaryType: "Order",
+      message: {
+        maker: order.Taker.signer,
+        makeAsset: {
+          assetType: order.takeAssetType,
+          contractAddress: order.takeAssetAddress as Address,
+          value: BigInt(order.takeAssetValue),
+          id: BigInt(order.takeAssetId),
+        },
+        taker: order.Maker.signer,
+        takeAsset: {
+          assetType: order.makeAssetType,
+          contractAddress: order.makeAssetAddress as Address,
+          value: BigInt(order.makeAssetValue),
+          id: BigInt(order.makeAssetId),
+        },
+        salt: BigInt(0),
+        start: BigInt(order.start),
+        end: BigInt(order.end),
+        index: order.index,
+      },
+    });
+    await writeContract({
+      abi,
+      address: contractExchangeV2Test,
+      functionName: "directAcceptBid",
+      args: [
+        {
+          bidOrder: {
+            orderType: 2,
+            maker: order.Maker.signer as Address,
+            makeAsset: {
+              assetType: order.makeAssetType,
+              contractAddress: order.makeAssetAddress as Address,
+              value: BigInt(order.makeAssetValue),
+              id: BigInt(order.makeAssetId),
+            },
+            taker: order.Taker.signer,
+            takeAsset: {
+              assetType: order.takeAssetType,
+              contractAddress: order.takeAssetAddress as Address,
+              value: BigInt(order.takeAssetValue),
+              id: BigInt(order.takeAssetId),
+            },
+            salt: BigInt(order.salt),
+            start: BigInt(order.start),
+            end: BigInt(order.end),
+            originFee: {
+              receiver: contractExchangeV2Test,
+              amount: BigInt("500"),
+            },
+            royaltyFee: {
+              receiver: order.Maker.signer,
+              amount: BigInt("0"),
+            },
+            index: order.index,
+            proof: [],
+            root: order.root as Address,
+            sig: order.sig as Address,
+          },
+          sellOrder: {
+            orderType: 2,
+            maker: order.Taker.signer,
+            makeAsset: {
+              assetType: order.takeAssetType,
+              contractAddress: order.takeAssetAddress as Address,
+              value: BigInt(order.takeAssetValue),
+              id: BigInt(order.takeAssetId),
+            },
+            taker: order.Maker.signer,
+            takeAsset: {
+              assetType: order.makeAssetType,
+              contractAddress: order.makeAssetAddress as Address,
+              value: BigInt(order.makeAssetValue),
+              id: BigInt(order.makeAssetId),
+            },
+            salt: BigInt(0),
+            start: BigInt(order.start),
+            end: BigInt(order.end),
+            index: order.index,
+            originFee: {
+              receiver: contractExchangeV2Test,
+              amount: BigInt("500"),
+            },
+            royaltyFee: {
+              receiver: order.Maker.signer,
+              amount: BigInt("0"),
+            },
+            proof: [],
+            root: order.root as Address,
+            sig: sellerSig as Address,
+          },
         },
       ],
     });
@@ -1854,11 +1949,14 @@ const useMarketplaceV2 = (nft: NFT) => {
     deposit,
     approveAll,
     buySingle,
+    acceptBid,
     signSellOrderData,
     checkIfApprovedForAll,
+    getOrderDetails,
     isApproving,
     isSigningOrderData,
     isCreatingOrder,
+    isDepositing,
   };
 };
 

@@ -58,3 +58,12 @@ export function genRandomNumber(byteCount: number, radix: number) {
     radix
   );
 }
+
+export function isNumber(value: any) {
+  if (value === undefined || value === null || value === "") return false;
+  return !isNaN(Number(value));
+}
+
+export function convertToUTCDateTS(value: number | Date | string) {
+   return new Date(value).getTime() + new Date(value).getTimezoneOffset() * 60000;
+} 

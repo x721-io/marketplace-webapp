@@ -134,7 +134,7 @@ export class Eip712MerkleTree {
     console.log("Merkle Root: " + this.tree.root);
     const verified = this.tree.verify(0, this.tree.getProof(0));
 
-    alert(verified);
+    // alert(verified);
   }
 
   // sign(orders: CreateBulkOrderItemInput[]) {

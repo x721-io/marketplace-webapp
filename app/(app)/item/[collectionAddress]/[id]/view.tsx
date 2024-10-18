@@ -6,14 +6,15 @@ import NFTData from "@/components/NFT/NFTData";
 import NFTMarketData from "@/components/Pages/MarketplaceNFT/NFTDetails/MarketData";
 import NFTImage from "@/components/Pages/MarketplaceNFT/NFTDetails/NFTImage";
 import Icon from "@/components/Icon";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGetMarketDataByNftId, useGetNftMetadata } from "@/hooks/useQuery";
 import { NFT } from "@/types";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 export default function NFTView({ item }: { item: NFT }) {
   const router = useRouter();
   const { id, collectionAddress } = useParams();
-
+  // const { testAcceptBid } = useMarketplaceV2(item);
   const { data: marketData, isLoading: isLoadingMarketData } =
     useGetMarketDataByNftId(collectionAddress as string, id as string);
 
@@ -62,6 +63,7 @@ export default function NFTView({ item }: { item: NFT }) {
             isLoadingMetadata={isLoadingMetadata}
           />
         </div>
+        {/* <button onClick={testAcceptBid}>Accept Biddd</button> */}
       </div>
     </div>
   );

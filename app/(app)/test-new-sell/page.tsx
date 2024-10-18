@@ -3,12 +3,6 @@
 import { useAccount, useSignTypedData } from "wagmi";
 import crypto from "crypto";
 import { encodeAbiParameters } from "viem";
-import Web3 from "web3";
-import keccak256 from "keccak256";
-import { MerkleTree } from "merkletreejs";
-import { Eip712MerkleTree, encodeProof } from "./Eip721MerkleTree";
-import { CreateBulkOrderItemInput, Order } from "../test-new-buy/page";
-import { getBulkOrderTree } from "./utils";
 
 const abi = [
   { type: "constructor", stateMutability: "nonpayable", inputs: [] },

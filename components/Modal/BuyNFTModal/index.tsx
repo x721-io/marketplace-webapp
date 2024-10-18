@@ -27,6 +27,8 @@ import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useBuyNFT from "@/hooks/useBuyNFT";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 import { useGetMarketDataByNftId } from "@/hooks/useQuery";
+import { ADDRESS_ZERO } from "@/config/constants";
+import { formatEther } from "viem";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -34,7 +36,8 @@ interface Props extends MyModalProps {
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
-  const { buySingle, deposit, getERC20Allowance } = useMarketplaceV2(nft);
+  const { buySingle, deposit, getERC20Allowance, getOrderDetails } =
+    useMarketplaceV2(nft);
   const { data: marketData, isLoading: isLoadingMarketData } =
     useGetMarketDataByNftId(nft.collection.address as string, nft.id as string);
   const {
@@ -67,14 +70,22 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     () => findTokenByAddress(saleData.quoteToken),
     [saleData]
   );
-  const { data: quoteTokenBalance } = useContractRead({
+  const { data: erc20TokenBalance } = useContractRead({
     abi: erc20ABI,
     account: address,
-    address: marketData.sellInfo[0].takeAssetAddress,
+    address: marketData.sellInfo[0].quoteToken as Address,
     functionName: "balanceOf",
     args: [address as Address],
-    enabled: !!address,
+    enabled: !!address && marketData.sellInfo[0].quoteToken !== ADDRESS_ZERO,
   });
+  const nativeTokenBalance = useBalance({
+    address,
+    enabled: !!address && marketData.sellInfo[0].quoteToken === ADDRESS_ZERO,
+  });
+  const quoteTokenBalance =
+    marketData.sellInfo[0].quoteToken === ADDRESS_ZERO
+      ? nativeTokenBalance.data?.value
+      : erc20TokenBalance;
   const [loading, setLoading] = useState(false);
   const {
     sellerFee,
@@ -245,8 +256,8 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     // }
     // setLoading(false);
     // reset();
-    alert(1);
-    await buySingle(marketData.sellInfo[0]);
+    // alert(1);
+    // await buySingle(marketData.sellInfo[0]);
   };
 
   const handleApproveMinAmount = () => {
@@ -307,14 +318,22 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   };
 
   const handleBuy = async () => {
-    buySingle(marketData.sellInfo[0]);
+    const orderDetails = await getOrderDetails(
+      marketData.sellInfo[0].sig,
+      marketData.sellInfo[0].index
+    );
+    if (!orderDetails) return;
+    await buySingle(orderDetails);
   };
 
   const handleDeposit = async () => {
-    await deposit(
-      marketData.sellInfo[0].takeAssetAddress,
-      marketData.sellInfo[0].takeAssetValue
+    const orderDetails = await getOrderDetails(
+      marketData.sellInfo[0].sig,
+      marketData.sellInfo[0].index
     );
+    if (!orderDetails || erc20TokenBalance === null || erc20TokenBalance === undefined) return;
+    const depositAmt = BigInt(orderDetails.takeAssetValue) - erc20TokenBalance;
+    await deposit(orderDetails.takeAssetAddress, depositAmt.toString());
   };
 
   return (
@@ -357,7 +376,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
+              {/* <div className="flex items-center justify-between mb-1">
                 <label className="text-body-14 text-secondary font-semibold">
                   Buy using
                 </label>
@@ -370,7 +389,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                     )
                   )}
                 </Text>
-              </div>
+              </div> */}
               <Input readOnly value={token?.symbol} />
             </div>
 
@@ -454,46 +473,19 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 />
               </>
             )}
-
-            {isTokenApproved ? (
-              <Button
-                type={"submit"}
-                className="w-full"
-                loading={loading}
-                disabled={isDisableBuy}
-              >
-                Purchase item
-              </Button>
-            ) : (
-              <ERC20TokenApproval
-                allowanceBalance={allowanceBalance}
-                quoteToken={quoteToken}
-                onApproveMinAmount={handleApproveMinAmount}
-                onAllowanceInput={() => handleAllowanceInput}
-                onApproveMaxAmount={handleApproveMaxAmount}
-                onApproveToken={handleApproveToken}
-                loading={loading}
-                registerAllowanceInput={register(
-                  "allowance",
-                  formRules.allowance
-                )}
-              />
-            )}
             <Button
               disabled={
                 !quoteTokenBalance ||
-                quoteTokenBalance <
-                  BigInt(marketData.sellInfo[0].takeAssetValue)
+                quoteTokenBalance < BigInt(marketData.sellInfo[0].price)
               }
               onClick={handleBuy}
             >
-              Buy
+              Purchase Item
             </Button>
 
             {quoteTokenBalance !== null &&
               quoteTokenBalance !== undefined &&
-              quoteTokenBalance <
-                BigInt(marketData.sellInfo[0].takeAssetValue) && (
+              quoteTokenBalance < BigInt(marketData.sellInfo[0].price) && (
                 <Button onClick={handleDeposit}>Deposit</Button>
               )}
 
