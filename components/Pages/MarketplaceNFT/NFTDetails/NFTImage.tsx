@@ -70,15 +70,12 @@ export default function NFTImage({ item }: { item: NFT }) {
         );
       case "image":
         return (
-          <div className="desktop:w-[850px] desktop:h-[825px] tablet:w-[410px] tablet:h-[394px] w-[341px] h-[341px]">
             <BlurImage
               src={displayMedia}
               alt=""
-              width={512}
-              height={512}
-              className="object-cover w-full h-full rounded-2xl mb-10"
+              fill
+              className="object-cover object-center relative rounded-2xl mb-10"
             />
-          </div>
         );
     }
   };

@@ -33,7 +33,7 @@ export default function NFTView({ item }: { item: NFT }) {
     <div className="w-full flex justify-center items-center">
       <div className="desktop:px-[100px] px-4 tablet:py-[60px] py-6 flex flex-col desktop:w-[78%] tablet:w-[646px] w-full justify-center">
         <div className="flex justify-between desktop:flex-row flex-col items-center w-full tablet:items-start">
-          <div className="flex gap-4 justify-center flex-col tablet:flex-row">
+          <div className="flex gap-4 justify-center flex-col tablet:flex-row w-[70%] pr-[40px]">
             <div
               className="w-10 h-10 flex justify-center items-center rounded-[42px] bg-surface-soft shadow hover:shadow-md"
               onClick={router.back}
@@ -45,14 +45,16 @@ export default function NFTView({ item }: { item: NFT }) {
                 height={20}
               />
             </div>
-            <NFTImage item={item} />
+            <div className="w-[810px] aspect-square relative flex items-center justify-center">
+              <NFTImage item={item} />
+            </div>
           </div>
           <div className="sticky top-[40px]">
-          <NFTMarketData
-            nft={item}
-            marketData={marketData}
-            isLoading={isLoadingMarketData}
-          />
+            <NFTMarketData
+              nft={item}
+              marketData={marketData}
+              isLoading={isLoadingMarketData}
+            />
           </div>
         </div>
         <div className="flex mt-[34px] desktop:w-[700px] tablet:w-full desktop:pl-14">
