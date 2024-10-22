@@ -28,8 +28,9 @@ import Icon from "@/components/Icon";
 import Image from "next/image";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 import { genRandomNumber } from "@/utils";
-import { Address, erc20ABI, useAccount, useContractRead } from "wagmi";
 import StepsModal from "@/components/X721UIKits/StepsModal";
+import { Address } from "viem";
+import { erc20ABI, useAccount, useContractRead } from "wagmi";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -172,8 +173,10 @@ export default function SellNFTModal({
       quantity,
       start,
       salt,
-      netPrice: parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
-      totalPrice: parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
+      netPrice:
+        parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
+      totalPrice:
+        parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
     };
     const onApproveSuccess = () => {
       setCurrentStep(1);
@@ -356,7 +359,7 @@ export default function SellNFTModal({
                             <Input
                               onClick={(e) => e.stopPropagation()}
                               placeholder="Enter price"
-                              className="w-full outline-none border-none"
+                              className="w-full !border-none !outline-none !ring-transparent"
                               maxLength={18}
                               size={18}
                               error={!!errors.price}

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cn from "clsx";
 
 function BlurImage(props: any) {
@@ -11,6 +11,7 @@ function BlurImage(props: any) {
     <Image
       {...props}
       loading="lazy"
+      unoptimized={props?.src?.split(".").pop() === "gif"}
       alt={props.alt}
       className={cn(
         props.className,

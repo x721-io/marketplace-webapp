@@ -66,7 +66,7 @@ export interface MarketEventV2 {
   netPrice: string;
   netPriceNum: number;
   orderStatus: OrderStatus;
-  orderType: OrderType;
+  orderType: string;
   price: string;
   priceNum: number;
   quoteToken: Address;

@@ -1,5 +1,5 @@
 import { Address } from "wagmi";
-import { Trait } from "@/types/entitites";
+import { NFT, Trait } from "@/types/entitites";
 
 export const daysRanges = ["1_DAY", "7_DAYS", "30_DAYS", "90_DAYS"] as const;
 export namespace FormState {
@@ -48,6 +48,10 @@ export namespace FormState {
     daysRange: DaysRange;
     netPrice: number;
     totalPrice: number;
+    nft?: NFT;
+    proof?: string[],
+    root?: string;
+    sig?: string;
   }
 
   export interface BuyNFT {

@@ -4,7 +4,6 @@ import { nextAPI } from "@/services/api";
 import { APIResponse } from "@/services/api/types";
 import { Web3Functions } from "@/services/web3";
 import { FormState, NFT, OrderDetails, OrderType } from "@/types";
-import { convertToUTCDateTS } from "@/utils";
 import { useState } from "react";
 import { Address, encodeAbiParameters, parseUnits } from "viem";
 import { useAccount, useSignTypedData } from "wagmi";
@@ -1073,9 +1072,9 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0xFf880Ba760f1fbB4513eA50a5f1493D0e25e0255";
+  "0x8AEb29DCe7F69ee6D70387f98b65Eab27870cd9C";
 
-const domain = {
+export const exchangeSignedDomain = {
   name: "X721Exchange",
   version: "1",
   chainId: 2484,
@@ -1345,7 +1344,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     try {
       const sig = await signTypedDataAsync({
         account: address,
-        domain,
+        domain: exchangeSignedDomain,
         types,
         primaryType: "Order",
         message: {
@@ -1412,7 +1411,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     try {
       const sig = await signTypedDataAsync({
         account: address,
-        domain,
+        domain: exchangeSignedDomain,
         types,
         primaryType: "Order",
         message: {
@@ -1504,16 +1503,16 @@ const useMarketplaceV2 = (nft: NFT) => {
     }
   };
 
-  const getOrderTypeIndex = (orderType: OrderType) => {
+  const getOrderTypeIndex = (orderType: string) => {
     switch (orderType) {
-      case OrderType.SINGLE:
+      case "SINGLE":
         return 0;
-      case OrderType.BULK:
+      case "BULK":
         return 1;
-      case OrderType.BID:
+      case "BID":
         return 2;
       default:
-        return 0;
+        return 4;
     }
   };
 
@@ -1607,8 +1606,8 @@ const useMarketplaceV2 = (nft: NFT) => {
     // if (!encodedData) return false;
 
     setIsSigningOrderData(true);
-    params.start = Math.floor(convertToUTCDateTS(params.start) / 1000);
-    params.end = Math.floor(convertToUTCDateTS(params.end) / 1000);
+    params.start = Math.floor(params.start / 1000);
+    params.end = Math.floor(params.end / 1000);
     const sig = await signSellOrderData(params);
     setIsSigningOrderData(false);
     if (!sig) {
@@ -1658,10 +1657,9 @@ const useMarketplaceV2 = (nft: NFT) => {
 
     // const encodedData = getBidOrderEncodedData(params, nft, marketData);
     // if (!encodedData) return false;
-
+    params.start = Math.floor(params.start / 1000);
+    params.end = Math.floor(params.end / 1000);
     setIsSigningOrderData(true);
-    params.start = Math.floor(convertToUTCDateTS(params.start) / 1000);
-    params.end = Math.floor(convertToUTCDateTS(params.end) / 1000);
     const sig = await signBidOrderData(params, nft, marketData);
     setIsSigningOrderData(false);
     if (!sig) {
@@ -1692,7 +1690,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         );
       }
     }
-    // alert(getOrderTypeIndex(order.orderType));
+
     await writeContract({
       abi,
       address: contractExchangeV2Test,
@@ -1729,7 +1727,7 @@ const useMarketplaceV2 = (nft: NFT) => {
               amount: BigInt("0"),
             },
             index: order.index,
-            proof: [],
+            proof: (order.proof as any) ?? [],
             root: order.root as Address,
             sig: order.sig as any,
           },
@@ -1841,7 +1839,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     } as const;
     const sellerSig = await signTypedDataAsync({
       account: address,
-      domain,
+      domain: exchangeSignedDomain,
       types,
       primaryType: "Order",
       message: {
@@ -1940,6 +1938,64 @@ const useMarketplaceV2 = (nft: NFT) => {
     });
   };
 
+  const generateBulkData = async (orders: FormState.SellNFT[]) => {
+    if (!address) return false;
+    const body = orders
+      .map((order, i) => {
+        if (!order.nft) return null;
+        const { collection } = order.nft;
+        const { address: collectionAddress } = collection;
+        const { end, price, quantity, quoteToken, start, salt } = order;
+        const makeAsset = {
+          assetType: getNftAssetType(),
+          contractAddress: collectionAddress,
+          value: BigInt(quantity).toString(),
+          id: nft.u2uId ?? nft.id,
+        };
+        const takeAsset = {
+          assetType: getTokenAssetType(quoteToken),
+          contractAddress: quoteToken,
+          value: parseUnits(order.totalPrice.toString(), 18),
+          id: BigInt(0).toString(),
+        };
+        const {
+          assetType: make_asset_type,
+          contractAddress: make_asset_address,
+          value: make_asset_value,
+          id: make_asset_id,
+        } = makeAsset;
+        const {
+          assetType: take_asset_type,
+          contractAddress: take_asset_address,
+          value: take_asset_value,
+          id: take_asset_id,
+        } = takeAsset;
+        return {
+          makeAssetType: make_asset_type,
+          makeAssetId: make_asset_id.toString(),
+          makeAssetAddress: make_asset_address,
+          makeAssetValue: make_asset_value.toString(),
+          taker: ADDRESS_ZERO,
+          takeAssetType: take_asset_type,
+          takeAssetAddress: take_asset_address,
+          takeAssetValue: take_asset_value.toString(),
+          takeAssetId: take_asset_id.toString(),
+          salt: salt.toString(),
+          start: start.toString(),
+          end: end.toString(),
+          orderType: "SINGLE",
+          price: parseUnits(price.toString(), 18).toString(),
+          totalPice: take_asset_value.toString(),
+          netPrice: parseUnits(order.netPrice.toString(), 18).toString(),
+          index: i,
+        };
+      })
+      .filter((item) => item !== null);
+    const response = await nextAPI.post("/order/generate-bulk-data", body);
+    console.log({ response });
+    return response.data.data;
+  };
+
   return {
     getERC20Allowance,
     createSellOrder,
@@ -1950,6 +2006,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     approveAll,
     buySingle,
     acceptBid,
+    generateBulkData,
     signSellOrderData,
     checkIfApprovedForAll,
     getOrderDetails,

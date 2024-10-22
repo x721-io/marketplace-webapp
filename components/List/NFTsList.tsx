@@ -132,7 +132,7 @@ export default function NFTsList({
 
           {items.map((item, i) => (
             <div className="h-full" key={i + "-" + item.u2uId}>
-              <NFTCard {...item} />
+              <NFTCard nft={item} />
             </div>
           ))}
           {isLoadMore &&

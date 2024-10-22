@@ -21,6 +21,7 @@
     "@openzeppelin/merkle-tree": "^1.0.7",
     "@rarible/types": "~0.9.16",
     "@types/dompurify": "^3.0.5",
+    "@wagmi/core": "^1.4.6",
     "abitype": "^1.0.6",
     "axios": "^1.6.1",
     "clsx": "^2.1.1",

@@ -17,18 +17,27 @@ import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
 import { useNFTFilterStore } from "@/store/filters/items/store";
+import Button from "@/components/Button";
+import { useUserStore } from "@/store/users/store";
 
-export default function NFTCard({
-  name,
-  id,
-  price,
-  sellStatus,
-  collection,
-  image,
-  animationUrl,
-  quoteToken,
-  creator,
-}: NFT) {
+type Props = {
+  nft: NFT;
+  canAddBulkList?: boolean;
+};
+
+export default function NFTCard({ nft, canAddBulkList = false }: Props) {
+  const {
+    name,
+    id,
+    price,
+    sellStatus,
+    collection,
+    image,
+    animationUrl,
+    quoteToken,
+    creator,
+  } = nft;
+  const { addToBulkList } = useUserStore();
   const gridMode = useNFTFilterStore((state) => state.gridMode);
   const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
@@ -142,12 +151,17 @@ export default function NFTCard({
       key={id}
       href={`/item/${collection.address}/${id}`}
       className={
-        "h-full flex flex-col rounded-xl px-2 py-2 gap-2 border border-1 hover:shadow-md border-surface transition-all"
+        "h-full flex flex-col rounded-xl px-2 py-2 gap-2 border border-1 hover:shadow-md border-surface transition-all relative"
       }
     >
+      <Button onClick={() => addToBulkList(item)} className="absolute right-0">
+        Add
+      </Button>
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
-        <Text className="text-black text-[1.05rem] py-2 font-bold whitespace-nowrap text-ellipsis overflow-hidden">{name}</Text>
+        <Text className="text-black text-[1.05rem] py-2 font-bold whitespace-nowrap text-ellipsis overflow-hidden">
+          {name}
+        </Text>
         {creator?.accountStatus && collection?.isVerified ? (
           <Icon name="verified" width={16} height={16} />
         ) : (

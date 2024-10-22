@@ -27,7 +27,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const userAddress = user?.publicKey;
-    console.log({ user });
     if (!userAddress) return;
     if (!filterStore[userAddress]) {
       filterStore.createFiltersForUser(user?.publicKey);

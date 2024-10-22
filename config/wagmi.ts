@@ -1,3 +1,4 @@
+
 import { configureChains, createConfig } from "wagmi";
 import {
   BLOCK_EXPLORER_URL,
@@ -5,10 +6,9 @@ import {
   NETWORK_NAME,
   RPC_URL,
 } from "@/config/constants";
-import { InjectedConnector } from "@wagmi/connectors/injected";
-import { MetaMaskConnector } from "@wagmi/connectors/metaMask";
 import { defineChain } from "viem";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { InjectedConnector } from "@wagmi/core";
 
 export const u2uChain = defineChain({
   id: Number(CHAIN_ID),
@@ -66,15 +66,15 @@ const injectedConnector = new InjectedConnector({
   },
 });
 
-const metaMaskConnector = new MetaMaskConnector({
-  chains: [u2uChain],
-  options: {
-    shimDisconnect: true,
-  },
-});
+// const metaMaskConnector = new ({
+//   chains: [u2uChain],
+//   options: {
+//     shimDisconnect: true,
+//   },
+// });
 
 export const wagmiConfig = createConfig({
   autoConnect: true,
   publicClient,
-  connectors: [injectedConnector, metaMaskConnector],
+  connectors: [injectedConnector],
 });
