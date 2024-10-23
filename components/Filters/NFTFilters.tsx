@@ -139,9 +139,12 @@ export default function NFTFilters({
               value={localFilters.priceMax}
               onChange={(e) => handleChange({ priceMax: e.target.value })}
             />
+          </div>
+          <div>
+            {" "}
             <Select
               options={tokenOptions}
-              containerClass="w-full"
+              containerClass="w-full pb-[40px]"
               scale="sm"
               value={localFilters.quoteToken}
               onChange={(e) =>
@@ -149,7 +152,6 @@ export default function NFTFilters({
               }
             />
           </div>
-
           <Button
             className="w-full"
             variant="secondary"

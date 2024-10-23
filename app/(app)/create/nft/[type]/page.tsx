@@ -432,6 +432,7 @@ export default function CreateNftPage() {
                                 className="w-full flex items-center gap-7"
                               >
                                 <Input
+                                  scale="sm"
                                   value={value[index].trait_type}
                                   containerClass="flex-1"
                                   placeholder="e.g. Size"
@@ -444,6 +445,7 @@ export default function CreateNftPage() {
                                   }
                                 />
                                 <Input
+                                  scale="sm"
                                   value={value[index].value}
                                   containerClass="flex-1"
                                   placeholder="e.g. M"
