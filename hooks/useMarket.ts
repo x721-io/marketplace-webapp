@@ -192,7 +192,7 @@ export const useMarketApproval = (nft: NFT) => {
     address: nft.collection.address,
     abi: contracts.erc721Base.abi,
     functionName: "approve",
-    args: [contracts.erc721Market.address, BigInt(nft.u2uId)],
+    args: [contracts.erc721Market.address, BigInt(nft.u2uId || nft.id)],
     value: BigInt(0) as any,
   });
 
