@@ -84,13 +84,12 @@ export default function TokenBalances() {
         </div>
 
         {Object.values(tokens).map((token, index) => {
-          // const balance = tokenBalances
-          //   ? formatUnits(
-          //       tokenBalances[index].result as BigNumberish,
-          //       token.decimal
-          //     )
-          //   : 0;
-          const balance = 1;
+          const balance = tokenBalances
+            ? formatUnits(
+                tokenBalances[index].result as BigNumberish,
+                token.decimal
+              )
+            : 0;
           return (
             <div
               className="flex flex-col gap-3 p-1 justify-between "
