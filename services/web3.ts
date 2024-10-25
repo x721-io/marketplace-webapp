@@ -40,6 +40,7 @@ async function write<
     const response = await waitForTransaction(tx);
     return response;
   } catch (err: any) {
+    console.log(err);
     const errMsg = await getWeb3ErrorMsg(err);
     throw new Error(errMsg);
   }

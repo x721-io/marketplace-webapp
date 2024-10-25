@@ -116,7 +116,7 @@ function CollectionsDesktop({
         if (value < 0) {
           return (
             <span className="text-[#E31B1B]">
-              -{parseFloat(value.toString()).toFixed(2)}%
+              {parseFloat(value.toString()).toFixed(2)}%
             </span>
           );
         }
@@ -164,7 +164,7 @@ function CollectionsDesktop({
         if (value < 0) {
           return (
             <span className="text-[#E31B1B]">
-              -{parseFloat(value.toString()).toFixed(2)}%
+              {parseFloat(value.toString()).toFixed(2)}%
             </span>
           );
         }

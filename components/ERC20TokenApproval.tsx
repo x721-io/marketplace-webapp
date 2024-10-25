@@ -56,8 +56,9 @@ export default function ERC20TokenApproval({
           Min
         </Button>
         <Input
-          className="text-center"
-          containerClass="flex-1"
+          className="text-center !flex-1"
+          containerClass="!flex-1"
+          scale="sm"
           register={registerAllowanceInput}
           onChange={onAllowanceInput}
         />

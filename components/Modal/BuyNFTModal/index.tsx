@@ -94,7 +94,6 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     nft.collection.type,
     parseUnits(price || "0", token?.decimal) + buyerFee
   );
-
   const formRules = {
     allowance: {
       required: true,
@@ -143,10 +142,11 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!saleData) return;
     setLoading(true);
     try {
-      await buyURC721UsingURC20(
-        quoteToken,
-        BigInt(saleData.price) + BigInt(buyerFee)
-      );
+      // await buyURC721UsingURC20(
+      //   quoteToken,
+      //   BigInt(saleData.price) + BigInt(buyerFee)
+      // );
+      await buyURC721UsingNative(BigInt(saleData.price) + BigInt(buyerFee));
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,

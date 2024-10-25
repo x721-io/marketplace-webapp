@@ -1,21 +1,11 @@
 "use client";
 
-import { formatDisplayedNumber } from "@/utils";
 import React from "react";
-import { formatEther, formatUnits } from "ethers";
 import Link from "next/link";
 import Text from "@/components/Text";
 import Image from "next/image";
-import Button from "../Button";
 import { CollectionStatisticItem as CollectionStatisticItemType } from "@/types";
-import {
-  classNames,
-  getCollectionAvatarImage,
-  getCollectionBannerImage,
-} from "@/utils/string";
-import useAuthStore from "@/store/auth/store";
-import Icon from "@/components/Icon";
-import MySpinner from "../X721UIKits/Spinner";
+import { getCollectionAvatarImage } from "@/utils/string";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowRightIcon from "../Icon/ArrowRight";
@@ -33,7 +23,7 @@ const CollectionStatisticItemMobile = ({
     if (value < 0) {
       return (
         <span className="text-[#E31B1B]">
-          -{parseFloat(value.toString()).toFixed(2)}%
+          {parseFloat(value.toString()).toFixed(2)}%
         </span>
       );
     }

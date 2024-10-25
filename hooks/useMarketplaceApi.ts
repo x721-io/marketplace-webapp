@@ -46,6 +46,7 @@ export const useMarketplaceApi = () => {
 
         axiosClient.defaults.headers.common.Authorization =
           response.bearerToken;
+
         return axiosClient.post(API_ENDPOINTS.PROFILE, params);
       },
 
