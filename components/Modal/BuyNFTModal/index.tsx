@@ -188,7 +188,11 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!saleData) return;
     setLoading(true);
     try {
-      await buyURC1155UsingURC20(saleData.operationId, quantity);
+      await buyURC1155UsingNative(
+        saleData.operationId,
+        BigInt(saleData.price) + BigInt(buyerFee),
+        quantity
+      );
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
