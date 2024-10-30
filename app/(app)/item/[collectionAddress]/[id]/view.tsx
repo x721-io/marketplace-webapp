@@ -49,7 +49,7 @@ export default function NFTView({ item }: { item: NFT }) {
               <NFTImage item={item} />
             </div>
           </div>
-          <div className="sticky left-0 flex-1 top-[40px]">
+          <div className="sticky z-[10] left-0 flex-1 top-[40px]">
             <NFTMarketData
               nft={item}
               marketData={marketData}

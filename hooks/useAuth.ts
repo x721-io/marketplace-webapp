@@ -11,8 +11,10 @@ import { CHAIN_ID } from "@/config/constants";
 import { AuthenticationContext } from "@/app/auth-provider";
 import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
 import { useConnectAPI } from "./useMutate";
+import { useUserStore } from "@/store/users/store";
 
 export const useAuth = () => {
+  const { clearBulkList } = useUserStore();
   const api = useMarketplaceApi();
   const { isAuthenticated, credentials } = useContext(AuthenticationContext);
   const { setProfile } = useAuthStore();
@@ -89,6 +91,7 @@ export const useAuth = () => {
     await disconnect();
     clearAuthCookiesAction();
     clearProfile();
+    clearBulkList();
   };
 
   return {

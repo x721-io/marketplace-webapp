@@ -14,6 +14,8 @@ import { useFilterByUser } from "@/store/filters/byUser/store";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import MySpinner from "@/components/X721UIKits/Spinner";
 import { useGetProfile } from "@/hooks/useQuery";
+import { useUserStore } from "@/store/users/store";
+import SellBulkFooter from "@/components/SellBulkFooter";
 
 export default function ProfilePage() {
   const { id } = useParams();
@@ -24,6 +26,7 @@ export default function ProfilePage() {
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
   const [currTabIndex, setCurrTabIndex] = useState(0);
   const { data: user, isLoading, error, mutate } = useGetProfile(id as string);
+  const { bulkList } = useUserStore();
 
   useEffect(() => {
     const userAddress = user?.publicKey;
@@ -124,6 +127,7 @@ export default function ProfilePage() {
         />
         <Activities isShow={currTabIndex === 4} wallet={user.publicKey} />
       </div>
+      <SellBulkFooter />
     </div>
   );
 }

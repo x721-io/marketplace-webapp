@@ -9,6 +9,7 @@ import {
 import { defineChain } from "viem";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { InjectedConnector } from "@wagmi/core";
+import { MetaMaskConnector } from '@wagmi/core/connectors/metaMask'
 
 export const u2uChain = defineChain({
   id: Number(CHAIN_ID),
@@ -66,15 +67,16 @@ const injectedConnector = new InjectedConnector({
   },
 });
 
-// const metaMaskConnector = new ({
-//   chains: [u2uChain],
-//   options: {
-//     shimDisconnect: true,
-//   },
-// });
+const metaMaskConnector = new MetaMaskConnector({
+  chains: [u2uChain],
+  options: {
+    shimDisconnect: true,
+    
+  },
+});
 
 export const wagmiConfig = createConfig({
   autoConnect: true,
   publicClient,
-  connectors: [injectedConnector],
+  connectors: [injectedConnector, metaMaskConnector],
 });

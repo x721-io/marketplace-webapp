@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Text from "@/components/Text";
 import { formatUnits } from "ethers";
@@ -11,7 +11,7 @@ import {
   ALLOWED_VIDEO_TYPES,
 } from "@/config/constants";
 import { formatDisplayedNumber } from "@/utils";
-import { NFT } from "@/types";
+import { FormState, NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
@@ -19,13 +19,15 @@ import BlurImage from "@/components/X721UIKits/BlurImage";
 import { useNFTFilterStore } from "@/store/filters/items/store";
 import Button from "@/components/Button";
 import { useUserStore } from "@/store/users/store";
+import { tokens } from "@/config/tokens";
+import { usePathname, useRouter } from "next/navigation";
+import useAuthStore from "@/store/auth/store";
 
 type Props = {
   nft: NFT;
-  canAddBulkList?: boolean;
 };
 
-export default function NFTCard({ nft, canAddBulkList = false }: Props) {
+export default function NFTCard({ nft }: Props) {
   const {
     name,
     id,
@@ -37,10 +39,14 @@ export default function NFTCard({ nft, canAddBulkList = false }: Props) {
     quoteToken,
     creator,
   } = nft;
-  const { addToBulkList } = useUserStore();
+  const pathName = usePathname();
+  const { addOrRemoveBulkList, bulkList } = useUserStore();
+  const [isOwnUserPage, setIsOwnUserPage] = useState(false);
   const gridMode = useNFTFilterStore((state) => state.gridMode);
   const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
+  const { profile } = useAuthStore();
+  const router = useRouter();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const fileType = useMemo(() => {
     if (!fileExtension) return "image";
@@ -146,17 +152,68 @@ export default function NFTCard({ nft, canAddBulkList = false }: Props) {
     }
   };
 
+  const handleAddBulkList = () => {
+    if (!nft) return;
+    const nftWithOrderData: NFT & FormState.SellNFT = {
+      ...nft,
+      id: nft.u2uId ? nft.u2uId : nft.id,
+      daysRange: "30_DAYS",
+      quantity: 1,
+      start: new Date().getTime(),
+      end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+      quoteToken: tokens["u2u"].address,
+      price: 0,
+      netPrice: 0,
+      totalPrice: 0,
+      salt: "0",
+    };
+    addOrRemoveBulkList(nftWithOrderData);
+  };
+
+  useEffect(() => {
+    if (!profile) return;
+    if (
+      pathName.split("/")[1] === "user" &&
+      pathName.split("/")[2] === profile.id
+    ) {
+      setIsOwnUserPage(true);
+    }
+  }, [pathName, profile]);
+
   return (
-    <Link
+    <div
       key={id}
-      href={`/item/${collection.address}/${id}`}
+      onClick={(e) => router.push(`/item/${collection.address}/${id}`)}
+      style={{
+        borderColor:
+          isOwnUserPage &&
+          bulkList.find((ele) =>
+            nft.u2uId ? ele.id === nft.u2uId : ele.id === nft.id
+          )
+            ? "#42A5F5"
+            : "rgba(0,0,0,0.05)",
+        borderWidth: "2.5px",
+      }}
       className={
-        "h-full flex flex-col rounded-xl px-2 py-2 gap-2 border border-1 hover:shadow-md border-surface transition-all relative"
+        "group h-full flex flex-col rounded-xl px-2 py-2 gap-2 border hover:shadow-md transition-all relative box-border"
       }
     >
-      <Button onClick={() => addToBulkList(item)} className="absolute right-0">
-        Add
-      </Button>
+      {isOwnUserPage && (
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddBulkList();
+          }}
+          className="absolute right-0 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-100"
+        >
+          {!bulkList.find((ele) =>
+            nft.u2uId ? ele.id === nft.u2uId : ele.id === nft.id
+          )
+            ? "Add"
+            : "Remove"}{" "}
+          {bulkList.length}
+        </Button>
+      )}
       {renderMedia()}
       <div className="flex gap-1 items-center px-1">
         <Text className="text-black text-[1.05rem] py-2 font-bold whitespace-nowrap text-ellipsis overflow-hidden">
@@ -170,6 +227,6 @@ export default function NFTCard({ nft, canAddBulkList = false }: Props) {
       </div>
 
       {renderNFTData()}
-    </Link>
+    </div>
   );
 }

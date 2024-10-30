@@ -21,13 +21,15 @@ export const useUserStore = create(
               [key]: text,
             },
           })),
-        addToBulkList: (nft) =>
+        addOrRemoveBulkList: (_nft) =>
           set((state) => ({
-            bulkList: [...state.bulkList, nft],
+            bulkList: !state.bulkList.find((nft) => nft.id === _nft.id)
+              ? [...state.bulkList, _nft]
+              : state.bulkList.filter((nft) => nft.id !== _nft.id),
           })),
-        removeFromBulkList: (nftId: string) =>
+        clearBulkList: () =>
           set((state) => ({
-            bulkList: state.bulkList.filter((nft) => nft.id !== nftId),
+            bulkList: [],
           })),
       }),
       { name: "user-storage" }
