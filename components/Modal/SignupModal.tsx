@@ -40,6 +40,9 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
         closeButton: true,
       });
       onSignupSuccess?.(credentials?.accessToken);
+      if (onClose) {
+        onClose();
+      }
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`);
       console.error("Error signing up:", e);

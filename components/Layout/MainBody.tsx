@@ -35,5 +35,5 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
     }
   }, [chain, switchNetwork]);
 
-  return <div className="flex-1">{children}</div>;
+  return <div className="flex-1 tablet:mt-[88px] mt-14">{children}</div>;
 }

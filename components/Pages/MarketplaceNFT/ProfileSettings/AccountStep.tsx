@@ -109,8 +109,8 @@ export default function AccountStep() {
       <div className="desktop:mt-5 mt-7 flex gap-8 w-full flex-col">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex gap-1 flex-col mb-4">
-            <label className="block text-base font-semibold text-primary">
-              Email
+            <label className=" text-base font-semibold text-primary flex items-center gap-1">
+              Email <p className="text-red-700">*</p>
             </label>
             <Text className="text-tertiary" variant="body-12">
               Your email for marketplace notifications

@@ -56,12 +56,7 @@ const { publicClient } = configureChains(
 const injectedConnector = new InjectedConnector({
   chains: [u2uChain],
   options: {
-    name: (detectedName) =>
-      `Injected (${
-        typeof detectedName === "string"
-          ? detectedName
-          : detectedName.join(", ")
-      })`,
+    name: "Injected Wallet",
     shimDisconnect: true,
   },
 });

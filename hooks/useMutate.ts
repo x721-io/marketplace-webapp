@@ -28,7 +28,7 @@ export const useUpdateProfile = () => {
     API_ENDPOINTS.PROFILE,
     async (_: string, { arg }: { arg: APIParams.UpdateProfile }) => {
       const response = await nextAPI.post(API_ENDPOINTS.PROFILE, arg);
-      return response.data.data;
+      return response.data.data as User;
     }
   );
   return {
@@ -298,6 +298,29 @@ export const useConnectAPI = () => {
     ) => {
       const response = await nextAPI.post(API_ENDPOINTS.CONNECT, arg);
       return response.data.data as APIResponse.Connect;
+    }
+  );
+  return {
+    trigger,
+    data,
+    isMutating,
+    reset,
+  };
+};
+
+export const useVerifyAccount = () => {
+  const { trigger, data, isMutating, reset } = useSWRMutation(
+    API_ENDPOINTS.CONNECT,
+    async (
+      _: string,
+      {
+        arg,
+      }: {
+        arg: any;
+      }
+    ) => {
+      const response = await nextAPI.post(API_ENDPOINTS.LIST_VERIFY, arg);
+      return response.data.data as APIResponse.VerifyAccount;
     }
   );
   return {

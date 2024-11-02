@@ -18,7 +18,7 @@ export default function MainHeader() {
 
   return (
     <nav
-      className={`h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 desktop:px-20 desktop:py-5 tablet:px-10 tablet:py-5 px-4 py-3 `}
+      className={`fixed top-0 w-full z-50 h-[${HEADER_HEIGHT}px] bg-white border-gray-200 dark:bg-gray-900 desktop:px-20 desktop:py-5 tablet:px-10 tablet:py-5 px-4 py-3`}
     >
       <div className="flex flex-wrap items-center justify-between mx-auto ">
         <div className="flex items-center gap-6">

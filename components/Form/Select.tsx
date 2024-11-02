@@ -33,7 +33,7 @@ export default function Select({
   ...rest
 }: Props) {
   const baseClass =
-    "bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] w-full";
+    "bg-surface-soft outline-none placeholder:text-tertiary focus-visible:ring-[0.5px] tablet:w-full";
 
   const scaleClass = useMemo(() => {
     switch (scale) {
@@ -50,7 +50,7 @@ export default function Select({
         );
       case "sm":
         return classNames(
-          "text-body-14 rounded-xl min-w-60 h-10 px-3 py-1",
+          "text-body-14 rounded-xl min-w-20 h-10 px-3 py-1",
           !!prependIcon && "ps-9"
         );
     }
@@ -70,7 +70,7 @@ export default function Select({
   return (
     <div
       className={classNames(
-        "flex items-center relative w-auto",
+        "flex items-center relative tablet:w-auto",
         containerClass
       )}
     >

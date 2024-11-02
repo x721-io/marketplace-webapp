@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Text from "@/components/Text";
 import { formatDisplayedNumber } from "@/utils";
@@ -22,12 +22,22 @@ export default function ProfilePage() {
   const [saleAmount, setSaleAmount] = useState(0);
   const [createdAmount, setCreatedAmount] = useState(0);
   const [createdCollectionAmount, setCreatedCollectionAmount] = useState(0);
-  const [currTabIndex, setCurrTabIndex] = useState(0);
   const { data: user, isLoading, error, mutate } = useGetProfile(id as string);
+
+  //handle back current tab index
+  const storedTabIndex = useMemo(() => {
+    const savedIndex = sessionStorage.getItem("profilePageTabIndex");
+    return savedIndex ? parseInt(savedIndex, 10) : 0;
+  }, []);
+
+  const [currTabIndex, setCurrTabIndex] = useState(storedTabIndex);
+
+  useEffect(() => {
+    sessionStorage.setItem("profilePageTabIndex", currTabIndex.toString());
+  }, [currTabIndex]);
 
   useEffect(() => {
     const userAddress = user?.publicKey;
-    console.log({ user });
     if (!userAddress) return;
     if (!filterStore[userAddress]) {
       filterStore.createFiltersForUser(user?.publicKey);

@@ -67,6 +67,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   }, []);
 
   useEffect(() => {
+    if (totalItem === 0) return;
     if (scrollRef && scrollRef.current) {
       if (currentIndex < totalItem) {
         const children = scrollRef.current.children;
@@ -80,7 +81,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
         setCurrentIndex(0);
       }
     }
-  }, [currentIndex]);
+  }, [currentIndex, totalItem]);
 
   const handlePrev = () => {
     if (scrollRef && scrollRef.current) {

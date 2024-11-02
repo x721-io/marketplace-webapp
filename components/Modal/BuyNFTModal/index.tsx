@@ -368,6 +368,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                     Quantity
                   </Text>
                   <Input
+                    type="number"
                     maxLength={3}
                     size={3}
                     error={!!errors.quantity}
