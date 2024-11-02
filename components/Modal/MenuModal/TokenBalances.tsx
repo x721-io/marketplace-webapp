@@ -17,6 +17,7 @@ import { waitForTransaction } from "@wagmi/core";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import { Web3Functions } from "@/services/web3";
 
 export default function TokenBalances() {
   const [claiming, setClaiming] = useState(false);
@@ -55,8 +56,13 @@ export default function TokenBalances() {
   const handleClaimToken = async () => {
     try {
       setClaiming(true);
-      const { hash } = await writeAsync({ args: [wu2uBalance] });
-      await waitForTransaction({ hash });
+      await Web3Functions.writeContract({
+        ...tokens.wu2u,
+        abi: WETH_ABI,
+        functionName: "withdraw",
+        args: [wu2uBalance],
+      });
+      toast.success("Convert successfully");
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`, {
         autoClose: 1000,

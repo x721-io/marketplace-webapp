@@ -258,8 +258,8 @@ export default function CreateNftPage() {
           <div className="flex flex-col gap-4 p-4">
             {/* Upload file */}
             <div>
-              <Text className="text-body-16 font-semibold mb-1">
-                Upload file
+              <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                Upload file <p className="text-red-700">*</p>
               </Text>
               <Controller
                 name="media"
@@ -278,8 +278,8 @@ export default function CreateNftPage() {
             </div>
             {isNonImageNFT && (
               <div>
-                <Text className="text-body-16 font-semibold mb-1">
-                  Upload Cover Image
+                <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                  Upload Cover Image <p className="text-red-700">*</p>
                 </Text>
                 <Controller
                   name="media"
@@ -365,8 +365,8 @@ export default function CreateNftPage() {
             </div>
             {/* Name */}
             <div>
-              <Text className="text-body-16 font-semibold mb-1">
-                Display name
+              <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                Display name <p className="text-red-700">*</p>
               </Text>
               <Input
                 error={!!errors.name}
@@ -389,7 +389,9 @@ export default function CreateNftPage() {
             </div>
             {/* Royalties */}
             <div>
-              <Text className="text-body-16 font-semibold mb-1">Royalties</Text>
+              <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                Royalties <p className="text-red-700">*</p>
+              </Text>
               <Input
                 error={!!errors.royalties}
                 register={register("royalties", formRulesCreateNFT.royalties)}
@@ -399,8 +401,8 @@ export default function CreateNftPage() {
 
             {type === "ERC1155" && (
               <div>
-                <Text className="text-body-16 font-semibold mb-1">
-                  Number of copies
+                <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                  Number of copies <p className="text-red-700">*</p>
                 </Text>
                 <Input
                   error={!!errors.amount}

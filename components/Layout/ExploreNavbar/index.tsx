@@ -94,6 +94,19 @@ export default function ExploreSectionNavbar() {
     }
   }, [pathname, collectionSearchText, nftSearchText, userSearchText]);
 
+  const placeholder = useMemo(() => {
+    switch (true) {
+      case pathname.includes("collections"):
+        return "Search Collections";
+      case pathname.includes("users"):
+        return "Search Users";
+      case pathname.includes("items"):
+        return "Search NFTs";
+      default:
+        return "";
+    }
+  }, [pathname]);
+
   const handleInputText = (value: any) => {
     switch (true) {
       case pathname.includes("collections"):
@@ -224,11 +237,12 @@ export default function ExploreSectionNavbar() {
           ))}
         </MyTabs.Group>
       </div>
-      <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
+      <div className="relative flex-1 order-2 desktop:order-3 tablet:min-w-[180px]">
         <Input
           onChange={(e) => handleInputText(e.target.value)}
           value={searchText}
           className="py-4 h-14"
+          placeholder={placeholder}
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
         />

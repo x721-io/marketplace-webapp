@@ -65,6 +65,7 @@ export default function SignConnectMessageModal({
       console.error("Error signing connect message:", e);
     } finally {
       setIsAuthenticating(false);
+      onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
@@ -116,22 +117,22 @@ export default function SignConnectMessageModal({
             </div>
           </>
         );
-      case isLoading:
-      default:
-        return (
-          <>
-            <Text className="font-semibold text-primary text-center text-heading-sm">
-              Loading...
-            </Text>
-            <Text className="text-secondary text-center" variant="body-18">
-              Sign the message in your wallet MetaMask to sign in safely
-            </Text>
-            <MySpinner />
-            <Button className="w-full" variant="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-          </>
-        );
+      // case isLoading:
+      // default:
+      //   return (
+      //     <>
+      //       <Text className="font-semibold text-primary text-center text-heading-sm">
+      //         Loading...
+      //       </Text>
+      //       <Text className="text-secondary text-center" variant="body-18">
+      //         Sign the message in your wallet MetaMask to sign in safely
+      //       </Text>
+      //       <MySpinner />
+      //       <Button className="w-full" variant="secondary" onClick={onClose}>
+      //         Cancel
+      //       </Button>
+      //     </>
+      //   );
     }
   };
 

@@ -50,7 +50,7 @@ export default function Button({
           "text-body-14 rounded-xl",
           variant === "icon"
             ? "p-3 rounded-full w-fit"
-            : "px-5 py-3 h-11 min-w-[120px]"
+            : "px-5 py-3 h-11 tablet:min-w-[120px]"
         );
     }
   }, [scale, variant]);
