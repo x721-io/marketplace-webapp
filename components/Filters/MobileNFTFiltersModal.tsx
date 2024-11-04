@@ -110,6 +110,7 @@ export default function MobileNFTFiltersModal({
 
             <div className="flex items-center gap-4 mb-4">
               <Input
+                type="number"
                 containerClass="w-24"
                 scale="sm"
                 placeholder="Min"
@@ -118,6 +119,7 @@ export default function MobileNFTFiltersModal({
               />
               <Text className="text-primary">to</Text>
               <Input
+                type="number"
                 containerClass="w-24"
                 scale="sm"
                 placeholder="Max"
@@ -126,7 +128,7 @@ export default function MobileNFTFiltersModal({
               />
               <Select
                 options={tokenOptions}
-                containerClass="tablet:w-2/3 w-full"
+                containerClass="tablet:w-2/3"
                 scale="sm"
                 value={localFilters.quoteToken}
                 onChange={(e) =>

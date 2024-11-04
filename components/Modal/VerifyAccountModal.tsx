@@ -58,7 +58,12 @@ export default function VerifyAccountModal({
                   Object.entries(reponseVerify?.listVerify).map(
                     ([key, value]) => (
                       <li key={key} className="flex gap-2 items-center">
-                        <Icon name="verify-active" width={16} height={16} />
+                        {value ? (
+                          <Icon name="verify-active" width={16} height={16} />
+                        ) : (
+                          <Icon name="verify-disable" width={16} height={16} />
+                        )}
+                        <>{value}</>
                         <Text>{`${key} is required`}</Text>
                       </li>
                     )

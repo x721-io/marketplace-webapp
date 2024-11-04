@@ -60,7 +60,7 @@ const ModalRoot: React.FC<MyModalProps> = ({
             borderRadius: position === "center" ? "8px" : 0,
             ...bodyContainerStyle,
           }}
-          className="bg-[white] w-[450px] py-[25px] max-[450px]:w-[92%]"
+          className="bg-[white] w-[450px] max-[450px]:w-[92%]"
         >
           {children}
         </div>
@@ -73,8 +73,8 @@ const ModalHeader = ({ children }: { children: React.ReactNode }) => {
   const { onClose } = useContext(MyModalContext);
 
   return (
-    <div className="w-full flex items-center justify-between px-[20px] pb-[20px] font-bold text-[1.2rem] border-solid border-b-[1px] border-[rbga(0,0,0,0.5)]">
-      <div className="flex-1">{children}</div>
+    <div className="w-full p-5 flex items-center justify-between font-bold text-[1.2rem] border-solid border-b-[1px] border-[rbga(0,0,0,0.5)]">
+      <div className="flex-1 ">{children}</div>
       <div onClick={onClose}>
         <CloseIcon color="black" width={20} />
       </div>
@@ -90,7 +90,7 @@ const ModalBody = ({
   className?: string;
 }) => {
   return (
-    <div className={`w-full px-[20px] pt-[20px] ${className}`}>{children}</div>
+    <div className={`w-full tablet:p-10 p-5 ${className}`}>{children}</div>
   );
 };
 

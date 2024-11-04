@@ -107,11 +107,11 @@ export default function CreateNFTCollectionPage() {
       toast.update(toastId, { render: "Sending transaction", type: "info" });
 
       try {
-        const response = await createCollection(type, args);
+        const hash = await createCollection(type, args);
         await createCollectionMutate({
           ...data,
           type,
-          txCreationHash: response.transactionHash,
+          txCreationHash: hash,
           creator,
         });
 
@@ -224,8 +224,9 @@ export default function CreateNFTCollectionPage() {
           <div className="flex flex-col gap-4 p-4">
             {/* Upload file */}
             <div>
-              <Text className="text-base font-semibold mb-1">
-                {t("FormTitle.CollectionImage")}
+              <Text className="text-base font-semibold mb-1 flex items-center gap-1">
+                {t("FormTitle.CollectionImage")}{" "}
+                <p className="text-red-700">*</p>
               </Text>
               <Controller
                 name="avatar"
@@ -245,8 +246,8 @@ export default function CreateNFTCollectionPage() {
             </div>
             {/* Name */}
             <div>
-              <Text className="text-base font-semibold mb-1">
-                {t("FormTitle.DisplayName")}
+              <Text className="text-base font-semibold mb-1 flex items-center gap-1">
+                {t("FormTitle.DisplayName")} <p className="text-red-700">*</p>
               </Text>
               <Input
                 register={register("name", formRulesCreateCollection.name)}
@@ -255,8 +256,8 @@ export default function CreateNFTCollectionPage() {
             </div>
             {/* Symbol */}
             <div>
-              <Text className="text-base font-semibold mb-1">
-                {t("FormTitle.Symbol")}
+              <Text className="text-base font-semibold mb-1 flex items-center gap-1">
+                {t("FormTitle.Symbol")} <p className="text-red-700">*</p>
               </Text>
               <Input
                 register={register("symbol", formRulesCreateCollection.symbol)}

@@ -44,6 +44,7 @@ export default function CollectionFilters({
         <Collapsible isOpen header="Floor Price" className="rounded-2xl border">
           <div className="flex items-center gap-4 mb-4">
             <Input
+              type="number"
               value={localFilters.min}
               onChange={(e) =>
                 setLocalFilters((state) => ({ ...state, min: e.target.value }))
@@ -54,6 +55,7 @@ export default function CollectionFilters({
             />
             <Text className="text-primary">to</Text>
             <Input
+              type="number"
               value={localFilters.max}
               onChange={(e) =>
                 setLocalFilters((state) => ({ ...state, max: e.target.value }))

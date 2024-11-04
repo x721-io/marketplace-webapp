@@ -8,10 +8,16 @@ import { useMemo, useState } from "react";
 import { formatDisplayedNumber, getRoundAbi } from "@/utils";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { toast } from "react-toastify";
-import { Address, useAccount, useBalance, useContractReads } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useContractReads,
+  useReadContracts,
+} from "wagmi";
 import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
 import { contracts } from "@/config/contracts";
+import { Address } from "abitype";
 
 interface Props {
   eligibleStatus: boolean;
@@ -24,19 +30,20 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
   const { address } = useAccount();
   const { data: balanceInfo } = useBalance({
     address: address,
-    watch: true,
-    enabled: !!address,
+    query: {
+      enabled: !!address,
+    },
   });
 
   const [amount, setAmount] = useState(1);
   const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     contracts: [
       {
         address: round.address,
         abi: getRoundAbi(round),
         functionName: "getAmountBought",
-        args: [address],
+        args: [address as Address],
       },
       {
         address: round.address,
@@ -45,10 +52,11 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
         args: [],
       },
     ],
-    watch: true,
-    enabled: !!address,
-    select: (data) => {
-      return data.map((item) => item.result);
+    query: {
+      enabled: !!address,
+      select: (data) => {
+        return data.map((item) => item.result);
+      },
     },
   });
 
@@ -69,10 +77,11 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
         args: [address as Address],
       },
     ],
-    watch: true,
-    enabled: !!address,
-    select: (data) => {
-      return data.map((item) => item.result);
+    query: {
+      enabled: !!address,
+      select: (data) => {
+        return data.map((item) => item.result);
+      },
     },
   });
 
@@ -148,8 +157,7 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
         transactionResponse = await onBuyNFT(amount);
       }
 
-      const { waitForTransaction, hash } = transactionResponse;
-      await waitForTransaction();
+      const hash = transactionResponse;
       toast.success("Your item has been successfully purchased!");
       await api.crawlNFTInfo({
         txCreation: hash,

@@ -19,7 +19,6 @@ export default function TimeframeDropdown({ round }: Props) {
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getTimeframesLength",
-    watch: true,
   });
 
   const { data: timeframes } = useContractReads({
@@ -34,12 +33,13 @@ export default function TimeframeDropdown({ round }: Props) {
         args: [timeframeIndex],
       };
     }),
-    enabled: Number(timeframesLength) > 0,
-    watch: true,
-    select: (data) =>
-      data.map((item) => {
-        return item.result as unknown as Timeframe;
-      }),
+    query: {
+      enabled: Number(timeframesLength) > 0,
+      select: (data) =>
+        data.map((item) => {
+          return item.result as unknown as Timeframe;
+        }),
+    },
   });
 
   useEffect(() => {

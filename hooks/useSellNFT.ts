@@ -28,7 +28,7 @@ export const useSellURC721 = (nft: NFT) => {
 export const useSellURC1155 = (nft: NFT) => {
   return async (price: number, quoteToken: Address, quantity: any) => {
     try {
-      const response = await Web3Functions.writeContract({
+      const receipt = await Web3Functions.writeContract({
         abi: contracts.erc1155Market.abi,
         address: contracts.erc1155Market.address,
         functionName: "createAsk",
@@ -40,7 +40,7 @@ export const useSellURC1155 = (nft: NFT) => {
           parseEther(String(price)),
         ],
       });
-      return response;
+      return receipt.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -50,7 +50,7 @@ export const useSellURC1155 = (nft: NFT) => {
 export const useCancelSellURC721 = (nft: NFT) => {
   return async () => {
     try {
-      const response = await Web3Functions.writeContract({
+      const receipt = await Web3Functions.writeContract({
         abi: contracts.erc721Market.abi,
         address: contracts.erc721Market.address,
         functionName: "cancelAsk",
@@ -59,7 +59,7 @@ export const useCancelSellURC721 = (nft: NFT) => {
           nft.u2uId ? BigInt(nft.u2uId) : BigInt(nft.id),
         ],
       });
-      return response;
+      return receipt.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -69,13 +69,13 @@ export const useCancelSellURC721 = (nft: NFT) => {
 export const useCancelSellURC1155 = () => {
   return async (operationId: string) => {
     try {
-      const response = await Web3Functions.writeContract({
+      const receipt = await Web3Functions.writeContract({
         abi: contracts.erc1155Market.abi,
         address: contracts.erc1155Market.address,
         functionName: "cancelAsk",
         args: [BigInt(operationId)],
       });
-      return response;
+      return receipt.transactionHash;
     } catch (err: any) {
       throw err;
     }

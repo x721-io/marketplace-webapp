@@ -1,4 +1,3 @@
-import { Address, erc20ABI, useContractRead } from "wagmi";
 import { useMemo } from "react";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
@@ -6,6 +5,9 @@ import { AssetType } from "@/types";
 import { tokens } from "@/config/tokens";
 import { isAddress } from "ethers";
 import { Web3Functions } from "@/services/web3";
+import { Address } from "abitype";
+import { useReadContract } from "wagmi";
+import { erc20Abi } from "viem";
 
 export const useMarketApproveERC20 = (
   token: Address,
@@ -16,13 +18,12 @@ export const useMarketApproveERC20 = (
   const marketContract =
     type === "ERC721" ? contracts.erc721Market : contracts.erc1155Market;
 
-  const { data: allowance, isLoading: isFetchingApproval } = useContractRead({
+  const { data: allowance, isLoading: isFetchingApproval } = useReadContract({
     address: token,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "allowance",
     args: [wallet as Address, marketContract.address],
-    enabled: !!isAddress,
-    watch: true,
+    query: { enabled: !!isAddress },
   });
 
   const isTokenApproved = useMemo(() => {
@@ -34,12 +35,12 @@ export const useMarketApproveERC20 = (
   const onApproveToken = async (allowance: bigint) => {
     try {
       const response = await Web3Functions.writeContract({
-        abi: erc20ABI,
+        abi: erc20Abi,
         address: token,
         functionName: "approve",
         args: [marketContract.address, allowance],
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }

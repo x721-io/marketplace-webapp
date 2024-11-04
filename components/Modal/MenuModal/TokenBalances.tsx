@@ -3,10 +3,7 @@ import {
   useAccount,
   useBalance,
   useBlockNumber,
-  useContractReads,
-  useContractWrite,
   useReadContracts,
-  useWriteContract,
 } from "wagmi";
 import Image from "next/image";
 import { BigNumberish, formatUnits } from "ethers";
@@ -14,14 +11,13 @@ import { formatDisplayedNumber } from "@/utils";
 import Button from "@/components/Button";
 import WETH_ABI from "@/abi/WETH";
 import { useEffect, useMemo, useState } from "react";
-import { waitForTransaction, waitForTransactionReceipt } from "@wagmi/core";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { Address } from "abitype";
 import { erc20Abi } from "viem";
-import { config } from "@/config/wagmi";
 import { useQueryClient } from "@tanstack/react-query";
+import { Web3Functions } from "@/services/web3";
 
 export default function TokenBalances() {
   const queryClient = useQueryClient();
@@ -51,18 +47,16 @@ export default function TokenBalances() {
     address,
   });
 
-  const { writeContractAsync } = useWriteContract();
-
   const handleClaimToken = async () => {
     try {
       setClaiming(true);
-      const hash = await writeContractAsync({
+      await Web3Functions.writeContract({
         ...tokens.wu2u,
         abi: WETH_ABI,
         functionName: "withdraw",
         args: [wu2uBalance],
       });
-      await waitForTransactionReceipt(config, { hash });
+      toast.success("Convert successfully");
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`, {
         autoClose: 1000,

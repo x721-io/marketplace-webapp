@@ -71,13 +71,13 @@ export const useAuth = () => {
       if (!profile) return;
       setProfile(profile);
     },
-    [bearerToken, address]
+    [bearerToken, setProfile]
   );
 
   const onVerifyAccount = useCallback(async () => {
     if (!bearerToken) return;
     return api.verifyAccount();
-  }, [bearerToken, address]);
+  }, [bearerToken]);
 
   const onResendEmail = useCallback(
     async (params: APIParams.ResendVerifyMail) => {

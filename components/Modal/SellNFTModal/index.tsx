@@ -36,6 +36,8 @@ export default function SellNFTModal({
 }: Props) {
   const api = useMarketplaceApi();
   const [loading, setLoading] = useState(false);
+  const [loadingForAll, setLoadingForAll] = useState(false);
+
   const type = nft.collection.type;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const ownerData = useMemo(() => {
@@ -182,7 +184,7 @@ export default function SellNFTModal({
 
   const handleApproveTokenForAll = async () => {
     const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
+    setLoadingForAll(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
       await onApproveTokenForAll();
@@ -203,7 +205,7 @@ export default function SellNFTModal({
         isLoading: false,
       });
     } finally {
-      setLoading(false);
+      setLoadingForAll(false);
     }
   };
 
@@ -304,7 +306,8 @@ export default function SellNFTModal({
               </Button>
             ) : (
               <NFTApproval
-                loading={loading}
+                loadingForSingle={loading}
+                loadingForAll={loadingForAll}
                 nft={nft}
                 isMarketContractApprovedToken={isMarketContractApprovedToken}
                 handleApproveTokenForAll={handleApproveTokenForAll}

@@ -12,7 +12,11 @@ import useAuthStore from "@/store/auth/store";
 import { AssetType, NFT } from "@/types";
 import { useTransactionStatus } from "@/hooks/useTransactionStatus";
 import { isAddress, parseEther } from "ethers";
-import { readContract, waitForTransactionReceipt } from "@wagmi/core";
+import {
+  getBalance,
+  readContract,
+  waitForTransactionReceipt,
+} from "@wagmi/core";
 import { tokens } from "@/config/tokens";
 import { Address } from "abitype";
 import { config } from "@/config/wagmi";
@@ -232,6 +236,7 @@ export const useMarketTokenApproval = (
   type: AssetType,
   totalCost: bigint
 ) => {
+  const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const marketContract =
@@ -252,7 +257,7 @@ export const useMarketTokenApproval = (
   }, [allowance, token, totalCost]);
 
   const onApproveToken = async (allowance: bigint) => {
-    const { data } = useBalance();
+    if (!address) return;
     const txHash = await writeContractAsync({
       abi: erc20Abi,
       address: token,

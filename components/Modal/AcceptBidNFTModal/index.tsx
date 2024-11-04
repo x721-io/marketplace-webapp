@@ -15,6 +15,7 @@ import { useAcceptBidURC1155, useAcceptBidURC721 } from "@/hooks/useBidNFT";
 import NFTApproval from "@/components/NFTApproval";
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+
 interface Props extends MyModalProps {
   nft: NFT;
   bid?: MarketEvent;
@@ -39,6 +40,8 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   ]);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
+  const [loadingForAll, setLoadingForAll] = useState(false);
+
   const type = nft?.collection.type;
   const onAcceptBidURC721 = useAcceptBidURC721(nft);
   const onAcceptBidURC1155 = useAcceptBidURC1155();
@@ -126,7 +129,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
 
   const handleApproveTokenForAll = async () => {
     const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
+    setLoadingForAll(true);
     try {
       toast.update(toastId, { render: "Sending token", type: "info" });
       await onApproveTokenForAll();
@@ -147,17 +150,17 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         isLoading: false,
       });
     } finally {
-      setLoading(false);
+      setLoadingForAll(false);
       reset();
     }
   };
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
-      <MyModal.Body className="py-10 px-[40px]">
+      <MyModal.Body className="tablet:p-10">
         <div className="flex flex-col justify-center items-center gap-4">
           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="font-bold">
+            <div className="font-bold mb-2">
               <Text className="mb-3 text-center" variant="heading-xs">
                 Accept Bid
               </Text>
@@ -250,7 +253,8 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                 </>
               ) : (
                 <NFTApproval
-                  loading={loading}
+                  loadingForAll={loadingForAll}
+                  loadingForSingle={loading}
                   nft={nft}
                   isMarketContractApprovedToken={isMarketContractApprovedToken}
                   handleApproveTokenForAll={handleApproveTokenForAll}

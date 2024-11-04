@@ -10,9 +10,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useWriteRoundContract } from "@/hooks/useRoundContract";
-import { Address, useAccount, useContractRead } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import MessageClaimSuccess from "./ToastMessage";
 import { classNames } from "@/utils/string";
+import { Address } from "abitype";
 
 interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
   round: Round;
@@ -37,23 +38,25 @@ const RoundSchedule = ({
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
   const { onClaimNFT } = useWriteRoundContract(round, collection);
-  const { data: claimableAmount } = useContractRead({
+  const { data: claimableAmount } = useReadContract({
     address: round?.address,
     abi: getRoundAbi(round),
     functionName: "getClaimableAmount",
-    args: [address],
-    enabled: !!address && !!round?.address,
-    watch: true,
-    select: (data) => data,
+    args: [address as Address],
+    query: {
+      enabled: !!address && !!round?.address,
+      select: (data) => data,
+    },
   });
 
-  const { data: startClaim } = useContractRead({
+  const { data: startClaim } = useReadContract({
     address: round?.address,
     abi: getRoundAbi(round),
     functionName: "getRound",
-    enabled: !!address && !!round?.address,
-    watch: true,
-    select: (data: any) => data["startClaim"],
+    query: {
+      enabled: !!address && !!round?.address,
+      select: (data: any) => data["startClaim"],
+    },
   });
 
   const handleClaimNFT = async () => {
@@ -62,7 +65,7 @@ const RoundSchedule = ({
       const txHash = await onClaimNFT();
       toast.success(
         <MessageClaimSuccess
-          txHash={txHash.hash}
+          txHash={txHash}
           profileAddress={address as Address}
         />,
         {

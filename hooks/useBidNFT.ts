@@ -18,7 +18,7 @@ export const useBidURC721UsingNative = (nft: NFT) => {
         ],
         value,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -35,8 +35,8 @@ export const useBidURC721UsingNative = (nft: NFT) => {
 
     const totalCost = totalPrice + buyerFee;
     try {
-      const response = await onBidERC721(totalPrice, totalCost);
-      return response.transactionHash;
+      const hash = await onBidERC721(totalPrice, totalCost);
+      return hash;
     } catch (err) {
       throw err;
     }
@@ -58,7 +58,7 @@ export const useBidURC1155UsingNative = (nft: NFT) => {
         ],
         value,
       });
-      return response;
+      return response.transactionHash;
     } catch (err) {
       throw err;
     }
@@ -97,7 +97,7 @@ export const useBidURC721UsingURC20 = (nft: NFT) => {
         parseEther(price),
       ],
     });
-    return response;
+    return response.transactionHash;
   };
   return onBidURC721UsingURC20;
 };
@@ -121,7 +121,7 @@ export const useBidURC1155UsingURC20 = (nft: NFT) => {
           parseEther(price),
         ],
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -139,7 +139,7 @@ export const useCancelBidURC721 = (nft: NFT) => {
         args: [nft.collection.address, (nft.u2uId ? nft.u2uId : nft.id) as any],
         value: BigInt(0) as any,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -157,7 +157,7 @@ export const useCancelBidURC1155 = () => {
         args: [operationId as any],
         value: BigInt(0) as any,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -179,7 +179,7 @@ export const useAcceptBidURC721 = (nft: NFT) => {
           quoteToken,
         ],
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -196,7 +196,7 @@ export const useAcceptBidURC1155 = () => {
         functionName: "acceptOffer",
         args: [BigInt(offerId), BigInt(quantity)],
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }

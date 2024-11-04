@@ -1,10 +1,11 @@
-import { Address, useContractRead } from "wagmi";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { NFT } from "@/types";
 import { useMemo } from "react";
 import { tokens } from "@/config/tokens";
 import { Web3Functions } from "@/services/web3";
+import { useReadContract } from "wagmi";
+import { Address } from "abitype";
 
 export const useMarketApproveNFT = (nft: NFT) => {
   const type = nft.collection.type;
@@ -12,26 +13,26 @@ export const useMarketApproveNFT = (nft: NFT) => {
     type === "ERC721" ? contracts.erc721Market : contracts.erc1155Market;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
 
-  const { data: isMarketContractApprovedForAll } = useContractRead({
+  const { data: isMarketContractApprovedForAll } = useReadContract({
     address: nft.collection.address,
     abi: (type === "ERC721"
       ? contracts.erc721Base.abi
       : contracts.erc1155Base.abi) as any,
     functionName: "isApprovedForAll",
     args: [wallet as Address, marketContract.address],
-    enabled: !!wallet,
-    watch: true,
+    query: { enabled: !!wallet },
   });
 
-  const { data: isMarketContractApprovedForSingle } = useContractRead({
+  const { data: isMarketContractApprovedForSingle } = useReadContract({
     address: nft.collection.address,
     abi: contracts.erc721Base.abi,
     functionName: "getApproved",
     args: [(nft.u2uId || nft.id) as any],
-    watch: true,
-    enabled: type === "ERC721",
-    select: (data) => {
-      return data !== "0x0000000000000000000000000000000000000000";
+    query: {
+      enabled: type === "ERC721",
+      select: (data) => {
+        return data !== "0x0000000000000000000000000000000000000000";
+      },
     },
   });
 
@@ -63,7 +64,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
         args: [marketContract.address, true],
         value: BigInt(0) as any,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -78,7 +79,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
         args: [contracts.erc721Market.address, BigInt(nft.u2uId ?? nft.id)],
         value: BigInt(0) as any,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }

@@ -73,6 +73,7 @@ export default function CollectionStatisticsFilters({
           </div>
           <div className="flex items-center gap-4 mb-4">
             <Input
+              type="number"
               value={localFilters.min}
               onChange={(e) =>
                 setLocalFilters((state) => ({ ...state, min: e.target.value }))
@@ -83,6 +84,7 @@ export default function CollectionStatisticsFilters({
             />
             <Text className="text-primary">to</Text>
             <Input
+              type="number"
               value={localFilters.max}
               onChange={(e) =>
                 setLocalFilters((state) => ({ ...state, max: e.target.value }))

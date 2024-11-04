@@ -1,5 +1,4 @@
 import { contracts } from "@/config/contracts";
-import { readContract } from "@wagmi/core";
 import { NFT } from "@/types";
 import { Address } from "abitype";
 import { Web3Functions } from "@/services/web3";
@@ -7,7 +6,7 @@ import { Web3Functions } from "@/services/web3";
 export default function useBuyNFT({ nft }: { nft: NFT }) {
   const buyURC721UsingNative = async (price: any) => {
     try {
-      const [_, buyerFee] = await readContract({
+      const [_, buyerFee] = await Web3Functions.readContract({
         ...contracts.feeDistributorContract,
         functionName: "calculateFee",
         args: [
@@ -23,7 +22,7 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
         args: [nft.collection.address, (nft.u2uId || nft.id) as any],
         value: BigInt(price) + buyerFee,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -36,7 +35,7 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
   ) => {
     const totalPrice = BigInt(price) * BigInt(quantity);
     try {
-      const [_, buyerFee] = await readContract({
+      const [_, buyerFee] = await Web3Functions.readContract({
         ...contracts.feeDistributorContract,
         functionName: "calculateFee",
         args: [
@@ -53,7 +52,7 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
         args: [BigInt(operationId), BigInt(quantity)],
         value: totalPrice + buyerFee,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -72,7 +71,7 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
           BigInt(price),
         ],
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }
@@ -90,7 +89,7 @@ export default function useBuyNFT({ nft }: { nft: NFT }) {
         args: [BigInt(operationId), BigInt(quantity)],
         value: BigInt(0) as any,
       });
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }

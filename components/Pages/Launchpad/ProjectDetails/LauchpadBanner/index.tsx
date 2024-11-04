@@ -49,8 +49,9 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
     abi: getRoundAbi(activeRound),
     functionName: "getRound",
     args: [],
-    enabled: !!activeRound,
-    watch: true,
+    query: {
+      enabled: !!activeRound,
+    },
   });
 
   return (

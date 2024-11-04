@@ -20,7 +20,7 @@ export default function useCollection() {
     }
     try {
       const response = await Web3Functions.writeContract(data as any);
-      return response;
+      return response.transactionHash;
     } catch (err: any) {
       throw err;
     }

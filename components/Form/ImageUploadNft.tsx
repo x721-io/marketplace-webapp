@@ -211,7 +211,7 @@ export default function ImageUploadNft({
                 className={`absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer`}
                 type="file"
                 ref={inputCoverRef}
-                accept=".png,.jpeg, .png"
+                accept=".png, .jpeg"
                 onChange={(e) => handleInputUploadCover(e.target.files)}
               />
               {!!fileImage ? (

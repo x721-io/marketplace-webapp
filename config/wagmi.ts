@@ -96,7 +96,7 @@ import {
 } from "./constants";
 import { Chain } from "viem";
 
-const u2uNetwork = {
+export const u2uNetwork = {
   id: Number(CHAIN_ID),
   name: NETWORK_NAME,
   nativeCurrency: { name: "U2U", symbol: "U2U", decimals: 18 },

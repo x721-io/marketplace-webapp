@@ -9,6 +9,7 @@ import { useWriteRoundContract } from "@/hooks/useRoundContract";
 import { Collection, Round } from "@/types";
 import { useRoundStatus } from "@/hooks/useRoundStatus";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
+import { Address } from "abitype";
 
 interface Props {
   collection: Collection;
@@ -30,16 +31,16 @@ export default function WhitelistChecker({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getAmountBought",
-    args: [address],
-    watch: true,
-    enabled: !!address,
-    select: (data) => formatUnits(String(data), 0),
+    args: [address as Address],
+    query: {
+      enabled: !!address,
+      select: (data) => formatUnits(String(data), 0),
+    },
   });
   const { data: roundInfo } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getRound",
-    watch: true,
   });
 
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
@@ -49,7 +50,7 @@ export default function WhitelistChecker({
   const startClaim = (roundInfo as any)?.startClaim;
   const price = (roundInfo as any)?.price;
 
-  const { data } = useBalance({ address, watch: true, enabled: !!address });
+  const { data } = useBalance({ address, query: { enabled: !!address } });
   const [amount, setAmount] = useState(1);
 
   const estimatedCost = useMemo(() => {
@@ -93,8 +94,7 @@ export default function WhitelistChecker({
 
     try {
       setLoading(true);
-      const { waitForTransaction } = await onBuyNFT();
-      await waitForTransaction();
+      const txHash = await onBuyNFT();
       toast.success("Your item has been successfully purchased!");
     } catch (e: any) {
       console.error(e);

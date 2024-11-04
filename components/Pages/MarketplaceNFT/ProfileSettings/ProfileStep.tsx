@@ -10,29 +10,20 @@ import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { FormState } from "@/types";
 import { urlRegex } from "@/utils/regex";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { MARKETPLACE_URL } from "@/config/constants";
-import { useUpdateProfile } from "@/hooks/useMutate";
+import { useUpdateProfile, useVerifyAccount } from "@/hooks/useMutate";
 
 export default function ProfileStep() {
   const { trigger: updateProfile } = useUpdateProfile();
+
+  const { trigger: onVerifyAccount, data } = useVerifyAccount();
   const profile = useAuthStore((state) => state.profile);
+  const { setProfile } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
-  const { onUpdateProfile, onVerifyAccount } = useAuth();
-  const [verifyData, setVerifyData] = useState<FormState.VerifyAccount>({
-    accountStatus: false,
-    listVerify: {
-      email: false,
-      username: false,
-      shortLink: false,
-      avatar: false,
-      bio: false,
-      twitterLink: false,
-      ownerOrCreater: false,
-    },
-  });
+
   const {
     handleSubmit,
     register,
@@ -55,8 +46,8 @@ export default function ProfileStep() {
     const toastId = toast.loading("Uploading Profile...", { type: "info" });
 
     try {
-      await updateProfile(params);
-
+      const res = await updateProfile(params);
+      setProfile(res);
       toast.update(toastId, {
         render: "Profile updated successfully",
         type: "success",
@@ -67,7 +58,9 @@ export default function ProfileStep() {
     } catch (e: any) {
       console.error("Error:", e);
       toast.update(toastId, {
-        render: `Profile updating: ${e.message}`,
+        render: `Profile updating: ${
+          e.response?.data?.error || e.message || e
+        }`,
         type: "error",
         isLoading: false,
         autoClose: 1000,
@@ -78,9 +71,8 @@ export default function ProfileStep() {
 
   const handleGetVerify = async () => {
     try {
-      let response = await onVerifyAccount();
-      if (response !== undefined) {
-        setVerifyData(response);
+      const response = await onVerifyAccount();
+      if (response) {
         setShowPopup(true);
       } else {
         setShowPopup(false);
@@ -99,8 +91,8 @@ export default function ProfileStep() {
         <div className="flex gap-8 mb-8">
           <div className=" flex gap-8 w-full flex-col">
             <div>
-              <label className="block mb-2 font-semibold text-primary">
-                Display name
+              <label className="mb-2 font-semibold text-primary flex items-center gap-1">
+                Display name <p className="text-red-700">*</p>
               </label>
               <Input
                 placeholder="Limit 6 to 25 characters"
@@ -223,13 +215,13 @@ export default function ProfileStep() {
             scale="sm"
             className="w-full tablet:w-auto desktop:w-auto"
           >
-            {profile?.accountStatus ? "Account Verified" : "Get Verified"}
+            {profile?.accountStatus ? "Account Verified" : "Get Verify"}
           </Button>
         </div>
       </div>
       <VerifyAccountModal
         show={showPopup}
-        reponseVerify={verifyData}
+        reponseVerify={data}
         onClose={() => setShowPopup(false)}
       />
     </div>

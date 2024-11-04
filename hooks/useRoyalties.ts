@@ -1,19 +1,22 @@
 import { contracts } from "@/config/contracts";
-import { Address, useContractRead } from "wagmi";
+import { useReadContract } from "wagmi";
 import { waitForTransaction, writeContract } from "@wagmi/core";
 import { NFT, Royalties } from "@/types";
 import { toast } from "react-toastify";
+import { Address } from "abitype";
+import { Web3Functions } from "@/services/web3";
 
 export const useReadCollectionRoyalties = (collectionAddress: Address) => {
   const royaltiesRegistryContract = contracts.royaltiesRegistry;
 
-  return useContractRead({
+  return useReadContract({
     ...royaltiesRegistryContract,
     functionName: "getRoyaltiesByToken",
     args: [collectionAddress],
-    enabled: !!collectionAddress,
-    watch: true,
-    select: ([_, royalties]) => royalties,
+    query: {
+      enabled: !!collectionAddress,
+      select: ([_, royalties]) => royalties,
+    },
   });
 };
 
@@ -28,25 +31,24 @@ export const useUpdateCollectionRoyalties = () => {
       });
     }
 
-    const { hash } = await writeContract({
+    return await Web3Functions.writeContract({
       ...royaltiesRegistryContract,
       functionName: "setRoyaltiesByToken",
       args: [collectionAddress, royalties],
       value: BigInt(0) as any,
     });
-
-    return waitForTransaction({ hash });
   };
 };
 
 export const useReadNFTRoyalties = (nft: NFT) => {
   const royaltiesRegistryContract = contracts.royaltiesRegistry;
 
-  return useContractRead({
+  return useReadContract({
     ...royaltiesRegistryContract,
     functionName: "getRoyalties",
     args: [nft.collection.address, (nft.u2uId || nft.id) as any],
-    enabled: !!nft,
-    watch: true,
+    query: {
+      enabled: !!nft,
+    },
   });
 };

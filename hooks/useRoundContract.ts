@@ -3,6 +3,7 @@ import { waitForTransaction, writeContract } from "@wagmi/core";
 import { getRoundAbi } from "@/utils";
 import { formatUnits } from "ethers";
 import { contracts } from "@/config/contracts";
+import { Web3Functions } from "@/services/web3";
 
 type BuyFunctionName = `buy${AssetType}`;
 type ClaimFunctionName = `claim${AssetType}`;
@@ -27,19 +28,15 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
         : BigInt(round.price);
 
     try {
-      const tx = await writeContract({
+      const receipt = await Web3Functions.writeContract({
         address: round.address,
         abi: roundAbi,
         functionName,
         args,
         value: price,
-        gas: BigInt(500000),
       });
 
-      return {
-        hash: tx.hash,
-        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-      };
+      return receipt.transactionHash;
     } catch (e: any) {
       if (e.message.includes("rejected")) {
         throw new Error(`user rejected the transaction`, {
@@ -59,19 +56,15 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     const price = BigInt(round.price);
 
     try {
-      const tx = await writeContract({
+      const hash = await Web3Functions.writeContract({
         address: round.address,
         abi: roundAbi,
         functionName,
         args,
         value: price,
-        gas: BigInt(500000),
       });
 
-      return {
-        hash: tx.hash,
-        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-      };
+      return hash.transactionHash;
     } catch (e: any) {
       if (e.message.includes("rejected")) {
         throw new Error(`user rejected the transaction`, {
@@ -87,7 +80,7 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
 
   const onClaimNFT = async () => {
     const functionName = getClaimFunctionName(collection.type);
-    const tx = await writeContract({
+    const receipt = await Web3Functions.writeContract({
       address: round.address,
       abi: roundAbi,
       functionName,
@@ -95,25 +88,19 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
       value: BigInt(0) as any,
     });
 
-    return {
-      hash: tx.hash,
-      waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-    };
+    return receipt.transactionHash;
   };
 
   const onClaimMemetaverse = async () => {
     try {
-      const tx = await writeContract({
+      const receipt = await Web3Functions.writeContract({
         address: round.address,
         abi: contracts.memeTaVerseContract.abi,
         functionName: "claim",
         args: [] as any,
       });
 
-      return {
-        hash: tx.hash,
-        waitForTransaction: () => waitForTransaction({ hash: tx.hash }),
-      };
+      return receipt.transactionHash;
     } catch (error) {
       console.error("Error in onClaimMemetaverse:", error);
     }

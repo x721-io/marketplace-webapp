@@ -1,4 +1,4 @@
-import { Address, useAccount } from "wagmi";
+import { useAccount } from "wagmi";
 import { contracts } from "@/config/contracts";
 import useAuthStore from "@/store/auth/store";
 import { AssetType } from "@/types";
@@ -11,6 +11,7 @@ import {
   useGenerateTokenId,
   useUploadMetadata,
 } from "./useMutate";
+import { Address } from "abitype";
 
 export const useCreateNFT = (type: AssetType) => {
   const api = useMarketplaceApi();
@@ -71,7 +72,7 @@ export const useCreateNFT = (type: AssetType) => {
           args: [tokenArgs, address],
           value: BigInt(0) as any,
         });
-        return response;
+        return response.transactionHash;
       } catch (err: any) {
         throw err;
       }
@@ -94,14 +95,14 @@ export const useCreateNFT = (type: AssetType) => {
           args: [tokenArgs, address, amount],
           value: BigInt(0) as any,
         });
-        return response;
+        return response.transactionHash;
       } catch (err: any) {
         throw err;
       }
     };
 
     try {
-      const response = await (type === "ERC721" ? mintERC721() : mintERC1155());
+      const hash = await (type === "ERC721" ? mintERC721() : mintERC1155());
       const createNFTParams = {
         id: id.toString(),
         u2uId: BigInt(u2uId).toString(),
@@ -109,7 +110,7 @@ export const useCreateNFT = (type: AssetType) => {
         ipfsHash: metadataHash,
         tokenUri: metadataHash,
         collectionId: collection,
-        txCreationHash: response.transactionHash,
+        txCreationHash: hash,
         image,
         creatorId: userId,
         traits: traits,

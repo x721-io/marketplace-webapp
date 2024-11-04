@@ -3,7 +3,7 @@ import { Round } from "@/types";
 import { getRoundAbi } from "@/utils";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { useAccount, useContractRead, useContractReads } from "wagmi";
+import { useAccount, useReadContract, useReadContracts } from "wagmi";
 
 interface Timeframe {
   hourStart: number;
@@ -20,15 +20,16 @@ interface Props {
 export default function Timeframes({ round, isSpecial }: Props) {
   const { address } = useAccount();
   const { setHasTimeframe, setIsInTimeframe } = useTimeframeStore();
-  const { data: timeframesLength } = useContractRead({
+  const { data: timeframesLength } = useReadContract({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getTimeframesLength",
-    enabled: !!address,
-    watch: true,
+    query: {
+      enabled: !!address,
+    },
   });
 
-  const { data: timeframes } = useContractReads({
+  const { data: timeframes } = useReadContracts({
     contracts: Array.from(
       { length: Number(timeframesLength) },
       (_, index) => index
@@ -40,9 +41,10 @@ export default function Timeframes({ round, isSpecial }: Props) {
         args: [timeframeIndex],
       };
     }),
-    enabled: !!address && Number(timeframesLength) > 0,
-    watch: true,
-    select: (data) => data.map((item) => item.result as unknown as Timeframe),
+    query: {
+      enabled: !!address && Number(timeframesLength) > 0,
+      select: (data) => data.map((item) => item.result as unknown as Timeframe),
+    },
   });
 
   const hasTimeframe = useMemo(() => {

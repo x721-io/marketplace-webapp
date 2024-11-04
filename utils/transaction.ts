@@ -8,10 +8,8 @@ export const getWeb3ErrorMsg = async (
 ) => {
   const locale = await getUserLocale();
   const messages = (await import(`../messages/${locale}.json`)).default;
-  switch (err.cause.code) {
-    case UserRejectedRequestError.code:
-      return messages["web3"]["error"]["rejected"] as string;
-    default:
-      return messages["web3"]["error"]["other"] as string;
+  if (err.shortMessage.includes("rejected")) {
+    return messages["web3"]["error"]["rejected"] as string;
   }
+  return messages["web3"]["error"]["other"] as string;
 };

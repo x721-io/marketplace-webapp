@@ -1,4 +1,4 @@
-import { Address, erc721ABI, useAccount, useContractRead } from "wagmi";
+import { useAccount, useContractRead, useReadContract } from "wagmi";
 import { useMemo, useState } from "react";
 import { formatUnits } from "ethers";
 import { useRoundStatus } from "@/hooks/useRoundStatus";
@@ -11,6 +11,8 @@ import RoundActionUpcoming from "./RoundActions/RoundActionUpcoming";
 import RoundActionEnded from "./RoundActions/RoundActionEnded";
 import { ZERO_COLLECTION } from "@/config/constants";
 import useLaunchpadStore from "@/store/launchpad/store";
+import { Address } from "abitype";
+import { erc721Abi } from "viem";
 
 export default function RoundAction() {
   const { round, collection } = useLaunchpadStore((state) => state);
@@ -34,12 +36,13 @@ export default function RoundAction() {
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "checkIsUserWhitelisted",
-    args: [address],
-    enabled:
-      !!address &&
-      round.type !== "U2UPremintRoundFCFS" &&
-      round.type !== "U2UMintRoundFCFS",
-    watch: true,
+    args: [address as Address],
+    query: {
+      enabled:
+        !!address &&
+        round.type !== "U2UPremintRoundFCFS" &&
+        round.type !== "U2UMintRoundFCFS",
+    },
   });
   const hasStaked = useMemo(() => {
     return (
@@ -47,16 +50,18 @@ export default function RoundAction() {
     );
   }, [snapshot, round]);
 
-  const { data: balanceNFT } = useContractRead({
+  const { data: balanceNFT } = useReadContract({
     address: ZERO_COLLECTION as Address,
-    abi: erc721ABI,
+    abi: erc721Abi,
     functionName: "balanceOf",
     args: [address as Address],
-    enabled:
-      !!address &&
-      (round.type == "U2UMintRoundZero" || round.type == "U2UPremintRoundZero"),
-    watch: true,
-    select: (data) => formatUnits(String(data), 0),
+    query: {
+      enabled:
+        !!address &&
+        (round.type == "U2UMintRoundZero" ||
+          round.type == "U2UPremintRoundZero"),
+      select: (data) => formatUnits(String(data), 0),
+    },
   });
   const isHolder = useMemo(() => {
     return Number(balanceNFT) > 0;

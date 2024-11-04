@@ -125,6 +125,7 @@ export default function NFTFilters({
         <Collapsible header="Price">
           <div className="flex items-center gap-4 mb-4">
             <Input
+              type="number"
               containerClass="w-24"
               scale="sm"
               placeholder="Min"
@@ -133,6 +134,7 @@ export default function NFTFilters({
             />
             <Text className="text-primary">to</Text>
             <Input
+              type="number"
               containerClass="w-24"
               scale="sm"
               placeholder="Max"

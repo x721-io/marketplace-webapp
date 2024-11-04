@@ -1,8 +1,8 @@
+import { u2uNetwork } from "@/config/wagmi";
 import { createPublicClient, http } from "viem";
-import { u2uChain } from "@/config/wagmi";
 
 const viemClient = createPublicClient({
-  chain: u2uChain,
+  chain: u2uNetwork,
   transport: http(),
 });
 
