@@ -2,18 +2,18 @@ import {
   Abi,
   AbiFunction,
   AbiParametersToPrimitiveTypes,
+  Address,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from "abitype";
 import {
-  Address,
   readContract,
-  waitForTransaction,
+  waitForTransactionReceipt,
   writeContract,
 } from "@wagmi/core";
 import { TransactionReceipt } from "viem";
-import { getUserLocale } from "./locale";
 import { getWeb3ErrorMsg } from "@/utils/transaction";
+import { config as wagmiConfig } from "../config/wagmi";
 
 async function write<
   abi extends Abi,
@@ -30,14 +30,14 @@ async function write<
 }): Promise<TransactionReceipt> {
   try {
     const { address, abi, functionName, args, value } = config;
-    const tx = await writeContract({
+    const tx = await writeContract(wagmiConfig, {
       address,
       abi: abi as any,
       functionName,
       args: args as any,
       value,
     });
-    const response = await waitForTransaction(tx);
+    const response = await waitForTransactionReceipt(wagmiConfig, { hash: tx });
     return response;
   } catch (err: any) {
     console.log(err);
@@ -58,7 +58,7 @@ async function read<
 }): Promise<AbiParametersToPrimitiveTypes<abiFunction["outputs"], "outputs">> {
   try {
     const { address, abi, functionName, args } = config;
-    const res = (await readContract({
+    const res = (await readContract(wagmiConfig, {
       address,
       abi: abi as any,
       functionName,

@@ -1,7 +1,7 @@
 import { contracts } from "@/config/contracts";
 import { readContract } from "@wagmi/core";
 import { NFT } from "@/types";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { Web3Functions } from "@/services/web3";
 
 export default function useBuyNFT({ nft }: { nft: NFT }) {

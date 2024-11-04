@@ -1,7 +1,7 @@
 import { contracts } from "@/config/contracts";
 import { NFT } from "@/types";
 import { parseEther } from "ethers";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { Web3Functions } from "@/services/web3";
 
 export const useSellURC721 = (nft: NFT) => {

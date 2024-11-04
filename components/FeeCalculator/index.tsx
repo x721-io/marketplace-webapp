@@ -2,10 +2,10 @@ import { NFT, Royalty } from "@/types";
 import { useMemo } from "react";
 import { formatUnits } from "ethers";
 import { useReadNFTRoyalties } from "@/hooks/useRoyalties";
-import { Address } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import Image from "next/image";
 import Text from "../Text";
+import { Address } from "abitype";
 
 interface Props {
   mode: "buyer" | "seller";

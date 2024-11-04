@@ -2,7 +2,7 @@ import useAuthStore from "@/store/auth/store";
 import { useEffect, useState } from "react";
 import { fetchBalance, FetchBalanceResult } from "@wagmi/core";
 import { formatEther } from "ethers";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 
 export const useBalance = (token: Address) => {
   const address = useAuthStore((state) => state.profile?.publicKey);

@@ -1,4 +1,4 @@
-import { Address } from "wagmi";
+import { Address } from "abitype";
 
 interface Token {
   name: string;

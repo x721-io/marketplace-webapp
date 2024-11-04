@@ -1,4 +1,4 @@
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import erc721MarketABI from "@/abi/ERC721Marketplace";
 import erc721Factory from "@/abi/ERC721Factory";
 import erc721ABI from "@/abi/ERC721Rarible";

@@ -10,7 +10,7 @@ import Input from "@/components/Form/Input";
 import Icon from "@/components/Icon";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { MAX_ROYALTIES } from "@/config/constants";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { isAddress } from "ethers";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";

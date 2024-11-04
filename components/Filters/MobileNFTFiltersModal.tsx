@@ -10,7 +10,7 @@ import Icon from "@/components/Icon";
 import { DEFAULT_NFT_FILTERS_STATE } from "@/store/filters/items/store";
 import Select from "../Form/Select";
 import { tokenOptions } from "@/config/tokens";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import MyRadio from "../X721UIKits/Radio";
 import MyCheckbox from "../X721UIKits/Checkbox";

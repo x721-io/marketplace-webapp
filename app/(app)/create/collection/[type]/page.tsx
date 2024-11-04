@@ -18,7 +18,7 @@ import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { parseImageUrl } from "@/utils/nft";
 import { redirect, useParams, useRouter } from "next/navigation";
-import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { CHAIN_ID } from "@/config/constants";
 import { formRulesCreateCollection } from "@/config/form/rules";
 import { useTranslations } from "next-intl";
@@ -31,8 +31,8 @@ import {
 export default function CreateNFTCollectionPage() {
   const validateTimeout = useRef<any>(null);
   const t = useTranslations("CreateCollection");
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useAccount();
+  const { switchChain } = useSwitchChain();
   const type = useParams().type.toString().toUpperCase() as AssetType;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -94,7 +94,7 @@ export default function CreateNFTCollectionPage() {
   const onSubmit = async (data: FormState.CreateCollection) => {
     if (!type || !creator) return;
     if (!!chain?.id && chain?.id !== Number(CHAIN_ID)) {
-      switchNetwork?.(Number(CHAIN_ID));
+      switchChain({ chainId: Number(CHAIN_ID) });
       return;
     }
     const toastId = toast.loading("Preparing data...", { type: "info" });

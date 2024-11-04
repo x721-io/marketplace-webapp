@@ -1,11 +1,13 @@
-import { useWaitForTransaction } from "wagmi";
+import { useWaitForTransactionReceipt } from "wagmi";
 import { useState } from "react";
 
 export const useTransactionStatus = () => {
   const [txHash, setTxHash] = useState<`0x${string}`>();
-  const data = useWaitForTransaction({
+  const data = useWaitForTransactionReceipt({
     hash: txHash,
-    enabled: !!txHash,
+    query: {
+      enabled: !!txHash,
+    },
   });
 
   return {

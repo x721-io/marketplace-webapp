@@ -1,62 +1,68 @@
 import { tokens } from "@/config/tokens";
 import {
-  Address,
-  erc20ABI,
   useAccount,
   useBalance,
+  useBlockNumber,
   useContractReads,
   useContractWrite,
+  useReadContracts,
+  useWriteContract,
 } from "wagmi";
 import Image from "next/image";
 import { BigNumberish, formatUnits } from "ethers";
 import { formatDisplayedNumber } from "@/utils";
 import Button from "@/components/Button";
 import WETH_ABI from "@/abi/WETH";
-import { useMemo, useState } from "react";
-import { waitForTransaction } from "@wagmi/core";
+import { useEffect, useMemo, useState } from "react";
+import { waitForTransaction, waitForTransactionReceipt } from "@wagmi/core";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import { Address } from "abitype";
+import { erc20Abi } from "viem";
+import { config } from "@/config/wagmi";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function TokenBalances() {
+  const queryClient = useQueryClient();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
   const [claiming, setClaiming] = useState(false);
   const { address } = useAccount();
 
-  const { data: tokenBalances } = useContractReads({
-    contracts: Object.values(tokens).map((token) => {
-      return {
-        address: token.address,
-        abi: erc20ABI,
-        functionName: "balanceOf",
-        args: [address as Address],
-      };
-    }),
-    enabled: !!address,
-    watch: true,
-  });
+  const { data: tokenBalances, queryKey: getTokenBalancesQK } =
+    useReadContracts({
+      contracts: Object.values(tokens).map((token) => {
+        return {
+          address: token.address,
+          abi: erc20Abi,
+          functionName: "balanceOf",
+          args: [address as Address],
+        };
+      }),
+      query: { enabled: !!address },
+    });
 
   const wu2uBalance = useMemo(() => {
     if (!tokenBalances) return BigInt(0);
     return tokenBalances[0].result as bigint;
   }, [tokenBalances]);
 
-  const { data: u2uBalance } = useBalance({
+  const { data: u2uBalance, queryKey: getU2UBalanceQK } = useBalance({
     address,
-    formatUnits: "ether",
-    watch: true,
   });
 
-  const { writeAsync } = useContractWrite({
-    ...tokens.wu2u,
-    abi: WETH_ABI,
-    functionName: "withdraw",
-  });
+  const { writeContractAsync } = useWriteContract();
 
   const handleClaimToken = async () => {
     try {
       setClaiming(true);
-      const { hash } = await writeAsync({ args: [wu2uBalance] });
-      await waitForTransaction({ hash });
+      const hash = await writeContractAsync({
+        ...tokens.wu2u,
+        abi: WETH_ABI,
+        functionName: "withdraw",
+        args: [wu2uBalance],
+      });
+      await waitForTransactionReceipt(config, { hash });
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`, {
         autoClose: 1000,
@@ -67,6 +73,11 @@ export default function TokenBalances() {
       setClaiming(false);
     }
   };
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: getTokenBalancesQK });
+    queryClient.invalidateQueries({ queryKey: getU2UBalanceQK });
+  }, [blockNumber, queryClient]);
 
   return (
     <div className="flex flex-col h-full justify-between">

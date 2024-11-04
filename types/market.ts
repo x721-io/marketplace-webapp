@@ -1,6 +1,6 @@
-import { Address } from "wagmi";
 import { BigNumberish } from "ethers";
 import { Collection, User } from "@/types/entitites";
+import { Address } from "abitype";
 
 export type MarketEventType =
   | "AskNew"

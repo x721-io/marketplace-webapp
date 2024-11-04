@@ -13,8 +13,8 @@ import {
 } from "@/utils/string";
 import { useFilterByCollection } from "@/store/filters/byCollection/store";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Address } from "wagmi";
 import { useGetNFTs } from "@/hooks/useQuery";
+import { Address } from "abitype";
 
 export default function CollectionView({
   collectionData,

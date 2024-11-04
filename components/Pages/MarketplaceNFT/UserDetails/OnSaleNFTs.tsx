@@ -5,7 +5,7 @@ import { classNames } from "@/utils/string";
 import NFTsList from "@/components/List/NFTsList";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MODE_ON_SALES } from "@/config/constants";
 import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 import { useGetTotalCountById } from "@/hooks/useQuery";

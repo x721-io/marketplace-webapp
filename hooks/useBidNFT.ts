@@ -1,5 +1,5 @@
 import { NFT } from "@/types";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { contracts } from "@/config/contracts";
 import { parseEther } from "ethers";
 import { Web3Functions } from "@/services/web3";

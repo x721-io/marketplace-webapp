@@ -1,7 +1,7 @@
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import useSWR from "swr";
 import React, { useState } from "react";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import Text from "@/components/Text";
 import UserMarketEvent from "@/components/Pages/MarketplaceNFT/UserDetails/Activities/MarketEvent";
 import { useGetUserActivities } from "@/hooks/useQuery";

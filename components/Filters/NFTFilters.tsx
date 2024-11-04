@@ -12,7 +12,7 @@ import { useNFTFilters } from "@/hooks/useFilters";
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import MyRadio from "../X721UIKits/Radio";
 import MyCheckbox from "../X721UIKits/Checkbox";
 

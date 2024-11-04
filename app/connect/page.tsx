@@ -1,33 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Connector, useAccount, useConnect } from "wagmi";
-import Text from "@/components/Text";
-import Icon from "@/components/Icon";
+import { useAccount } from "wagmi";
 import SignConnectMessageModal from "@/components/Modal/SignConnectMessageModal";
 import SignupModal from "@/components/Modal/SignupModal";
 import { useRouter } from "next/navigation";
-import { connect } from "@wagmi/core";
-import MySpinner from "@/components/X721UIKits/Spinner";
 
 export default function ConnectPage() {
   const router = useRouter();
-  const { connectors, pendingConnector, isLoading } = useConnect();
-  const { isConnected } = useAccount();
   const [showSignMessage, setShowSignMessage] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-
-  const handleConnect = async (connector: Connector) => {
-    if (!connector.ready) return;
-    try {
-      if (!isConnected) {
-        await connect({ connector });
-      }
-      setShowSignMessage(true);
-    } catch (e) {
-      console.error("Error connecting wallet:", e);
-    }
-  };
 
   return (
     <>

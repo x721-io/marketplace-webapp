@@ -3,7 +3,7 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import { Address, useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import { tokenOptions, tokens } from "@/config/tokens";
 import { useCalculateFee } from "@/hooks/useMarket";
@@ -26,6 +26,7 @@ import {
 import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { Address } from "abitype";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -73,6 +74,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       token?.decimal
     ),
     onSuccess: (data) => {
+      console.log(123);
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
         !isNaN(Number(price)) ? (price as string) : "0",
@@ -140,9 +142,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
 
   const { data: tokenBalance } = useBalance({
     address: address,
-    enabled: !!address && !!token?.address,
+    query: {
+      enabled: !!address && !!token?.address,
+    },
     token: token?.address === tokens.wu2u.address ? undefined : token?.address,
-    watch: true,
   });
 
   const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {

@@ -1,5 +1,5 @@
 import { APIParams } from "@/services/api/types";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 
 interface NFTFilter {
   showFilters: boolean;

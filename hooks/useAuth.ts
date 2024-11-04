@@ -1,6 +1,6 @@
 "use client";
 
-import { Address, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { disconnect } from "@wagmi/core";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
@@ -11,6 +11,8 @@ import { CHAIN_ID } from "@/config/constants";
 import { AuthenticationContext } from "@/app/auth-provider";
 import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
 import { useConnectAPI } from "./useMutate";
+import { Address } from "abitype";
+import { config } from "@/config/wagmi";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
@@ -86,7 +88,7 @@ export const useAuth = () => {
   );
 
   const onLogout = async () => {
-    await disconnect();
+    await disconnect(config);
     clearAuthCookiesAction();
     clearProfile();
   };
@@ -103,8 +105,8 @@ export const useAuth = () => {
 };
 
 export const useWrongNetwork = () => {
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useAccount();
+  const { switchChain } = useSwitchChain();
 
   const isWrongNetwork = useMemo(() => {
     return !!chain?.id && chain?.id !== Number(CHAIN_ID);
@@ -112,7 +114,7 @@ export const useWrongNetwork = () => {
 
   const switchToCorrectNetwork = () => {
     if (isWrongNetwork) {
-      switchNetwork?.(Number(CHAIN_ID));
+      switchChain({ chainId: Number(CHAIN_ID) });
     }
   };
 

@@ -11,7 +11,7 @@ import { useCollectionStatisticsFilters } from "@/hooks/useFilters";
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions } from "@/config/tokens";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import MyRadio from "../X721UIKits/Radio";
 import { Label } from "flowbite-react";
 

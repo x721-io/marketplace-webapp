@@ -6,7 +6,7 @@ import {
   User,
   NFTMetadata,
 } from "@/types/entitites";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MarketEvent, MarketEventType } from "@/types/market";
 import { Project, RoundStatus } from "@/types";
 import { FormState } from "@/types";

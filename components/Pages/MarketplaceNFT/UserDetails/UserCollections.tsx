@@ -3,7 +3,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { MODE_COLLECTIONS } from "@/config/constants";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import {
   useGetCollectionsByUserInfinite,

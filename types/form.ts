@@ -1,4 +1,4 @@
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { Trait } from "@/types/entitites";
 
 export namespace FormState {

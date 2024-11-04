@@ -3,10 +3,10 @@ import Text from "./Text";
 import Image from "next/image";
 import Button from "./Button";
 import Input from "./Form/Input";
-import { Address } from "wagmi";
 import { useMemo } from "react";
 import { findTokenByAddress } from "@/utils/token";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Address } from "abitype";
 
 interface Props {
   allowanceBalance?: bigint;

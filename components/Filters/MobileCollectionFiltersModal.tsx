@@ -7,7 +7,7 @@ import { useCollectionFilters } from "@/hooks/useFilters";
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 
 interface Props extends MyModalProps {

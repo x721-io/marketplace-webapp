@@ -1,12 +1,13 @@
 import { useCalculateFee } from "@/hooks/useMarket";
+import { useQueryClient } from "@tanstack/react-query";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
 import { useForm } from "react-hook-form";
 import { formatUnits, MaxUint256, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
-import { useMemo, useState } from "react";
-import { Address, useAccount, useBalance } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount, useBalance, useBlockNumber } from "wagmi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { FormState, MarketEvent, NFT } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
@@ -19,6 +20,7 @@ import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useBuyNFT from "@/hooks/useBuyNFT";
+import { Address } from "abitype";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -26,6 +28,8 @@ interface Props extends MyModalProps {
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
+  const queryClient = useQueryClient();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
   const {
     buyURC1155UsingNative,
     buyURC1155UsingURC20,
@@ -100,11 +104,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     },
   };
 
-  const { data: tokenBalance } = useBalance({
+  const { data: tokenBalance, queryKey } = useBalance({
     address: address,
-    enabled: !!address && !!token?.address,
+    query: { enabled: !!address && !!token?.address },
     token: token?.address === tokens.wu2u.address ? undefined : token?.address,
-    watch: true,
   });
 
   const totalPriceBN = useMemo(() => {
@@ -288,6 +291,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [blockNumber, queryClient]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>

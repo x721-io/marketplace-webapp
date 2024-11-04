@@ -11,10 +11,12 @@ import { useForm } from "react-hook-form";
 import { numberRegex } from "@/utils/regex";
 import { isAddress, ZeroAddress } from "ethers";
 import { writeContract } from "@wagmi/core";
-import { Address, erc721ABI } from "wagmi";
 import ERC1155 from "@/abi/ERC1155";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { Address } from "abitype";
+import { erc721Abi } from "viem";
+import { useWriteContract } from "wagmi";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -27,6 +29,7 @@ export default function TransferNFTModal({
   onClose,
   marketData,
 }: Props) {
+  const { writeContractAsync } = useWriteContract();
   const type = nft.collection.type;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const ownerData = useMemo(() => {
@@ -75,14 +78,14 @@ export default function TransferNFTModal({
   const onSubmit = async ({ quantity, recipient }: FormState.TransferToken) => {
     try {
       if (type === "ERC721") {
-        await writeContract({
+        await writeContractAsync({
           address: nft.collection.address,
-          abi: erc721ABI,
+          abi: erc721Abi,
           functionName: "safeTransferFrom",
           args: [wallet as Address, recipient, (nft.u2uId ?? nft.id) as any],
         });
       } else if (type === "ERC1155") {
-        await writeContract({
+        await writeContractAsync({
           address: nft.collection.address,
           abi: ERC1155,
           functionName: "safeTransferFrom",

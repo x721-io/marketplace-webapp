@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { CHAIN_ID } from "@/config/constants";
 import { toast } from "react-toastify";
 import Button from "@/components/Button";
-import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 
 export default function MainBody({ children }: { children: React.ReactNode }) {
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useAccount();
+  const { switchChain } = useSwitchChain();
 
   useEffect(() => {
     if (!!chain?.id && chain?.id !== Number(CHAIN_ID)) {
@@ -21,7 +21,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
             <div
               className="cursor-pointer whitespace-nowrap flex justify-center items-center text-body-14 font-semibold text-info mr-2"
               onClick={(e) => {
-                switchNetwork?.(Number(CHAIN_ID));
+                switchChain({ chainId: Number(CHAIN_ID) });
                 closeToast(e);
               }}
             >
@@ -33,7 +33,7 @@ export default function MainBody({ children }: { children: React.ReactNode }) {
     } else {
       toast.dismiss();
     }
-  }, [chain, switchNetwork]);
+  }, [chain, switchChain]);
 
   return <div className="flex-1">{children}</div>;
 }

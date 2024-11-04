@@ -11,6 +11,7 @@ import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import "react-tooltip/dist/react-tooltip.css";
 import { useGetProfileMutate } from "@/hooks/useMutate";
+import { config } from "@/config/wagmi";
 
 interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -24,7 +25,7 @@ export default function SignConnectMessageModal({
   onSignup,
 }: Props) {
   const { address } = useAccount();
-  const { isError, isLoading, signMessageAsync, error } = useSignMessage();
+  const { isError, signMessageAsync, error, isPending } = useSignMessage();
   const { setProfile } = useAuthStore();
   const { onAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -46,7 +47,7 @@ export default function SignConnectMessageModal({
             method: "personal_sign",
             params: [SIGN_MESSAGE.CONNECT(date), address],
           })
-        : await signMessage({ message: SIGN_MESSAGE.CONNECT(date) });
+        : await signMessage(config, { message: SIGN_MESSAGE.CONNECT(date) });
 
       const credentials = await onAuth(date, signature);
       const profile = await getProfileMutate({ address });
@@ -116,7 +117,7 @@ export default function SignConnectMessageModal({
             </div>
           </>
         );
-      case isLoading:
+      case isPending:
       default:
         return (
           <>

@@ -2,7 +2,7 @@ import { useFilterByUser } from "@/store/filters/byUser/store";
 import { useMemo } from "react";
 import { APIParams } from "@/services/api/types";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { useGetNFTs } from "./useQuery";
 
 export const useFetchNFTsByUser = (

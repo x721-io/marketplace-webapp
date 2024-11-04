@@ -1,4 +1,4 @@
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { tokens } from "@/config/tokens";
 
 export const findTokenByAddress = (address?: Address) => {

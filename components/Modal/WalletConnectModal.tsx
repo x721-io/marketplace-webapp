@@ -1,9 +1,11 @@
 import Text from "@/components/Text";
 import Icon from "@/components/Icon";
-import { Connector, useAccount, useConnect } from "wagmi";
+import { Connector, useAccount, useConnect, useDisconnect } from "wagmi";
 import { connect } from "@wagmi/core";
 import MySpinner from "../X721UIKits/Spinner";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
+import { WalletButton } from "@rainbow-me/rainbowkit";
+import { useState } from "react";
 
 interface Props extends MyModalProps {
   onSignMessage: () => void;
@@ -15,12 +17,22 @@ export default function WalletConnectModal({
   onSignMessage,
 }: Props) {
   const { isConnected } = useAccount();
-  const { connectors, pendingConnector } = useConnect();
+  const { connectors, connectAsync } = useConnect();
+  const { disconnectAsync } = useDisconnect();
+  const [isMobile, setIsMobile] = useState(false);
 
-  const handleConnect = async (connector: Connector) => {
+  const handleConnect = async (
+    connector: Connector,
+    connect?: () => Promise<void>
+  ) => {
     try {
       if (!isConnected) {
-        await connect({ connector });
+        await disconnectAsync();
+        if (connect) {
+          await connect();
+        } else {
+          await connectAsync({ connector });
+        }
       }
       onSignMessage();
       onClose && onClose();
@@ -42,23 +54,55 @@ export default function WalletConnectModal({
           </Text>
 
           <div className="w-full flex flex-col gap-5">
-            {connectors.map((connector) => {
-              return (
-                <div
-                  key={connector.id}
-                  className="cursor-pointer px-4 py-2 tablet:px-10 tablet:py-4 desktop:px-10 desktop:py-4 border border-gray-200 rounded-[20px]
-                      flex items-center gap-5 transition-all hover:bg-gray-100 hover:border-transparent"
-                  onClick={() => handleConnect(connector)}
+            <div className="w-full flex flex-col gap-5">
+              <div
+                key={connectors[0].id}
+                className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black"
+              >
+                <button
+                  onClick={() => handleConnect(connectors[0])}
+                  className="flex justify-between items-center w-full"
                 >
-                  {connector.ready ? (
-                    <Icon name={connector.id} width={40} height={40} />
-                  ) : (
-                    <MySpinner />
-                  )}
-                  <Text>{connector.name}</Text>
-                </div>
-              );
-            })}
+                  <p>{connectors[0].name}</p>
+                </button>
+              </div>
+              {/* <WalletButton.Custom wallet="okx">
+              {({ ready, connect, connector }) => {
+                return (
+                  <div className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black">
+                    <button
+                      onClick={() =>
+                        isMobile
+                          ? handleConnect(connector, connect)
+                          : handleConnect(connector)
+                      }
+                      className="flex justify-between items-center w-full"
+                    >
+                      <p>{connector.name}</p>
+                    </button>
+                  </div>
+                );
+              }}
+            </WalletButton.Custom> */}
+              <WalletButton.Custom wallet="bitget">
+                {({ ready, connect, connector }) => {
+                  return (
+                    <div className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black">
+                      <button
+                        onClick={() =>
+                          isMobile
+                            ? handleConnect(connector, connect)
+                            : handleConnect(connector)
+                        }
+                        className="flex justify-between items-center w-full"
+                      >
+                        <p>Bitget</p>
+                      </button>
+                    </div>
+                  );
+                }}
+              </WalletButton.Custom>
+            </div>
           </div>
         </div>
       </MyModal.Body>

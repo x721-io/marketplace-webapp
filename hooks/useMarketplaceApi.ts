@@ -3,7 +3,7 @@
 import { APIParams, APIResponse } from "@/services/api/types";
 import { getMarketplaceApi, marketplaceApi } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { useCallback, useContext, useMemo } from "react";
 import { parseQueries, sanitizeObject } from "@/utils";
 import { parseUnits } from "ethers";

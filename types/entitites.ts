@@ -1,4 +1,4 @@
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MarketEventType } from "@/types/market";
 import { BigNumberish } from "ethers";
 

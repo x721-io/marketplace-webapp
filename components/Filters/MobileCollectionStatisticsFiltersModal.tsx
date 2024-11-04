@@ -10,7 +10,7 @@ import {
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
 import { tokenOptions, tokens } from "@/config/tokens";
-import { Address } from "wagmi";
+import { Address } from "abitype";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import MyRadio from "../X721UIKits/Radio";
 import { Label } from "flowbite-react";
