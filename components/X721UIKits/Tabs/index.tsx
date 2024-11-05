@@ -44,7 +44,10 @@ const TabsGroup: React.FC<TabsRootProps> = ({
 
   return (
     <TabsContext.Provider value={{ onTabClick, style }}>
-      <div style={getStyleByTabStyle()} className="flex flex-row">
+      <div
+        style={getStyleByTabStyle()}
+        className="flex flex-row overflow-x-auto max-w-full no-scrollbar"
+      >
         {children}
       </div>
     </TabsContext.Provider>
@@ -80,7 +83,7 @@ const TabItem = ({
 
   return (
     <div
-      className="h-full flex items-center justify-center cursor px-[15px] py-[12px] cursor-pointer"
+      className="h-full flex items-center justify-center cursor px-[15px] py-[12px] cursor-pointer max-[768px]:flex-1"
       style={getStyleByTabStyle()}
       onClick={() => onTabClick && onTabClick(tabIndex)}
     >

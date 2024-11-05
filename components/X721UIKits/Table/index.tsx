@@ -1,6 +1,7 @@
 "use client";
 
 import ArrowRightIcon from "@/components/Icon/ArrowRight";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 import { FC, useCallback, useMemo } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -86,6 +87,9 @@ const MyTable: FC<MyTableProps> = ({
             ) : (
               <ArrowRightIcon className="-rotate-[90deg]" width={14} />
             ))}
+          {col.sorting && col.sorting.direction === "unset" && (
+            <SwapVertIcon width={14} />
+          )}
         </div>
       </div>
     );

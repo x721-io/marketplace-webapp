@@ -36,7 +36,7 @@ const CollectionStatisticItemMobile = ({
 
   return (
     <Link key={c.id} href={`/collection/${link}`}>
-      <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all p-4">
+      <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all p-2">
         <div className="relative flex flex-row items-center justify-start gap-4">
           <div className="w-[50px] aspect-square relative">
             <Image

@@ -26,7 +26,10 @@ const Statistics: React.FC<Props> = ({
   const [currentSorting, setCurrentSorting] = useState<{
     field: string;
     direction: "asc" | "desc";
-  } | null>(null);
+  } | null>({
+    field: "volume",
+    direction: "desc",
+  });
   const [filters, setFilters] = useState<APIParams.FetchCollectionsStatistics>({
     type: AnalysisType.ONEDAY,
     page: 1,
@@ -126,7 +129,7 @@ const Statistics: React.FC<Props> = ({
 
   return (
     <div className="flex justify-center gap-14 desktop:gap-0 tablet:gap-0 flex-col-reverse tablet:flex-row desktop:flex-row w-full px-4 tablet:px-20 desktop:px-20">
-      <div className="w-full p-5 rounded-xl border border-1 border-soft shadow-sm flex flex-col gap-5">
+      <div className="w-full p-3 rounded-xl border border-1 border-soft shadow-sm flex flex-col gap-5">
         <StatisticsHeader
           showFilters={!disableFilters}
           filters={filters}

@@ -6,6 +6,14 @@ import {
 } from "@/actions";
 import { getBackendAPI, marketplaceApi } from "@/services/api";
 
+// export const config = {
+//   api: {
+//     bodyParser: {
+//       sizeLimit: '20mb',
+//     },
+//   },
+// };
+
 export async function GET(request: Request) {
   const backendAPI = marketplaceApi;
   await handleRouteAuthentication(request, backendAPI);

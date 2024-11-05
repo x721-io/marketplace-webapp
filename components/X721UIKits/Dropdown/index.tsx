@@ -83,7 +83,7 @@ function DropdownRoot({
           }}
         >
           <div>{label}</div>
-          <div>{icon}</div>
+          <div className="w-full">{icon}</div>
         </div>
         {isOpen && (
           <div
@@ -112,9 +112,11 @@ function DropdownRoot({
 function DropDownItem({
   children,
   onClick,
+  className = "",
 }: {
   children: React.ReactNode;
   onClick?: () => void;
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isOnScreen = useOnScreen(ref);
@@ -133,7 +135,7 @@ function DropDownItem({
         e.stopPropagation();
         onClick && onClick();
       }}
-      className="w-[140px] px-[15px] py-[10px] cursor-pointer hover:bg-[#E0E0E0]"
+      className={`${className} w-[140px] px-[15px] py-[10px] cursor-pointer hover:bg-[#E0E0E0]`}
     >
       {children}
     </div>

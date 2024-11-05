@@ -17,6 +17,7 @@ import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { Address } from "abitype";
 import { erc721Abi } from "viem";
 import { useWriteContract } from "wagmi";
+import { Web3Functions } from "@/services/web3";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -78,14 +79,14 @@ export default function TransferNFTModal({
   const onSubmit = async ({ quantity, recipient }: FormState.TransferToken) => {
     try {
       if (type === "ERC721") {
-        await writeContractAsync({
+        await Web3Functions.writeContract({
           address: nft.collection.address,
           abi: erc721Abi,
           functionName: "safeTransferFrom",
           args: [wallet as Address, recipient, (nft.u2uId ?? nft.id) as any],
         });
       } else if (type === "ERC1155") {
-        await writeContractAsync({
+        await Web3Functions.writeContract({
           address: nft.collection.address,
           abi: ERC1155,
           functionName: "safeTransferFrom",

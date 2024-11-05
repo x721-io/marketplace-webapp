@@ -90,11 +90,13 @@ export default function InformationSectionCollection({ data }: Props) {
           </div>
           <Text className="text-secondary text-body-16 font-semibold">
             Symbol:{" "}
-            <span className="text-primary font-bold">
+            <span className="text-primary font-bold break-all">
               {data.collection.symbol}
             </span>
           </Text>
-          <Text className="text-secondary">{data.collection.description}</Text>
+          <Text className="text-secondary break-all">
+            {data.collection.description}
+          </Text>
         </div>
       </div>
 

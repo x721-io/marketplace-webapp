@@ -187,6 +187,16 @@ export default function ExploreSectionNavbar() {
   }, [sortOption, pathname]);
 
   useEffect(() => {
+    updateNFTFilters({
+      name: "",
+    });
+    updateCollectionFilters({
+      name: "",
+    });
+    updateUserFilters({
+      search: "",
+    });
+
     if (tabsRef.current) {
       switch (true) {
         case pathname.includes("items"):
@@ -249,11 +259,11 @@ export default function ExploreSectionNavbar() {
       </div>
 
       {!pathname.includes("users") && (
-        <div className="order-4">
+        <div className="order-4 max-[768px]:flex-1">
           <Dropdown.Root
             label=""
             icon={
-              <div className="bg-surface-soft flex items-center justify-center gap-3 rounded-2xl p-3 h-full cursor-pointer">
+              <div className="bg-surface-soft flex items-center justify-between gap-3 rounded-2xl p-3 h-full cursor-pointer w-full">
                 {sortOption.name}
                 <div className="rounded-lg p-1 bg-surface-medium">
                   <Icon name="chevronDown" width={14} height={14} />
