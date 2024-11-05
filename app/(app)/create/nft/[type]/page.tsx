@@ -299,8 +299,8 @@ export default function CreateNftPage() {
 
             {/* Choose collection */}
             <div>
-              <Text className="text-body-16 font-semibold mb-1">
-                Choose collection
+              <Text className="text-body-16 font-semibold mb-1 flex items-center gap-1">
+                Choose Collection <p className="text-red-700">*</p>
               </Text>
               <Controller
                 name="collection"

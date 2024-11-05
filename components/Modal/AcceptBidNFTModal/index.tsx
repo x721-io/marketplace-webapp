@@ -177,6 +177,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
             {type === "ERC721" ? (
               <FeeCalculator
                 mode="seller"
+                qty={quantity}
                 nft={nft}
                 // price={BigInt(bid?.price || 0)}
                 price={parseUnits(String(bid?.price || 0), token?.decimal)}
@@ -216,6 +217,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                   />
                 </div>
                 <FeeCalculator
+                  qty={quantity}
                   mode="seller"
                   nft={nft}
                   quoteToken={bid?.quoteToken}

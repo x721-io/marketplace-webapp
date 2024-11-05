@@ -333,6 +333,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 </div>
                 <FeeCalculator
                   mode="buyer"
+                  qty={Number(quantity)}
                   nft={nft}
                   price={parseUnits(
                     String(Number(price) * Number(quantity) || 0),
@@ -349,6 +350,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
               </>
             ) : (
               <FeeCalculator
+                qty={Number(quantity)}
                 mode="buyer"
                 nft={nft}
                 price={parseUnits(
