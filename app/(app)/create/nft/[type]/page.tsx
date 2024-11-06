@@ -270,7 +270,7 @@ export default function CreateNftPage() {
                 rules={formRulesCreateNFT.media}
                 render={({ field: { value } }) => (
                   <ImageUploader
-                    maxSize={100}
+                    maxSize={4}
                     loading={uploading}
                     error={!!errors.media}
                     accept={ALLOWED_FILE_TYPES}

@@ -20,7 +20,7 @@ export const SIGN_MESSAGE = {
 export const FINGERPRINT =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-export const ALLOWED_IMAGE_TYPES = ".png, .jpg , .jpeg, .gif, .webp";
+export const ALLOWED_IMAGE_TYPES = ".png, .jpeg, .gif, .webp";
 export const ALLOWED_AUDIO_TYPES = " .mpeg";
 export const ALLOWED_VIDEO_TYPES = ".mp4, .webm";
 export const ALLOWED_FILE_TYPES = [
