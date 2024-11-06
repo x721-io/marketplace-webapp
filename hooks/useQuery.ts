@@ -218,7 +218,7 @@ export const useGetMarketDataByNftId = (
 ) => {
   const { data, error, isLoading, mutate } = useSWR(
     [
-      "nft-market-data",
+      `nft-market-data/${id}`,
       { collectionAddress: String(collectionAddress), id: String(id) },
     ],
     (key: any) => {
