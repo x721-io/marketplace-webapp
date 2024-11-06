@@ -18,6 +18,7 @@ interface Props {
   sellerFee: bigint;
   royaltiesFee: bigint;
   netReceived: bigint;
+  qty: number;
 }
 
 export default function FeeCalculator({
@@ -29,6 +30,7 @@ export default function FeeCalculator({
   sellerFeeRatio,
   buyerFee,
   sellerFee,
+  qty,
   royaltiesFee,
   netReceived,
 }: Props) {
@@ -49,8 +51,6 @@ export default function FeeCalculator({
 
   return (
     <div className="w-full p-4 border border-disabled rounded-2xl flex flex-col gap-2">
-      <p className="text-sm text-gray-400">Note: Estimate for 1 item.</p>
-
       {mode === "seller" ? (
         <>
           <div className="w-full flex items-center justify-between">
@@ -109,7 +109,7 @@ export default function FeeCalculator({
                 labelTooltip={formatUnits(sellerFee, token?.decimal)}
                 className="w-auto max-w-[80px]"
               >
-                {formatUnits(netReceived, token?.decimal)}
+                {formatUnits(netReceived * BigInt(qty ?? "1"), token?.decimal)}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (

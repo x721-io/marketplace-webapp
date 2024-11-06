@@ -274,6 +274,7 @@ export default function SellNFTModal({
                 <FeeCalculator
                   mode="seller"
                   nft={nft}
+                  qty={quantity}
                   price={parseUnits(
                     String(Number(price || 0) * Number(quantity || 0)),
                     token?.decimal
@@ -290,6 +291,7 @@ export default function SellNFTModal({
             ) : (
               <FeeCalculator
                 mode="seller"
+                qty={quantity}
                 nft={nft}
                 quoteToken={token?.address}
                 price={parseUnits(String(price || 0), token?.decimal)}

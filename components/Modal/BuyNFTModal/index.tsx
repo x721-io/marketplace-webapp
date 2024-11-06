@@ -357,6 +357,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
+                qty={quantity}
                 price={BigInt(saleData?.price || "0")}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
@@ -379,6 +380,8 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                     maxLength={3}
                     size={3}
                     error={!!errors.quantity}
+                    min="0"
+                    step="1"
                     register={register("quantity", {
                       pattern: {
                         value: numberRegex,
@@ -419,6 +422,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 </div>
 
                 <FeeCalculator
+                  qty={quantity}
                   mode="buyer"
                   nft={nft}
                   price={totalPriceBN}
