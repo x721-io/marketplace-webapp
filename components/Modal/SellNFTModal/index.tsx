@@ -260,6 +260,8 @@ export default function SellNFTModal({
                   Quantity
                 </Text>
                 <Input
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  type="number"
                   maxLength={3}
                   size={3}
                   error={!!errors.quantity}

@@ -33,7 +33,7 @@ export default function UserCollections({
     onNext: () => setSize(size + 1),
   });
 
-  const { data: totalCollections } = useGetTotalCountById(
+  const { data: totalCollections, mutate } = useGetTotalCountById(
     "total_collections-data",
     String(wallet) as `0x${string}`,
     String(MODE_COLLECTIONS)
@@ -42,8 +42,9 @@ export default function UserCollections({
   useEffect(() => {
     if (totalCollections) {
       onUpdateAmount(totalCollections);
+      mutate();
     }
-  }, [totalCollections, onUpdateAmount]);
+  }, [totalCollections, onUpdateAmount, mutate]);
 
   return (
     <div

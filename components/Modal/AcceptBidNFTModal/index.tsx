@@ -195,6 +195,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                     Quantity:
                   </label>
                   <Input
+                    type="number"
                     maxLength={18}
                     size={18}
                     error={!!errors.quantity}

@@ -25,6 +25,7 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { useUploadFile, useValidateInput } from "@/hooks/useMutate";
 import { useGetCollectionsByUser } from "@/hooks/useQuery";
+import { useGetBalance } from "@/hooks/useBalance";
 
 export default function CreateNftPage() {
   const validateTimeout = useRef<any>(null);
@@ -36,6 +37,8 @@ export default function CreateNftPage() {
   const [uploading, setUploading] = useState(false);
   const { onCreateNFT } = useCreateNFT(type || "ERC721");
   const userId = profile?.id;
+  const { isBalance } = useGetBalance();
+
   const { data } = useGetCollectionsByUser(!!userId, {
     page: 1,
     limit: 1000,
@@ -476,7 +479,10 @@ export default function CreateNftPage() {
                 loading={loading}
                 loadingText="Creating NFT ..."
                 disabled={
-                  uploading || validating || Object.keys(errors).length > 0
+                  uploading ||
+                  validating ||
+                  Object.keys(errors).length > 0 ||
+                  !isBalance
                 }
                 type="submit"
                 className="w-full tablet:w-auto desktop:w-auto"

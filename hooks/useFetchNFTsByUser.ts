@@ -12,6 +12,7 @@ export const useFetchNFTsByUser = (
   const filterStore = useFilterByUser();
   const { showFilters, filters, toggleFilter, resetFilters, updateFilters } =
     useMemo(() => {
+      console.log(mode);
       return {
         showFilters: filterStore[wallet]?.[mode].showFilters,
         filters: filterStore[wallet]?.[mode].filters || {},
@@ -23,9 +24,9 @@ export const useFetchNFTsByUser = (
           filterStore.updateFilters(mode, wallet, filters),
         resetFilters: () => filterStore.resetFilters(mode, wallet),
       };
-    }, [filterStore, wallet]);
+    }, [filterStore, mode, wallet]);
 
-  const { error, isLoading, setSize, size, data } = useGetNFTs(filters);
+  const { error, isLoading, setSize, size, data, mutate } = useGetNFTs(filters);
   const { isLoadingMore, list: items } = useInfiniteScroll({
     data,
     loading: isLoading,
@@ -43,5 +44,6 @@ export const useFetchNFTsByUser = (
     toggleFilter,
     resetFilters,
     updateFilters,
+    mutate,
   };
 };
