@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { FormState, NFT } from "@/types";
@@ -18,6 +18,7 @@ import { Address } from "abitype";
 import { erc721Abi } from "viem";
 import { useWriteContract } from "wagmi";
 import { Web3Functions } from "@/services/web3";
+import { useGetBalance } from "@/hooks/useBalance";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -33,6 +34,8 @@ export default function TransferNFTModal({
   const { writeContractAsync } = useWriteContract();
   const type = nft.collection.type;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const { isBalance } = useGetBalance();
+  const [isLoading, setIsLoading] = useState(false);
   const ownerData = useMemo(() => {
     if (!wallet || !marketData) return undefined;
     return marketData.owners.find(
@@ -77,6 +80,7 @@ export default function TransferNFTModal({
   };
 
   const onSubmit = async ({ quantity, recipient }: FormState.TransferToken) => {
+    setIsLoading(true);
     try {
       if (type === "ERC721") {
         await Web3Functions.writeContract({
@@ -109,6 +113,7 @@ export default function TransferNFTModal({
     } finally {
       onClose?.();
       reset();
+      setIsLoading(false);
     }
   };
 
@@ -129,6 +134,8 @@ export default function TransferNFTModal({
             <div className="flex gap-1 flex-col">
               <Text className="text-secondary font-semibold">Quantity</Text>
               <Input
+                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                type="number"
                 error={!!errors.quantity}
                 register={register("quantity", formRules.quantity)}
                 appendIcon={
@@ -152,7 +159,12 @@ export default function TransferNFTModal({
           <FormValidationMessages errors={errors} />
 
           <div className="flex gap-2 flex-col">
-            <Button type={"submit"} className="w-full">
+            <Button
+              loading={isLoading}
+              disabled={!isBalance}
+              type={"submit"}
+              className="w-full"
+            >
               Continue
             </Button>
             <Button variant="outlined" className="w-full" onClick={onClose}>

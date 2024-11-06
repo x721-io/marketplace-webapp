@@ -7,7 +7,7 @@ import Textarea from "@/components/Form/Textarea";
 import Button from "@/components/Button";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import useCollection, { useUpdateCollection } from "@/hooks/useCollection";
+import useCollection from "@/hooks/useCollection";
 import { randomWord } from "@rarible/types";
 import useAuthStore from "@/store/auth/store";
 import { BASE_API_URL } from "@/config/api";
@@ -19,7 +19,7 @@ import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { parseImageUrl } from "@/utils/nft";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { useAccount, useSwitchChain } from "wagmi";
-import { CHAIN_ID } from "@/config/constants";
+import { ALLOWED_FILE_TYPES, CHAIN_ID } from "@/config/constants";
 import { formRulesCreateCollection } from "@/config/form/rules";
 import { useTranslations } from "next-intl";
 import {
@@ -238,8 +238,8 @@ export default function CreateNFTCollectionPage() {
                     onInput={handleUploadImage}
                     loading={uploading}
                     error={!!errors.avatar}
-                    maxSize={20}
-                    accept=".jpg,.jpeg, .png, .gif, .webp"
+                    maxSize={4}
+                    accept={ALLOWED_FILE_TYPES}
                   />
                 )}
               />

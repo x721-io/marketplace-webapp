@@ -138,7 +138,6 @@ export const useGetNFTs = (
     },
     {
       initialSize: 1,
-      revalidateFirstPage: false,
     }
   );
 
@@ -284,9 +283,6 @@ export const useGetTotalCountById = (
           break;
       }
       return nextAPI.post(API_ENDPOINTS.TOTAL_COUNT, params);
-    },
-    {
-      refreshInterval: 0,
     }
   );
   return {

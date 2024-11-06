@@ -310,6 +310,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     Quantity
                   </Text>
                   <Input
+                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="number"
                     maxLength={3}
                     size={3}
                     register={register("quantity", formRules.quantity)}

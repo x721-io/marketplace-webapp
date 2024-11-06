@@ -33,6 +33,7 @@ export default function CreatedNFTs({
     toggleFilter,
     resetFilters,
     updateFilters,
+    mutate,
   } = useFetchNFTsByUser(wallet, "created");
 
   const { data: totalCreated } = useGetTotalCountById(
@@ -44,8 +45,9 @@ export default function CreatedNFTs({
   useEffect(() => {
     if (totalCreated) {
       onUpdateAmount(totalCreated);
+      mutate();
     }
-  }, [totalCreated, onUpdateAmount]);
+  }, [totalCreated, onUpdateAmount, mutate]);
 
   return (
     <div

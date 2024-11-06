@@ -31,7 +31,7 @@ export default function OwnedNFTs({
     updateFilters,
   } = useFetchNFTsByUser(wallet, "owned");
 
-  const { data: totalOwned } = useGetTotalCountById(
+  const { data: totalOwned, mutate } = useGetTotalCountById(
     "total_owner-data",
     String(wallet) as `0x${string}`,
     String(MODE_OWNED)
@@ -40,8 +40,9 @@ export default function OwnedNFTs({
   useEffect(() => {
     if (totalOwned) {
       onUpdateAmount(totalOwned);
+      mutate();
     }
-  }, [totalOwned, onUpdateAmount]);
+  }, [totalOwned, onUpdateAmount, mutate]);
 
   return (
     <div

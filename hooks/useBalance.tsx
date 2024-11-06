@@ -1,27 +1,18 @@
-import useAuthStore from "@/store/auth/store";
-import { useEffect, useState } from "react";
-import { GetBalanceReturnType, getBalance } from "@wagmi/core";
-import { formatEther } from "ethers";
-import { Address } from "abitype";
-import { config } from "@/config/wagmi";
+import { useMemo } from "react";
+import { useAccount, useBalance } from "wagmi";
 
-export const useBalance = (token: Address) => {
-  const address = useAuthStore((state) => state.profile?.publicKey);
-  const [tokenBalance, setTokenBalance] = useState<GetBalanceReturnType>();
+export const useGetBalance = () => {
+  const { address } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+  });
 
-  useEffect(() => {
-    (async () => {
-      if (!address) return;
-      const balance = await getBalance(config, {
-        address,
-        token,
-      });
-      setTokenBalance(balance);
-    })();
-  }, [address, token]);
+  const isBalance = useMemo(() => {
+    return !!(balance && balance?.value > 0);
+  }, [balance]);
 
   return {
-    balance: tokenBalance,
-    displayedBalance: formatEther(tokenBalance?.value || 0),
+    balance,
+    isBalance,
   };
 };
