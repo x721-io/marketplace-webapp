@@ -141,5 +141,5 @@ export const config = createConfig({
   storage: createStorage({
     storage: cookieStorage,
   }),
-  ssr: true,
+  ssr: false,
 });

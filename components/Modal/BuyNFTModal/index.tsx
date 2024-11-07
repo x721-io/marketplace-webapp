@@ -21,6 +21,7 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useBuyNFT from "@/hooks/useBuyNFT";
 import { Address } from "abitype";
+import { isIntegerString } from "@/utils/string";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -48,6 +49,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   } = useForm<FormState.BuyNFT>({
     defaultValues: {
       quoteToken: saleData.quoteToken,
+      quantity: 0,
     },
   });
   const [price, quantity, quoteToken, allowance] = watch([
@@ -75,14 +77,14 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       nft.collection.type === "ERC721"
         ? BigInt(saleData.price || "0")
         : BigInt(saleData.price || "0") *
-          BigInt(quantity && !isNaN(quantity) ? quantity : "0"),
+          BigInt(isIntegerString(quantity.toString()) ? quantity : "0"),
     onSuccess: (data) => {
       if (!saleData.price || isNaN(Number(saleData.price))) return;
       const priceBigint =
         nft.collection.type === "ERC721"
           ? BigInt(saleData.price || "0")
           : BigInt(saleData.price || "0") *
-            BigInt(quantity && !isNaN(quantity) ? quantity : "0");
+            BigInt(isIntegerString(quantity.toString()) ? quantity : "0");
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
       setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
@@ -114,7 +116,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!quantity) return BigInt(0);
     return (
       BigInt(saleData.price || "0") *
-      BigInt(quantity && !isNaN(quantity) ? quantity : "0")
+      BigInt(isIntegerString(quantity.toString()) ? quantity : "0")
     );
   }, [quantity, saleData]);
 
@@ -357,7 +359,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
-                qty={quantity}
+                qty={quantity ?? 0}
                 price={BigInt(saleData?.price || "0")}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
@@ -422,7 +424,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 </div>
 
                 <FeeCalculator
-                  qty={quantity}
+                  qty={quantity ?? 0}
                   mode="buyer"
                   nft={nft}
                   price={totalPriceBN}

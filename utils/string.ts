@@ -95,3 +95,11 @@ export const truncate = ({
     str.substring(str.length - tailCount - 1)
   );
 };
+
+export const isIntegerString = (text: string) => {
+  return text === Number.parseInt(text) + "";
+};
+
+export const isFloatString = (text: string) => {
+  return text === Number.parseFloat(text) + "";
+};

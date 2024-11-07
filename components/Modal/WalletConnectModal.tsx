@@ -37,10 +37,10 @@ export default function WalletConnectModal({
           await connect();
         } else {
           await connectAsync({ connector });
+          onSignMessage();
+          onClose && onClose();
         }
       }
-      onSignMessage();
-      onClose && onClose();
     } catch (e) {
       console.error("Error connecting wallet:", e);
     }
@@ -66,7 +66,7 @@ export default function WalletConnectModal({
               >
                 <button
                   onClick={() => {
-                    if (!isMetamask) {
+                    if (!isMetamask && !isAndroid && !isIphone) {
                       window.open(
                         "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en",
                         "_blank"
@@ -84,7 +84,11 @@ export default function WalletConnectModal({
                       width={35}
                       height={35}
                     />
-                    Metamask {!isMetamask && `(Not Installed)`}
+                    Metamask{" "}
+                    {!isMetamask &&
+                      !isAndroid &&
+                      !isIphone &&
+                      `(Not Installed)`}
                   </div>
                 </button>
               </div>
@@ -112,14 +116,14 @@ export default function WalletConnectModal({
                     <div className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black">
                       <button
                         onClick={() => {
-                          if (!isBitget) {
+                          if (!isBitget && !isAndroid && !isIphone) {
                             window.open(
                               "https://chromewebstore.google.com/detail/bitget-wallet-formerly-bi/jiidiaalihmmhddjgbnbgdfflelocpak",
                               "_blank"
                             );
                             return;
                           }
-                          isMobile
+                          isAndroid || isIphone
                             ? handleConnect(connector, connect)
                             : handleConnect(connector);
                         }}
@@ -132,7 +136,11 @@ export default function WalletConnectModal({
                             width={35}
                             height={35}
                           />
-                          Bitget {!isBitget && `(Not Installed)`}
+                          Bitget{" "}
+                          {!isBitget &&
+                            !isAndroid &&
+                            !isIphone &&
+                            `(Not Installed)`}
                         </div>
                       </button>
                     </div>
