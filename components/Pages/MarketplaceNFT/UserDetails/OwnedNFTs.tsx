@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import SliderIcon from "@/components/Icon/Sliders";
 import Button from "@/components/Button";
 import { classNames } from "@/utils/string";
@@ -9,6 +9,7 @@ import { Address } from "abitype";
 import { MODE_OWNED } from "@/config/constants";
 import { useFetchNFTsByUser } from "@/hooks/useFetchNFTsByUser";
 import { useGetTotalCountById } from "@/hooks/useQuery";
+import { useFilterByUser } from "@/store/filters/byUser/store";
 
 export default function OwnedNFTs({
   wallet,
@@ -30,6 +31,12 @@ export default function OwnedNFTs({
     resetFilters,
     updateFilters,
   } = useFetchNFTsByUser(wallet, "owned");
+
+  // const {resetFilters: reset} = useFilterByUser();
+  //
+  // const resetFilters = useCallback(() => {
+  //   reset("owned", wallet);
+  // }, [reset, wallet]);
 
   const { data: totalOwned, mutate } = useGetTotalCountById(
     "total_owner-data",
