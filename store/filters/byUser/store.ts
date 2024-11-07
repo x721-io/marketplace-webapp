@@ -95,6 +95,49 @@ export const useFilterByUser = create(
       resetFilters: (mode, userAddress) =>
         set((state) => {
           if (!state[userAddress]) return state;
+
+          if (mode === "onSale") {
+            return {
+              [userAddress]: {
+                ...state[userAddress],
+                [mode]: {
+                  filters: {
+                    ...DEFAULT_FILTERS_BY_USER[mode].filters,
+                    userAddress,
+                    owner:
+                      mode === "onSale"
+                        ? state[userAddress][mode].filters.owner
+                        : undefined,
+                    sellStatus:
+                      mode === "onSale"
+                        ? state[userAddress][mode].filters.sellStatus
+                        : undefined,
+                  },
+                  showFilters: state[userAddress][mode].showFilters,
+                },
+              },
+            };
+          }
+
+          if (mode === "owned") {
+            return {
+              [userAddress]: {
+                ...state[userAddress],
+                [mode]: {
+                  filters: {
+                    ...DEFAULT_FILTERS_BY_USER[mode].filters,
+                    userAddress,
+                    owner:
+                      mode === "owned"
+                        ? state[userAddress][mode].filters.owner
+                        : undefined,
+                  },
+                  showFilters: state[userAddress][mode].showFilters,
+                },
+              },
+            };
+          }
+
           return {
             [userAddress]: {
               ...state[userAddress],
