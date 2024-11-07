@@ -40,7 +40,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   const interval = useRef<any>(null);
   const [isMouseUp, setMouseUp] = useState(false);
   const [totalItem, setTotalItem] = useState(0);
-  const [isAutoplay, setAutoplay] = useState(autoPlay);
+  const [isAutoplay, setAutoplay] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(initCurrentIndex);
   const scrollRef = useRef<HTMLDivElement>(null);
 
