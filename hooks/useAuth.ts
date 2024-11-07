@@ -67,9 +67,9 @@ export const useAuth = () => {
   const onUpdateProfile = useCallback(
     async (params: APIParams.UpdateProfile) => {
       if (!bearerToken) return;
-      const profile = await api.updateProfile(params);
-      if (!profile) return;
-      setProfile(profile);
+      const resonse = await api.updateProfile(params);
+      if (!resonse) return;
+      setProfile(resonse.data.data);
     },
     [bearerToken, setProfile]
   );
