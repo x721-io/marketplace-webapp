@@ -5,6 +5,8 @@ import { NFT, MarketEvent } from "@/types";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { useSWRConfig } from "swr";
+import { useParams } from "next/navigation";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -12,12 +14,15 @@ interface Props extends MyModalProps {
 }
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
+  const { id } = useParams();
   const { onCancelBid, isLoading, error, isSuccess } = useCancelBidNFT(nft);
+  const { mutate } = useSWRConfig();
 
   const handleCancelBid = async () => {
     if (!bid) return;
     try {
-      onCancelBid(bid.operationId);
+      await onCancelBid(bid.operationId);
+      mutate(`nft-market-data/${id}`);
     } catch (e: any) {
       console.error(e);
     }

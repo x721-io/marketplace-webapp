@@ -27,6 +27,8 @@ import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { Address } from "abitype";
+import { useSWRConfig } from "swr";
+import { useParams } from "next/navigation";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -34,6 +36,8 @@ interface Props extends MyModalProps {
 }
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
+  const { id } = useParams();
+  const { mutate } = useSWRConfig();
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
   const onBidURC721UsingNative = useBidURC721UsingNative(nft);
@@ -178,6 +182,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         isLoading: false,
       });
       onClose?.();
+      mutate(`nft-market-data/${id}`);
     } catch (e: any) {
       console.error(e);
       toast.update(toastId, {

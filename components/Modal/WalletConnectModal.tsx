@@ -146,13 +146,6 @@ export default function WalletConnectModal({
                       <div className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black">
                         <button
                           onClick={() => {
-                            if (!isBitget) {
-                              window.open(
-                                "https://chromewebstore.google.com/detail/bitget-wallet-formerly-bi/jiidiaalihmmhddjgbnbgdfflelocpak",
-                                "_blank"
-                              );
-                              return;
-                            }
                             isMobile
                               ? handleConnect(connector, connect)
                               : handleConnect(connector);
