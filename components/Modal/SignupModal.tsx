@@ -1,7 +1,7 @@
 import { Label } from "flowbite-react";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { sleep } from "@/utils";
@@ -24,6 +24,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormState.SignUp>();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -44,12 +45,19 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
         onClose();
       }
     } catch (e: any) {
-      toast.error(`Error report: ${e.message || e}`);
+      toast.error(`Error report: ${e.response.data.error || e}`);
       console.error("Error signing up:", e);
     } finally {
       setIsSigningUp(false);
     }
   };
+
+  useEffect(() => {
+    if (!show) {
+      setValue("email", "");
+      setValue("username", "");
+    }
+  }, [show, setValue]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
