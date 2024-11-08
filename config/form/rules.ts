@@ -120,11 +120,19 @@ export const formRulesCreateCollection = {
       value: noSpecialCharacterRegex,
       message: "Collection symbol should not contain special characters",
     },
+    maxLength: {
+      value: CREATE_NAME,
+      message: "Symbol cannot exceed 25 characters",
+    },
   },
   shortUrl: {
     pattern: {
       value: noSpecialCharacterRegex,
       message: "Short url should not contain special characters",
+    },
+    maxLength: {
+      value: CREATE_NAME,
+      message: "Short url cannot exceed 25 characters",
     },
   },
   description: {
