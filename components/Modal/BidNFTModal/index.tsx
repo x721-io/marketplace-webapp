@@ -250,6 +250,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         isLoading: false,
       });
     } finally {
+      mutate(`nft-market-data/${id}`);
       setLoading(false);
     }
   };

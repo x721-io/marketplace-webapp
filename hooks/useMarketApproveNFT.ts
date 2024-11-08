@@ -20,6 +20,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
       : contracts.erc1155Base.abi) as any,
     functionName: "isApprovedForAll",
     args: [wallet as Address, marketContract.address],
+    scopeKey: "isMarketContractApprovedForAll",
     query: { enabled: !!wallet },
   });
 
@@ -28,6 +29,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
     abi: contracts.erc721Base.abi,
     functionName: "getApproved",
     args: [(nft.u2uId || nft.id) as any],
+    scopeKey: "isMarketContractApprovedForSingle",
     query: {
       enabled: type === "ERC721",
       select: (data) => {

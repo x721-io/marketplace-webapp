@@ -22,6 +22,8 @@ import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 import NFTApproval from "@/components/NFTApproval";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { useSWRConfig } from "swr";
+import { useParams } from "next/navigation";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -34,7 +36,9 @@ export default function SellNFTModal({
   marketData,
   onClose,
 }: Props) {
+  const { id } = useParams();
   const api = useMarketplaceApi();
+  const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);
   const [loadingForAll, setLoadingForAll] = useState(false);
 
@@ -178,6 +182,7 @@ export default function SellNFTModal({
         isLoading: false,
       });
     } finally {
+      mutate(`isMarketContractApprovedForSingle`);
       setLoading(false);
     }
   };
@@ -205,6 +210,7 @@ export default function SellNFTModal({
         isLoading: false,
       });
     } finally {
+      mutate(`isMarketContractApprovedForAll`);
       setLoadingForAll(false);
     }
   };

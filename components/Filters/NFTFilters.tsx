@@ -156,7 +156,7 @@ export default function NFTFilters({
           </div>
           <Button
             className="w-full"
-            variant="secondary"
+            variant="primary"
             scale="sm"
             onClick={handleApplyFilters}
           >
