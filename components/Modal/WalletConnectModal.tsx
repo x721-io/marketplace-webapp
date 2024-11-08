@@ -44,18 +44,12 @@ export default function WalletConnectModal({
     }
   };
 
-  const handleOnConnect = useCallback(() => {
+  const handleOnConnect = () => {
     setTimeout(() => {
       onSignMessage();
       onClose && onClose();
-    }, 100);
-  }, [onSignMessage, onClose]);
-
-  useEffect(() => {
-    if (isAndroid || isIphone) {
-      connectors.forEach((c) => c.emitter.on("connect", handleOnConnect));
-    }
-  }, [isAndroid, isIphone, connectors, handleOnConnect]);
+    }, 250);
+  };
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
@@ -76,13 +70,18 @@ export default function WalletConnectModal({
                 className="cursor-pointer px-4 py-2 tablet:px-5 tablet:py-3 border border-gray-200 rounded-xl flex items-center  transition-all hover:bg-gray-300 hover:border-transparent hover:text-black"
               >
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     if (!isMetamask && !isAndroid && !isIphone) {
                       window.open(
                         "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en",
                         "_blank"
                       );
                       return;
+                    }
+                    if (isAndroid || isIphone) {
+                      connectors.forEach((c) =>
+                        c.emitter.on("connect", handleOnConnect)
+                      );
                     }
                     handleConnect(connectors[0]);
                   }}

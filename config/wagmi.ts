@@ -138,8 +138,8 @@ export const config = createConfig({
     [u2uNetwork.id]: http(),
   },
   multiInjectedProviderDiscovery: false,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
+  // storage: createStorage({
+  //   storage: cookieStorage,
+  // }),
   ssr: false,
 });

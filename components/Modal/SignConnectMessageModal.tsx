@@ -119,6 +119,20 @@ export default function SignConnectMessageModal({
           </>
         );
       // case isLoading:
+      //         return (
+      //     <>
+      //       <Text className="font-semibold text-primary text-center text-heading-sm">
+      //         Loading...
+      //       </Text>
+      //       <Text className="text-secondary text-center" variant="body-18">
+      //         Sign the message in your wallet MetaMask to sign in safely
+      //       </Text>
+      //       <MySpinner />
+      //       <Button className="w-full" variant="secondary" onClick={onClose}>
+      //         Cancel
+      //       </Button>
+      //     </>
+      //   );
       // default:
       //   return (
       //     <>
