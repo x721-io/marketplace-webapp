@@ -10,11 +10,17 @@ import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/auth/store";
 import { FormState } from "@/types";
 import { urlRegex } from "@/utils/regex";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { MARKETPLACE_URL } from "@/config/constants";
-import { useUpdateProfile, useVerifyAccount } from "@/hooks/useMutate";
+import {
+  useGetProfileMutate,
+  useUpdateProfile,
+  useVerifyAccount,
+} from "@/hooks/useMutate";
+import { Address } from "viem";
+import { useAccount } from "wagmi";
 
 export default function ProfileStep() {
   const { trigger: updateProfile } = useUpdateProfile();
@@ -23,6 +29,15 @@ export default function ProfileStep() {
   const profile = useAuthStore((state) => state.profile);
   const { setProfile } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
+
+  const { address } = useAccount();
+  const { data: getProfile, revalidate } = useGetProfileMutate(
+    address as Address
+  );
+
+  const isVerify = useMemo(() => {
+    return getProfile?.accountStatus;
+  }, [getProfile, revalidate]);
 
   const {
     handleSubmit,
@@ -209,13 +224,13 @@ export default function ProfileStep() {
             trust on X721
           </Text>
           <Button
-            disabled={profile?.accountStatus}
+            disabled={isVerify}
             onClick={() => handleGetVerify()}
             variant="secondary"
             scale="sm"
             className="w-full tablet:w-auto desktop:w-auto"
           >
-            {profile?.accountStatus ? "Account Verified" : "Get Verify"}
+            {isVerify ? "Account Verified" : "Get Verify"}
           </Button>
         </div>
       </div>

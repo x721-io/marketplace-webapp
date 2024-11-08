@@ -12,6 +12,7 @@ import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import "react-tooltip/dist/react-tooltip.css";
 import { useGetProfileMutate } from "@/hooks/useMutate";
 import { config } from "@/config/wagmi";
+import { Address } from "viem";
 
 interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -30,8 +31,7 @@ export default function SignConnectMessageModal({
   const { onAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
-  const { trigger: getProfileMutate } = useGetProfileMutate();
-
+  const { data } = useGetProfileMutate(address as Address);
   const handleSignMessage = useCallback(async () => {
     setAuthError("");
 
@@ -50,13 +50,12 @@ export default function SignConnectMessageModal({
         : await signMessage(config, { message: SIGN_MESSAGE.CONNECT(date) });
 
       const credentials = await onAuth(date, signature);
-      const profile = await getProfileMutate({ address });
 
-      if (!profile?.acceptedTerms) {
+      if (!data?.acceptedTerms) {
         // Not registered
         onSignup();
       } else {
-        setProfile(profile);
+        setProfile(data);
         onConnectSuccess?.(credentials?.accessToken);
         onClose?.();
       }

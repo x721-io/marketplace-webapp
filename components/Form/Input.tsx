@@ -36,7 +36,7 @@ export default function Input({
     switch (scale) {
       case "lg":
         return classNames(
-          "text-body-16 rounded-2xl min-w-72 h-14 p-4",
+          "text-body-16 rounded-2xl tablet:min-w-72 h-14 p-4",
           !!prependIcon && "ps-10",
           !!appendIcon && "pe-10"
         );
@@ -49,7 +49,7 @@ export default function Input({
       case "md":
       default:
         return classNames(
-          "text-body-16 rounded-2xl min-w-72 h-12 p-3",
+          "text-body-16 rounded-2xl tablet:min-w-72 h-12 p-3",
           !!prependIcon && "ps-10",
           !!appendIcon && "pe-10"
         );
