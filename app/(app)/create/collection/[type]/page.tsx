@@ -19,7 +19,7 @@ import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { parseImageUrl } from "@/utils/nft";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { useAccount, useSwitchChain } from "wagmi";
-import { ALLOWED_FILE_TYPES, CHAIN_ID } from "@/config/constants";
+import { ALLOWED_IMAGE_TYPES, CHAIN_ID } from "@/config/constants";
 import { formRulesCreateCollection } from "@/config/form/rules";
 import { useTranslations } from "next-intl";
 import {
@@ -239,7 +239,7 @@ export default function CreateNFTCollectionPage() {
                     loading={uploading}
                     error={!!errors.avatar}
                     maxSize={4}
-                    accept={ALLOWED_FILE_TYPES}
+                    accept={ALLOWED_IMAGE_TYPES}
                   />
                 )}
               />

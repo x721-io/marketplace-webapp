@@ -6,14 +6,19 @@ import { tokens } from "@/config/tokens";
 import { Web3Functions } from "@/services/web3";
 import { useReadContract } from "wagmi";
 import { Address } from "abitype";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useMarketApproveNFT = (nft: NFT) => {
+  const queryClient = useQueryClient();
   const type = nft.collection.type;
   const marketContract =
     type === "ERC721" ? contracts.erc721Market : contracts.erc1155Market;
   const wallet = useAuthStore((state) => state.profile?.publicKey);
 
-  const { data: isMarketContractApprovedForAll } = useReadContract({
+  const {
+    data: isMarketContractApprovedForAll,
+    queryKey: isApproveAllQueryKey,
+  } = useReadContract({
     address: nft.collection.address,
     abi: (type === "ERC721"
       ? contracts.erc721Base.abi
@@ -24,7 +29,10 @@ export const useMarketApproveNFT = (nft: NFT) => {
     query: { enabled: !!wallet },
   });
 
-  const { data: isMarketContractApprovedForSingle } = useReadContract({
+  const {
+    data: isMarketContractApprovedForSingle,
+    queryKey: isApproveSingleQueryKey,
+  } = useReadContract({
     address: nft.collection.address,
     abi: contracts.erc721Base.abi,
     functionName: "getApproved",
@@ -66,6 +74,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
         args: [marketContract.address, true],
         value: BigInt(0) as any,
       });
+      queryClient.invalidateQueries({ queryKey: isApproveAllQueryKey });
       return response.transactionHash;
     } catch (err: any) {
       throw err;
@@ -81,6 +90,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
         args: [contracts.erc721Market.address, BigInt(nft.u2uId ?? nft.id)],
         value: BigInt(0) as any,
       });
+      queryClient.invalidateQueries({ queryKey: isApproveSingleQueryKey });
       return response.transactionHash;
     } catch (err: any) {
       throw err;
