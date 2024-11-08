@@ -23,9 +23,9 @@ import { Address } from "viem";
 import { useAccount } from "wagmi";
 
 export default function ProfileStep() {
-  const { trigger: updateProfile } = useUpdateProfile();
+  const { trigger: updateProfile, isMutating: isUpdate } = useUpdateProfile();
 
-  const { trigger: onVerifyAccount, data } = useVerifyAccount();
+  const { trigger: onVerifyAccount, data, isMutating } = useVerifyAccount();
   const profile = useAuthStore((state) => state.profile);
   const { setProfile } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
@@ -38,6 +38,10 @@ export default function ProfileStep() {
   const isVerify = useMemo(() => {
     return getProfile?.accountStatus;
   }, [getProfile, revalidate]);
+
+  useEffect(() => {
+    revalidate();
+  }, [revalidate, isMutating, isUpdate]);
 
   const {
     handleSubmit,
@@ -199,6 +203,7 @@ export default function ProfileStep() {
         <FormValidationMessages errors={errors} />
         <div className="w-full tablet:w-auto desktop:w-auto">
           <Button
+            loading={isUpdate}
             type="submit"
             disabled={!isDirty}
             className="w-full tablet:w-auto desktop:w-auto"
