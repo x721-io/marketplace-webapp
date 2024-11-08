@@ -1,6 +1,7 @@
 import { NFT } from "@/types";
 import Button from "./Button";
 import Text from "./Text";
+import { useGetBalance } from "@/hooks/useBalance";
 
 interface Props {
   nft: NFT;
@@ -19,6 +20,8 @@ export default function NFTApproval({
   loadingForSingle,
   loadingForAll,
 }: Props) {
+  const { isBalance } = useGetBalance();
+
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="flex justify-between items-center">
@@ -35,6 +38,7 @@ export default function NFTApproval({
           <Button
             loading={loadingForSingle}
             variant="secondary"
+            disabled={!isBalance}
             onClick={handleApproveTokenForSingle}
             className="p-3 flex-1 w-full  tablet:w-auto hover:bg-gray-900 hover:text-white "
           >
@@ -46,6 +50,7 @@ export default function NFTApproval({
         <Button
           loading={loadingForAll}
           variant="secondary"
+          disabled={!isBalance}
           onClick={handleApproveTokenForAll}
           className="p-3 flex-1 w-full tablet:w-auto hover:bg-gray-900 hover:text-white "
         >

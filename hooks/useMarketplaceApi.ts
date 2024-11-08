@@ -1,7 +1,7 @@
 "use client";
 
 import { APIParams, APIResponse } from "@/services/api/types";
-import { getMarketplaceApi, marketplaceApi } from "@/services/api";
+import { getMarketplaceApi, marketplaceApi, nextAPI } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { Address } from "abitype";
 import { useCallback, useContext, useMemo } from "react";
@@ -33,9 +33,8 @@ export const useMarketplaceApi = () => {
 
       updateProfile: async (
         params: APIParams.UpdateProfile
-      ): Promise<APIResponse.ProfileDetails | null> => {
+      ): Promise<{ data: { data: APIResponse.ProfileDetails } } | null> => {
         const response = await handleAuthentication();
-        const axiosClient = getMarketplaceApi();
 
         if (response.status === "fail") {
           clearAuthCookiesAction();
@@ -44,10 +43,9 @@ export const useMarketplaceApi = () => {
           return null;
         }
 
-        axiosClient.defaults.headers.common.Authorization =
-          response.bearerToken;
+        nextAPI.defaults.headers.common.Authorization = response.bearerToken;
 
-        return axiosClient.post(API_ENDPOINTS.PROFILE, params);
+        return nextAPI.post(API_ENDPOINTS.PROFILE, params);
       },
 
       resendEmail: (

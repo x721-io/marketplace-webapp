@@ -4,7 +4,7 @@ import { useAccount, useSwitchChain } from "wagmi";
 import { disconnect } from "@wagmi/core";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { APIParams } from "@/services/api/types";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { CHAIN_ID } from "@/config/constants";
@@ -67,9 +67,9 @@ export const useAuth = () => {
   const onUpdateProfile = useCallback(
     async (params: APIParams.UpdateProfile) => {
       if (!bearerToken) return;
-      const profile = await api.updateProfile(params);
-      if (!profile) return;
-      setProfile(profile);
+      const resonse = await api.updateProfile(params);
+      if (!resonse) return;
+      setProfile(resonse.data.data);
     },
     [bearerToken, setProfile]
   );
@@ -105,12 +105,17 @@ export const useAuth = () => {
 };
 
 export const useWrongNetwork = () => {
-  const { chain } = useAccount();
+  const { chainId } = useAccount();
   const { switchChain } = useSwitchChain();
+  const [isWrongNetwork, setIsWrongNetwork] = useState(false);
 
-  const isWrongNetwork = useMemo(() => {
-    return !!chain?.id && chain?.id !== Number(CHAIN_ID);
-  }, [chain?.id]);
+  useEffect(() => {
+    if (chainId === Number(CHAIN_ID)) {
+      setIsWrongNetwork(false);
+    } else {
+      setIsWrongNetwork(true);
+    }
+  }, [chainId]);
 
   const switchToCorrectNetwork = () => {
     if (isWrongNetwork) {

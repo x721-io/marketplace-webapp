@@ -69,6 +69,10 @@ export default function SearchInput() {
   };
 
   useEffect(() => {
+    handleTextInput("");
+  }, [searchKey]);
+
+  useEffect(() => {
     // Lazy search
     resetCollection();
     resetNft();
