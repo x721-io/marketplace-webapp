@@ -4,25 +4,30 @@ import { User } from "@/types";
 import { APIParams, APIResponse } from "@/services/api/types";
 import useSWRMutation from "swr/mutation";
 import { Address } from "viem";
+import useSWR from "swr";
 
-export const useGetProfileMutate = () => {
-  const { trigger, data, isMutating, reset } = useSWRMutation(
-    `${API_ENDPOINTS.PROFILE}`,
-    async (_: string, { arg }: { arg: { address: string } }) => {
-      const response = await nextAPI.get(
-        `${API_ENDPOINTS.PROFILE}/${arg.address}`
-      );
-      return response.data.data as User;
-    }
-  );
-  return {
-    trigger,
+export const useGetProfileMutate = (address: Address) => {
+  const fetcher = async (url: string) => {
+    const response = await nextAPI.get(url);
+    return response.data.data as User;
+  };
+
+  const {
     data,
-    isMutating,
-    reset,
+    error,
+    isLoading,
+    mutate: revalidate,
+  } = useSWR(address ? `${API_ENDPOINTS.PROFILE}/${address}` : null, fetcher, {
+    refreshInterval: 0,
+  });
+
+  return {
+    data,
+    isLoading,
+    error,
+    revalidate,
   };
 };
-
 export const useUpdateProfile = () => {
   const { trigger, data, isMutating, reset } = useSWRMutation(
     API_ENDPOINTS.PROFILE,
