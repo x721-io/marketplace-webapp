@@ -29,6 +29,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
   } = useForm<FormState.SignUp>();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const { bearerToken } = useAuth();
 
   const onSignup = async (data: FormState.SignUp) => {
     if (!acceptedTerms) return;
@@ -45,7 +46,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
         onClose();
       }
     } catch (e: any) {
-      toast.error(`Error report: ${e.response.data.error || e}`);
+      toast.error(`Error report: ${e.response?.data?.error || e}`);
       console.error("Error signing up:", e);
     } finally {
       setIsSigningUp(false);

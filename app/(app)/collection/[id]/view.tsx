@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { APIParams, APIResponse } from "@/services/api/types";
 import NFTsList from "@/components/List/NFTsList";
 import BannerSectionCollection from "@/components/Pages/MarketplaceNFT/CollectionDetails/BannerSection";
@@ -15,22 +15,55 @@ import { useFilterByCollection } from "@/store/filters/byCollection/store";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useGetNFTs } from "@/hooks/useQuery";
 import { Address } from "abitype";
+import useSWR from "swr";
+import { API_ENDPOINTS } from "@/config/api";
+import { marketplaceApi } from "@/services/api";
 
-export default function CollectionView({
-  collectionData,
-}: {
-  collectionData: APIResponse.CollectionDetails;
-}) {
+const getCollectionData = async (
+  id: string
+): Promise<
+  | { status: "success"; data: APIResponse.CollectionDetails | null }
+  | { status: "error" }
+> => {
+  try {
+    const data = (await marketplaceApi.get(
+      `${API_ENDPOINTS.COLLECTIONS + `/${id}`}`
+    )) as APIResponse.CollectionDetails | null;
+    return {
+      status: "success",
+      data,
+    };
+  } catch (err) {
+    return {
+      status: "error",
+    };
+  }
+};
+
+export default function CollectionView() {
+  const { id } = useParams();
+  const { data: collectionData } = useSWR(
+    id ? `/api/collections` : null,
+    async () => {
+      const data = await getCollectionData(id as string);
+      if (data.status === "success") {
+        return data.data;
+      }
+      return null;
+    }
+  );
   const router = useRouter();
   const filterStore = useFilterByCollection((state) => state);
   const [isInitial, setInitial] = useState(true);
 
   useEffect(() => {
-    const collectionAddress = collectionData.collection.address;
-    filterStore.createFiltersForCollection(collectionAddress);
-    filterStore.updateFilters(collectionAddress, { collectionAddress });
+    if (collectionData) {
+      const collectionAddress = collectionData.collection.address;
+      filterStore.createFiltersForCollection(collectionAddress);
+      filterStore.updateFilters(collectionAddress, { collectionAddress });
+    }
     setInitial(false);
-  }, []);
+  }, [collectionData]);
 
   const { showFilters, filters, toggleFilter, resetFilters, updateFilters } =
     useMemo(() => {
@@ -71,6 +104,10 @@ export default function CollectionView({
     page: size,
     onNext: () => setSize(size + 1),
   });
+
+  if (!collectionData) {
+    return null;
+  }
 
   return (
     <div className="w-full relative">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAccount, useSwitchChain } from "wagmi";
+import { hasCookie } from "cookies-next";
 import { disconnect } from "@wagmi/core";
 import { sleep } from "@/utils";
 import useAuthStore, { clearProfile } from "@/store/auth/store";
@@ -66,7 +67,9 @@ export const useAuth = () => {
 
   const onUpdateProfile = useCallback(
     async (params: APIParams.UpdateProfile) => {
-      if (!bearerToken) return;
+      if (!hasCookie("refreshToken")) {
+        throw new Error("User not authorized. Please connect wallet again");
+      }
       const resonse = await api.updateProfile(params);
       if (!resonse) return;
       setProfile(resonse.data.data);

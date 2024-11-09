@@ -22,6 +22,7 @@ import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useBuyNFT from "@/hooks/useBuyNFT";
 import { Address } from "abitype";
 import { isIntegerString } from "@/utils/string";
+import { useSWRConfig } from "swr";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -62,6 +63,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     () => findTokenByAddress(saleData.quoteToken),
     [saleData]
   );
+  const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);
   const {
     sellerFee,
@@ -133,6 +135,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         autoClose: 1000,
         closeButton: true,
       });
+      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
@@ -156,6 +159,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         autoClose: 1000,
         closeButton: true,
       });
+      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
@@ -179,6 +183,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         autoClose: 1000,
         closeButton: true,
       });
+      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
@@ -202,7 +207,9 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         autoClose: 1000,
         closeButton: true,
       });
+      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
+      mutate("/api/collections");
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
         autoClose: 2500,
