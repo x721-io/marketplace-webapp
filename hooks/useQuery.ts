@@ -89,6 +89,7 @@ export const useGetCollections = (
     {
       initialSize: 1,
       revalidateFirstPage: false,
+      refreshInterval: 3000,
     }
   );
 
