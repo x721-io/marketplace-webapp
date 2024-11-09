@@ -88,7 +88,7 @@ export const useGetCollections = (
     },
     {
       initialSize: 1,
-      revalidateFirstPage: false,
+      refreshInterval: 3000,
     }
   );
 
@@ -151,19 +151,13 @@ export const useGetNFTs = (
   };
 };
 
-export const useGetCollectionById = (
-  id: string | null,
-  onSuccess: (data: APIResponse.CollectionDetails) => void
-) => {
+export const useGetCollectionById = (id: number) => {
   const { data, error, isLoading, mutate } =
     useSWR<NextAPIResponse.GetCollectionDetails>(
       id ? `${API_ENDPOINTS.COLLECTIONS + `/${id}`}` : null,
       nextAPI.get,
       {
-        refreshInterval: 30000,
-        onSuccess: (data) => {
-          onSuccess(data.data.data);
-        },
+        refreshInterval: 3000,
       }
     );
   return {
