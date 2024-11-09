@@ -13,6 +13,9 @@ import "react-tooltip/dist/react-tooltip.css";
 import { useGetProfileMutate } from "@/hooks/useMutate";
 import { config } from "@/config/wagmi";
 import { Address } from "viem";
+import { nextAPI } from "@/services/api";
+import { API_ENDPOINTS } from "@/config/api";
+import { User } from "@/types";
 
 interface Props extends MyModalProps {
   onConnectSuccess?: (accessToken?: string) => void;
@@ -31,7 +34,18 @@ export default function SignConnectMessageModal({
   const { onAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState("");
-  const { data } = useGetProfileMutate(address as Address);
+
+  const getUserProfile = async () => {
+    try {
+      const data = (await nextAPI.get(
+        `${API_ENDPOINTS.PROFILE}/${address}`
+      )) as { data: { data: User | null } };
+      return data?.data?.data;
+    } catch (err: any) {
+      return null;
+    }
+  };
+
   const handleSignMessage = useCallback(async () => {
     setAuthError("");
 
@@ -48,14 +62,13 @@ export default function SignConnectMessageModal({
             params: [SIGN_MESSAGE.CONNECT(date), address],
           })
         : await signMessage(config, { message: SIGN_MESSAGE.CONNECT(date) });
-
+      const userProfiles = await getUserProfile();
       const credentials = await onAuth(date, signature);
-
-      if (!data?.acceptedTerms) {
+      if (!userProfiles?.acceptedTerms) {
         // Not registered
         onSignup();
       } else {
-        setProfile(data);
+        setProfile(userProfiles);
         onConnectSuccess?.(credentials?.accessToken);
         onClose?.();
       }

@@ -52,7 +52,7 @@ export default function ConnectPage() {
         onClose={() => setShowSignMessage(false)}
       />
       <SignupModal
-        show={true}
+        show={showSignup}
         onSignupSuccess={() => router.push("/")}
         onClose={() => setShowSignup(false)}
       />

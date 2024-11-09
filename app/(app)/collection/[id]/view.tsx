@@ -17,7 +17,7 @@ import { useGetNFTs } from "@/hooks/useQuery";
 import { Address } from "abitype";
 import useSWR from "swr";
 import { API_ENDPOINTS } from "@/config/api";
-import { marketplaceApi } from "@/services/api";
+import { nextAPI } from "@/services/api";
 
 const getCollectionData = async (
   id: string
@@ -26,12 +26,13 @@ const getCollectionData = async (
   | { status: "error" }
 > => {
   try {
-    const data = (await marketplaceApi.get(
+    const data = (await nextAPI.get(
       `${API_ENDPOINTS.COLLECTIONS + `/${id}`}`
-    )) as APIResponse.CollectionDetails | null;
+    )) as { data: { data: APIResponse.CollectionDetails | null } };
+
     return {
       status: "success",
-      data,
+      data: data.data.data,
     };
   } catch (err) {
     return {
