@@ -117,7 +117,7 @@ export default function WalletConnectModal({
                                 ? "https://play.google.com/store/apps/details?id=io.metamask&hl=en"
                                 : "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
                             }
-                          }, 1000);
+                          }, 500);
                           return;
                         }
                         handleConnect(connectors[0]);
@@ -164,7 +164,7 @@ export default function WalletConnectModal({
                                       ? "https://play.google.com/store/apps/details?id=com.bitkeep.wallet&hl=en"
                                       : "https://apps.apple.com/us/app/bitget-wallet-crypto-bitcoin/id1395301115";
                                   }
-                                }, 1000);
+                                }, 500);
                                 return;
                               }
                               handleConnect(connector);
