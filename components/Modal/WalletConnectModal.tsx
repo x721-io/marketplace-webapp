@@ -34,18 +34,18 @@ export default function WalletConnectModal({
     connect?: () => Promise<void>
   ) => {
     try {
-      if (!isConnected) {
+      if (isConnected) {
         await disconnectAsync();
-        if (connect) {
-          await connect();
-        } else {
-          await connectAsync({ connector });
-        }
-        setTimeout(() => {
-          onSignMessage();
-          onClose && onClose();
-        }, 200);
       }
+      if (connect) {
+        await connect();
+      } else {
+        await connectAsync({ connector });
+      }
+      setTimeout(() => {
+        onSignMessage();
+        onClose && onClose();
+      }, 100);
     } catch (e) {
       console.error("Error connecting wallet:", e);
     }
