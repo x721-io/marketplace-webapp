@@ -34,24 +34,21 @@ export default function WalletConnectModal({
     connect?: () => Promise<void>
   ) => {
     try {
-      await disconnectAsync();
-      if (connect) {
-        await connect();
-      } else {
-        await connectAsync({ connector });
-        onSignMessage();
-        onClose && onClose();
+      if (!isConnected) {
+        await disconnectAsync();
+        if (connect) {
+          await connect();
+        } else {
+          await connectAsync({ connector });
+        }
+        setTimeout(() => {
+          onSignMessage();
+          onClose && onClose();
+        }, 200);
       }
     } catch (e) {
       console.error("Error connecting wallet:", e);
     }
-  };
-
-  const handleOnConnect = () => {
-    setTimeout(() => {
-      onSignMessage();
-      onClose && onClose();
-    }, 250);
   };
 
   const getDappWalletInfo = () => {
