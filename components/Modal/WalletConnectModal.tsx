@@ -106,17 +106,17 @@ export default function WalletConnectModal({
                           );
                           return;
                         }
-                        // if (isAndroid || isIphone) {
-                        //   window.location.href = `https://metamask.app.link/dapp/${MARKETPLACE_URL}`;
-                        //   setTimeout(function () {
-                        //     if (document.hasFocus()) {
-                        //       window.location.href = isAndroid
-                        //         ? "https://play.google.com/store/apps/details?id=io.metamask&hl=en"
-                        //         : "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
-                        //     }
-                        //   }, 500);
-                        //   return;
-                        // }
+                        if (isAndroid || isIphone) {
+                          window.location.href = `https://metamask.app.link/dapp/${MARKETPLACE_URL}`;
+                          setTimeout(function () {
+                            if (document.hasFocus()) {
+                              window.location.href = isAndroid
+                                ? "https://play.google.com/store/apps/details?id=io.metamask&hl=en"
+                                : "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
+                            }
+                          }, 1000);
+                          return;
+                        }
                         handleConnect(connectors[0]);
                       }}
                       className="flex justify-between items-center w-full"
