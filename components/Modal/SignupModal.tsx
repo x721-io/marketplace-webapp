@@ -25,6 +25,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
     register,
     handleSubmit,
     setValue,
+    clearErrors,
     formState: { errors },
   } = useForm<FormState.SignUp>();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -58,8 +59,9 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
       setValue("email", "");
       setValue("username", "");
       setAcceptedTerms(false);
+      clearErrors();
     }
-  }, [show, setValue]);
+  }, [show, setValue, clearErrors]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>

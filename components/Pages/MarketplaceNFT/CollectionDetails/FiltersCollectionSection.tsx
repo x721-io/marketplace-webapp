@@ -39,6 +39,7 @@ export default function FiltersSectionCollection({
       </div>
       <div className="relative flex-1 order-2 desktop:order-3 min-w-[180px]">
         <Input
+          placeholder="Search NFTs in this collection"
           value={activeFilters.name}
           onChange={(e) => onSearch(e.target.value)}
           className="py-4 h-14 w-full"

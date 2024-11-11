@@ -98,6 +98,7 @@ export default function BannerSectionCollection({
           <input
             className="opacity-0"
             type="file"
+            accept="image/png, image/gif, image/webp"
             ref={coverImageRef}
             onChange={(e) => handleInputImage(e.target.files)}
           />
