@@ -34,9 +34,7 @@ export default function WalletConnectModal({
     connect?: () => Promise<void>
   ) => {
     try {
-      if (isConnected) {
-        await disconnectAsync();
-      }
+      await disconnectAsync();
       if (connect) {
         await connect();
       } else {
