@@ -39,17 +39,19 @@ export default function ExploreSectionNavbar() {
   });
 
   const {
-    filters: { name: collectionSearchText },
+    filters: collectionFilters,
     showFilters: showCollectionFilters,
     toggleFilter: toggleCollectionFilters,
     updateFilters: updateCollectionFilters,
+    resetFilters: resetCollectionFilters,
   } = useCollectionFilterStore((state) => state);
 
   const {
-    filters: { name: nftSearchText },
+    filters: nftFilters,
     showFilters: showNFTFilters,
     toggleFilter: toggleNFTFilters,
     updateFilters: updateNFTFilters,
+    resetFilters: resetNFTFilters,
   } = useNFTFilterStore((state) => state);
 
   const {
@@ -57,6 +59,7 @@ export default function ExploreSectionNavbar() {
     showFilters: showUserFilters,
     toggleFilter: toggleUserFilters,
     updateFilters: updateUserFilters,
+    resetFilters: resetUserFilters,
   } = useUserFilterStore((state) => state);
 
   const isFiltersVisible = useMemo(() => {
@@ -84,15 +87,15 @@ export default function ExploreSectionNavbar() {
   const searchText = useMemo(() => {
     switch (true) {
       case pathname.includes("collections"):
-        return collectionSearchText;
+        return collectionFilters.name;
       case pathname.includes("users"):
         return userSearchText;
       case pathname.includes("items"):
-        return nftSearchText;
+        return nftFilters.name;
       default:
         return "";
     }
-  }, [pathname, collectionSearchText, nftSearchText, userSearchText]);
+  }, [pathname, collectionFilters.name, nftFilters.name, userSearchText]);
 
   const placeholder = useMemo(() => {
     switch (true) {
@@ -176,6 +179,47 @@ export default function ExploreSectionNavbar() {
     }
     setSortOption({ name, order, orderBy });
   };
+
+  useEffect(() => {
+    if (pathname.includes("collections")) {
+      resetNFTFilters();
+      resetUserFilters();
+      if (!collectionFilters.order) {
+        setSortOption(dropdownItems[0]);
+        return;
+      }
+      const selectedItem = dropdownItems.find(
+        (item) =>
+          item.order === collectionFilters.order &&
+          item.orderBy === collectionFilters.orderBy
+      );
+      if (!selectedItem) {
+        setSortOption(dropdownItems[0]);
+        return;
+      }
+      setSortOption(selectedItem);
+    } else if (pathname.includes("items")) {
+      resetCollectionFilters();
+      resetUserFilters();
+      if (!nftFilters.order) {
+        setSortOption(dropdownItems[0]);
+        return;
+      }
+      const selectedItem = dropdownItems.find(
+        (item) =>
+          item.order === nftFilters.order && item.orderBy === nftFilters.orderBy
+      );
+      if (!selectedItem) {
+        setSortOption(dropdownItems[0]);
+        return;
+      }
+      setSortOption(selectedItem);
+    } else if (pathname.includes("users")) {
+      resetCollectionFilters();
+      resetUserFilters();
+      setSortOption(dropdownItems[0]);
+    }
+  }, [pathname, setSortOption]);
 
   useEffect(() => {
     if (pathname.includes("collections")) {

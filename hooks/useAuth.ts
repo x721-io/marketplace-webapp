@@ -108,17 +108,18 @@ export const useAuth = () => {
 };
 
 export const useWrongNetwork = () => {
-  const { chainId } = useAccount();
+  const { chainId, isConnected } = useAccount();
   const { switchChain } = useSwitchChain();
   const [isWrongNetwork, setIsWrongNetwork] = useState(false);
 
   useEffect(() => {
+    if (!isConnected) return;
     if (chainId === Number(CHAIN_ID)) {
       setIsWrongNetwork(false);
     } else {
       setIsWrongNetwork(true);
     }
-  }, [chainId]);
+  }, [chainId, isConnected]);
 
   const switchToCorrectNetwork = () => {
     if (isWrongNetwork) {

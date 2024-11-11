@@ -57,6 +57,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
     if (!show) {
       setValue("email", "");
       setValue("username", "");
+      setAcceptedTerms(false);
     }
   }, [show, setValue]);
 
