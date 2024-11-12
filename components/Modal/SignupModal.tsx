@@ -72,7 +72,7 @@ export default function SignupModal({ onSignupSuccess, show, onClose }: Props) {
               className="font-semibold text-primary text-center"
               variant="heading-md"
             >
-              Sign-up to U2 NFT!
+              Sign-up to X721!
             </Text>
             <Text className="text-secondary text-center" variant="body-18">
               Choose a display name and enter your email address to receive
