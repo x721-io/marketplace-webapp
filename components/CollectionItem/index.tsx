@@ -31,7 +31,7 @@ const CollectionItem = ({
       <div className="flex flex-col rounded-xl border border-1 hover:shadow-md border-soft transition-all">
         <div className="relative">
           <Image
-            className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover w-full h-24"
+            className="cursor-pointer rounded-tl-xl rounded-tr-xl object-cover w-full aspect-[7/2]"
             src={getCollectionBannerImage(c)}
             alt="Cover"
             width={1200}

@@ -18,6 +18,7 @@ import { useLaunchpadApi } from "@/hooks/useLaunchpadApi";
 import useLaunchpadStore from "@/store/launchpad/store";
 import { contracts } from "@/config/contracts";
 import { Address } from "abitype";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
   eligibleStatus: boolean;
@@ -34,6 +35,7 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
       enabled: !!address,
     },
   });
+  const { isValidSession } = useAuth();
 
   const [amount, setAmount] = useState(1);
   const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
@@ -273,12 +275,14 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
           </div>
         ) : (
           <div className="flex-1">
-            <p className="text-body-12 text-secondary">
-              Minted: {Number(amountBought)}
-              <span className="text-primary font-semibold">
-                /{round.maxPerWallet}
-              </span>
-            </p>
+            {isValidSession && (
+              <p className="text-body-12 text-secondary">
+                Minted: {Number(amountBought)}
+                <span className="text-primary font-semibold">
+                  /{round.maxPerWallet}
+                </span>
+              </p>
+            )}
           </div>
         )}
         <div className="flex-1 w-full">

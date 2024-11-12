@@ -7,7 +7,7 @@ import { Project } from "@/types";
 
 export default function ProjectView({ data }: { data: Project }) {
   return (
-    <div className="px-4 tablet:px-7 desktop:px-20">
+    <div className="px-4 pb-4 tablet:pb-10 tablet:px-7 desktop:px-20">
       <div className="mb-20 mt-10">
         <ProjectPageBanner project={data} />
       </div>

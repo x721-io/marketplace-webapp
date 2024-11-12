@@ -88,7 +88,7 @@ export const useInfiniteScroll = ({
       concatenatedData = data.reduce(
         (prevData: any[], currentPage: ListData) => [
           ...prevData,
-          ...currentPage.data,
+          ...(currentPage?.data || []),
         ],
         []
       );
