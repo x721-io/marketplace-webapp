@@ -74,7 +74,7 @@ export default function BannerSectionCollection({
   };
   return (
     <div
-      className="bg-cover relative w-full desktop:h-[220px] tablet:h-[220px] h-[160px]"
+      className="bg-cover relative w-full aspect-[7/2]"
       style={{
         background:
           "var(--gradient-001, linear-gradient(90deg, #22C746 -2.53%, #B0F445 102.48%))",
