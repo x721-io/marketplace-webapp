@@ -85,8 +85,9 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <p className="text-secondary text-body-16">
                 Total Items:{" "}
                 <span className="text-primary font-medium">
-                  {formatDisplayedNumber(activeRound?.totalNftt) ||
-                    "Open Edition"}
+                  {activeRound?.totalNftt
+                    ? formatDisplayedNumber(activeRound?.totalNftt)
+                    : "Open Edition"}
                 </span>
               </p>
               <p className="text-secondary text-body-16">
