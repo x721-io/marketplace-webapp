@@ -77,7 +77,7 @@ export default function WalletConnectModal({
   return (
     <MyModal.Root show={show} onClose={onClose}>
       <MyModal.Body>
-        <div className="mx-auto  flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
+        <div className="mx-auto flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
           <Text className="desktop:text-heading-md tablet:text-heading-md text-body-32 text-primary font-semibold text-center">
             Connect wallet
           </Text>
@@ -123,8 +123,9 @@ export default function WalletConnectModal({
                         <Image
                           src={MetamaskImage.src}
                           alt="bitget-ico"
-                          width={35}
-                          height={35}
+                          width={55}
+                          height={20}
+                          className="mr-2 ml-4"
                         />
                         Metamask{" "}
                         {!isMetamask &&
@@ -170,10 +171,10 @@ export default function WalletConnectModal({
                               <Image
                                 src={BitgetImage.src}
                                 alt="bitget-ico"
-                                width={35}
-                                height={35}
+                                width={80}
+                                height={40}
                               />
-                              Bitget{" "}
+                              Bitget Wallet{" "}
                               {!isBitget &&
                                 !isAndroid &&
                                 !isIphone &&
