@@ -1,6 +1,11 @@
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
-import { useAccount, useBalance, useContractRead } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  useReadContract,
+} from "wagmi";
 import { useMemo, useState } from "react";
 import { formatEther, formatUnits } from "ethers";
 import { formatDisplayedNumber, getRoundAbi } from "@/utils";
@@ -10,6 +15,7 @@ import { Collection, Round } from "@/types";
 import { useRoundStatus } from "@/hooks/useRoundStatus";
 import ConnectWalletButton from "@/components/Button/ConnectWalletButton";
 import { Address } from "abitype";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   collection: Collection;
@@ -27,7 +33,8 @@ export default function WhitelistChecker({
   const status = useRoundStatus(round);
 
   const { address } = useAccount();
-  const { data: amountBought } = useContractRead({
+  const queryClient = useQueryClient();
+  const { data: amountBought, queryKey } = useReadContract({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getAmountBought",
@@ -37,7 +44,7 @@ export default function WhitelistChecker({
       select: (data) => formatUnits(String(data), 0),
     },
   });
-  const { data: roundInfo } = useContractRead({
+  const { data: roundInfo } = useReadContract({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: "getRound",
@@ -95,6 +102,7 @@ export default function WhitelistChecker({
     try {
       setLoading(true);
       const txHash = await onBuyNFT();
+      queryClient.invalidateQueries({ queryKey });
       toast.success("Your item has been successfully purchased!");
     } catch (e: any) {
       console.error(e);

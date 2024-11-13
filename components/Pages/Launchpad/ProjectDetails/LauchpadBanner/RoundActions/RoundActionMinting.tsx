@@ -19,6 +19,7 @@ import useLaunchpadStore from "@/store/launchpad/store";
 import { contracts } from "@/config/contracts";
 import { Address } from "abitype";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   eligibleStatus: boolean;
@@ -36,10 +37,11 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
     },
   });
   const { isValidSession } = useAuth();
+  const queryClient = useQueryClient();
 
   const [amount, setAmount] = useState(1);
   const { hasTimeframe, isInTimeframe } = useTimeframeStore((state) => state);
-  const { data } = useReadContracts({
+  const { data, queryKey } = useReadContracts({
     contracts: [
       {
         address: round.address,
@@ -165,6 +167,7 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
         txCreation: hash,
         collectionAddress: collection.address,
       });
+      queryClient.invalidateQueries({ queryKey });
     } catch (e: any) {
       console.error(e);
       if (e.message.includes("rejected")) {
@@ -181,6 +184,7 @@ export default function RoundActionMinting({ eligibleStatus }: Props) {
     try {
       setLoading(true);
       await onClaimMemetaverse();
+      queryClient.invalidateQueries({ queryKey });
       toast.success("Mint successfully!");
     } catch (e: any) {
       toast.error(`Error report: ${e?.message || e}`);
