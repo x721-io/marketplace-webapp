@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 declare global {
   interface Window {
     okxwallet: any;
+    isBitKeepChrome: any;
+    isBitKeep: any;
   }
 }
 
@@ -27,7 +29,10 @@ const useDetectWallets = () => {
       const isMetamask =
         window.ethereum.isMetaMask || window.ethereum.isMetamask;
       const isBitget =
-        window.ethereum.isBitget || window.ethereum.isBitKeepChrome;
+        window.ethereum.isBitget ||
+        window.ethereum.isBitKeepChrome ||
+        window.isBitKeepChrome ||
+        window.isBitKeep;
       const isOkxWallet = window.okxwallet;
       setIsMetamask(isMetamask);
       setIsBitget(isBitget);

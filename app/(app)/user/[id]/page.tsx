@@ -88,26 +88,22 @@ export default function ProfilePage() {
         <MyTabs.Group onActiveTabChange={setCurrTabIndex} style="underline">
           <MyTabs.Item tabIndex={0} active={currTabIndex === 0}>
             <div className="min-w-fit whitespace-nowrap">
-              Owned
-              {/*({formatDisplayedNumber(ownedAmount)})*/}
+              Owned ({formatDisplayedNumber(ownedAmount)})
             </div>
           </MyTabs.Item>
           <MyTabs.Item tabIndex={1} active={currTabIndex === 1}>
             <div className="min-w-fit whitespace-nowrap">
-              On Sale
-              {/*({formatDisplayedNumber(saleAmount)})*/}
+              On Sale ({formatDisplayedNumber(saleAmount)})
             </div>
           </MyTabs.Item>
           <MyTabs.Item tabIndex={2} active={currTabIndex === 2}>
             <div className="min-w-fit whitespace-nowrap">
-              Created
-              {/*({formatDisplayedNumber(createdAmount)})*/}
+              Created ({formatDisplayedNumber(createdAmount)})
             </div>
           </MyTabs.Item>
           <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
             <div className="min-w-fit whitespace-nowrap">
-              Collections
-              {/*({formatDisplayedNumber(createdCollectionAmount)})*/}
+              Collections ({formatDisplayedNumber(createdCollectionAmount)})
             </div>
           </MyTabs.Item>
           <MyTabs.Item tabIndex={4} active={currTabIndex === 4}>

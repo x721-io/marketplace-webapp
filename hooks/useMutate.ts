@@ -1,4 +1,4 @@
-import { nextAPI } from "@/services/api";
+import { marketplaceApi, nextAPI } from "@/services/api";
 import { API_ENDPOINTS } from "@/config/api";
 import { User } from "@/types";
 import { APIParams, APIResponse } from "@/services/api/types";
@@ -67,8 +67,11 @@ export const useUploadMetadata = () => {
     async (_: string, { arg }: { arg: Record<string, any> }) => {
       const form = new FormData();
       form.append("metadata", JSON.stringify(arg));
-      const response = await nextAPI.post(API_ENDPOINTS.UPLOAD_IMAGE, form);
-      return response.data.data as APIResponse.UploadMetadata;
+      const response = await marketplaceApi.post(
+        API_ENDPOINTS.UPLOAD_IMAGE,
+        form
+      );
+      return response?.data as APIResponse.UploadMetadata;
     }
   );
 
@@ -100,8 +103,11 @@ export const useUploadFile = () => {
       if (metadata) {
         form.append("metadata", JSON.stringify(metadata));
       }
-      const response = await nextAPI.post(API_ENDPOINTS.UPLOAD_IMAGE, form);
-      return response.data.data as APIResponse.UploadImage;
+      const response = await marketplaceApi.post(
+        API_ENDPOINTS.UPLOAD_IMAGE,
+        form
+      );
+      return response?.data as APIResponse.UploadImage;
     }
   );
   return {
