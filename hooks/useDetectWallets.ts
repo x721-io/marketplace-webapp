@@ -22,7 +22,6 @@ const useDetectWallets = () => {
     if (isClient) {
       if (!window.ethereum) {
         setIsMetamask(false);
-        alert(123);
         setIsBitget(false);
         setIsOkxWallet(false);
         return;
