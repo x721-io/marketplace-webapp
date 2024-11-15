@@ -10,7 +10,6 @@ import { redirect, useRouter } from "next/navigation";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
-import { useAccount } from "wagmi";
 
 export default function ProfilePage() {
   const [currTabIndex, setCurrTabIndex] = useState(0);
@@ -19,7 +18,6 @@ export default function ProfilePage() {
     if (!isValidSession) return redirect("/");
   }, [isValidSession]);
   const router = useRouter();
-  const { address } = useAccount();
 
   const getComponentByCurrTabIndex = () => {
     switch (currTabIndex) {
@@ -35,11 +33,7 @@ export default function ProfilePage() {
   return (
     <div className="w-full relative gap-3 tablet:gap-8 desktop:gap-8 flex flex-col items-center desktop:py-10 desktop:px-60 tablet:py-10 tablet:px-16 py-4 px-4">
       <div className="tablet:absolute tablet:top-10 tablet:left-[150px] w-full">
-        <Button
-          onClick={() => router.push(`/user/${address}`)}
-          variant="icon"
-          className=""
-        >
+        <Button onClick={() => router.back()} variant="icon" className="">
           <Icon name="arrowLeft" width={19} height={19} />
         </Button>
       </div>

@@ -16,4 +16,4 @@ export const noSpecialCharacterRegex = new RegExp(/^[A-Za-z0-9 ]+$/);
 export const numberRegex = /^[0-9 ]+$/;
 export const decimalRegex = new RegExp(/^[0-9]+([.,][0-9]+)?$/);
 export const nameRegex = new RegExp(/^[A-Za-z0-9_-]{3,25}$/);
-export const usernameRegex = new RegExp(/^[A-Za-z0-9_ -]{3,25}$/);
+export const usernameRegex = new RegExp(/^[A-Za-z0-9_ -]{3,25}(?=.*[A-Za-z])/);
