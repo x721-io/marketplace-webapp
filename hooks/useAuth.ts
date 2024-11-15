@@ -94,6 +94,7 @@ export const useAuth = () => {
     await disconnect(config);
     clearAuthCookiesAction();
     clearProfile();
+    window.location.reload();
   };
 
   return {
