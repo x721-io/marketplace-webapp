@@ -73,9 +73,8 @@ export default function UpdateRoyaltiesModal({
     try {
       const _royalties = data.royalties.map((item) => {
         const royaltiesBigInt = BigInt(
-          Number(Number(item.value).toFixed(2)) * 100
+          Number(Math.round(Number(item.value) * 100))
         );
-
         return { ...item, value: royaltiesBigInt };
       });
       await onUpdateRoyalties(collection.address, _royalties);
