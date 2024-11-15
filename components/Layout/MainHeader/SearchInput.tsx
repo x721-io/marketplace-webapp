@@ -89,7 +89,10 @@ export default function SearchInput() {
           <SearchCollectionTab
             loading={searchingCollection}
             data={collectionSearchData}
-            onClose={() => onclose()}
+            onClose={() => {
+              setOpenModal(false);
+              onclose();
+            }}
           />
         );
       case 1:
@@ -97,7 +100,10 @@ export default function SearchInput() {
           <SearchNFTTab
             loading={searchingNFT}
             data={nftSearchData}
-            onClose={() => onclose()}
+            onClose={() => {
+              setOpenModal(false);
+              onclose();
+            }}
           />
         );
       case 2:
@@ -105,7 +111,10 @@ export default function SearchInput() {
           <SearchUserTab
             loading={searchingUser}
             data={userSearchData}
-            onClose={() => onclose()}
+            onClose={() => {
+              setOpenModal(false);
+              onclose();
+            }}
           />
         );
     }
