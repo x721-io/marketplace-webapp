@@ -67,11 +67,11 @@ export const useUploadMetadata = () => {
     async (_: string, { arg }: { arg: Record<string, any> }) => {
       const form = new FormData();
       form.append("metadata", JSON.stringify(arg));
-      const response = await marketplaceApi.post(
+      const response = (await marketplaceApi.post(
         API_ENDPOINTS.UPLOAD_IMAGE,
         form
-      );
-      return response?.data as APIResponse.UploadMetadata;
+      )) as APIResponse.UploadMetadata;
+      return response;
     }
   );
 
@@ -103,11 +103,11 @@ export const useUploadFile = () => {
       if (metadata) {
         form.append("metadata", JSON.stringify(metadata));
       }
-      const response = await marketplaceApi.post(
+      const response = (await marketplaceApi.post(
         API_ENDPOINTS.UPLOAD_IMAGE,
         form
-      );
-      return response?.data as APIResponse.UploadImage;
+      )) as APIResponse.UploadImage;
+      return response;
     }
   );
   return {
