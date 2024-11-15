@@ -13,8 +13,15 @@ import { useUserFilterStore } from "@/store/filters/users/store";
 import Icon from "@/components/Icon";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
+import useQueryFilters from "@/hooks/useQueryFilters";
 
 export default function ExploreSectionNavbar() {
+  const {
+    addFilterItems,
+    removeFilterItems,
+    filters: customFilters,
+    getFilterBykey,
+  } = useQueryFilters();
   const tabs = [
     { label: "NFTs", href: "/explore/items" },
     { label: "Collections", href: "/explore/collections" },
@@ -124,6 +131,7 @@ export default function ExploreSectionNavbar() {
   };
 
   const handleChangeTab = (activeTab: number) => {
+    removeFilterItems(["sortBy", "sortDirection"]);
     return router.push(tabs[activeTab].href);
   };
 
@@ -178,48 +186,84 @@ export default function ExploreSectionNavbar() {
         break;
     }
     setSortOption({ name, order, orderBy });
+    if (order !== "") {
+      addFilterItems([
+        { item: { key: "sortBy", values: [orderBy] }, type: "single" },
+        {
+          item: { key: "sortDirection", values: [order] },
+          type: "single",
+        },
+      ]);
+    } else {
+      removeFilterItems(["sortBy", "sortDirection"]);
+    }
   };
 
   useEffect(() => {
     if (pathname.includes("collections")) {
-      resetNFTFilters();
-      resetUserFilters();
-      if (!collectionFilters.order) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      const selectedItem = dropdownItems.find(
-        (item) =>
-          item.order === collectionFilters.order &&
-          item.orderBy === collectionFilters.orderBy
-      );
-      if (!selectedItem) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      setSortOption(selectedItem);
+      // resetNFTFilters();
+      // resetUserFilters();
+      // if (!collectionFilters.order) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // const selectedItem = dropdownItems.find(
+      //   (item) =>
+      //     item.order === collectionFilters.order &&
+      //     item.orderBy === collectionFilters.orderBy
+      // );
+      // if (!selectedItem) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // setSortOption(selectedItem);
     } else if (pathname.includes("items")) {
-      resetCollectionFilters();
-      resetUserFilters();
-      if (!nftFilters.order) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      const selectedItem = dropdownItems.find(
-        (item) =>
-          item.order === nftFilters.order && item.orderBy === nftFilters.orderBy
-      );
-      if (!selectedItem) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      setSortOption(selectedItem);
+      // resetCollectionFilters();
+      // resetUserFilters();
+      // if (!nftFilters.order) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // const selectedItem = dropdownItems.find(
+      //   (item) =>
+      //     item.order === nftFilters.order && item.orderBy === nftFilters.orderBy
+      // );
+      // if (!selectedItem) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // setSortOption(selectedItem);
     } else if (pathname.includes("users")) {
       resetCollectionFilters();
       resetUserFilters();
       setSortOption(dropdownItems[0]);
     }
   }, [pathname, setSortOption]);
+
+  useEffect(() => {
+    if (!pathname.includes("users")) {
+      if (
+        getFilterBykey("sortBy")?.values &&
+        getFilterBykey("sortDirection")?.values &&
+        dropdownItems.find(
+          (ele) =>
+            ele.orderBy === getFilterBykey("sortBy")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")?.values[0]
+        )
+      ) {
+        const item = dropdownItems.find(
+          (ele) =>
+            ele.orderBy === getFilterBykey("sortBy")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")?.values[0]
+        );
+        setSortOption(item ?? dropdownItems[0]);
+        return;
+      }
+      setSortOption(dropdownItems[0]);
+    }
+  }, [customFilters, pathname]);
 
   useEffect(() => {
     if (pathname.includes("collections")) {
