@@ -35,7 +35,7 @@ export const useUpdateCollectionRoyalties = () => {
       ...royaltiesRegistryContract,
       functionName: "setRoyaltiesByToken",
       args: [collectionAddress, royalties],
-      value: BigInt(0) as any,
+      // value: BigInt(0) as any,
     });
   };
 };

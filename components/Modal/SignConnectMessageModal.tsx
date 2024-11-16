@@ -56,12 +56,15 @@ export default function SignConnectMessageModal({
       setIsAuthenticating(true);
 
       // @ts-ignore
-      const signature = window.ReactNativeWebView
-        ? await (window as any).ethereum.request({
-            method: "personal_sign",
-            params: [SIGN_MESSAGE.CONNECT(date), address],
-          })
-        : await signMessage(config, { message: SIGN_MESSAGE.CONNECT(date) });
+      // const signature = window.ReactNativeWebView
+      //   ? await (window as any).ethereum.request({
+      //       method: "personal_sign",
+      //       params: [SIGN_MESSAGE.CONNECT(date), address],
+      //     })
+      //   : await signMessage(config, { message: SIGN_MESSAGE.CONNECT(date) });
+      const signature = await signMessage(config, {
+        message: SIGN_MESSAGE.CONNECT(date),
+      });
       const userProfiles = await getUserProfile();
       const credentials = await onAuth(date, signature);
       if (!userProfiles?.acceptedTerms) {

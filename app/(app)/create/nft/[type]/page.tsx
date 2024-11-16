@@ -149,10 +149,10 @@ export default function CreateNftPage() {
     });
 
     try {
-      const { fileHashes } = await uploadFileMutate({ files: media });
+      const response = await uploadFileMutate({ files: media });
       toast.update(createNFTToast, { render: "Sending transaction" });
 
-      const [media1, media2] = fileHashes;
+      const [media1, media2] = response.fileHashes;
       const params = {
         ...rest,
         traits: _traits,
