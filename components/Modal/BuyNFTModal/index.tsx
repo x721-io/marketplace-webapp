@@ -303,7 +303,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey });
-  }, [blockNumber, queryClient]);
+  }, [blockNumber, queryClient, queryKey]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>

@@ -32,7 +32,9 @@ export default function ExploreNFTsPage() {
     data,
     loading: isLoading,
     page: size,
-    onNext: () => setSize(size + 1),
+    onNext: () => {
+      setSize(size + 1);
+    },
   });
 
   if (!decouncedFilters) {

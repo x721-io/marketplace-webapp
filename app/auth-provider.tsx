@@ -44,7 +44,7 @@ export default function AuthProvider({
         clearProfile();
       }
     }
-  }, [data, !isLoading]);
+  }, [data, isLoading, setProfile, setCredentials, setAuthenticated]);
 
   if (isLoading) return null;
 

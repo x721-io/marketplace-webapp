@@ -17,7 +17,7 @@ function BlurImage(props: any) {
         "duration-300 ease",
         isLoading ? "bg-[rgba(0,0,0,0.3)] animate-pulse" : ""
       )}
-      onLoadingComplete={() => setLoading(false)}
+      onLoad={() => setLoading(false)}
     />
   );
 }
