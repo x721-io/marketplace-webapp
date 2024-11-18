@@ -14,6 +14,7 @@ import { Address } from "abitype";
 import { isAddress } from "ethers";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props extends MyModalProps {
   collection: Collection;
@@ -30,8 +31,11 @@ export default function UpdateRoyaltiesModal({
   show,
   collection,
 }: Props) {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
-  const { data: royalties } = useReadCollectionRoyalties(collection.address);
+  const { data: royalties, queryKey } = useReadCollectionRoyalties(
+    collection.address
+  );
 
   const {
     control,
@@ -82,6 +86,7 @@ export default function UpdateRoyaltiesModal({
         autoClose: 1000,
         closeButton: true,
       });
+      queryClient.invalidateQueries({ queryKey });
       handleClose();
     } catch (e: any) {
       toast.error(`Error report: ${e.message || e}`, {
