@@ -132,7 +132,7 @@ export default function UpdateRoyaltiesModal({
             rules={formRules}
             render={({ field: { value, onChange } }) => {
               return (
-                <div className="flex flex-col gap-4 w-full">
+                <div className="flex flex-col gap-4 w-full overflow-y-auto overflow-x-hidden max-h-[60vh] px-1 py-5">
                   {value.map((royalty, index) => (
                     <div
                       className="flex items-stretch gap-2"

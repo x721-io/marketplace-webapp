@@ -9,6 +9,7 @@ export type MyModalProps = {
   className?: string;
   children?: React.ReactNode;
   bodyContainerStyle?: React.CSSProperties;
+  bodyClassName?: string;
   position?: "center" | "right" | "top-right" | "left" | "top-left";
 };
 
@@ -24,6 +25,7 @@ const ModalRoot: React.FC<MyModalProps> = ({
   onClose,
   bodyContainerStyle,
   className,
+  bodyClassName,
   children,
 }) => {
   if (!show) return null;
@@ -60,7 +62,7 @@ const ModalRoot: React.FC<MyModalProps> = ({
             borderRadius: position === "center" ? "8px" : 0,
             ...bodyContainerStyle,
           }}
-          className="bg-[white] w-[450px] max-[450px]:w-[92%]"
+          className={`bg-[white] w-[450px] max-[450px]:w-[92%] ${bodyClassName}`}
         >
           {children}
         </div>

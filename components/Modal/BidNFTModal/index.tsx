@@ -78,7 +78,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       token?.decimal
     ),
     onSuccess: (data) => {
-      console.log(123);
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
         !isNaN(Number(price)) ? (price as string) : "0",
