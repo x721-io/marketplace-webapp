@@ -111,7 +111,7 @@ export default function CollectionView() {
   }
 
   return (
-    <div className="w-full relative">
+    <div className="w-full relative overflow-x-hidden">
       <BannerSectionCollection
         onUpdateSuccess={() => router.refresh()}
         collectionId={collectionData.collection.id}

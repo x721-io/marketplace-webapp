@@ -75,7 +75,7 @@ export default function WalletConnectModal({
   };
 
   return (
-    <MyModal.Root show={show} onClose={onClose}>
+    <MyModal.Root bodyClassName="w-[520px]" show={show} onClose={onClose}>
       <MyModal.Body>
         <div className="mx-auto flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
           <Text className="desktop:text-heading-md tablet:text-heading-md text-body-32 text-primary font-semibold text-center">
