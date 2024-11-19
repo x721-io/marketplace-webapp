@@ -43,7 +43,7 @@ const getCollectionData = async (
 
 export default function CollectionView() {
   const { id } = useParams();
-  const { data: collectionData } = useSWR(
+  const { data: collectionData, mutate } = useSWR(
     id ? `/api/collections` : null,
     async () => {
       const data = await getCollectionData(id as string);
@@ -113,7 +113,7 @@ export default function CollectionView() {
   return (
     <div className="w-full relative overflow-x-hidden">
       <BannerSectionCollection
-        onUpdateSuccess={() => router.refresh()}
+        onUpdateSuccess={() => mutate()}
         collectionId={collectionData.collection.id}
         creators={collectionData.collection.creators}
         cover={getCollectionBannerImage(collectionData.collection)}
