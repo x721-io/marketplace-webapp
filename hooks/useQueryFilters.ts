@@ -1,7 +1,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type FilterItem = {
+export type FilterItem = {
   key: string;
   values: string[];
 };
@@ -66,7 +66,6 @@ function useQueryFilters(defaultFilters: FilterItem[] = []) {
       }
     });
     setFilters(currentFilters);
-    console.log({ currentFilters });
     window.history.replaceState(null, "", "?" + searchParams.toString());
   };
 
@@ -85,11 +84,17 @@ function useQueryFilters(defaultFilters: FilterItem[] = []) {
     window.history.replaceState(null, "", "?" + searchParams.toString());
   };
 
+  const clearFilters = () => {
+    window.history.replaceState(null, "", "?" + "");
+    setFilters([]);
+  };
+
   return {
     filters,
     addFilterItems,
     removeFilterItems,
     getFilterBykey,
+    clearFilters,
   };
 }
 

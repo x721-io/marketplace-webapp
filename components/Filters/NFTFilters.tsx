@@ -11,10 +11,11 @@ import { classNames } from "@/utils/string";
 import { useNFTFilters } from "@/hooks/useFilters";
 import Icon from "@/components/Icon";
 import Select from "../Form/Select";
-import { tokenOptions, tokens } from "@/config/tokens";
+import { tokenOptions } from "@/config/tokens";
 import { Address } from "abitype";
 import MyRadio from "../X721UIKits/Radio";
 import MyCheckbox from "../X721UIKits/Checkbox";
+import useQueryFilters from "@/hooks/useQueryFilters";
 
 export type FilterType = "price" | "type" | "status";
 
@@ -37,6 +38,8 @@ export default function NFTFilters({
   onResetFilters,
   containerClass,
 }: FilterProps) {
+  const { addFilterItems, removeFilterItems, getFilterBykey, clearFilters } =
+    useQueryFilters();
   const {
     handleApplyFilters,
     localFilters,
@@ -59,10 +62,11 @@ export default function NFTFilters({
           <div className="flex items-center gap-7 flex-wrap">
             <div className="flex gap-3 items-center">
               <MyRadio
-                checked={localFilters.type === undefined}
-                onChange={() =>
-                  handleChange({ type: undefined, updateOnChange: true })
-                }
+                checked={getFilterBykey("type") === undefined}
+                onChange={() => {
+                  removeFilterItems(["type"]);
+                  handleChange({ type: undefined, updateOnChange: true });
+                }}
                 id="type-all"
                 value=""
               />
@@ -72,10 +76,19 @@ export default function NFTFilters({
               <MyRadio
                 id="type-single"
                 value="ERC721"
-                checked={localFilters.type === "ERC721"}
-                onChange={() =>
-                  handleChange({ type: "ERC721", updateOnChange: true })
-                }
+                checked={getFilterBykey("type")?.values[0] === "ERC721"}
+                onChange={() => {
+                  addFilterItems([
+                    {
+                      item: {
+                        key: "type",
+                        values: ["ERC721"],
+                      },
+                      type: "single",
+                    },
+                  ]);
+                  handleChange({ type: "ERC721", updateOnChange: true });
+                }}
               />
               <Label htmlFor="type-single">Single edition</Label>
             </div>
@@ -83,10 +96,19 @@ export default function NFTFilters({
               <MyRadio
                 id="type-multiple"
                 value="ERC1155"
-                checked={localFilters.type === "ERC1155"}
-                onChange={() =>
-                  handleChange({ type: "ERC1155", updateOnChange: true })
-                }
+                checked={getFilterBykey("type")?.values[0] === "ERC1155"}
+                onChange={() => {
+                  addFilterItems([
+                    {
+                      item: {
+                        key: "type",
+                        values: ["ERC1155"],
+                      },
+                      type: "single",
+                    },
+                  ]);
+                  handleChange({ type: "ERC1155", updateOnChange: true });
+                }}
               />
               <Label htmlFor="type-multiple">Multiple editions</Label>
             </div>
@@ -100,10 +122,11 @@ export default function NFTFilters({
               <MyRadio
                 id="status-all"
                 value="status-all"
-                checked={localFilters.sellStatus === undefined}
-                onChange={() =>
-                  handleChange({ sellStatus: undefined, updateOnChange: true })
-                }
+                checked={getFilterBykey("sellStatus") === undefined}
+                onChange={() => {
+                  removeFilterItems(["sellStatus"]);
+                  handleChange({ sellStatus: undefined, updateOnChange: true });
+                }}
               />
               <Label htmlFor="status-all">All</Label>
             </div>
@@ -111,10 +134,19 @@ export default function NFTFilters({
               <MyRadio
                 id="AskNew"
                 value="AskNew"
-                checked={localFilters.sellStatus === "AskNew"}
-                onChange={() =>
-                  handleChange({ sellStatus: "AskNew", updateOnChange: true })
-                }
+                checked={getFilterBykey("sellStatus")?.values[0] === "AskNew"}
+                onChange={() => {
+                  addFilterItems([
+                    {
+                      item: {
+                        key: "sellStatus",
+                        values: ["AskNew"],
+                      },
+                      type: "single",
+                    },
+                  ]);
+                  handleChange({ sellStatus: "AskNew", updateOnChange: true });
+                }}
               />
               <Label htmlFor="AskNew">Buy now</Label>
             </div>
@@ -198,7 +230,10 @@ export default function NFTFilters({
           className="w-full"
           variant="outlined"
           scale="sm"
-          onClick={onResetFilters}
+          onClick={() => {
+            clearFilters();
+            onResetFilters?.();
+          }}
         >
           Reset <Icon name="refresh" width={12} height={12} />
         </Button>

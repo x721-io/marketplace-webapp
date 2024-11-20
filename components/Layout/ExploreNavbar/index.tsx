@@ -2,7 +2,7 @@
 
 import { TabsRef } from "flowbite-react";
 import Button from "@/components/Button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Input from "@/components/Form/Input";
 import SliderIcon from "@/components/Icon/Sliders";
@@ -16,11 +16,13 @@ import { MyTabs } from "@/components/X721UIKits/Tabs";
 import useQueryFilters from "@/hooks/useQueryFilters";
 
 export default function ExploreSectionNavbar() {
+  const searchParams = useSearchParams();
   const {
     addFilterItems,
     removeFilterItems,
     filters: customFilters,
     getFilterBykey,
+    clearFilters,
   } = useQueryFilters();
   const tabs = [
     { label: "NFTs", href: "/explore/items" },
@@ -131,7 +133,10 @@ export default function ExploreSectionNavbar() {
   };
 
   const handleChangeTab = (activeTab: number) => {
-    removeFilterItems(["sortBy", "sortDirection"]);
+    resetNFTFilters();
+    resetCollectionFilters();
+    resetUserFilters();
+    clearFilters();
     return router.push(tabs[activeTab].href);
   };
 
@@ -242,6 +247,13 @@ export default function ExploreSectionNavbar() {
 
   useEffect(() => {
     if (!pathname.includes("users")) {
+      customFilters.forEach((ele) => {
+        if (ele.key !== "sortBy" && ele.key !== "sortDirection") {
+          updateNFTFilters({
+            [ele.key]: ele.values[0],
+          });
+        }
+      });
       if (
         getFilterBykey("sortBy")?.values &&
         getFilterBykey("sortDirection")?.values &&
@@ -263,6 +275,7 @@ export default function ExploreSectionNavbar() {
       }
       setSortOption(dropdownItems[0]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFilters, pathname]);
 
   useEffect(() => {
@@ -275,16 +288,6 @@ export default function ExploreSectionNavbar() {
   }, [sortOption, pathname]);
 
   useEffect(() => {
-    updateNFTFilters({
-      name: "",
-    });
-    updateCollectionFilters({
-      name: "",
-    });
-    updateUserFilters({
-      search: "",
-    });
-
     if (tabsRef.current) {
       switch (true) {
         case pathname.includes("items"):
@@ -299,6 +302,12 @@ export default function ExploreSectionNavbar() {
       }
     }
   }, [tabsRef, pathname]);
+
+  useEffect(() => {
+    if (!searchParams.get("sortBy")) {
+      setSortOption(dropdownItems[0]);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
