@@ -24,8 +24,14 @@ export default function UserCollections({
   const { id } = useParams();
   const api = useMarketplaceApi();
 
-  const { data, isLoading, setSize, size, error } =
-    useGetCollectionsByUserInfinite(String(id));
+  const {
+    data,
+    isLoading,
+    setSize,
+    size,
+    error,
+    mutate: mutateCollections,
+  } = useGetCollectionsByUserInfinite(String(id));
   const { isLoadingMore, list: collections } = useInfiniteScroll({
     data,
     loading: isLoading,
@@ -44,7 +50,8 @@ export default function UserCollections({
       onUpdateAmount(totalCollections);
       mutate();
     }
-  }, [totalCollections, onUpdateAmount, mutate]);
+    mutateCollections();
+  }, [totalCollections, onUpdateAmount, mutate, mutateCollections]);
 
   return (
     <div

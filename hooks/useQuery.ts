@@ -89,6 +89,7 @@ export const useGetCollections = (
     {
       initialSize: 1,
       refreshInterval: 3000,
+      revalidateFirstPage: false,
     }
   );
 
@@ -138,6 +139,7 @@ export const useGetNFTs = (
     },
     {
       initialSize: 1,
+      revalidateFirstPage: false,
     }
   );
 

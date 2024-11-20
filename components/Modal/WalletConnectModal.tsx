@@ -75,7 +75,7 @@ export default function WalletConnectModal({
   };
 
   return (
-    <MyModal.Root show={show} onClose={onClose}>
+    <MyModal.Root bodyClassName="w-[520px]" show={show} onClose={onClose}>
       <MyModal.Body>
         <div className="mx-auto flex flex-col desktop:gap-8 tablet:gap-8 gap-4 p-2 desktop:p-8 items-center overflow-ellipsis">
           <Text className="desktop:text-heading-md tablet:text-heading-md text-body-32 text-primary font-semibold text-center">
@@ -106,13 +106,13 @@ export default function WalletConnectModal({
                         }
                         if (isAndroid || isIphone) {
                           window.location.href = `https://metamask.app.link/dapp/${MARKETPLACE_URL}`;
-                          setTimeout(function () {
-                            if (document.hasFocus()) {
-                              window.location.href = isAndroid
-                                ? "https://play.google.com/store/apps/details?id=io.metamask&hl=en"
-                                : "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
-                            }
-                          }, 1000);
+                          // setTimeout(function () {
+                          //   if (document.hasFocus()) {
+                          //     window.location.href = isAndroid
+                          //       ? "https://play.google.com/store/apps/details?id=io.metamask&hl=en"
+                          //       : "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
+                          //   }
+                          // }, 1000);
                           return;
                         }
                         handleConnect(connectors[0]);
@@ -153,14 +153,14 @@ export default function WalletConnectModal({
                                 return;
                               }
                               if (isAndroid || isIphone) {
-                                window.location.href = `bitkeep://bkconnect?action=dapp&url=${MARKETPLACE_URL}`;
-                                setTimeout(function () {
-                                  if (document.hasFocus()) {
-                                    window.location.href = isAndroid
-                                      ? "https://play.google.com/store/apps/details?id=com.bitkeep.wallet&hl=en"
-                                      : "https://apps.apple.com/us/app/bitget-wallet-crypto-bitcoin/id1395301115";
-                                  }
-                                }, 1000);
+                                window.location.href = `https://bkcode.vip?action=dapp&url=${MARKETPLACE_URL}`;
+                                // setTimeout(function () {
+                                //   if (document.hasFocus()) {
+                                //     window.location.href = isAndroid
+                                //       ? "https://play.google.com/store/apps/details?id=com.bitkeep.wallet&hl=en"
+                                //       : "https://apps.apple.com/us/app/bitget-wallet-crypto-bitcoin/id1395301115";
+                                //   }
+                                // }, 1000);
                                 return;
                               }
                               handleConnect(connector);

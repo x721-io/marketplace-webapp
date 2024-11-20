@@ -21,6 +21,7 @@ import {
 } from "@/hooks/useMutate";
 import { Address } from "viem";
 import { useAccount } from "wagmi";
+import { ClipLoader } from "react-spinners";
 
 export default function ProfileStep() {
   const { trigger: updateProfile, isMutating: isUpdate } = useUpdateProfile();
@@ -31,9 +32,11 @@ export default function ProfileStep() {
   const [showPopup, setShowPopup] = useState(false);
 
   const { address } = useAccount();
-  const { data: getProfile, revalidate } = useGetProfileMutate(
-    address as Address
-  );
+  const {
+    data: getProfile,
+    revalidate,
+    isLoading,
+  } = useGetProfileMutate(address as Address);
 
   const isVerify = useMemo(() => {
     return getProfile?.accountStatus;
@@ -212,33 +215,44 @@ export default function ProfileStep() {
           </Button>
         </div>
       </form>
-
-      <div className="flex items-center justify-center desktop:items-start tablet:items-start ">
-        <div
-          className=" w-[244px] rounded-2xl flex justify-center items-center p-4 gap-2 flex-col text-center"
-          style={{ boxShadow: "rgba(27, 32, 50, 0.12) 0px 10px 40px" }}
-        >
-          <div>
-            <Icon name="verified" width={72} height={72} />
-          </div>
-          <Text className="font-semibold  text-body-24">
-            Verify your account
-          </Text>
-          <Text className="text-secondary text-body-16">
-            Proceed with verification process to get more visibility and gain
-            trust on X721
-          </Text>
-          <Button
-            disabled={isVerify}
-            onClick={() => handleGetVerify()}
-            variant="secondary"
-            scale="sm"
-            className="w-full tablet:w-auto desktop:w-auto"
+      {isLoading && (
+        <div className="flex items-center justify-center desktop:items-start tablet:items-start">
+          <div
+            className=" w-[244px] rounded-2xl flex justify-center items-center p-4 gap-2 flex-col text-center  min-h-[250px]"
+            style={{ boxShadow: "rgba(27, 32, 50, 0.12) 0px 10px 40px" }}
           >
-            {isVerify ? "Account Verified" : "Get Verify"}
-          </Button>
+            <ClipLoader size={50} />
+          </div>
         </div>
-      </div>
+      )}
+      {getProfile && !isLoading && (
+        <div className="flex items-center justify-center desktop:items-start tablet:items-start ">
+          <div
+            className=" w-[244px] rounded-2xl flex justify-center items-center p-4 gap-2 flex-col text-center"
+            style={{ boxShadow: "rgba(27, 32, 50, 0.12) 0px 10px 40px" }}
+          >
+            <div>
+              <Icon name="verified" width={72} height={72} />
+            </div>
+            <Text className="font-semibold  text-body-24">
+              Verify your account
+            </Text>
+            <Text className="text-secondary text-body-16">
+              Proceed with verification process to get more visibility and gain
+              trust on X721
+            </Text>
+            <Button
+              disabled={isVerify}
+              onClick={() => handleGetVerify()}
+              variant="secondary"
+              scale="sm"
+              className="w-full tablet:w-auto desktop:w-auto"
+            >
+              {isVerify ? "Account Verified" : "Get Verify"}
+            </Button>
+          </div>
+        </div>
+      )}
       <VerifyAccountModal
         show={showPopup}
         reponseVerify={data}

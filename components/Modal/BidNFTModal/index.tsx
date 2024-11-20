@@ -14,7 +14,7 @@ import Input from "@/components/Form/Input";
 import { formatDisplayedNumber } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { numberRegex } from "@/utils/regex";
+import { decimalRegex, numberRegex } from "@/utils/regex";
 import Select from "@/components/Form/Select";
 import ERC20TokenApproval from "@/components/ERC20TokenApproval";
 import {
@@ -78,7 +78,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       token?.decimal
     ),
     onSuccess: (data) => {
-      console.log(123);
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
         !isNaN(Number(price)) ? (price as string) : "0",
@@ -105,6 +104,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const formRules = {
     price: {
       required: "Please input bid price",
+      pattern: { value: decimalRegex, message: "Wrong price input" },
       min: { value: 0, message: "Price cannot be zero" },
       validate: {
         isNumber: (v: any) => !isNaN(v) || "Please input a valid number",
