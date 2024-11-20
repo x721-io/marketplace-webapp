@@ -1,4 +1,4 @@
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export type FilterItem = {
@@ -7,6 +7,8 @@ export type FilterItem = {
 };
 
 function useQueryFilters(defaultFilters: FilterItem[] = []) {
+  const router = useRouter();
+  const pathName = usePathname();
   const [filters, setFilters] = useState<FilterItem[]>([]);
 
   useEffect(() => {
@@ -85,7 +87,7 @@ function useQueryFilters(defaultFilters: FilterItem[] = []) {
   };
 
   const clearFilters = () => {
-    window.history.replaceState(null, "", "?" + "");
+    router.push(pathName);
     setFilters([]);
   };
 
