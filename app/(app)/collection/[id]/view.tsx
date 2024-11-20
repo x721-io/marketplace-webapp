@@ -121,7 +121,7 @@ export default function CollectionView() {
             onClick={() => router.push("/explore/collections")}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded mt-4"
           >
-            Exlore more collections
+            Explore more collections
           </button>
         </div>
       );

@@ -2,7 +2,7 @@
 
 import { TabsRef } from "flowbite-react";
 import Button from "@/components/Button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Input from "@/components/Form/Input";
 import SliderIcon from "@/components/Icon/Sliders";
@@ -13,8 +13,17 @@ import { useUserFilterStore } from "@/store/filters/users/store";
 import Icon from "@/components/Icon";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
+import useQueryFilters from "@/hooks/useQueryFilters";
 
 export default function ExploreSectionNavbar() {
+  const searchParams = useSearchParams();
+  const {
+    addFilterItems,
+    removeFilterItems,
+    filters: customFilters,
+    getFilterBykey,
+    clearFilters,
+  } = useQueryFilters();
   const tabs = [
     { label: "NFTs", href: "/explore/items" },
     { label: "Collections", href: "/explore/collections" },
@@ -124,6 +133,10 @@ export default function ExploreSectionNavbar() {
   };
 
   const handleChangeTab = (activeTab: number) => {
+    resetNFTFilters();
+    resetCollectionFilters();
+    resetUserFilters();
+    clearFilters();
     return router.push(tabs[activeTab].href);
   };
 
@@ -178,48 +191,92 @@ export default function ExploreSectionNavbar() {
         break;
     }
     setSortOption({ name, order, orderBy });
+    if (order !== "") {
+      addFilterItems([
+        { item: { key: "sortBy", values: [orderBy] }, type: "single" },
+        {
+          item: { key: "sortDirection", values: [order] },
+          type: "single",
+        },
+      ]);
+    } else {
+      removeFilterItems(["sortBy", "sortDirection"]);
+    }
   };
 
   useEffect(() => {
     if (pathname.includes("collections")) {
-      resetNFTFilters();
-      resetUserFilters();
-      if (!collectionFilters.order) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      const selectedItem = dropdownItems.find(
-        (item) =>
-          item.order === collectionFilters.order &&
-          item.orderBy === collectionFilters.orderBy
-      );
-      if (!selectedItem) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      setSortOption(selectedItem);
+      // resetNFTFilters();
+      // resetUserFilters();
+      // if (!collectionFilters.order) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // const selectedItem = dropdownItems.find(
+      //   (item) =>
+      //     item.order === collectionFilters.order &&
+      //     item.orderBy === collectionFilters.orderBy
+      // );
+      // if (!selectedItem) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // setSortOption(selectedItem);
     } else if (pathname.includes("items")) {
-      resetCollectionFilters();
-      resetUserFilters();
-      if (!nftFilters.order) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      const selectedItem = dropdownItems.find(
-        (item) =>
-          item.order === nftFilters.order && item.orderBy === nftFilters.orderBy
-      );
-      if (!selectedItem) {
-        setSortOption(dropdownItems[0]);
-        return;
-      }
-      setSortOption(selectedItem);
+      // resetCollectionFilters();
+      // resetUserFilters();
+      // if (!nftFilters.order) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // const selectedItem = dropdownItems.find(
+      //   (item) =>
+      //     item.order === nftFilters.order && item.orderBy === nftFilters.orderBy
+      // );
+      // if (!selectedItem) {
+      //   setSortOption(dropdownItems[0]);
+      //   return;
+      // }
+      // setSortOption(selectedItem);
     } else if (pathname.includes("users")) {
       resetCollectionFilters();
       resetUserFilters();
       setSortOption(dropdownItems[0]);
     }
   }, [pathname, setSortOption]);
+
+  useEffect(() => {
+    if (!pathname.includes("users")) {
+      customFilters.forEach((ele) => {
+        if (ele.key !== "sortBy" && ele.key !== "sortDirection") {
+          updateNFTFilters({
+            [ele.key]: ele.values[0],
+          });
+        }
+      });
+      if (
+        getFilterBykey("sortBy")?.values &&
+        getFilterBykey("sortDirection")?.values &&
+        dropdownItems.find(
+          (ele) =>
+            ele.orderBy === getFilterBykey("sortBy")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")?.values[0]
+        )
+      ) {
+        const item = dropdownItems.find(
+          (ele) =>
+            ele.orderBy === getFilterBykey("sortBy")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")!.values[0] &&
+            ele.order === getFilterBykey("sortDirection")?.values[0]
+        );
+        setSortOption(item ?? dropdownItems[0]);
+        return;
+      }
+      setSortOption(dropdownItems[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customFilters, pathname]);
 
   useEffect(() => {
     if (pathname.includes("collections")) {
@@ -231,16 +288,6 @@ export default function ExploreSectionNavbar() {
   }, [sortOption, pathname]);
 
   useEffect(() => {
-    updateNFTFilters({
-      name: "",
-    });
-    updateCollectionFilters({
-      name: "",
-    });
-    updateUserFilters({
-      search: "",
-    });
-
     if (tabsRef.current) {
       switch (true) {
         case pathname.includes("items"):
@@ -255,6 +302,12 @@ export default function ExploreSectionNavbar() {
       }
     }
   }, [tabsRef, pathname]);
+
+  useEffect(() => {
+    if (!searchParams.get("sortBy")) {
+      setSortOption(dropdownItems[0]);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap">
