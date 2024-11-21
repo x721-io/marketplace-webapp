@@ -54,6 +54,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   } = useForm<FormState.BidNFT>({
     defaultValues: {
       quoteToken: tokens.wu2u.address,
+      quantity: "",
     },
   });
   const [price, quantity, quoteToken, allowance] = watch([
