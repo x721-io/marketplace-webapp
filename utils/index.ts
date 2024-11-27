@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import { Round } from "@/types";
 import { abis } from "@/abi";
 
@@ -51,3 +53,14 @@ export const formatDisplayedNumber = (value: string | number) => {
 
   return usFormatter.format(Number(value));
 };
+
+export function genRandomNumber(byteCount: number, radix: number) {
+  return BigInt("0x" + crypto.randomBytes(byteCount).toString("hex")).toString(
+    radix
+  );
+}
+
+export function isNumber(value: any) {
+  if (value === undefined || value === null || value === "") return false;
+  return !isNaN(Number(value));
+}

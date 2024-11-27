@@ -1,34 +1,31 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
-import { FormState, NFT } from "@/types";
+import { daysRanges, FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import { useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance, useBlockNumber, useReadContract } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
-import { tokenOptions, tokens } from "@/config/tokens";
+import { tokens } from "@/config/tokens";
 import { useCalculateFee } from "@/hooks/useMarket";
 import { useForm } from "react-hook-form";
-import { formatUnits, MaxUint256, parseEther, parseUnits } from "ethers";
+import { parseUnits } from "ethers";
 import { toast } from "react-toastify";
 import Input from "@/components/Form/Input";
-import { formatDisplayedNumber } from "@/utils";
+import { formatDisplayedNumber, genRandomNumber, isNumber } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
 import { numberRegex } from "@/utils/regex";
-import Select from "@/components/Form/Select";
-import ERC20TokenApproval from "@/components/ERC20TokenApproval";
-import {
-  useBidURC1155UsingNative,
-  useBidURC1155UsingURC20,
-  useBidURC721UsingNative,
-  useBidURC721UsingURC20,
-} from "@/hooks/useBidNFT";
-import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
-import { Address } from "abitype";
-import { useSWRConfig } from "swr";
-import { useParams } from "next/navigation";
+import { Dropdown } from "@/components/X721UIKits/Dropdown";
+import Icon from "@/components/Icon";
+import Image from "next/image";
+import moment from "moment";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import { ADDRESS_ZERO } from "@/config/constants";
+import { Address, erc20Abi } from "viem";
+import { useQueryClient } from "@tanstack/react-query";
+import StepsModal from "../StepsModal";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -36,32 +33,64 @@ interface Props extends MyModalProps {
 }
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
-  const { id } = useParams();
-  const { mutate } = useSWRConfig();
+  const queryClient = useQueryClient();
+  const {
+    getERC20Allowance,
+    createBidOrder,
+    isApproving,
+    isCreatingOrder,
+    isSigningOrderData,
+    deposit,
+    isDepositing,
+  } = useMarketplaceV2(nft);
   const { address } = useAccount();
-  const [loading, setLoading] = useState(false);
-  const onBidURC721UsingNative = useBidURC721UsingNative(nft);
-  const onBidURC1155UsingNative = useBidURC1155UsingNative(nft);
-  const onBidURC721UsingURC20 = useBidURC721UsingURC20(nft);
-  const onBidURC1155UsingURC20 = useBidURC1155UsingURC20(nft);
+  const [errorStep, setErrorStep] = useState<{
+    stepIndex: number;
+    reason: string;
+  } | null>(null);
+  const [currentFormState, setCurrentFormState] = useState<"INPUT" | "CREATE">(
+    "INPUT"
+  );
+  const [currentStep, setCurrentStep] = useState(0);
   const {
     handleSubmit,
     watch,
     register,
     reset,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
-  } = useForm<FormState.BidNFT>({
+  } = useForm<FormState.BidNFTV2>({
     defaultValues: {
-      quoteToken: tokens.wu2u.address,
+      quantity: "1",
+      price: "1",
+      start: new Date().getTime(),
+      end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+      daysRange: "30_DAYS",
+      quoteToken: tokens["wu2u"].address,
+      salt: genRandomNumber(8, 10),
     },
   });
-  const [price, quantity, quoteToken, allowance] = watch([
+  const [price, quantity, quoteToken, start, end, daysRange, salt] = watch([
     "price",
     "quantity",
     "quoteToken",
-    "allowance",
+    "start",
+    "end",
+    "daysRange",
+    "salt",
   ]);
+  const { data: quoteTokenBalance } = useReadContract({
+    abi: erc20Abi,
+    account: address,
+    address: quoteToken,
+    functionName: "balanceOf",
+    args: [address as Address],
+    query: {
+      enabled: !!address && !!quoteToken,
+    },
+  });
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const {
     sellerFee,
@@ -78,29 +107,14 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       token?.decimal
     ),
     onSuccess: (data) => {
-      console.log(123);
       if (!price || isNaN(Number(price))) return;
       const priceBigint = parseUnits(
         !isNaN(Number(price)) ? (price as string) : "0",
         token?.decimal
       );
       const { buyerFee } = data;
-      const totalCostBigint = priceBigint + buyerFee;
-      // Update allowance input when price is changing
-      setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
     },
   });
-
-  const {
-    allowance: allowanceBalance,
-    isTokenApproved,
-    onApproveToken,
-  } = useMarketApproveERC20(
-    token?.address as Address,
-    nft.collection.type,
-    parseUnits(price && !isNaN(Number(price)) ? price : "0", token?.decimal) +
-      buyerFee
-  );
 
   const formRules = {
     price: {
@@ -108,16 +122,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       min: { value: 0, message: "Price cannot be zero" },
       validate: {
         isNumber: (v: any) => !isNaN(v) || "Please input a valid number",
-        balance: (v: any) => {
-          if (!tokenBalance?.value) return "Not enough balance";
-          if (nft.collection.type === "ERC1155") {
-            const totalPrice = Number(price) * Number(quantity);
-            const totalPriceBN = parseEther(totalPrice.toString());
-            return totalPriceBN < tokenBalance.value || "Not enough balance";
-          }
-          const priceBN = parseEther(String(v));
-          return priceBN < tokenBalance.value || "Not enough balance";
-        },
       },
     },
     quantity: {
@@ -144,207 +148,302 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     },
   };
 
-  const { data: tokenBalance } = useBalance({
-    address: address,
+  const { data: nativeTokenBalance, queryKey } = useBalance({
+    address,
     query: {
-      enabled: !!address && !!token?.address,
+      enabled: !!address,
     },
-    token: token?.address === tokens.wu2u.address ? undefined : token?.address,
   });
 
-  const onSubmit = async ({ price, quantity }: FormState.BidNFT) => {
-    const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
-    try {
-      switch (nft.collection.type) {
-        case "ERC721":
-          if (quoteToken === tokens.wu2u.address) {
-            await onBidURC721UsingNative(price);
-          } else {
-            await onBidURC721UsingURC20(price, quoteToken);
-          }
+  const { data: blockNumber } = useBlockNumber({
+    watch: true,
+  });
+
+  const onSubmit = async () => {
+    if (!marketData) return;
+    setCurrentStep(0);
+    setErrorStep(null);
+    setCurrentFormState("CREATE");
+    const params: FormState.BidNFTV2 = {
+      quoteToken,
+      price,
+      quantity,
+      start,
+      salt,
+      end,
+      daysRange,
+      netPrice:
+        parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
+      totalPrice:
+        parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
+    };
+
+    const onApproveERC20Success = () => {
+      setCurrentStep(1);
+    };
+
+    const onSignSuccess = () => {
+      setCurrentStep(2);
+    };
+
+    const onCreateOrderAPISuccess = () => {
+      setCurrentStep(3);
+    };
+
+    const onRequestError = (
+      requestType: "approve" | "sign" | "create_order_api",
+      error: Error
+    ) => {
+      let errorStepIndex = -1;
+      switch (requestType) {
+        case "approve":
+          errorStepIndex = 0;
           break;
-        case "ERC1155":
-          if (quoteToken === tokens.wu2u.address) {
-            await onBidURC1155UsingNative(price, quantity);
-          } else {
-            await onBidURC1155UsingURC20(price, quoteToken, quantity);
-          }
+        case "sign":
+          errorStepIndex = 1;
           break;
-        default:
+        case "create_order_api":
+          errorStepIndex = 2;
           break;
       }
-      toast.update(toastId, {
-        render: "Bid placed successfully",
-        type: "success",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
+      setErrorStep({
+        stepIndex: errorStepIndex,
+        reason: error.message,
       });
-      onClose?.();
-      mutate(`nft-market-data/${id}`);
-    } catch (e: any) {
-      console.error(e);
-      toast.update(toastId, {
-        render: `Bid placed failed. Error report: ${e.message}`,
-        type: "error",
-        autoClose: 5000,
-        closeButton: true,
-        isLoading: false,
-      });
-    } finally {
-      setLoading(false);
-      reset();
-    }
-  };
-
-  const handleAllowanceInput = (event: any) => {
-    const value = event.target.value;
-    if (allowance === "UNLIMITED") {
-      setValue("allowance", value.slice(-1));
-    } else {
-      setValue("allowance", value);
-    }
-  };
-
-  const handleApproveMinAmount = () => {
-    if (allowanceBalance === undefined) return;
-
-    const priceBigint = parseUnits(price || "0", token?.decimal);
-    const totalCostBigint = priceBigint + buyerFee;
-    const remainingToApprove =
-      BigInt(allowanceBalance as bigint) < totalCostBigint
-        ? totalCostBigint - allowanceBalance
-        : 0;
-    setValue("allowance", formatUnits(remainingToApprove, token?.decimal));
-  };
-
-  const handleApproveMaxAmount = () => {
-    setValue("allowance", "UNLIMITED");
-  };
-
-  const handleApproveToken = async () => {
-    const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
+    };
     try {
-      toast.update(toastId, { render: "Sending token", type: "info" });
-      const allowanceBigint =
-        allowance === "UNLIMITED"
-          ? MaxUint256
-          : parseUnits(allowance, token?.decimal);
-      await onApproveToken(allowanceBigint);
-
-      toast.update(toastId, {
-        render: "Approve token successfully",
-        type: "success",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-    } catch (e) {
-      toast.update(toastId, {
-        render: "Failed to approve token",
-        type: "error",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-    } finally {
-      mutate(`nft-market-data/${id}`);
-      setLoading(false);
+      await createBidOrder(
+        { ...params },
+        nft,
+        marketData,
+        onApproveERC20Success,
+        onSignSuccess,
+        onCreateOrderAPISuccess,
+        onRequestError
+      );
+    } catch (error: any) {
+      console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (isApproving) {
+      toast.loading("Approving token for all...", {
+        type: "info",
+        toastId: "approve-all",
+      });
+    } else {
+      toast.dismiss("approve-all");
+    }
+    if (isSigningOrderData) {
+      toast.loading("Signing order data...", {
+        type: "info",
+        toastId: "sign-order-data",
+      });
+    } else {
+      toast.dismiss("sign-order-data");
+    }
+    if (isCreatingOrder) {
+      toast.loading("Creating a Bid...", {
+        type: "info",
+        toastId: "create-order",
+      });
+    } else {
+      toast.dismiss("create-order");
+    }
+  }, [isApproving, isSigningOrderData, isCreatingOrder]);
+
+  const onRetry = async () => {
+    setErrorStep(null);
+    setCurrentStep(0);
+    onSubmit();
+  };
+
+  const handleDeposit = async () => {
+    if (!nativeTokenBalance) return;
+    try {
+      const depositAmt = parseUnits(price, 18) - quoteTokenBalance!;
+      if (depositAmt > nativeTokenBalance.value) {
+        toast.error(`You don't have enough ${tokens["u2u"].symbol}`);
+        return;
+      }
+      await deposit(quoteToken, depositAmt.toString());
+    } catch (err: any) {
+      toast.error("Deposit failed");
+    }
+  };
+
+  useEffect(() => {
+    if (!price || !isNumber(price)) {
+      setError("price", {
+        type: "custom",
+        message: `Price must be a number`,
+      });
+      return;
+    }
+    if (Number(price) <= 0) {
+      setError("price", {
+        type: "custom",
+        message: `Price must be greater than 0`,
+      });
+      return;
+    }
+    if (isNumber(quoteTokenBalance)) {
+      if (parseUnits(price, 18) > quoteTokenBalance!) {
+        setError("price", {
+          type: "custom",
+          message: `You don't have enough ${tokens["wu2u"].symbol}`,
+        });
+      } else {
+        clearErrors("price");
+        Text;
+      }
+    }
+  }, [price, quoteTokenBalance]);
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey,
+    });
+  }, [blockNumber, queryClient, queryKey]);
+
   return (
-    <MyModal.Root show={show} onClose={onClose}>
-      <MyModal.Body className="p-10 px-[30px]">
-        <div className="flex flex-col justify-center items-center gap-4">
-          <form
-            className="w-full flex flex-col gap-6"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="font-bold">
-              <Text className="mb-3" variant="heading-xs">
-                Place a bid
-              </Text>
-              <Text className="text-secondary" variant="body-16">
-                Creating bid for{" "}
-                <span className="text-primary font-bold">{nft.name}</span> from{" "}
-                <span className="text-primary font-bold">
-                  {nft.collection.name}
-                </span>{" "}
-                collection
-              </Text>
-            </div>
-
-            <div>
-              <label className="text-body-14 text-secondary font-semibold mb-1">
-                {nft.collection.type === "ERC721" ? "Price" : "Price per unit"}
-              </label>
-              <Input
-                maxLength={18}
-                size={18}
-                error={!!errors.price}
-                register={register("price", formRules.price)}
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-body-14 text-secondary font-semibold">
-                  Bid using
-                </label>
-                <Text>
-                  Balance:{" "}
-                  {formatDisplayedNumber(
-                    formatUnits(
-                      tokenBalance?.value || 0,
-                      tokenBalance?.decimals
-                    )
-                  )}
+    <>
+      <MyModal.Root
+        show={show && currentFormState === "INPUT"}
+        onClose={onClose}
+      >
+        <MyModal.Body className="p-10 px-[30px]">
+          <div className="flex flex-col justify-center items-center gap-4">
+            <form
+              className="w-full flex flex-col gap-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="font-bold">
+                <Text className="mb-3" variant="heading-xs">
+                  Make an offer
+                </Text>
+                <Text className="text-secondary" variant="body-16">
+                  Make an offer for{" "}
+                  <span className="text-primary font-bold">{nft.name}</span>{" "}
+                  from{" "}
+                  <span className="text-primary font-bold">
+                    {nft.collection.name}
+                  </span>{" "}
+                  collection
                 </Text>
               </div>
-              <Select
-                options={tokenOptions}
-                register={register("quoteToken")}
-              />
-            </div>
-
-            {nft.collection.type === "ERC1155" ? (
-              <>
-                <div>
-                  <Text className="text-secondary font-semibold mb-1">
-                    Quantity
-                  </Text>
-                  <Input
-                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    type="number"
-                    maxLength={3}
-                    size={3}
-                    register={register("quantity", formRules.quantity)}
-                    appendIcon={
-                      <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
-                        Max:{" "}
-                        {formatDisplayedNumber(marketData?.totalSupply || 0)}
-                      </Text>
+              <div className="w-full flex flex-col">
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  {nft.collection.type === "ERC721"
+                    ? "Offer price"
+                    : "Offer price per unit"}
+                </label>
+                <div className="w-full relative rounded-2xl">
+                  <Dropdown.Root
+                    dropdownContainerClassName="w-full"
+                    label=""
+                    icon={
+                      <div className="w-full bg-surface-soft flex items-center justify-center gap-3 rounded-2xl px-2 h-full cursor-pointer">
+                        <div className="flex-1 flex justify-between text-[0.95rem] items-center">
+                          <div>
+                            <Input
+                              onClick={(e) => e.stopPropagation()}
+                              placeholder="Enter offer price"
+                              className="w-full !outline-none !border-none !ring-transparent"
+                              maxLength={18}
+                              size={18}
+                              error={!!errors.price}
+                              register={register("price", formRules.price)}
+                              type="number"
+                            />
+                          </div>
+                          <div>WU2U</div>
+                        </div>
+                        <div className="rounded-lg p-1">
+                          <Icon name="chevronDown" width={14} height={14} />
+                        </div>
+                      </div>
                     }
-                  />
+                  >
+                    {Object.keys(tokens)
+                      .filter((t) => t !== "u2u")
+                      .map((key) => (
+                        <Dropdown.Item
+                          className="w-full rounded-md"
+                          key={tokens[key].symbol}
+                          onClick={() =>
+                            setValue("quoteToken", tokens[key].address)
+                          }
+                        >
+                          <div className="w-full flex items-center gap-2">
+                            <Image
+                              src={tokens[key].logo}
+                              alt="token-image"
+                              className="rounded-full"
+                              width={22}
+                              height={22}
+                            />
+                            {tokens[key].name}
+                          </div>
+                        </Dropdown.Item>
+                      ))}
+                  </Dropdown.Root>
                 </div>
+              </div>
+
+              {nft.collection.type === "ERC1155" ? (
                 <div>
-                  <Text className="text-secondary font-semibold mb-1">
-                    Estimated cost:
-                  </Text>
-                  <Input
-                    readOnly
-                    value={Number(price) * Number(quantity) || 0}
-                    appendIcon={<Text>{token?.symbol}</Text>}
+                  <div>
+                    <Text className="text-secondary font-semibold mb-1">
+                      Quantity
+                    </Text>
+                    <Input
+                      maxLength={3}
+                      size={3}
+                      register={register("quantity", formRules.quantity)}
+                      appendIcon={
+                        <Text className="w-56 overflow-ellipsis whitespace-nowrap text-right">
+                          Max:{" "}
+                          {formatDisplayedNumber(marketData?.totalSupply || 0)}
+                        </Text>
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Text className="text-secondary font-semibold mb-1">
+                      Estimated cost:
+                    </Text>
+                    <Input
+                      readOnly
+                      value={Number(price) * Number(quantity) || 0}
+                      appendIcon={<Text>{token?.symbol}</Text>}
+                    />
+                  </div>
+                  <FeeCalculator
+                    mode="buyer"
+                    nft={nft}
+                    price={parseUnits(
+                      String(Number(price) * Number(quantity) || 0),
+                      token?.decimal
+                    )}
+                    quoteToken={token?.address}
+                    sellerFee={sellerFee}
+                    buyerFee={buyerFee}
+                    sellerFeeRatio={sellerFeeRatio}
+                    buyerFeeRatio={buyerFeeRatio}
+                    netReceived={netReceived}
+                    royaltiesFee={royaltiesFee}
+                    qty={quantity ? Number(quantity) : 0}
+                    tokenBalance={quoteTokenBalance ?? BigInt(0)}
                   />
                 </div>
+              ) : (
                 <FeeCalculator
                   mode="buyer"
-                  qty={Number(quantity)}
                   nft={nft}
                   price={parseUnits(
-                    String(Number(price) * Number(quantity) || 0),
+                    price && !isNaN(Number(price)) ? price : "0",
                     token?.decimal
                   )}
                   quoteToken={token?.address}
@@ -354,55 +453,102 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   buyerFeeRatio={buyerFeeRatio}
                   netReceived={netReceived}
                   royaltiesFee={royaltiesFee}
+                  qty={quantity ? Number(quantity) : 0}
+                  tokenBalance={quoteTokenBalance ?? BigInt(0)}
                 />
-              </>
-            ) : (
-              <FeeCalculator
-                qty={Number(quantity)}
-                mode="buyer"
-                nft={nft}
-                price={parseUnits(
-                  price && !isNaN(Number(price)) ? price : "0",
-                  token?.decimal
-                )}
-                quoteToken={token?.address}
-                sellerFee={sellerFee}
-                buyerFee={buyerFee}
-                sellerFeeRatio={sellerFeeRatio}
-                buyerFeeRatio={buyerFeeRatio}
-                netReceived={netReceived}
-                royaltiesFee={royaltiesFee}
-              />
-            )}
+              )}
 
-            {isTokenApproved ? (
-              <Button
-                disabled={!isTokenApproved}
-                type={"submit"}
-                className="w-full"
-                loading={loading}
-              >
-                Place bid
-              </Button>
-            ) : (
-              <ERC20TokenApproval
-                allowanceBalance={allowanceBalance}
-                quoteToken={quoteToken}
-                onApproveMinAmount={handleApproveMinAmount}
-                onAllowanceInput={() => handleAllowanceInput}
-                onApproveMaxAmount={handleApproveMaxAmount}
-                onApproveToken={handleApproveToken}
-                loading={loading}
-                registerAllowanceInput={register(
-                  "allowance",
-                  formRules.allowance
+              <div className="w-full flex flex-col">
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  Offer&apos;s expiration date
+                </label>
+                <div className="w-full relative rounded-2xl">
+                  <Dropdown.Root
+                    dropdownContainerClassName="w-full"
+                    label=""
+                    icon={
+                      <div className="w-[100%] relative bg-surface-soft flex items-center justify-center gap-3 rounded-2xl py-3 px-5 h-full cursor-pointer">
+                        <div className="flex-1 flex justify-between text-[0.95rem]">
+                          <div>{moment(end).format("MM.DD.YYYY HH:mm A")}</div>
+                          <div>
+                            {daysRange.replaceAll("_", " ").toLowerCase()}
+                          </div>
+                        </div>
+                        <div className="rounded-lg p-1">
+                          <Icon name="chevronDown" width={14} height={14} />
+                        </div>
+                      </div>
+                    }
+                  >
+                    {daysRanges.map((item) => (
+                      <Dropdown.Item
+                        key={item}
+                        className="w-full rounded-md"
+                        onClick={() => {
+                          setValue("daysRange", item);
+                          const newEnd =
+                            start +
+                            parseInt(item.split("_")[0]) * 24 * 60 * 60 * 1000;
+                          setValue("end", newEnd);
+                        }}
+                      >
+                        <div className="w-full flex items-center gap-2">
+                          {item.replaceAll("_", " ").toLowerCase()}
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Root>
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-between gap-3">
+                <Button
+                  disabled={errors.price !== undefined}
+                  type={"submit"}
+                  className="flex-1"
+                  loading={isApproving || isCreatingOrder || isSigningOrderData}
+                >
+                  Make offer
+                </Button>
+                {errors.price && (
+                  <Button
+                    loading={isDepositing}
+                    className="flex-1"
+                    onClick={handleDeposit}
+                  >
+                    Add {tokens["wu2u"].symbol}
+                  </Button>
                 )}
-              />
-            )}
-            <FormValidationMessages errors={errors} />
-          </form>
-        </div>
-      </MyModal.Body>
-    </MyModal.Root>
+              </div>
+              <FormValidationMessages errors={errors} />
+            </form>
+          </div>
+        </MyModal.Body>
+      </MyModal.Root>
+      <StepsModal
+        title="Bid NFT"
+        erorStep={errorStep}
+        isOpen={currentFormState === "CREATE"}
+        onClose={() => {
+          setCurrentFormState("INPUT");
+          onClose && onClose();
+        }}
+        currentStep={currentStep}
+        onRetry={onRetry}
+        steps={[
+          {
+            title: "Approve ERC20 token amount",
+            description: "Approve ERC20 amount",
+          },
+          {
+            title: "Sign bid data",
+            description: "Sign order data",
+          },
+          {
+            title: "Create bid",
+            description: "Create bid",
+          },
+        ]}
+      />
+    </>
   );
 }

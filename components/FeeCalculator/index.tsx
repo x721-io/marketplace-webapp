@@ -19,6 +19,7 @@ interface Props {
   royaltiesFee: bigint;
   netReceived: bigint;
   qty: number;
+  tokenBalance?: bigint;
 }
 
 export default function FeeCalculator({
@@ -33,6 +34,7 @@ export default function FeeCalculator({
   qty,
   royaltiesFee,
   netReceived,
+  tokenBalance = BigInt(0),
 }: Props) {
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
 

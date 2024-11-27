@@ -1,6 +1,7 @@
 import { Address } from "abitype";
-import { Trait } from "@/types/entitites";
+import { NFT, Trait } from "@/types/entitites";
 
+export const daysRanges = ["1_DAY", "7_DAYS", "30_DAYS", "90_DAYS"] as const;
 export namespace FormState {
   export interface SignUp {
     username: string;
@@ -80,5 +81,35 @@ export namespace FormState {
     bio: boolean;
     twitterLink: boolean;
     ownerOrCreater: boolean;
+  }
+
+  export type DaysRange = (typeof daysRanges)[number];
+
+  export interface SellNFTV2 {
+    price: number;
+    quantity: number;
+    quoteToken: Address;
+    start: number;
+    salt: string;
+    end: number;
+    daysRange: DaysRange;
+    netPrice: number;
+    totalPrice: number;
+    nft?: NFT;
+    proof?: string[];
+    root?: string;
+    sig?: string;
+  }
+
+  export interface BidNFTV2 {
+    quoteToken: Address;
+    price: string;
+    quantity: string;
+    start: number;
+    salt: string;
+    end: number;
+    daysRange: DaysRange;
+    netPrice: number;
+    totalPrice: number;
   }
 }

@@ -23,6 +23,7 @@ import useBuyNFT from "@/hooks/useBuyNFT";
 import { Address } from "abitype";
 import { isIntegerString } from "@/utils/string";
 import { useSWRConfig } from "swr";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -30,6 +31,8 @@ interface Props extends MyModalProps {
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
+  const { buySingle, deposit, getERC20Allowance, getOrderDetails } =
+    useMarketplaceV2(nft);
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({ watch: true });
   const {

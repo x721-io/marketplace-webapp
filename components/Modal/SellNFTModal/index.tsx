@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useCalculateFee } from "@/hooks/useMarket";
 import Button from "@/components/Button";
 import Select from "@/components/Form/Select";
-import { tokenOptions } from "@/config/tokens";
+import { tokenOptions, tokens } from "@/config/tokens";
 import { useForm } from "react-hook-form";
 import useAuthStore from "@/store/auth/store";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
@@ -24,6 +24,9 @@ import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { useSWRConfig } from "swr";
 import { useParams } from "next/navigation";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import StepsModal from "../StepsModal";
+import { genRandomNumber } from "@/utils";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -37,6 +40,15 @@ export default function SellNFTModal({
   onClose,
 }: Props) {
   const { id } = useParams();
+  const { createSellOrder } = useMarketplaceV2(nft);
+  const [currentFormState, setCurrentFormState] = useState<"INPUT" | "CREATE">(
+    "INPUT"
+  );
+  const [currentStep, setCurrentStep] = useState(0);
+  const [errorStep, setErrorStep] = useState<{
+    stepIndex: number;
+    reason: string;
+  } | null>(null);
   const api = useMarketplaceApi();
   const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);
@@ -56,11 +68,24 @@ export default function SellNFTModal({
     watch,
     reset,
     formState: { errors },
-  } = useForm<FormState.SellNFT>();
-  const [price, quantity, quoteToken] = watch([
+  } = useForm<FormState.SellNFTV2>({
+    defaultValues: {
+      quantity: 1,
+      start: new Date().getTime(),
+      end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+      daysRange: "30_DAYS",
+      quoteToken: tokens["u2u"].address,
+      salt: genRandomNumber(8, 10),
+    },
+  });
+  const [price, quantity, quoteToken, start, end, daysRange, salt] = watch([
     "price",
     "quantity",
     "quoteToken",
+    "start",
+    "end",
+    "daysRange",
+    "salt",
   ]);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const onSellURC721 = useSellURC721(nft);
@@ -123,41 +148,60 @@ export default function SellNFTModal({
     },
   };
 
-  const onSubmit = async ({
-    price,
-    quoteToken,
-    quantity,
-  }: FormState.SellNFT) => {
-    const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
-    try {
-      if (nft.collection.type === "ERC721") {
-        await onSellURC721(price, quoteToken);
-      } else {
-        await onSellURC1155(price, quoteToken, quantity);
+  const onSubmit = async () => {
+    setErrorStep(null);
+    setCurrentFormState("CREATE");
+    const params: FormState.SellNFTV2 = {
+      daysRange,
+      end,
+      price,
+      quoteToken,
+      quantity,
+      start,
+      salt,
+      netPrice:
+        parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
+      totalPrice:
+        parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
+    };
+    const onApproveSuccess = () => {
+      setCurrentStep(1);
+    };
+    const onSignSuccess = () => {
+      setCurrentStep(2);
+    };
+    const onCreateOrderAPISuccess = () => {
+      // alert(true)
+      setCurrentStep(3);
+    };
+    const onRequestError = (
+      requestType: "approve" | "sign" | "create_order_api",
+      error: Error
+    ) => {
+      let errorStepIndex = -1;
+      switch (requestType) {
+        case "approve":
+          errorStepIndex = 0;
+          break;
+        case "sign":
+          errorStepIndex = 1;
+          break;
+        case "create_order_api":
+          errorStepIndex = 2;
+          break;
       }
-      await api.getFloorPrice({ address: nft.collection.address });
-      toast.update(toastId, {
-        render: "Your NFT has been put on sale!",
-        type: "success",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
+      setErrorStep({
+        stepIndex: errorStepIndex,
+        reason: error.message,
       });
-      onClose?.();
-    } catch (e: any) {
-      console.error(e);
-      toast.update(toastId, {
-        render: `Your NFT has been unsold. Error report: ${e.message}`,
-        type: "error",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-    } finally {
-      setLoading(false);
-      reset();
-    }
+    };
+    await createSellOrder(
+      params,
+      onApproveSuccess,
+      onSignSuccess,
+      onCreateOrderAPISuccess,
+      onRequestError
+    );
   };
 
   const handleApproveTokenForSingle = async () => {
@@ -215,77 +259,103 @@ export default function SellNFTModal({
     }
   };
 
+  const onRetry = async () => {
+    setErrorStep(null);
+    setCurrentStep(0);
+    onSubmit();
+  };
+
   return (
-    <MyModal.Root show={show} onClose={onClose}>
-      <MyModal.Body className="py-10 px-[30px]">
-        <div className="flex flex-col justify-center items-center gap-4">
-          <form
-            className="w-full flex flex-col gap-6"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="font-bold">
-              <Text className="mb-3" variant="heading-xs">
-                Sell NFT
-              </Text>
-              <Text className="text-secondary" variant="body-16">
-                Creating sell order for{" "}
-                <span className="text-primary font-bold">{nft.name}</span> from{" "}
-                <span className="text-primary font-bold">
-                  {nft.collection.name}
-                </span>{" "}
-                collection
-              </Text>
-            </div>
-
-            <div>
-              <label className="text-body-14 text-secondary font-semibold mb-1">
-                Price
-              </label>
-              <Input
-                maxLength={18}
-                size={18}
-                error={!!errors.price}
-                register={register("price", formRules.price)}
-                type="number"
-              />
-            </div>
-
-            <div>
-              <label className="text-body-14 text-secondary font-semibold mb-1">
-                Sell using
-              </label>
-              <Select
-                options={tokenOptions}
-                register={register("quoteToken")}
-              />
-            </div>
-
-            {nft.collection.type === "ERC1155" ? (
-              <div>
-                <Text className="text-secondary font-semibold mb-1">
-                  Quantity
+    <>
+      <MyModal.Root
+        show={show && currentFormState === "INPUT"}
+        onClose={onClose}
+      >
+        <MyModal.Body className="py-10 px-[30px]">
+          <div className="flex flex-col justify-center items-center gap-4">
+            <form
+              className="w-full flex flex-col gap-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="font-bold">
+                <Text className="mb-3" variant="heading-xs">
+                  Sell NFT
                 </Text>
+                <Text className="text-secondary" variant="body-16">
+                  Creating sell order for{" "}
+                  <span className="text-primary font-bold">{nft.name}</span>{" "}
+                  from{" "}
+                  <span className="text-primary font-bold">
+                    {nft.collection.name}
+                  </span>{" "}
+                  collection
+                </Text>
+              </div>
+
+              <div>
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  Price
+                </label>
                 <Input
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  maxLength={18}
+                  size={18}
+                  error={!!errors.price}
+                  register={register("price", formRules.price)}
                   type="number"
-                  maxLength={3}
-                  size={3}
-                  error={!!errors.quantity}
-                  register={register("quantity", formRules.quantity)}
-                  containerClass="mb-4"
-                  appendIcon={
-                    <Text className="mr-5">Owned: {ownerData?.quantity}</Text>
-                  }
                 />
+              </div>
+
+              <div>
+                <label className="text-body-14 text-secondary font-semibold mb-1">
+                  Sell using
+                </label>
+                <Select
+                  options={tokenOptions}
+                  register={register("quoteToken")}
+                />
+              </div>
+
+              {nft.collection.type === "ERC1155" ? (
+                <div>
+                  <Text className="text-secondary font-semibold mb-1">
+                    Quantity
+                  </Text>
+                  <Input
+                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="number"
+                    maxLength={3}
+                    size={3}
+                    error={!!errors.quantity}
+                    register={register("quantity", formRules.quantity)}
+                    containerClass="mb-4"
+                    appendIcon={
+                      <Text className="mr-5">Owned: {ownerData?.quantity}</Text>
+                    }
+                  />
+                  <FeeCalculator
+                    mode="seller"
+                    nft={nft}
+                    qty={quantity}
+                    price={parseUnits(
+                      String(Number(price || 0) * Number(quantity || 0)),
+                      token?.decimal
+                    )}
+                    quoteToken={token?.address}
+                    sellerFee={sellerFee}
+                    buyerFee={buyerFee}
+                    sellerFeeRatio={sellerFeeRatio}
+                    buyerFeeRatio={buyerFeeRatio}
+                    netReceived={netReceived}
+                    royaltiesFee={royaltiesFee}
+                  />
+                </div>
+              ) : (
                 <FeeCalculator
                   mode="seller"
-                  nft={nft}
                   qty={quantity}
-                  price={parseUnits(
-                    String(Number(price || 0) * Number(quantity || 0)),
-                    token?.decimal
-                  )}
+                  nft={nft}
                   quoteToken={token?.address}
+                  price={parseUnits(String(price || 0), token?.decimal)}
                   sellerFee={sellerFee}
                   buyerFee={buyerFee}
                   sellerFeeRatio={sellerFeeRatio}
@@ -293,40 +363,51 @@ export default function SellNFTModal({
                   netReceived={netReceived}
                   royaltiesFee={royaltiesFee}
                 />
-              </div>
-            ) : (
-              <FeeCalculator
-                mode="seller"
-                qty={quantity}
-                nft={nft}
-                quoteToken={token?.address}
-                price={parseUnits(String(price || 0), token?.decimal)}
-                sellerFee={sellerFee}
-                buyerFee={buyerFee}
-                sellerFeeRatio={sellerFeeRatio}
-                buyerFeeRatio={buyerFeeRatio}
-                netReceived={netReceived}
-                royaltiesFee={royaltiesFee}
-              />
-            )}
-            <FormValidationMessages errors={errors} />
-            {isMarketContractApprovedToken ? (
-              <Button type={"submit"} className="w-full" loading={loading}>
-                Put on sale
-              </Button>
-            ) : (
-              <NFTApproval
-                loadingForSingle={loading}
-                loadingForAll={loadingForAll}
-                nft={nft}
-                isMarketContractApprovedToken={isMarketContractApprovedToken}
-                handleApproveTokenForAll={handleApproveTokenForAll}
-                handleApproveTokenForSingle={handleApproveTokenForSingle}
-              />
-            )}
-          </form>
-        </div>
-      </MyModal.Body>
-    </MyModal.Root>
+              )}
+              <FormValidationMessages errors={errors} />
+              {isMarketContractApprovedToken ? (
+                <Button type={"submit"} className="w-full" loading={loading}>
+                  Put on sale
+                </Button>
+              ) : (
+                <NFTApproval
+                  loadingForSingle={loading}
+                  loadingForAll={loadingForAll}
+                  nft={nft}
+                  isMarketContractApprovedToken={isMarketContractApprovedToken}
+                  handleApproveTokenForAll={handleApproveTokenForAll}
+                  handleApproveTokenForSingle={handleApproveTokenForSingle}
+                />
+              )}
+            </form>
+          </div>
+        </MyModal.Body>
+      </MyModal.Root>
+      <StepsModal
+        title="Sell NFT"
+        erorStep={errorStep}
+        isOpen={currentFormState === "CREATE"}
+        onClose={() => {
+          setCurrentFormState("INPUT");
+          onClose && onClose();
+        }}
+        currentStep={currentStep}
+        onRetry={onRetry}
+        steps={[
+          {
+            title: "Approve NFT",
+            description: "Approve NFT for all",
+          },
+          {
+            title: "Sign order data",
+            description: "Sign order data",
+          },
+          {
+            title: "Create sell order",
+            description: "Create sell order",
+          },
+        ]}
+      />
+    </>
   );
 }

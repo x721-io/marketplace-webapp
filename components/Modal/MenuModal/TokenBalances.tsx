@@ -27,14 +27,16 @@ export default function TokenBalances() {
 
   const { data: tokenBalances, queryKey: getTokenBalancesQK } =
     useReadContracts({
-      contracts: Object.values(tokens).map((token) => {
-        return {
-          address: token.address,
-          abi: erc20Abi,
-          functionName: "balanceOf",
-          args: [address as Address],
-        };
-      }),
+      contracts: Object.values(tokens)
+        .filter((t) => t.symbol !== "U2U")
+        .map((token) => {
+          return {
+            address: token.address,
+            abi: erc20Abi,
+            functionName: "balanceOf",
+            args: [address as Address],
+          };
+        }),
       query: { enabled: !!address },
     });
 
@@ -88,51 +90,53 @@ export default function TokenBalances() {
           <span>U2U</span>
         </div>
 
-        {Object.values(tokens).map((token, index) => {
-          const balance = tokenBalances
-            ? formatUnits(
-                tokenBalances[index].result as BigNumberish,
-                token.decimal
-              )
-            : 0;
-          return (
-            <div
-              className="flex flex-col gap-3 p-1 justify-between "
-              key={token.address}
-            >
-              <div className="flex gap-2 items-center">
-                <Image
-                  src={token.logo}
-                  alt=""
-                  width={30}
-                  height={30}
-                  className="w-6 h-6 rounded-full"
-                />
-                <a
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content="Hello world!"
-                >
-                  <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
-                    {balance}
-                  </p>
-                </a>
-                <Tooltip id="my-tooltip" />
-                <span className="text-secondary">{token.symbol}</span>
+        {Object.values(tokens)
+          .filter((t) => t.symbol !== "U2U")
+          .map((token, index) => {
+            const balance = tokenBalances
+              ? formatUnits(
+                  tokenBalances[index].result as BigNumberish,
+                  token.decimal
+                )
+              : 0;
+            return (
+              <div
+                className="flex flex-col gap-3 p-1 justify-between "
+                key={token.address}
+              >
+                <div className="flex gap-2 items-center">
+                  <Image
+                    src={token.logo}
+                    alt=""
+                    width={30}
+                    height={30}
+                    className="w-6 h-6 rounded-full"
+                  />
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="Hello world!"
+                  >
+                    <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
+                      {balance}
+                    </p>
+                  </a>
+                  <Tooltip id="my-tooltip" />
+                  <span className="text-secondary">{token.symbol}</span>
+                </div>
+                {token.address === tokens.wu2u.address && (
+                  <Button
+                    scale="sm"
+                    className="text-body-12"
+                    loading={claiming}
+                    disabled={Number(balance) === 0}
+                    onClick={handleClaimToken}
+                  >
+                    Convert to U2U
+                  </Button>
+                )}
               </div>
-              {token.address === tokens.wu2u.address && (
-                <Button
-                  scale="sm"
-                  className="text-body-12"
-                  loading={claiming}
-                  disabled={Number(balance) === 0}
-                  onClick={handleClaimToken}
-                >
-                  Convert to U2U
-                </Button>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );

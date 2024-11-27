@@ -20,10 +20,12 @@ function DropdownRoot({
   label,
   icon,
   children,
+  dropdownContainerClassName = "",
 }: {
   label: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  dropdownContainerClassName?: string;
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -99,7 +101,11 @@ function DropdownRoot({
                   }
             }
             ref={dropdownRef}
-            className="flex flex-col absolute top-[100%] text-[0.9rem] bg-[white] z-[100] shadow-sm rounded-sm border-solid border-[1px] border-[#E0E0E0]"
+            className={
+              dropdownContainerClassName +
+              ` flex flex-col absolute top-[100%] text-[0.9rem] bg-[white] z-[100] px-3 py-2
+                shadow-xl rounded-2xl border-solid border-[1px] border-[#E0E0E0] animate-fade-in`
+            }
           >
             {children}
           </div>
