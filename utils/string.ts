@@ -96,6 +96,14 @@ export const truncate = ({
   );
 };
 
+export const removeLeadingZerosFromNoStr = (text: string) => {
+  let formmattedString = text.replace(/^0+/, "");
+  if (formmattedString.trim() === "") {
+    formmattedString = "0";
+  }
+  return formmattedString;
+};
+
 export const isIntegerString = (text: string) => {
   return text === Number.parseInt(text) + "";
 };

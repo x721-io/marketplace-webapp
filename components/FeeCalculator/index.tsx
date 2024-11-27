@@ -85,7 +85,7 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatUnits(sellerFee, token?.decimal)}
+                labelTooltip={formatUnits(royaltiesFee, token?.decimal)}
                 className="w-auto max-w-[80px]"
               >
                 {formatUnits(royaltiesFee, token?.decimal)}
@@ -108,10 +108,13 @@ export default function FeeCalculator({
             <div className="flex items-center font-bold gap-1">
               <Text
                 showTooltip
-                labelTooltip={formatUnits(sellerFee, token?.decimal)}
+                labelTooltip={formatUnits(netReceived, token?.decimal)}
                 className="w-auto max-w-[80px]"
               >
-                {formatUnits(netReceived * BigInt(qty ?? "1"), token?.decimal)}
+                {formatUnits(
+                  BigInt(netReceived.toString()) * BigInt(1),
+                  token?.decimal
+                )}
               </Text>
               <p className="text-secondary">{token?.symbol}</p>
               {!!token?.logo && (

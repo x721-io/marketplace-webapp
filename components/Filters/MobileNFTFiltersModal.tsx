@@ -14,6 +14,7 @@ import { Address } from "abitype";
 import { MyModal, MyModalProps } from "../X721UIKits/Modal";
 import MyRadio from "../X721UIKits/Radio";
 import MyCheckbox from "../X721UIKits/Checkbox";
+import useQueryFilters, { FilterItem } from "@/hooks/useQueryFilters";
 
 export default function MobileNFTFiltersModal({
   baseFilters = ["price", "type", "status"],
@@ -31,6 +32,8 @@ export default function MobileNFTFiltersModal({
     isTraitSelected,
     handleSelectTrait,
   } = useNFTFilters(activeFilters, onApplyFilters);
+  const { addFilterItems, removeFilterItems, getFilterBykey, clearFilters } =
+    useQueryFilters();
 
   const handleCloseModal = () => {
     handleChange(activeFilters); // reset to previous state
@@ -180,6 +183,7 @@ export default function MobileNFTFiltersModal({
           variant="secondary"
           scale="sm"
           onClick={() => {
+            clearFilters();
             onResetFilters?.();
             handleChange({ ...DEFAULT_NFT_FILTERS_STATE.filters });
           }}
@@ -200,6 +204,26 @@ export default function MobileNFTFiltersModal({
             scale="sm"
             className="flex-1"
             onClick={() => {
+              let filterItems: {
+                item: FilterItem;
+                type: "single" | "mutiple";
+              }[] = [];
+              Object.keys(localFilters).forEach((key) => {
+                if (key === "sellStatus" || key === "type") {
+                  filterItems.push({
+                    item: {
+                      key,
+                      values: [
+                        localFilters[
+                          key as keyof typeof localFilters
+                        ]?.toString() ?? "",
+                      ],
+                    },
+                    type: "single",
+                  });
+                }
+              });
+              addFilterItems(filterItems);
               handleApplyFilters();
               onClose?.();
             }}

@@ -53,7 +53,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   } = useForm<FormState.BuyNFT>({
     defaultValues: {
       quoteToken: saleData.quoteToken,
-      quantity: 0,
+      quantity: "",
     },
   });
   const [price, quantity, quoteToken, allowance] = watch([
@@ -235,9 +235,9 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         break;
       case "ERC1155":
         if (quoteToken === tokens.wu2u.address) {
-          await handleBuyURC1155UsingNative(quantity);
+          await handleBuyURC1155UsingNative(Number(quantity));
         } else {
-          await handleBuyURC1155UsingURC20(quantity);
+          await handleBuyURC1155UsingURC20(Number(quantity));
         }
         break;
       default:
@@ -306,7 +306,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey });
-  }, [blockNumber, queryClient]);
+  }, [blockNumber, queryClient, queryKey]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
@@ -369,7 +369,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               <FeeCalculator
                 mode="buyer"
                 nft={nft}
-                qty={quantity ?? 0}
+                qty={quantity ? Number(quantity) : 0}
                 price={BigInt(saleData?.price || "0")}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
@@ -401,10 +401,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                       },
                       validate: {
                         required: (v) =>
-                          (!!v && !isNaN(v) && v > 0) ||
+                          (!!v && !isNaN(Number(v)) && Number(v) > 0) ||
                           "Please input quantity of item to purchase",
                         max: (v) =>
-                          v <= Number(saleData?.quantity) ||
+                          Number(v) <= Number(saleData?.quantity) ||
                           "Quantity exceeds sale amount",
                         balance: (v) => {
                           if (!tokenBalance?.value) return "Not enough balance";
@@ -434,7 +434,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 </div>
 
                 <FeeCalculator
-                  qty={quantity ?? 0}
+                  qty={quantity ? Number(quantity) : 0}
                   mode="buyer"
                   nft={nft}
                   price={totalPriceBN}

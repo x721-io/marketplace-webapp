@@ -14,7 +14,7 @@ import Input from "@/components/Form/Input";
 import { formatDisplayedNumber, genRandomNumber, isNumber } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { numberRegex } from "@/utils/regex";
+import { decimalRegex, numberRegex } from "@/utils/regex";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
@@ -119,6 +119,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const formRules = {
     price: {
       required: "Please input bid price",
+      pattern: { value: decimalRegex, message: "Wrong price input" },
       min: { value: 0, message: "Price cannot be zero" },
       validate: {
         isNumber: (v: any) => !isNaN(v) || "Please input a valid number",

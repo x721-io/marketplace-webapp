@@ -53,9 +53,9 @@ export default function MenuModal({ onClose, show }: MyModalProps) {
           </div>
 
           <div className="flex flex-1 justify-end items-center gap-4">
-            <Button className="w-12 !min-w-0 !p-2" variant="icon" disabled>
+            {/* <Button className="w-12 !min-w-0 !p-2" variant="icon" disabled>
               <Icon name="shoppingBag" width={16} height={16} />
-            </Button>
+            </Button> */}
             <button onClick={onClose}>
               <Icon name="close" width={24} height={24} />
             </button>

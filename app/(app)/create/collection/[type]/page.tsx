@@ -134,6 +134,7 @@ export default function CreateNFTCollectionPage() {
         });
         setLoading(false);
       }
+      //mutate here
     } catch (e: any) {
       toast.update(toastId, {
         render: `Error creating collection: ${e.message ?? e}`,
