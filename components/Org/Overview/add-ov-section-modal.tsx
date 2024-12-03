@@ -162,7 +162,76 @@ export default function AddOverviewSectionModal({
           }}
           className="w-full cursor-pointer"
         >
-          Text and media side by side
+          Text left, media right
+        </div>
+        <div
+          onClick={() => {
+            const element: Element = {
+              type: ElementType.CONTAINER,
+              width: "100%",
+              background: "rgba(0,0,0,0.95)",
+              flexDirection: "row",
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+              children: [
+                {
+                  type: ElementType.CONTAINER,
+                  width: "50%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  children: [
+                    {
+                      type: ElementType.IMAGE,
+                      src: "https://img.freepik.com/premium-photo/seamless-geometric-pattern-fabric-wallpaper-background-design_955379-17743.jpg?semt=ais_hybrid",
+                      width: "100%",
+                      height: "500px",
+                    },
+                  ],
+                },
+                {
+                  type: ElementType.CONTAINER,
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  styles: {
+                    width: "50%",
+                    paddingLeft: "100px",
+                    paddingRight: "100px",
+                    gap: "10px",
+                    alignSelf: "stretch",
+                  },
+                  children: [
+                    {
+                      type: ElementType.TEXT,
+                      contentType: "TITLE",
+                      text: {
+                        content: "At the Cornerstone of Digital Identity",
+                        color: "white",
+                        fontSize: "26px",
+                        fontWeight: 700,
+                      },
+                    },
+                    {
+                      type: ElementType.TEXT,
+                      contentType: "DESCRIPTION",
+                      text: {
+                        content:
+                          "Each Keeper is a fully-rigged and gameplay-ready 3D identity. Downloadable digital files make each avatar ready for use in 4K film and media, AAA gaming, and networked metaverse environments.",
+                        color: "rgba(255,255,255,0.7)",
+                        fontSize: "18px",
+                        fontWeight: 300,
+                      },
+                    },
+                  ],
+                },
+              ],
+            };
+            onAddNewElement(element);
+          }}
+          className="w-full cursor-pointer"
+        >
+          Text right, media left
         </div>
         <div
           onClick={() => {

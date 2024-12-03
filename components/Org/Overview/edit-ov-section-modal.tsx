@@ -88,6 +88,7 @@ export default function EditOverviewSectionModal({
         }
       });
     };
+    setMediaSrc(null);
     if (element) {
       const mediaElements: Array<Video & { path: string }> = [];
       const textElements: Array<Text & { path: string }> = [];
@@ -213,15 +214,38 @@ export default function EditOverviewSectionModal({
     return null;
   };
 
-  const handleUploadImage = async (file?: Blob) => {
+  const handleUploadImage = (file?: Blob) => {
+    // alert(1233);
     if (!file) {
       setMediaSrc(null);
       return;
     }
     setUploading(true);
     try {
-      const response = await uploadFileMutate({ files: file });
-      alert(response.fileHashes[0]);
+      const objectURL = URL.createObjectURL(file);
+      setMediaSrc(objectURL);
+      const updatedMediaElement = structuredClone(mediaElements[0]);
+      updatedMediaElement.src = objectURL;
+
+      if (file.type.startsWith("image")) {
+        updatedMediaElement.width = "100%";
+        updatedMediaElement.height = "450px";
+        updatedMediaElement.type = ElementType.IMAGE;
+      } else if (file.type.startsWith("video")) {
+        updatedMediaElement.width = "100%";
+        updatedMediaElement.styles = {
+          width: "100%",
+          height: "500px",
+          objectFit: "cover",
+        };
+        updatedMediaElement.type = ElementType.VIDEO;
+      }
+      onUpdateElement(
+        updatedMediaElement.path,
+        structuredClone(updatedMediaElement)
+      );
+      // const response = await uploadFileMutate({ files: file });
+      // alert(response.fileHashes[0]);
     } finally {
       setUploading(false);
     }
@@ -255,35 +279,26 @@ export default function EditOverviewSectionModal({
                     onInput={handleUploadImage}
                     // loading={uploading}
                     // error={!!errors.avatar}
-                    maxSize={4}
+                    maxSize={50}
                     className="!absolute top-0 left-0 cursor-pointer w-[100%] !h-[200px]"
                     accept={ALLOWED_FILE_TYPES}
                   />
                 )}
                 {mediaElements[0].type === ElementType.VIDEO && (
                   <video
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      mediaInputRef.current?.click();
-                    }}
                     src={mediaElements[0].src}
-                    className="rounded-md cursor-pointer w-[100%] !h-[200px]"
+                    className="rounded-md cursor-pointer w-[100%] !h-[200px]  select-none pointer-events-none"
                   />
                 )}
                 {mediaElements[0].type === ElementType.IMAGE && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt="overview-img"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      mediaInputRef.current?.click();
-                    }}
                     src={mediaElements[0].src}
-                    className="rounded-md cursor-pointer w-[100%] !h-[200px]"
+                    className="rounded-md cursor-pointer w-[100%] !h-[200px] select-none pointer-events-none"
                   />
                 )}
               </div>
-              <input ref={mediaInputRef} type="file" className="hidden" />
             </div>
           </div>
         )}
