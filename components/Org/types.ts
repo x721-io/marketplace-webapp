@@ -15,7 +15,7 @@ export type OrgProperties = {
   overviewElements: Element[];
 };
 
-export type Element = Video | ButtonLink | TextLink | Container | Text;
+export type Element = Video | ButtonLink | TextLink | Container | Text | Image;
 
 export type TextAttributes = {
   content: string;
@@ -54,6 +54,16 @@ export type Container = {
 export type Video = {
   type: ElementType.VIDEO;
   showControls?: boolean;
+  src: string;
+  width?: string;
+  height?: string;
+  styles?: React.CSSProperties;
+  children?: Element[];
+  path?: string;
+};
+
+export type Image = {
+  type: ElementType.IMAGE;
   src: string;
   width?: string;
   height?: string;

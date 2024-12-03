@@ -19,9 +19,6 @@ const orgProperties: OrgProperties = {
       flexDirection: "row",
       alignItems: "flex-start",
       justifyContent: "flex-start",
-      styles: {
-        padding: "20px 0px",
-      },
       children: [
         {
           type: ElementType.CONTAINER,
@@ -69,11 +66,11 @@ const orgProperties: OrgProperties = {
             {
               type: ElementType.VIDEO,
               src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-              width: "500px",
-              showControls: true,
+              width: "100%",
+              showControls: false,
               styles: {
-                aspectRatio: 1,
-                borderRadius: "20px",
+                objectFit: "cover",
+                aspectRatio: 1.5,
               },
             },
           ],

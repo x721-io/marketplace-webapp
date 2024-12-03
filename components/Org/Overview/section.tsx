@@ -3,6 +3,7 @@
 import { Element, ElementType } from "../types";
 import ButtonLinkElement from "./Elements/button-link-element";
 import ContainerElement from "./Elements/container-element";
+import ImageElement from "./Elements/image-element";
 import TextElement from "./Elements/text-element";
 import VideoElement from "./Elements/video-element";
 
@@ -16,6 +17,8 @@ export const generateElement = (element: Element, index: number) => {
       return TextElement(element, index);
     case ElementType.VIDEO:
       return VideoElement(element, index);
+    case ElementType.IMAGE:
+      return ImageElement(element, index);
   }
 };
 

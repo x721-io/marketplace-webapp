@@ -33,7 +33,7 @@ export default function AddOverviewSectionModal({
               type: ElementType.CONTAINER,
               alignItems: "center",
               justifyContent: "center",
-              height: "600px",
+              height: "500px",
               styles: {
                 position: "relative",
               },
@@ -41,20 +41,14 @@ export default function AddOverviewSectionModal({
                 {
                   type: ElementType.CONTAINER,
                   width: "100%",
-                  height: "100%",
+                  height: "600px",
                   alignItems: "center",
                   justifyContent: "center",
                   children: [
                     {
-                      type: ElementType.VIDEO,
-                      src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-                      showControls: false,
-                      styles: {
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        filter: "brightness(70%)",
-                      },
+                      type: ElementType.IMAGE,
+                      src: "https://img.freepik.com/premium-photo/seamless-geometric-pattern-fabric-wallpaper-background-design_955379-17743.jpg?semt=ais_hybrid",
+                      height: "500px",
                     },
                   ],
                 },
@@ -110,9 +104,6 @@ export default function AddOverviewSectionModal({
               flexDirection: "row",
               alignItems: "flex-start",
               justifyContent: "flex-start",
-              styles: {
-                padding: "20px 0px",
-              },
               children: [
                 {
                   type: ElementType.CONTAINER,
@@ -158,14 +149,10 @@ export default function AddOverviewSectionModal({
                   justifyContent: "center",
                   children: [
                     {
-                      type: ElementType.VIDEO,
-                      src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-                      width: "500px",
-                      showControls: true,
-                      styles: {
-                        aspectRatio: 1,
-                        borderRadius: "20px",
-                      },
+                      type: ElementType.IMAGE,
+                      src: "https://img.freepik.com/premium-photo/seamless-geometric-pattern-fabric-wallpaper-background-design_955379-17743.jpg?semt=ais_hybrid",
+                      width: "100%",
+                      height: "500px",
                     },
                   ],
                 },
@@ -186,15 +173,10 @@ export default function AddOverviewSectionModal({
               justifyContent: "center",
               children: [
                 {
-                  type: ElementType.VIDEO,
-                  src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-                  width: "500px",
-                  showControls: false,
-                  styles: {
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  },
+                  type: ElementType.IMAGE,
+                  src: "https://img.freepik.com/premium-photo/seamless-geometric-pattern-fabric-wallpaper-background-design_955379-17743.jpg?semt=ais_hybrid",
+                  width: "100%",
+                  height: "500px",
                 },
               ],
             };

@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container, Element, ElementType, Text, Video } from "../types";
+import { Container, Element, ElementType, Image, Text, Video } from "../types";
 import CloseIcon from "@/components/Icon/Close";
+import { ALLOWED_FILE_TYPES } from "@/config/constants";
+import ImageUploader from "@/components/Form/ImageUploader";
+import { useUploadFile } from "@/hooks/useMutate";
+import { toast } from "react-toastify";
 
 export default function EditOverviewSectionModal({
   isShow,
@@ -17,9 +21,11 @@ export default function EditOverviewSectionModal({
   onUpdateElement: (path: string, updatedElement: Element) => void;
   onClose: () => void;
 }) {
+  const { trigger: uploadFileMutate } = useUploadFile();
+  const [uploading, setUploading] = useState(false);
   const mediaInputRef = useRef<HTMLInputElement>(null);
   const [mediaElements, setMediaElements] = useState<
-    Array<Video & { path: string }>
+    Array<(Video | Image) & { path: string }>
   >([]);
   const [textElements, setTextElements] = useState<
     Array<Text & { path: string }>
@@ -30,6 +36,7 @@ export default function EditOverviewSectionModal({
   const [textContainerElement, setTextContainerElement] = useState<
     (Container & { path: string }) | null
   >(null);
+  const [mediaSrc, setMediaSrc] = useState<string | null>(null);
   const [justifyContent, setJustifyContent] = useState<
     | "flex-start"
     | "flex-end"
@@ -51,7 +58,7 @@ export default function EditOverviewSectionModal({
     const processData = (
       element: Element,
       path: string,
-      mediaElements: Array<Video & { path: string }>,
+      mediaElements: Array<(Video | Image) & { path: string }>,
       textElements: Array<Text & { path: string }>,
       containerElements: Array<Container & { path: string }>
     ) => {
@@ -70,6 +77,8 @@ export default function EditOverviewSectionModal({
         } else {
           switch (child.type) {
             case ElementType.VIDEO:
+            case ElementType.IMAGE:
+              setMediaSrc(child.src);
               mediaElements.push({ ...child, path: path + "-" + i });
               break;
             case ElementType.TEXT:
@@ -204,6 +213,20 @@ export default function EditOverviewSectionModal({
     return null;
   };
 
+  const handleUploadImage = async (file?: Blob) => {
+    if (!file) {
+      setMediaSrc(null);
+      return;
+    }
+    setUploading(true);
+    try {
+      const response = await uploadFileMutate({ files: file });
+      alert(response.fileHashes[0]);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -225,16 +248,40 @@ export default function EditOverviewSectionModal({
               <div className="w-full flex items-center text-heading-sm !text-[19px]">
                 Media
               </div>
-              <div className="w-full">
-                <video
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    mediaInputRef.current?.click();
-                  }}
-                  src={mediaElements[0].src}
-                  width={"100%"}
-                  className="object-cover rounded-md cursor-pointer"
-                />
+              <div className="w-full relative">
+                {mediaSrc && (
+                  <ImageUploader
+                    value={mediaSrc}
+                    onInput={handleUploadImage}
+                    // loading={uploading}
+                    // error={!!errors.avatar}
+                    maxSize={4}
+                    className="!absolute top-0 left-0 cursor-pointer w-[100%] !h-[200px]"
+                    accept={ALLOWED_FILE_TYPES}
+                  />
+                )}
+                {mediaElements[0].type === ElementType.VIDEO && (
+                  <video
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mediaInputRef.current?.click();
+                    }}
+                    src={mediaElements[0].src}
+                    className="rounded-md cursor-pointer w-[100%] !h-[200px]"
+                  />
+                )}
+                {mediaElements[0].type === ElementType.IMAGE && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    alt="overview-img"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mediaInputRef.current?.click();
+                    }}
+                    src={mediaElements[0].src}
+                    className="rounded-md cursor-pointer w-[100%] !h-[200px]"
+                  />
+                )}
               </div>
               <input ref={mediaInputRef} type="file" className="hidden" />
             </div>
