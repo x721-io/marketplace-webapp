@@ -42,7 +42,6 @@ export default function AddOverviewSectionModal({
                 {
                   type: ElementType.CONTAINER,
                   width: "100%",
-                  height: "600px",
                   alignItems: "center",
                   justifyContent: "center",
                   background: "transparent",

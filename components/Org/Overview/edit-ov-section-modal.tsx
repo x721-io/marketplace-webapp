@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container, Element, ElementType, Image, Text, Video } from "../types";
+import {
+  Container,
+  Element,
+  ElementType,
+  Image as ImageType,
+  Text,
+  Video,
+} from "../types";
 import CloseIcon from "@/components/Icon/Close";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from "@/config/constants";
 import ImageUploader from "@/components/Form/ImageUploader";
 import { useUploadFile } from "@/hooks/useMutate";
-import { toast } from "react-toastify";
 
 export default function EditOverviewSectionModal({
   isShow,
@@ -30,7 +36,7 @@ export default function EditOverviewSectionModal({
   const [uploading, setUploading] = useState(false);
   const mediaInputRef = useRef<HTMLInputElement>(null);
   const [mediaElements, setMediaElements] = useState<
-    Array<(Video | Image) & { path: string }>
+    Array<(Video | ImageType) & { path: string }>
   >([]);
   const [textElements, setTextElements] = useState<
     Array<Text & { path: string }>
@@ -55,7 +61,7 @@ export default function EditOverviewSectionModal({
     const processData = (
       element: Element,
       path: string,
-      mediaElements: Array<(Video | Image) & { path: string }>,
+      mediaElements: Array<(Video | ImageType) & { path: string }>,
       textElements: Array<Text & { path: string }>,
       containerElements: Array<Container & { path: string }>
     ) => {
@@ -165,27 +171,40 @@ export default function EditOverviewSectionModal({
     setUploading(true);
     try {
       const objectURL = URL.createObjectURL(file);
-      setMediaSrc(objectURL);
-      const updatedMediaElement = structuredClone(mediaElements[0]);
-      updatedMediaElement.src = objectURL;
+      var reader = new FileReader();
 
-      if (file.type.startsWith("image")) {
-        updatedMediaElement.width = "100%";
-        updatedMediaElement.height = "450px";
-        updatedMediaElement.type = ElementType.IMAGE;
-      } else if (file.type.startsWith("video")) {
-        updatedMediaElement.width = "100%";
-        updatedMediaElement.styles = {
-          width: "100%",
-          height: "500px",
-          objectFit: "cover",
-        };
-        updatedMediaElement.type = ElementType.VIDEO;
-      }
-      onUpdateElement(
-        updatedMediaElement.path,
-        structuredClone(updatedMediaElement)
-      );
+      //Read the contents of Image File.
+      reader.readAsDataURL(file);
+      reader.onload = function (e) {
+        //Initiate the JavaScript Image object.
+        var image = new Image();
+
+        //Set the Base64 string return from FileReader as source.
+        if (e.target?.result) {
+          image.src = e.target.result as any;
+
+          //Validate the File Height and Width.
+          image.onload = function () {
+            setMediaSrc(objectURL);
+            const updatedMediaElement = structuredClone(mediaElements[0]);
+            updatedMediaElement.src = objectURL;
+
+            if (file.type.startsWith("image")) {
+              updatedMediaElement.width = "100%";
+              updatedMediaElement.height = image.height + "px";
+              file;
+              updatedMediaElement.type = ElementType.IMAGE;
+            } else if (file.type.startsWith("video")) {
+              updatedMediaElement.type = ElementType.VIDEO;
+            }
+            onUpdateElement(
+              updatedMediaElement.path,
+              structuredClone(updatedMediaElement)
+            );
+          };
+        }
+      };
+
       // const response = await uploadFileMutate({ files: file });
       // alert(response.fileHashes[0]);
     } finally {
@@ -330,7 +349,7 @@ export default function EditOverviewSectionModal({
                       setTextElements(updatedTextElements);
                       onUpdateElement(
                         textElements[index].path,
-                        structuredClone(updatedTextElements[index])
+                        updatedTextElements[index]
                       );
                     }}
                     value={
