@@ -42,27 +42,27 @@ export default function Section({
 }) {
   return (
     <div className="relative h-full w-full group">
-      <div className="w-full max-w-[170px] absolute z-10 h-10 bg-gray-100 mx-20 border border-gray-400 rounded-lg right-0 gap-2 items-center justify-center text-[white] !font-bold group-hover:flex hidden transition">
+      <div className="w-full max-w-[170px] absolute z-10 h-10 bg-white mx-20 border border-gray-400 rounded-lg right-0 gap-2 items-center justify-center text-[white] !font-bold group-hover:flex hidden transition">
         <button
-          className="border  rounded-lg p-2"
+          className="border hover:bg-[#E3E3E3] rounded-lg p-2"
           onClick={() => onEdit(index)}
         >
           <GrEdit color="black" />
         </button>
         <button
-          className="border rounded-lg p-2"
+          className="border hover:bg-[#E3E3E3] rounded-lg p-2"
           onClick={() => onMoveUp(index)}
         >
           <FaArrowUp color="black" />
         </button>
         <button
-          className="border rounded-lg p-2"
+          className="border hover:bg-[#E3E3E3] rounded-lg p-2"
           onClick={() => onMoveDown(index)}
         >
           <FaArrowDown color="black" />
         </button>
         <button
-          className="border rounded-lg p-2"
+          className="border hover:bg-[#E3E3E3] rounded-lg p-2"
           onClick={() => onDelete(index)}
         >
           <RiDeleteBin6Line color="black" />
