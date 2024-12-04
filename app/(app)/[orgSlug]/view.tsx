@@ -38,9 +38,10 @@ const orgProperties: OrgProperties = {
               contentType: "TITLE",
               text: {
                 content: "At the Cornerstone of Digital Identity",
-                color: "white",
+                color: "#ffffff",
                 fontSize: "26px",
                 fontWeight: 700,
+                textAlign: "left",
               },
             },
             {
@@ -49,9 +50,10 @@ const orgProperties: OrgProperties = {
               text: {
                 content:
                   "Each Keeper is a fully-rigged and gameplay-ready 3D identity. Downloadable digital files make each avatar ready for use in 4K film and media, AAA gaming, and networked metaverse environments.",
-                color: "rgba(255,255,255,0.7)",
+                color: "#a5a3a3",
                 fontSize: "18px",
                 fontWeight: 300,
+                textAlign: "left",
               },
             },
           ],

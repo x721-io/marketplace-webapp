@@ -23,6 +23,7 @@ export type TextAttributes = {
   fontSize: string;
   fontWeight: number;
   styles?: React.CSSProperties;
+  textAlign: "left" | "center" | "right";
 };
 
 export type Container = {

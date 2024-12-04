@@ -21,6 +21,7 @@ export default function EditOverviewSectionModal({
   onUpdateElement: (path: string, updatedElement: Element) => void;
   onClose: () => void;
 }) {
+  const textAligns = ["left", "center", "right"];
   const { trigger: uploadFileMutate } = useUploadFile();
   const [uploading, setUploading] = useState(false);
   const mediaInputRef = useRef<HTMLInputElement>(null);
@@ -308,56 +309,253 @@ export default function EditOverviewSectionModal({
               <div className="w-full flex items-center text-heading-sm !text-[19px]">
                 Title
               </div>
-              <div className="w-full">
-                <input
-                  type="text"
-                  className="w-full rounded-md bg-transparent"
-                  onChange={(e) => {
-                    const index = textElements.findIndex(
-                      (ele) => ele.contentType === "TITLE"
-                    );
-                    if (index === -1) return;
-                    const updatedTextElements = structuredClone(textElements);
-                    updatedTextElements[index].text.content = e.target.value;
-                    setTextElements(updatedTextElements);
-                    onUpdateElement(
-                      textElements[index].path,
-                      structuredClone(updatedTextElements[index])
-                    );
-                  }}
-                  value={
-                    textElements.find((ele) => ele.contentType === "TITLE")
-                      ?.text.content
-                  }
-                />
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Content</div>
+                <div className="flex-1 flex items-center">
+                  <input
+                    type="text"
+                    className="w-full rounded-md bg-transparent"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "TITLE"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.content = e.target.value;
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={
+                      textElements.find((ele) => ele.contentType === "TITLE")
+                        ?.text.content
+                    }
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Font size</div>
+                <div className="flex-1 flex items-center flex-wrap">
+                  <input
+                    type="number"
+                    className="h-[40px] w-full rounded-lg bg-transparent text-center"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "TITLE"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.fontSize =
+                        e.target.value + "px";
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={parseInt(
+                      textElements
+                        .find((ele) => ele.contentType === "TITLE")
+                        ?.text.fontSize.split("px")[0] ?? "0"
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Color</div>
+                <div className="flex-1 flex items-center">
+                  <input
+                    type="color"
+                    className="h-[45px] w-full rounded-lg bg-transparent"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "TITLE"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.color = e.target.value;
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={
+                      textElements.find((ele) => ele.contentType === "TITLE")
+                        ?.text.color
+                    }
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Text align</div>
+                <div className="flex-1 flex flex-row items-center flex-wrap">
+                  {textAligns.map((ta, i) => (
+                    <div
+                      onClick={() => {
+                        const index = textElements.findIndex(
+                          (ele) => ele.contentType === "TITLE"
+                        );
+                        if (index === -1) return;
+                        const updatedTextElements =
+                          structuredClone(textElements);
+                        updatedTextElements[index].text.textAlign = ta as any;
+                        setTextElements(updatedTextElements);
+                        onUpdateElement(
+                          textElements[index].path,
+                          structuredClone(updatedTextElements[index])
+                        );
+                      }}
+                      style={{
+                        backgroundColor:
+                          textElements.find(
+                            (ele) => ele.contentType === "TITLE"
+                          )?.text.textAlign === ta
+                            ? "white"
+                            : "rgba(255,255,255,0.15)",
+                        color:
+                          textElements.find(
+                            (ele) => ele.contentType === "TITLE"
+                          )?.text.textAlign === ta
+                            ? "black"
+                            : "white",
+                      }}
+                      className="w-[33.3%] flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
+                      key={ta}
+                    >
+                      {ta.toLocaleUpperCase()}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="w-full flex flex-col gap-2">
               <div className="w-full flex items-center text-heading-sm !text-[19px]">
                 Description
               </div>
-              <div className="w-full">
-                <textarea
-                  className="w-full h-[200px] rounded-md bg-transparent"
-                  onChange={(e) => {
-                    const index = textElements.findIndex(
-                      (ele) => ele.contentType === "DESCRIPTION"
-                    );
-                    if (index === -1) return;
-                    const updatedTextElements = structuredClone(textElements);
-                    updatedTextElements[index].text.content = e.target.value;
-                    setTextElements(updatedTextElements);
-                    onUpdateElement(
-                      textElements[index].path,
-                      structuredClone(updatedTextElements[index])
-                    );
-                  }}
-                  value={
-                    textElements.find(
-                      (ele) => ele.contentType === "DESCRIPTION"
-                    )?.text.content
-                  }
-                />
+              <div className="w-full flex items-center">
+                <div className="w-[25%] h-[200px]">Content</div>
+                <div className="flex-1 flex items-center">
+                  <textarea
+                    className="w-full rounded-md bg-transparent h-[200px]"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "DESCRIPTION"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.content = e.target.value;
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={
+                      textElements.find(
+                        (ele) => ele.contentType === "DESCRIPTION"
+                      )?.text.content
+                    }
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Font size</div>
+                <div className="flex-1 flex items-center flex-wrap">
+                  <input
+                    type="number"
+                    className="h-[40px] w-full rounded-lg bg-transparent text-center"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "DESCRIPTION"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.fontSize =
+                        e.target.value + "px";
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={parseInt(
+                      textElements
+                        .find((ele) => ele.contentType === "DESCRIPTION")
+                        ?.text.fontSize.split("px")[0] ?? "0"
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Color</div>
+                <div className="flex-1 flex items-center">
+                  <input
+                    type="color"
+                    className="h-[45px] w-full rounded-lg bg-transparent"
+                    onChange={(e) => {
+                      const index = textElements.findIndex(
+                        (ele) => ele.contentType === "DESCRIPTION"
+                      );
+                      if (index === -1) return;
+                      const updatedTextElements = structuredClone(textElements);
+                      updatedTextElements[index].text.color = e.target.value;
+                      setTextElements(updatedTextElements);
+                      onUpdateElement(
+                        textElements[index].path,
+                        structuredClone(updatedTextElements[index])
+                      );
+                    }}
+                    value={
+                      textElements.find(
+                        (ele) => ele.contentType === "DESCRIPTION"
+                      )?.text.color
+                    }
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-[25%]">Text align</div>
+                <div className="flex-1 flex flex-row items-center flex-wrap">
+                  {textAligns.map((ta, i) => (
+                    <div
+                      onClick={() => {
+                        const index = textElements.findIndex(
+                          (ele) => ele.contentType === "DESCRIPTION"
+                        );
+                        if (index === -1) return;
+                        const updatedTextElements =
+                          structuredClone(textElements);
+                        updatedTextElements[index].text.textAlign = ta as any;
+                        setTextElements(updatedTextElements);
+                        onUpdateElement(
+                          textElements[index].path,
+                          structuredClone(updatedTextElements[index])
+                        );
+                      }}
+                      style={{
+                        backgroundColor:
+                          textElements.find(
+                            (ele) => ele.contentType === "DESCRIPTION"
+                          )?.text.textAlign === ta
+                            ? "white"
+                            : "rgba(255,255,255,0.15)",
+                        color:
+                          textElements.find(
+                            (ele) => ele.contentType === "DESCRIPTION"
+                          )?.text.textAlign === ta
+                            ? "black"
+                            : "white",
+                      }}
+                      className="w-[33.3%] flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
+                      key={ta}
+                    >
+                      {ta.toLocaleUpperCase()}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="w-full flex flex-col gap-2">

@@ -73,6 +73,7 @@ export default function AddOverviewSectionModal({
                         color: "white",
                         fontSize: "26px",
                         fontWeight: 700,
+                        textAlign: "left",
                       },
                     },
                     {
@@ -83,6 +84,7 @@ export default function AddOverviewSectionModal({
                         color: "rgba(255,255,255,0.7)",
                         fontSize: "18px",
                         fontWeight: 300,
+                        textAlign: "left",
                       },
                     },
                   ],
@@ -126,6 +128,7 @@ export default function AddOverviewSectionModal({
                         color: "white",
                         fontSize: "26px",
                         fontWeight: 700,
+                        textAlign: "left",
                       },
                     },
                     {
@@ -137,6 +140,7 @@ export default function AddOverviewSectionModal({
                         color: "rgba(255,255,255,0.7)",
                         fontSize: "18px",
                         fontWeight: 300,
+                        textAlign: "left",
                       },
                     },
                   ],
@@ -210,6 +214,7 @@ export default function AddOverviewSectionModal({
                         color: "white",
                         fontSize: "26px",
                         fontWeight: 700,
+                        textAlign: "left",
                       },
                     },
                     {
@@ -221,6 +226,7 @@ export default function AddOverviewSectionModal({
                         color: "rgba(255,255,255,0.7)",
                         fontSize: "18px",
                         fontWeight: 300,
+                        textAlign: "left",
                       },
                     },
                   ],
