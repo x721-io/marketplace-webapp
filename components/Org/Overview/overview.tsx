@@ -70,9 +70,25 @@ export default function OrgOverview({
     setDraftedElements(updatedDraftedElements);
   };
 
-  useEffect(() => {
-    console.log({ draftedElements });
-  }, [draftedElements]);
+  const handleUpdateBG = (
+    newBG: string,
+    index: number,
+    type: "color" | "image"
+  ) => {
+    const updatedDraftedElements = [...draftedElements];
+    if (updatedDraftedElements[index].type === ElementType.CONTAINER) {
+      switch (type) {
+        case "color":
+          updatedDraftedElements[index].background = newBG;
+          break;
+        case "image":
+          updatedDraftedElements[index].backgroundImage = newBG;
+          break;
+        default:
+      }
+    }
+    setDraftedElements(updatedDraftedElements);
+  };
 
   return (
     <div className="w-full relative flex flex-col">
@@ -104,6 +120,12 @@ export default function OrgOverview({
         element={editIndex !== -1 ? draftedElements[editIndex] : null}
         isShow={editIndex !== -1}
         index={editIndex}
+        onUpdateBackgroundColor={(newBG: string) =>
+          handleUpdateBG(newBG, editIndex, "color")
+        }
+        onUpdateBackgroundImage={(newBG: string) =>
+          handleUpdateBG(newBG, editIndex, "image")
+        }
         onUpdateElement={handleUpdateElement}
       />
       <AddOverviewSectionModal

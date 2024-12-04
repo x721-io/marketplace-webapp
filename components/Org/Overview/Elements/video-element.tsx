@@ -14,7 +14,7 @@ const VideoElement = (element: Video, index: number) => {
       width={element.width}
       height={element.height}
       style={{
-        background: "black",
+        background: "transparent",
         ...element.styles,
       }}
     ></video>

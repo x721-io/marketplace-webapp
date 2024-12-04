@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Container, Element, ElementType, Image, Text, Video } from "../types";
 import CloseIcon from "@/components/Icon/Close";
-import { ALLOWED_FILE_TYPES } from "@/config/constants";
+import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from "@/config/constants";
 import ImageUploader from "@/components/Form/ImageUploader";
 import { useUploadFile } from "@/hooks/useMutate";
 import { toast } from "react-toastify";
@@ -13,12 +13,16 @@ export default function EditOverviewSectionModal({
   element,
   index,
   onUpdateElement,
+  onUpdateBackgroundColor,
+  onUpdateBackgroundImage,
   onClose,
 }: {
   isShow: boolean;
   element: Element | null;
   index: number;
   onUpdateElement: (path: string, updatedElement: Element) => void;
+  onUpdateBackgroundColor: (newBackground: string) => void;
+  onUpdateBackgroundImage: (newBackgroundImg: string) => void;
   onClose: () => void;
 }) {
   const textAligns = ["left", "center", "right"];
@@ -39,14 +43,6 @@ export default function EditOverviewSectionModal({
   >(null);
   const [mediaSrc, setMediaSrc] = useState<string | null>(null);
   const [justifyContent, setJustifyContent] = useState<
-    | "flex-start"
-    | "flex-end"
-    | "center"
-    | "space-between"
-    | "space-around"
-    | "space-evenly"
-  >("flex-start");
-  const [alignItems, setAlignItems] = useState<
     | "flex-start"
     | "flex-end"
     | "center"
@@ -116,7 +112,6 @@ export default function EditOverviewSectionModal({
       if (!containerElement) return;
       setTextContainerElement(containerElement);
       setJustifyContent(containerElement.justifyContent ?? "flex-start");
-      setAlignItems(containerElement.alignItems ?? "flex-start");
     }
   }, [containerElements, textElements]);
 
@@ -127,25 +122,11 @@ export default function EditOverviewSectionModal({
       | "center"
       | "space-between"
       | "space-around"
-      | "space-evenly",
-    alignItems:
-      | "flex-start"
-      | "flex-end"
-      | "center"
-      | "space-between"
-      | "space-around"
       | "space-evenly"
   ) => {
-    if (justifyContent === "flex-start" && alignItems === "flex-start")
-      return 0;
-    if (justifyContent === "flex-start" && alignItems === "center") return 1;
-    if (justifyContent === "flex-start" && alignItems === "flex-end") return 2;
-    if (justifyContent === "center" && alignItems === "flex-start") return 3;
-    if (justifyContent === "center" && alignItems === "center") return 4;
-    if (justifyContent === "center" && alignItems === "flex-end") return 5;
-    if (justifyContent === "flex-end" && alignItems === "flex-start") return 6;
-    if (justifyContent === "flex-end" && alignItems === "center") return 7;
-    if (justifyContent === "flex-end" && alignItems === "flex-end") return 8;
+    if (justifyContent === "flex-start") return 0;
+    if (justifyContent === "center") return 1;
+    if (justifyContent === "flex-end") return 2;
     return -1;
   };
 
@@ -159,58 +140,18 @@ export default function EditOverviewSectionModal({
       | "space-between"
       | "space-around"
       | "space-evenly";
-    alignItems:
-      | "flex-start"
-      | "flex-end"
-      | "center"
-      | "space-between"
-      | "space-around"
-      | "space-evenly";
   } | null => {
     if (index === 0)
       return {
         justifyContent: "flex-start",
-        alignItems: "flex-start",
       };
     if (index === 1)
       return {
-        justifyContent: "flex-start",
-        alignItems: "center",
+        justifyContent: "center",
       };
     if (index === 2)
       return {
-        justifyContent: "flex-start",
-        alignItems: "flex-end",
-      };
-    if (index === 3)
-      return {
-        justifyContent: "center",
-        alignItems: "flex-start",
-      };
-    if (index === 4)
-      return {
-        justifyContent: "center",
-        alignItems: "center",
-      };
-    if (index === 5)
-      return {
-        justifyContent: "center",
-        alignItems: "flex-end",
-      };
-    if (index === 6)
-      return {
         justifyContent: "flex-end",
-        alignItems: "flex-start",
-      };
-    if (index === 7)
-      return {
-        justifyContent: "flex-end",
-        alignItems: "center",
-      };
-    if (index === 8)
-      return {
-        justifyContent: "flex-end",
-        alignItems: "flex-end",
       };
     return null;
   };
@@ -252,6 +193,21 @@ export default function EditOverviewSectionModal({
     }
   };
 
+  const handleUploadBackgroundImage = (file?: Blob) => {
+    // alert(1233);
+    if (!file) {
+      setMediaSrc(null);
+      return;
+    }
+    setUploading(true);
+    try {
+      const objectURL = URL.createObjectURL(file);
+      onUpdateBackgroundImage(objectURL);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -267,6 +223,55 @@ export default function EditOverviewSectionModal({
         </div>
       </div>
       <div className="w-full flex flex-col flex-1 overflow-y-auto pr-5">
+        <div className="w-full flex flex-col gap-5 mb-5">
+          <div className="w-full flex flex-col gap-2">
+            <div className="w-full flex items-center text-heading-sm !text-[19px]">
+              Background color
+            </div>
+            <div className="w-full relative">
+              {element && element.type === ElementType.CONTAINER && (
+                <input
+                  type="color"
+                  className="h-[45px] w-full rounded-lg bg-transparent"
+                  onChange={(e) => {
+                    onUpdateBackgroundColor(e.target.value);
+                  }}
+                  value={element.background}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex flex-col gap-5 mb-5">
+          <div className="w-full flex flex-col gap-2">
+            <div className="w-full flex items-center text-heading-sm !text-[19px]">
+              Background image
+            </div>
+            <div className="w-full relative !h-[200px]">
+              {element && element.type === ElementType.CONTAINER && (
+                <ImageUploader
+                  value={element.backgroundImage ?? ""}
+                  onInput={handleUploadBackgroundImage}
+                  // loading={uploading}
+                  // error={!!errors.avatar}
+                  maxSize={50}
+                  className="!absolute top-0 left-0 cursor-pointer w-[100%] !h-[200px]"
+                  accept={ALLOWED_IMAGE_TYPES}
+                />
+              )}
+              {element &&
+                element.type === ElementType.CONTAINER &&
+                element.backgroundImage && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    alt="overview-img"
+                    src={element.backgroundImage}
+                    className="rounded-md cursor-pointer w-[100%] !h-[200px] select-none pointer-events-none"
+                  />
+                )}
+            </div>
+          </div>
+        </div>
         {mediaElements.length > 0 && (
           <div className="w-full flex flex-col gap-5 mb-5">
             <div className="w-full flex flex-col gap-2">
@@ -391,7 +396,7 @@ export default function EditOverviewSectionModal({
               </div>
               <div className="w-full flex items-center">
                 <div className="w-[25%]">Text align</div>
-                <div className="flex-1 flex flex-row items-center flex-wrap">
+                <div className="flex-1 flex flex-row items-center flex-wrap justify-between">
                   {textAligns.map((ta, i) => (
                     <div
                       onClick={() => {
@@ -422,10 +427,10 @@ export default function EditOverviewSectionModal({
                             ? "black"
                             : "white",
                       }}
-                      className="w-[33.3%] flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
+                      className="w-[30%] h-[15px] rounded-md flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
                       key={ta}
                     >
-                      {ta.toLocaleUpperCase()}
+                      {/* {ta.toLocaleUpperCase()} */}
                     </div>
                   ))}
                 </div>
@@ -518,7 +523,7 @@ export default function EditOverviewSectionModal({
               </div>
               <div className="w-full flex items-center">
                 <div className="w-[25%]">Text align</div>
-                <div className="flex-1 flex flex-row items-center flex-wrap">
+                <div className="flex-1 flex flex-row items-center flex-wrap justify-between">
                   {textAligns.map((ta, i) => (
                     <div
                       onClick={() => {
@@ -549,10 +554,10 @@ export default function EditOverviewSectionModal({
                             ? "black"
                             : "white",
                       }}
-                      className="w-[33.3%] flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
+                      className="w-[30%] h-[15px] rounded-md flex justify-center items-center cursor-pointer p-1 tracking-wider !text-[14px] text-heading-xs"
                       key={ta}
                     >
-                      {ta.toLocaleUpperCase()}
+                      {/* {ta.toLocaleUpperCase()} */}
                     </div>
                   ))}
                 </div>
@@ -560,39 +565,34 @@ export default function EditOverviewSectionModal({
             </div>
             <div className="w-full flex flex-col gap-2">
               <div className="w-full flex items-center text-heading-sm !text-[19px]">
-                Text position
+                Text vertical position
               </div>
-              <div className="w-full flex flex-wrap justify-between rounded-xl border pt-2 pb-2 border-[rgba(0,0,0,0.07)]">
-                {Array(9)
-                  .fill("")
-                  .map((_, i) => (
-                    <div
-                      key={i}
-                      onClick={(e) => {
-                        const textAlign = getTextPosByIndex(i);
-                        const updatedElement =
-                          structuredClone(textContainerElement);
-                        if (!textAlign) return;
-                        if (!updatedElement) return;
-                        setAlignItems(textAlign.alignItems);
-                        setJustifyContent(textAlign.justifyContent);
-                        updatedElement.alignItems = textAlign.alignItems;
-                        updatedElement.justifyContent =
-                          textAlign.justifyContent;
-                        onUpdateElement(
-                          updatedElement.path,
-                          structuredClone(updatedElement)
-                        );
-                      }}
-                      style={{
-                        backgroundColor:
-                          getIndexByTextPos(justifyContent, alignItems) === i
-                            ? "rgba(255,255,255,0.8)"
-                            : "rgba(255,255,255,0.2)",
-                      }}
-                      className="w-[30%] cursor-pointer transition-all mb-2 mt-2 h-[22px] flex items-center justify-center rounded-3xl"
-                    />
-                  ))}
+              <div className="w-full flex flex-col justify-between rounded-xl border pt-2 pb-2 border-[rgba(0,0,0,0.07)]">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    onClick={(e) => {
+                      const textAlign = getTextPosByIndex(i);
+                      const updatedElement =
+                        structuredClone(textContainerElement);
+                      if (!textAlign) return;
+                      if (!updatedElement) return;
+                      setJustifyContent(textAlign.justifyContent);
+                      updatedElement.justifyContent = textAlign.justifyContent;
+                      onUpdateElement(
+                        updatedElement.path,
+                        structuredClone(updatedElement)
+                      );
+                    }}
+                    style={{
+                      backgroundColor:
+                        getIndexByTextPos(justifyContent) === i
+                          ? "rgba(255,255,255,0.8)"
+                          : "rgba(255,255,255,0.2)",
+                    }}
+                    className="w-[100%] cursor-pointer transition-all mb-2 mt-2 h-[22px] flex items-center justify-center rounded-3xl"
+                  />
+                ))}
               </div>
             </div>
           </div>

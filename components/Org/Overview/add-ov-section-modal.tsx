@@ -33,6 +33,7 @@ export default function AddOverviewSectionModal({
               type: ElementType.CONTAINER,
               alignItems: "center",
               justifyContent: "center",
+              background: "#ffffff",
               height: "500px",
               styles: {
                 position: "relative",
@@ -44,6 +45,7 @@ export default function AddOverviewSectionModal({
                   height: "600px",
                   alignItems: "center",
                   justifyContent: "center",
+                  background: "transparent",
                   children: [
                     {
                       type: ElementType.IMAGE,
@@ -59,6 +61,7 @@ export default function AddOverviewSectionModal({
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
+                  background: "transparent",
                   styles: {
                     position: "absolute",
                     top: 0,
@@ -70,10 +73,10 @@ export default function AddOverviewSectionModal({
                       contentType: "TITLE",
                       text: {
                         content: "This is a title",
-                        color: "white",
+                        color: "#ffffff",
                         fontSize: "26px",
                         fontWeight: 700,
-                        textAlign: "left",
+                        textAlign: "center",
                       },
                     },
                     {
@@ -81,10 +84,10 @@ export default function AddOverviewSectionModal({
                       contentType: "DESCRIPTION",
                       text: {
                         content: "This is a description.",
-                        color: "rgba(255,255,255,0.7)",
+                        color: "#ffffff",
                         fontSize: "18px",
                         fontWeight: 300,
-                        textAlign: "left",
+                        textAlign: "center",
                       },
                     },
                   ],
@@ -102,7 +105,7 @@ export default function AddOverviewSectionModal({
             const element: Element = {
               type: ElementType.CONTAINER,
               width: "100%",
-              background: "rgba(0,0,0,0.95)",
+              background: "#ffffff",
               flexDirection: "row",
               alignItems: "flex-start",
               justifyContent: "flex-start",
@@ -112,6 +115,7 @@ export default function AddOverviewSectionModal({
                   flexDirection: "column",
                   alignItems: "flex-start",
                   justifyContent: "center",
+                  background: "transparent",
                   styles: {
                     width: "50%",
                     paddingLeft: "100px",
@@ -125,7 +129,7 @@ export default function AddOverviewSectionModal({
                       contentType: "TITLE",
                       text: {
                         content: "At the Cornerstone of Digital Identity",
-                        color: "white",
+                        color: "#000000",
                         fontSize: "26px",
                         fontWeight: 700,
                         textAlign: "left",
@@ -137,7 +141,7 @@ export default function AddOverviewSectionModal({
                       text: {
                         content:
                           "Each Keeper is a fully-rigged and gameplay-ready 3D identity. Downloadable digital files make each avatar ready for use in 4K film and media, AAA gaming, and networked metaverse environments.",
-                        color: "rgba(255,255,255,0.7)",
+                        color: "#000000",
                         fontSize: "18px",
                         fontWeight: 300,
                         textAlign: "left",
@@ -151,6 +155,7 @@ export default function AddOverviewSectionModal({
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
+                  background: "transparent",
                   children: [
                     {
                       type: ElementType.IMAGE,
@@ -173,7 +178,7 @@ export default function AddOverviewSectionModal({
             const element: Element = {
               type: ElementType.CONTAINER,
               width: "100%",
-              background: "rgba(0,0,0,0.95)",
+              background: "#ffffff",
               flexDirection: "row",
               alignItems: "flex-start",
               justifyContent: "flex-start",
@@ -184,6 +189,7 @@ export default function AddOverviewSectionModal({
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
+                  background: "transparent",
                   children: [
                     {
                       type: ElementType.IMAGE,
@@ -198,6 +204,7 @@ export default function AddOverviewSectionModal({
                   flexDirection: "column",
                   alignItems: "flex-start",
                   justifyContent: "center",
+                  background: "transparent",
                   styles: {
                     width: "50%",
                     paddingLeft: "100px",
@@ -211,7 +218,7 @@ export default function AddOverviewSectionModal({
                       contentType: "TITLE",
                       text: {
                         content: "At the Cornerstone of Digital Identity",
-                        color: "white",
+                        color: "#000000",
                         fontSize: "26px",
                         fontWeight: 700,
                         textAlign: "left",
@@ -223,7 +230,7 @@ export default function AddOverviewSectionModal({
                       text: {
                         content:
                           "Each Keeper is a fully-rigged and gameplay-ready 3D identity. Downloadable digital files make each avatar ready for use in 4K film and media, AAA gaming, and networked metaverse environments.",
-                        color: "rgba(255,255,255,0.7)",
+                        color: "#000000",
                         fontSize: "18px",
                         fontWeight: 300,
                         textAlign: "left",
@@ -246,6 +253,7 @@ export default function AddOverviewSectionModal({
               width: "100%",
               alignItems: "center",
               justifyContent: "center",
+              background: "#ffffff",
               children: [
                 {
                   type: ElementType.IMAGE,
@@ -260,6 +268,62 @@ export default function AddOverviewSectionModal({
           className="w-full cursor-pointer"
         >
           Media only
+        </div>
+        <div
+          onClick={() => {
+            const element: Element = {
+              type: ElementType.CONTAINER,
+              width: "100%",
+              height: "400px",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#ffffff",
+              children: [
+                {
+                  type: ElementType.CONTAINER,
+                  width: "100%",
+                  height: "100%",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "transparent",
+                  styles: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  },
+                  children: [
+                    {
+                      type: ElementType.TEXT,
+                      contentType: "TITLE",
+                      text: {
+                        content: "This is a title",
+                        color: "#000000",
+                        fontSize: "26px",
+                        fontWeight: 700,
+                        textAlign: "center",
+                      },
+                    },
+                    {
+                      type: ElementType.TEXT,
+                      contentType: "DESCRIPTION",
+                      text: {
+                        content: "This is a description.",
+                        color: "#000000",
+                        fontSize: "18px",
+                        fontWeight: 300,
+                        textAlign: "center",
+                      },
+                    },
+                  ],
+                },
+              ],
+            };
+            onAddNewElement(element);
+          }}
+          className="w-full cursor-pointer"
+        >
+          Text block only
         </div>
       </div>
     </div>

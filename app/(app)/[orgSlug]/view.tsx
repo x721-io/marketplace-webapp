@@ -15,7 +15,7 @@ const orgProperties: OrgProperties = {
     {
       type: ElementType.CONTAINER,
       width: "100%",
-      background: "rgba(0,0,0,0.95)",
+      background: "#000000",
       flexDirection: "row",
       alignItems: "flex-start",
       justifyContent: "flex-start",
@@ -23,8 +23,8 @@ const orgProperties: OrgProperties = {
         {
           type: ElementType.CONTAINER,
           flexDirection: "column",
-          alignItems: "flex-start",
           justifyContent: "center",
+          background: "transparent",
           styles: {
             width: "50%",
             paddingLeft: "100px",
@@ -64,6 +64,7 @@ const orgProperties: OrgProperties = {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
+          background: "transparent",
           children: [
             {
               type: ElementType.VIDEO,

@@ -30,7 +30,7 @@ export type Container = {
   type: ElementType.CONTAINER;
   width?: string;
   height?: string;
-  background?: string;
+  background: string;
   backgroundImage?: string;
   flexDirection?: "row" | "column";
   alignItems?:
