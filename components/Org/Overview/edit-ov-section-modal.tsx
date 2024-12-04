@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { Container, Element, ElementType, Image, Text, Video } from "../types";
 import CloseIcon from "@/components/Icon/Close";
