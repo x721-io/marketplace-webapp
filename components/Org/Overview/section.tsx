@@ -6,6 +6,9 @@ import ContainerElement from "./Elements/container-element";
 import ImageElement from "./Elements/image-element";
 import TextElement from "./Elements/text-element";
 import VideoElement from "./Elements/video-element";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { GrEdit } from "react-icons/gr";
 
 export const generateElement = (element: Element, index: number) => {
   switch (element.type) {
@@ -38,12 +41,32 @@ export default function Section({
   onDelete: (index: number) => void;
 }) {
   return (
-    <div className="relative">
-      <div className="w-full absolute z-10 h-[50px] bg-[rgba(0,0,0,0.25)] flex gap-5 items-center justify-end px-8 text-[white] !font-bold">
-        <button onClick={() => onEdit(index)}>Edit</button>
-        <button onClick={() => onMoveUp(index)}>Up</button>
-        <button onClick={() => onMoveDown(index)}>Down</button>
-        <button onClick={() => onDelete(index)}>Delete</button>
+    <div className="relative h-full w-full group">
+      <div className="w-full max-w-[170px] absolute z-10 h-10 bg-gray-100 mx-20 border border-gray-400 rounded-lg right-0 gap-2 items-center justify-center text-[white] !font-bold group-hover:flex hidden transition">
+        <button
+          className="border  rounded-lg p-2"
+          onClick={() => onEdit(index)}
+        >
+          <GrEdit color="black" />
+        </button>
+        <button
+          className="border rounded-lg p-2"
+          onClick={() => onMoveUp(index)}
+        >
+          <FaArrowUp color="black" />
+        </button>
+        <button
+          className="border rounded-lg p-2"
+          onClick={() => onMoveDown(index)}
+        >
+          <FaArrowDown color="black" />
+        </button>
+        <button
+          className="border rounded-lg p-2"
+          onClick={() => onDelete(index)}
+        >
+          <RiDeleteBin6Line color="black" />
+        </button>
       </div>
       {generateElement(element, index)}
     </div>

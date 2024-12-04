@@ -91,7 +91,7 @@ export default function OrgOverview({
   };
 
   return (
-    <div className="w-full relative flex flex-col">
+    <div className="w-full relative flex flex-col gap-10">
       <div className="w-full relative flex flex-col">
         {draftedElements.map((e, i) => (
           <Section
