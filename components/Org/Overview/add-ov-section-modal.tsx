@@ -123,7 +123,9 @@ export default function AddOverviewSectionModal({
                 {category.options.map((option, idx) => (
                   <div
                     key={idx}
-                    onClick={() => onAddNewElement(option.element)}
+                    onClick={() =>
+                      onAddNewElement(structuredClone(option.element))
+                    }
                     className="flex gap-4 p-3 text-[#6A6A6A] hover:bg-gray-700 text-body-16 rounded-md cursor-pointer flex-col"
                   >
                     <Image

@@ -169,39 +169,53 @@ export default function EditOverviewSectionModal({
     setUploading(true);
     try {
       const objectURL = URL.createObjectURL(file);
-      var reader = new FileReader();
-
-      //Read the contents of Image File.
-      reader.readAsDataURL(file);
-      reader.onload = function (e) {
-        //Initiate the JavaScript Image object.
-        var image = new Image();
-
-        //Set the Base64 string return from FileReader as source.
-        if (e.target?.result) {
-          image.src = e.target.result as any;
-
-          //Validate the File Height and Width.
-          image.onload = function () {
-            setMediaSrc(objectURL);
-            const updatedMediaElement = structuredClone(mediaElements[0]);
-            updatedMediaElement.src = objectURL;
-
-            if (file.type.startsWith("image")) {
-              updatedMediaElement.width = "100%";
+      setMediaSrc(objectURL);
+      if (file.type.startsWith("image")) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+          var image = new Image();
+          if (e.target?.result) {
+            image.src = e.target.result as any;
+            image.onload = function () {
+              const updatedMediaElement = structuredClone(mediaElements[0]);
+              updatedMediaElement.src = objectURL;
               updatedMediaElement.height = image.height + "px";
-              file;
+              updatedMediaElement.width = image.width + "px";
               updatedMediaElement.type = ElementType.IMAGE;
-            } else if (file.type.startsWith("video")) {
+              onUpdateElement(
+                updatedMediaElement.path,
+                structuredClone(updatedMediaElement)
+              );
+            };
+          }
+        };
+      } else if (file.type.startsWith("video")) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+          var video = document.createElement("video");
+          if (e.target?.result) {
+            video.src = e.target.result as any;
+            video.addEventListener("loadedmetadata", function (e) {
+              const height = this.videoHeight;
+              const width = this.videoWidth;
+              const updatedMediaElement = structuredClone(mediaElements[0]);
+              updatedMediaElement.src = objectURL;
+              updatedMediaElement.width = "100%";
+              updatedMediaElement.styles = {
+                aspectRatio: width / height,
+              };
+              // updatedMediaElement.height = height + "px";
               updatedMediaElement.type = ElementType.VIDEO;
-            }
-            onUpdateElement(
-              updatedMediaElement.path,
-              structuredClone(updatedMediaElement)
-            );
-          };
-        }
-      };
+              onUpdateElement(
+                updatedMediaElement.path,
+                structuredClone(updatedMediaElement)
+              );
+            });
+          }
+        };
+      }
 
       // const response = await uploadFileMutate({ files: file });
       // alert(response.fileHashes[0]);
@@ -347,7 +361,7 @@ export default function EditOverviewSectionModal({
                       setTextElements(updatedTextElements);
                       onUpdateElement(
                         textElements[index].path,
-                        updatedTextElements[index]
+                        structuredClone(updatedTextElements[index])
                       );
                     }}
                     value={
