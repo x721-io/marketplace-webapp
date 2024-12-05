@@ -6,7 +6,7 @@ export const findTokenByAddress = (address?: Address) => {
     return {
       ...tokens.wu2u,
       name: "Unicorn Ultra Token",
-      symbol: "U2U",
+      symbol: "WU2U",
     };
   }
 

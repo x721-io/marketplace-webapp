@@ -6,6 +6,7 @@ import Text from "@/components/Text";
 import { formatUnits } from "ethers";
 import Link from "next/link";
 import {
+  ADDRESS_ZERO,
   ALLOWED_AUDIO_TYPES,
   ALLOWED_IMAGE_TYPES,
   ALLOWED_VIDEO_TYPES,
@@ -16,18 +17,23 @@ import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
+import useAuthStore from "@/store/auth/store";
+import { useUserStore } from "@/store/users/store";
 
-export default function NFTCard({
-  name,
-  id,
-  price,
-  sellStatus,
-  collection,
-  image,
-  animationUrl,
-  quoteToken,
-  creator,
-}: NFT) {
+export default function NFTCard(nft: NFT) {
+  const { profile } = useAuthStore();
+  const {
+    name,
+    id,
+    price,
+    sellStatus,
+    collection,
+    image,
+    animationUrl,
+    quoteToken,
+    creator,
+  } = nft;
+  const { upsertBulkOrdersItem } = useUserStore();
   const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
@@ -124,24 +130,46 @@ export default function NFTCard({
   };
 
   return (
-    <Link
-      key={id}
-      href={`/item/${collection.address}/${id}`}
-      className={
-        "h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md border-soft transition-all"
-      }
-    >
-      {renderMedia()}
-      <div className="flex gap-1 items-center px-1">
-        <Text className="text-secondary text-body-12">{name}</Text>
-        {creator?.accountStatus && collection?.isVerified ? (
-          <Icon name="verified" width={16} height={16} />
-        ) : (
-          <Icon name="verify-disable" width={16} height={16} />
-        )}
-      </div>
+    <div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          upsertBulkOrdersItem({
+            nft: nft,
+            price: 0,
+            quantity: 1,
+            daysRange: "30_DAYS",
+            end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+            start: new Date().getTime(),
+            netPrice: 0,
+            totalPrice: 0,
+            quoteToken: ADDRESS_ZERO,
+            salt: "0",
+          });
+        }}
+      >
+        +
+      </button>
+      <Link
+        key={id}
+        href={`/item/${collection.address}/${id}`}
+        className={
+          "h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md border-soft transition-all"
+        }
+      >
+        {/* {profile?.signer === } */}
+        {renderMedia()}
+        <div className="flex gap-1 items-center px-1">
+          <Text className="text-secondary text-body-12">{name}</Text>
+          {creator?.accountStatus && collection?.isVerified ? (
+            <Icon name="verified" width={16} height={16} />
+          ) : (
+            <Icon name="verify-disable" width={16} height={16} />
+          )}
+        </div>
 
-      {renderNFTData()}
-    </Link>
+        {renderNFTData()}
+      </Link>
+    </div>
   );
 }

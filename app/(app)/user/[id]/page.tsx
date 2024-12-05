@@ -14,9 +14,11 @@ import { useFilterByUser } from "@/store/filters/byUser/store";
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import MySpinner from "@/components/X721UIKits/Spinner";
 import { useGetProfile } from "@/hooks/useQuery";
+import { useUserStore } from "@/store/users/store";
 
 export default function ProfilePage() {
   const { id } = useParams();
+  const { bulkOrders } = useUserStore();
   const filterStore = useFilterByUser();
   const [ownedAmount, setOwnedAmount] = useState(0);
   const [saleAmount, setSaleAmount] = useState(0);
@@ -135,6 +137,11 @@ export default function ProfilePage() {
         />
         <Activities isShow={currTabIndex === 4} wallet={user.publicKey} />
       </div>
+      {bulkOrders.length > 0 && (
+        <div className="fixed bottom-0 left-0 w-full h-[50px] bg-[red]">
+          123 {bulkOrders.length}
+        </div>
+      )}
     </div>
   );
 }
