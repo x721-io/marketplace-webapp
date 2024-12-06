@@ -17,11 +17,23 @@ import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import { convertImageUrl } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
-import useAuthStore from "@/store/auth/store";
 import { useUserStore } from "@/store/users/store";
+import { useGetMarketDataByNftId } from "@/hooks/useQuery";
+import { useNFTMarketStatus } from "@/hooks/useMarket";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function NFTCard(nft: NFT) {
-  const { profile } = useAuthStore();
+  const router = useRouter();
+  const pathName = usePathname();
+  const { data: marketData } = useGetMarketDataByNftId(
+    nft.collection.address as string,
+    nft.id as string,
+    pathName.startsWith("/user")
+  );
+  const { isOwner, isOnSale } = useNFTMarketStatus(
+    nft.collection.type,
+    marketData
+  );
   const {
     name,
     id,
@@ -33,7 +45,8 @@ export default function NFTCard(nft: NFT) {
     quoteToken,
     creator,
   } = nft;
-  const { upsertBulkOrdersItem } = useUserStore();
+  const { upsertBulkOrdersItem, removeBulkOrdersItem, bulkOrders } =
+    useUserStore();
   const displayMedia = convertImageUrl(image || animationUrl);
   const fileExtension = displayMedia.split(".").pop();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
@@ -129,32 +142,62 @@ export default function NFTCard(nft: NFT) {
     }
   };
 
+  const getOrderItemIndex = () => {
+    const index = bulkOrders.findIndex(
+      (o) => o.nft?.id === nft.id && o.nft.collectionId === nft.collectionId
+    );
+    return index;
+  };
+
   return (
-    <div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          upsertBulkOrdersItem({
-            nft: nft,
-            price: 0,
-            quantity: 1,
-            daysRange: "30_DAYS",
-            end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
-            start: new Date().getTime(),
-            netPrice: 0,
-            totalPrice: 0,
-            quoteToken: ADDRESS_ZERO,
-            salt: "0",
-          });
-        }}
-      >
-        +
-      </button>
+    <div className="group cursor-pointer relative overflow-hidden">
+      {isOwner && !isOnSale && pathName.startsWith("/user") && (
+        <div
+          onClick={() => router.push(`/item/${collection.address}/${id}`)}
+          className="absolute top-0 left-0 z-10 w-full h-full rounded-md px-3 py-2 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        >
+          <button
+            style={{
+              background: getOrderItemIndex() !== -1 ? "#9E9E9E" : "#1E88E5",
+            }}
+            className="rounded-full w-[30px] h-[30px] outline-none border-none text-[white] shadow-xl"
+            onClick={(e) => {
+              e.stopPropagation();
+              const index = getOrderItemIndex();
+              if (index !== -1) {
+                removeBulkOrdersItem(index);
+              } else {
+                upsertBulkOrdersItem({
+                  nft: nft,
+                  price: 0,
+                  quantity: 1,
+                  daysRange: "30_DAYS",
+                  end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+                  start: new Date().getTime(),
+                  netPrice: 0,
+                  totalPrice: 0,
+                  quoteToken: ADDRESS_ZERO,
+                  salt: "0",
+                });
+              }
+            }}
+          >
+            {getOrderItemIndex() !== -1 ? "-" : "+"}
+          </button>
+        </div>
+      )}
       <Link
         key={id}
         href={`/item/${collection.address}/${id}`}
+        style={{
+          borderColor:
+            getOrderItemIndex() !== -1 && pathName.startsWith("/user")
+              ? "#1E88E5"
+              : "#ebeaea",
+          borderWidth: "2px",
+        }}
         className={
-          "h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md border-soft transition-all"
+          "h-full flex flex-col rounded-xl p-2 gap-2 border border-1 hover:shadow-md transition-all"
         }
       >
         {/* {profile?.signer === } */}

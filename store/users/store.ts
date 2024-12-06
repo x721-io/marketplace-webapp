@@ -24,24 +24,30 @@ export const useUserStore = create(
           })),
         upsertBulkOrdersItem: (item: FormState.SellNFTV2) =>
           set((state) => ({
-            bulkOrders: state.bulkOrders.find(
-              (o) =>
-                o.nft?.collectionId === item.nft?.collectionId &&
-                o.nft?.id === item.nft?.id
-            )
-              ? [
-                  ...state.bulkOrders.filter(
-                    (o) =>
-                      o.nft?.id !== item.nft?.id &&
-                      o.nft?.collectionId !== item.nft?.collectionId
-                  ),
-                  item,
-                ]
-              : [...state.bulkOrders, item],
+            bulkOrders:
+              state.bulkOrders.findIndex(
+                (o) =>
+                  o.nft?.collectionId === item.nft?.collectionId &&
+                  o.nft?.id === item.nft?.id
+              ) !== -1
+                ? state.bulkOrders.toSpliced(
+                    state.bulkOrders.findIndex(
+                      (o) =>
+                        o.nft?.collectionId === item.nft?.collectionId &&
+                        o.nft?.id === item.nft?.id
+                    ),
+                    1,
+                    item
+                  )
+                : [...state.bulkOrders, item],
           })),
         removeBulkOrdersItem: (index: number) =>
           set((state) => ({
             bulkOrders: state.bulkOrders.toSpliced(index, 1),
+          })),
+        removeAllBulkOrderItems: () =>
+          set((state) => ({
+            bulkOrders: [],
           })),
       }),
       { name: "user-storage" }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Text from "@/components/Text";
 import { formatDisplayedNumber } from "@/utils";
 import OwnedNFTs from "@/components/Pages/MarketplaceNFT/UserDetails/OwnedNFTs";
@@ -15,8 +15,11 @@ import { MyTabs } from "@/components/X721UIKits/Tabs";
 import MySpinner from "@/components/X721UIKits/Spinner";
 import { useGetProfile } from "@/hooks/useQuery";
 import { useUserStore } from "@/store/users/store";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ProfilePage() {
+  const { isValidSession } = useAuth();
+  const router = useRouter();
   const { id } = useParams();
   const { bulkOrders } = useUserStore();
   const filterStore = useFilterByUser();
@@ -137,11 +140,20 @@ export default function ProfilePage() {
         />
         <Activities isShow={currTabIndex === 4} wallet={user.publicKey} />
       </div>
-      {bulkOrders.length > 0 && (
-        <div className="fixed bottom-0 left-0 w-full h-[50px] bg-[red]">
-          123 {bulkOrders.length}
-        </div>
-      )}
+      <div
+        style={{
+          bottom: bulkOrders.length > 0 && isValidSession ? "0px" : "-70px",
+          transition: "bottom 0.25s",
+        }}
+        className="fixed left-0 w-full h-[70px] bg-[white] border-solid border-t-[1px] flex items-center justify-end px-10"
+      >
+        <button
+          onClick={() => router.push("/bulk-list")}
+          className="font-bold text-[1rem] bg-[#000] px-5 py-2 rounded-lg text-[white]"
+        >
+          List {bulkOrders.length} {bulkOrders.length > 1 ? "items" : "item"}
+        </button>
+      </div>
     </div>
   );
 }

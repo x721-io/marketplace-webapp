@@ -11,4 +11,5 @@ export interface UserAction {
   setQueryString: (key: SearchKey, text: string) => void;
   upsertBulkOrdersItem: (item: FormState.SellNFTV2) => void;
   removeBulkOrdersItem: (index: number) => void;
+  removeAllBulkOrderItems: () => void;
 }

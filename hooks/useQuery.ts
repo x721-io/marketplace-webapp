@@ -210,13 +210,16 @@ export const useGetLaunchpadProjectById = (id: string | null) => {
 
 export const useGetMarketDataByNftId = (
   collectionAddress: string,
-  id: string
+  id: string,
+  enabled: boolean = true
 ) => {
   const { data, error, isLoading, mutate } = useSWR(
-    [
-      `nft-market-data/${id}`,
-      { collectionAddress: String(collectionAddress), id: String(id) },
-    ],
+    enabled
+      ? [
+          `nft-market-data/${id}`,
+          { collectionAddress: String(collectionAddress), id: String(id) },
+        ]
+      : null,
     (key: any) => {
       return nextAPI.get(API_ENDPOINTS.NFT_TRANSACTIONS, {
         params: {

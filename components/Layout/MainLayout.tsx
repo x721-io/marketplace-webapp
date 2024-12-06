@@ -4,6 +4,7 @@ import MainHeader from "@/components/Layout/MainHeader";
 import MainFooter from "@/components/Layout/MainFooter";
 import MainBody from "@/components/Layout/MainBody";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function MainLayout({
   children,
@@ -11,6 +12,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const [isClient, setClient] = useState(false);
+  const pathName = usePathname();
 
   useEffect(() => setClient(true), []);
 
@@ -20,7 +22,7 @@ export default function MainLayout({
     <main className="flex flex-col min-h-screen">
       <MainHeader />
       <MainBody>{children}</MainBody>
-      <MainFooter />
+      {pathName !== "/bulk-list" && <MainFooter />}
     </main>
   );
 }

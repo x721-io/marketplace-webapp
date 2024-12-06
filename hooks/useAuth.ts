@@ -14,11 +14,13 @@ import { clearAuthCookiesAction, setAuthCookiesAction } from "@/actions";
 import { useConnectAPI } from "./useMutate";
 import { Address } from "abitype";
 import { config } from "@/config/wagmi";
+import { useUserStore } from "@/store/users/store";
 
 export const useAuth = () => {
   const api = useMarketplaceApi();
   const { isAuthenticated, credentials } = useContext(AuthenticationContext);
   const { setProfile } = useAuthStore();
+  const { removeAllBulkOrderItems } = useUserStore();
   const bearerToken = credentials?.accessToken;
   const { isConnected, address } = useAccount();
   const acceptedTerms = useAuthStore((state) => state.profile?.acceptedTerms);
@@ -91,6 +93,7 @@ export const useAuth = () => {
   );
 
   const onLogout = async () => {
+    removeAllBulkOrderItems();
     await disconnect(config);
     clearAuthCookiesAction();
     clearProfile();
