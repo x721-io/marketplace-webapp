@@ -1,32 +1,36 @@
-import { ElementType, Element } from "@/components/Org/types";
+import { ElementType, Element } from "@/components/PageBuilder/types";
 
 export const elementTextOverBgMedia: Element = {
   type: ElementType.CONTAINER,
+  textOverMedia: true,
   alignItems: "center",
   justifyContent: "center",
   background: "#ffffff",
-  height: "500px",
+  height: "100%",
   styles: {
     position: "relative",
   },
   children: [
     {
       type: ElementType.CONTAINER,
+      textOverMedia: true,
       width: "100%",
-      height: "600px",
+      height: "100%",
       alignItems: "center",
       justifyContent: "center",
       background: "transparent",
       children: [
         {
           type: ElementType.IMAGE,
+          textOverMedia: true,
           src: "https://img.freepik.com/premium-photo/seamless-geometric-pattern-fabric-wallpaper-background-design_955379-17743.jpg?semt=ais_hybrid",
-          height: "500px",
+          height: "686px",
         },
       ],
     },
     {
       type: ElementType.CONTAINER,
+      textOverMedia: true,
       width: "100%",
       height: "100%",
       flexDirection: "column",
@@ -37,6 +41,7 @@ export const elementTextOverBgMedia: Element = {
         position: "absolute",
         top: 0,
         left: 0,
+        padding: "40px",
       },
       children: [
         {
@@ -68,20 +73,21 @@ export const elementTextOverBgMedia: Element = {
 export const elementTextLeftMediaRight: Element = {
   type: ElementType.CONTAINER,
   background: "transparent",
+  gap: true,
+  isFlexDirection: true,
+  flexDirection: "row",
   height: "500px",
   styles: {
     width: "100%",
-    // height: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     alignContent: "center",
-    padding: "40px 80px",
-    gap: "80px",
   },
   children: [
     {
       type: ElementType.CONTAINER,
+      responsive: true,
       background: "transparent",
       justifyContent: "center",
       alignItems: "center",
@@ -93,12 +99,12 @@ export const elementTextLeftMediaRight: Element = {
       children: [
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           justifyContent: "center",
           flexDirection: "column",
           styles: {
             width: "100%",
-            maxWidth: "600px",
           },
           children: [
             {
@@ -123,6 +129,9 @@ export const elementTextLeftMediaRight: Element = {
                 fontSize: "18px",
                 fontWeight: 300,
               },
+              styles: {
+                marginTop: "12px",
+              },
             },
           ],
         },
@@ -130,6 +139,7 @@ export const elementTextLeftMediaRight: Element = {
     },
     {
       type: ElementType.CONTAINER,
+      responsive: true,
       background: "transparent",
       styles: {
         width: "100%",
@@ -137,17 +147,16 @@ export const elementTextLeftMediaRight: Element = {
       children: [
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           styles: {
             width: "100%",
-            maxWidth: "600px",
           },
 
           children: [
             {
               type: ElementType.VIDEO,
               src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-              showControls: false,
               styles: {
                 objectFit: "cover",
                 aspectRatio: 1.5,
@@ -166,20 +175,21 @@ export const elementTextLeftMediaRight: Element = {
 export const elementTextRightMediaLeft: Element = {
   type: ElementType.CONTAINER,
   background: "transparent",
+  gap: true,
+  isFlexDirection: true,
+  flexDirection: "row",
   height: "500px",
   styles: {
     width: "100%",
-    // height: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     alignContent: "center",
-    padding: "40px 80px",
-    gap: "80px",
   },
   children: [
     {
       type: ElementType.CONTAINER,
+      responsive: true,
       background: "transparent",
       styles: {
         width: "100%",
@@ -187,17 +197,16 @@ export const elementTextRightMediaLeft: Element = {
       children: [
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           styles: {
             width: "100%",
-            maxWidth: "600px",
           },
 
           children: [
             {
               type: ElementType.VIDEO,
               src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-              showControls: false,
               styles: {
                 objectFit: "cover",
                 aspectRatio: 1.5,
@@ -212,6 +221,7 @@ export const elementTextRightMediaLeft: Element = {
     },
     {
       type: ElementType.CONTAINER,
+      responsive: true,
       background: "transparent",
       justifyContent: "center",
       alignItems: "center",
@@ -223,12 +233,12 @@ export const elementTextRightMediaLeft: Element = {
       children: [
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           justifyContent: "center",
           flexDirection: "column",
           styles: {
             width: "100%",
-            maxWidth: "600px",
           },
           children: [
             {
@@ -253,6 +263,9 @@ export const elementTextRightMediaLeft: Element = {
                 fontSize: "18px",
                 fontWeight: 300,
               },
+              styles: {
+                marginTop: "12px",
+              },
             },
           ],
         },
@@ -263,6 +276,7 @@ export const elementTextRightMediaLeft: Element = {
 
 export const elementMediaOnly: Element = {
   type: ElementType.CONTAINER,
+  mediaOnly: true,
   width: "100%",
   height: "100%",
   alignItems: "center",
@@ -281,7 +295,8 @@ export const elementMediaOnly: Element = {
 export const elementTextBlockOnly: Element = {
   type: ElementType.CONTAINER,
   width: "100%",
-  height: "400px",
+  height: "100%",
+  textOnly: true,
   alignItems: "center",
   justifyContent: "center",
   background: "#ffffff",
@@ -290,6 +305,7 @@ export const elementTextBlockOnly: Element = {
       type: ElementType.CONTAINER,
       width: "100%",
       height: "100%",
+      // textOnly: true,
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",

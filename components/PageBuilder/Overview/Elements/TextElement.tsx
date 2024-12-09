@@ -1,8 +1,11 @@
 "use client";
 
 import { Text } from "../../types";
+import { useScreen } from "@/hooks/useDevice";
 
 const TextElement = (element: Text, index: number) => {
+  const { screen } = useScreen();
+
   return (
     <p
       key={index}
@@ -13,7 +16,6 @@ const TextElement = (element: Text, index: number) => {
         color: element.text.color,
         fontSize: element.text.fontSize,
         fontWeight: element.text.fontWeight,
-        padding: "10px",
         textAlign: element.text.textAlign,
         ...element.styles,
       }}

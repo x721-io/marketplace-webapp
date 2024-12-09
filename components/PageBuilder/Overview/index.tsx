@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Element, ElementType } from "../types";
-import AddOverviewSectionModal from "./add-ov-section-modal";
-import Section from "./section";
-import EditOverviewSectionModal from "./edit-ov-section-modal";
+import EditOverviewSectionModal from "@/components/PageBuilder/Overview/CRUD/EditSectionModal";
+import AddOverviewSectionModal from "@/components/PageBuilder/Overview/CRUD/AddOnSectionModal";
+import CRUD from "@/components/PageBuilder/Overview/CRUD";
 
-export default function OrgOverview({
+export default function OverviewTab({
   overviewElements,
   editMode = true,
 }: {
@@ -94,7 +94,7 @@ export default function OrgOverview({
     <div className="w-full relative flex flex-col gap-10">
       <div className="w-full relative flex flex-col">
         {draftedElements.map((e, i) => (
-          <Section
+          <CRUD
             onEdit={handleOnEdit}
             onMoveDown={handleMoveDown}
             onMoveUp={handleMoveUp}
@@ -106,7 +106,7 @@ export default function OrgOverview({
         ))}
       </div>
       {editMode && (
-        <div className="w-full flex justify-center py-10">
+        <div className="w-full hidden tablet:flex justify-center py-10 ">
           <button
             onClick={() => setShowAddSectionModal(true)}
             className="bg-[#000000] text-[#ffffff] py-2 px-5 rounded-full"

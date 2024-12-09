@@ -6,7 +6,7 @@ import {
   Image as ImageType,
   Text,
   Video,
-} from "../types";
+} from "../../types";
 import CloseIcon from "@/components/Icon/Close";
 import { ALLOWED_FILE_TYPES, ALLOWED_IMAGE_TYPES } from "@/config/constants";
 import ImageUploader from "@/components/Form/ImageUploader";
@@ -180,7 +180,12 @@ export default function EditOverviewSectionModal({
             image.onload = function () {
               const updatedMediaElement = structuredClone(mediaElements[0]);
               updatedMediaElement.src = objectURL;
-              updatedMediaElement.height = image.height + "px";
+              updatedMediaElement.height =
+                image.height >= 686
+                  ? " 686px"
+                  : image.height >= 457
+                  ? "457px"
+                  : "257px";
               updatedMediaElement.width = image.width + "px";
               updatedMediaElement.type = ElementType.IMAGE;
               onUpdateElement(

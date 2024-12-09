@@ -1,10 +1,8 @@
 "use client";
 
-import OrgHeader from "@/components/Org/order-header";
-import OrgOverview from "@/components/Org/Overview/overview";
-import { ElementType, OrgProperties } from "@/components/Org/types";
-import Tab from "@/components/Org/Tab";
-import { FormProvider, useForm } from "react-hook-form";
+import SectionBanner from "@/components/PageBuilder/Header/SectionBanner";
+import TabRoot from "@/components/PageBuilder/TabRoot";
+import { ElementType, OrgProperties } from "@/components/PageBuilder/types";
 
 export const orgProperties: OrgProperties = {
   title: "Keepers",
@@ -18,20 +16,21 @@ export const orgProperties: OrgProperties = {
     {
       type: ElementType.CONTAINER,
       background: "transparent",
+      gap: true,
+      isFlexDirection: true,
+      flexDirection: "row",
       height: "500px",
       styles: {
         width: "100%",
-        // height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         alignContent: "center",
-        padding: "40px 80px",
-        gap: "80px",
       },
       children: [
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           justifyContent: "center",
           alignItems: "center",
@@ -43,12 +42,12 @@ export const orgProperties: OrgProperties = {
           children: [
             {
               type: ElementType.CONTAINER,
+              responsive: true,
               background: "transparent",
               justifyContent: "center",
               flexDirection: "column",
               styles: {
                 width: "100%",
-                maxWidth: "600px",
               },
               children: [
                 {
@@ -73,6 +72,9 @@ export const orgProperties: OrgProperties = {
                     fontSize: "18px",
                     fontWeight: 300,
                   },
+                  styles: {
+                    marginTop: "12px",
+                  },
                 },
               ],
             },
@@ -80,6 +82,7 @@ export const orgProperties: OrgProperties = {
         },
         {
           type: ElementType.CONTAINER,
+          responsive: true,
           background: "transparent",
           styles: {
             width: "100%",
@@ -87,17 +90,16 @@ export const orgProperties: OrgProperties = {
           children: [
             {
               type: ElementType.CONTAINER,
+              responsive: true,
               background: "transparent",
               styles: {
                 width: "100%",
-                maxWidth: "600px",
               },
 
               children: [
                 {
                   type: ElementType.VIDEO,
                   src: "https://stream.mux.com/701ykhqj7byVeIl0002PlMz1cwQAfmcbfCMolJ54Hy6n1E/high.mp4",
-                  showControls: false,
                   styles: {
                     objectFit: "cover",
                     aspectRatio: 1.5,
@@ -127,8 +129,8 @@ export default function OrgView() {
   return (
     // <FormProvider {...methods}>
     <div className="w-full">
-      <OrgHeader orgProperties={orgProperties} />
-      <Tab />
+      <SectionBanner orgProperties={orgProperties} />
+      <TabRoot />
     </div>
     // </FormProvider>
   );

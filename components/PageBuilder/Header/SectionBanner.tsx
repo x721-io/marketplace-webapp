@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { OrgProperties } from "./types";
+import { OrgProperties } from "../types";
 import UploadIcon from "@/components/Icon/Upload";
 import React from "react";
 import Text from "@/components/Text";
@@ -23,9 +23,9 @@ export default function SectionBanner({
     const extension = banner.split(".").pop();
     if (extension === "mp4" || extension === "webm") {
       return (
-        <div className="w-full h-full">
+        <div className="w-full h-full min-h-[160px] tablet:min-h-[220px]">
           {editMode && (
-            <button className="absolute top-0 right-0 z-10 m-2 py-2 px-5 text-[white] font-extrabold cursor-pointer">
+            <button className="absolute top-0 right-0 z-10 m-2 py-2 px-5 text-[white] font-extrabold cursor-pointer hidden tablet:block">
               Edit banner
             </button>
           )}
@@ -43,7 +43,7 @@ export default function SectionBanner({
     }
     return (
       <Image
-        className="w-full h-full object-cover"
+        className="w-full h-full max-w-[160px] tablet:max-w-full object-cover"
         src={banner}
         alt="banner"
         width={1200}
@@ -57,7 +57,7 @@ export default function SectionBanner({
   return (
     <>
       <div className="bg-cover relative w-full aspect-[7/2]">
-        <div className="absolute desktop:ml-20 tablet:ml-20 ml-4 block w-[80px] h-[80px] tablet:w-[120px] tablet:h-[120px] tablet:bottom-[-55px] bottom-[-38px]">
+        <div className="absolute desktop:ml-20 tablet:ml-10 ml-4 block w-[80px] h-[80px] tablet:w-[120px] tablet:h-[120px] tablet:bottom-[-55px] bottom-[-38px]">
           <Image
             src={orgProperties.avatar}
             alt="user-detail-bg"
@@ -70,13 +70,16 @@ export default function SectionBanner({
       </div>
 
       <>
-        <div className="w-full flex justify-between pt-20 desktop:px-20 tablet:px-20 px-4 mb-6 tablet:gap-12">
-          <div className="flex flex-col gap-4 w-full">
-            <div className="flex items-center gap-2">
-              <Text className="font-semibold text-primary desktop:text-body-32 tablet:text-body-32 text-body-24 w-auto desktop:max-w-[500px] tablet:max-w-[500px] max-w-[300px]">
-                LayerG
-              </Text>
-              <Icon name="verify-active" width={24} height={24} />
+        <div className="w-full flex flex-col laptop:flex-row justify-between  laptop:px-20 laptop:pt-20 tablet:pt-20 tablet:px-10 pt-14 px-4 pb-6 gap-8 tablet:gap-6 laptop:gap-12">
+          <div className="flex flex-col gap-8 tablet:gap-4 w-full">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Text className="font-semibold text-primary desktop:text-body-32 tablet:text-body-32 text-body-24">
+                  LayerG
+                </Text>
+                <Icon name="verify-active" width={24} height={24} />
+              </div>
+
               {/*{creator?.accountStatus && data.collection.isVerified ? (*/}
               {/*    <Icon name="verify-active" width={24} height={24} />*/}
               {/*) : (*/}
@@ -89,20 +92,21 @@ export default function SectionBanner({
               {/*      <Text className="text-body-16">Get Verified</Text>*/}
               {/*    </Link>*/}
               {/*)}*/}
+              <div className="flex items-center gap-2">
+                <Link
+                  href={"#"}
+                  className="font-semibold text-secondary text-body-16 hover:underline"
+                >
+                  Created by:{" "}
+                  <span className="text-primary font-bold">Memetaverse</span>
+                </Link>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href={"#"}
-                className="font-semibold text-secondary text-body-16 hover:underline"
-              >
-                Created by:{" "}
-                <span className="text-primary font-bold">Memetaverse</span>
-              </Link>
-            </div>
+
             <Text
-              showTooltip
-              labelTooltip={orgProperties.description}
-              className="text-secondary text-body-16 font-semibold w-auto desktop:max-w-[600px] tablet:max-w-600px] max-w-[300px]"
+              // showTooltip
+              // labelTooltip={orgProperties.description}
+              className="text-secondary text-body-16 font-semibold w-full desktop:max-w-[600px] tablet:max-w-600px] "
             >
               {orgProperties.description}
             </Text>
@@ -145,12 +149,6 @@ export default function SectionBanner({
             </div>
           </div>
         </div>
-
-        {/*<UpdateRoyaltiesModal*/}
-        {/*    show={showRoyaltiesModal}*/}
-        {/*    onClose={() => setShowRoyaltiesModal(false)}*/}
-        {/*    collection={data.collection}*/}
-        {/*/>*/}
       </>
     </>
   );

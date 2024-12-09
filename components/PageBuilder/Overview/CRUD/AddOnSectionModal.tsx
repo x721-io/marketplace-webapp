@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CloseIcon from "@/components/Icon/Close";
-import { Element } from "../types";
+import { Element } from "../../types";
 import {
   MdOutlineArrowDropDown,
   MdOutlineArrowDropUp,

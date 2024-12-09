@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum ElementType {
   CONTAINER = "CONTAINER",
   IMAGE = "IMAGE",
@@ -27,6 +29,12 @@ export type TextAttributes = {
 };
 
 export type Container = {
+  textOnly?: boolean;
+  textOverMedia?: boolean;
+  mediaOnly?: boolean;
+  responsive?: boolean;
+  gap?: boolean;
+  isFlexDirection?: boolean;
   type: ElementType.CONTAINER;
   width?: string;
   height?: string;
@@ -64,6 +72,7 @@ export type Video = {
 };
 
 export type Image = {
+  textOverMedia?: boolean;
   type: ElementType.IMAGE;
   src: string;
   width?: string;

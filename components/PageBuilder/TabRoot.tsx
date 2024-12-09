@@ -1,20 +1,20 @@
 import { MyTabs } from "@/components/X721UIKits/Tabs";
 import { useState } from "react";
-import OrgOverview from "@/components/Org/Overview/overview";
 import { orgProperties } from "@/app/(app)/[orgSlug]/view";
+import OverviewTab from "@/components/PageBuilder/Overview";
 
 interface Props {
   isLoadingMetadata?: boolean;
 }
 
-export default function Tab({ isLoadingMetadata = false }: Props) {
+export default function TabRoot({ isLoadingMetadata = false }: Props) {
   const [currTabIndex, setCurrTabIndex] = useState(1);
 
   const getComponentByCurrTabIndex = () => {
     switch (currTabIndex) {
       case 1:
         return (
-          <OrgOverview overviewElements={orgProperties.overviewElements} />
+          <OverviewTab overviewElements={orgProperties.overviewElements} />
         );
       case 2:
         return (
@@ -39,7 +39,7 @@ export default function Tab({ isLoadingMetadata = false }: Props) {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="tablet:px-20 tablet:py-10 tablet:w-full overflow-auto">
+      <div className="p-4 tablet:px-10 laptop:px-20 laptop:py-10 tablet:py-6 tablet:w-full overflow-auto">
         <MyTabs.Group style="underline" onActiveTabChange={setCurrTabIndex}>
           <MyTabs.Item tabIndex={1} active={currTabIndex === 1}>
             <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
@@ -49,11 +49,6 @@ export default function Tab({ isLoadingMetadata = false }: Props) {
           <MyTabs.Item tabIndex={2} active={currTabIndex === 2}>
             <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
               List Item
-            </div>
-          </MyTabs.Item>
-          <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
-            <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
-              On Sale (0)
             </div>
           </MyTabs.Item>
           <MyTabs.Item tabIndex={4} active={currTabIndex === 4}>
