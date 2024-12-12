@@ -160,3 +160,78 @@ export type CollectionStatisticItem = {
   createdAt: string;
   collection: Collection;
 };
+
+export interface LayerGNFT {
+  id: string;
+  u2uId: string;
+  name: string;
+  status: EntityStatus;
+  tokenUri: string;
+  txCreationHash: string;
+  creatorId: string;
+  collectionId: string;
+  image: string;
+  animationUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  nameSlug: string;
+  isActive: boolean;
+  metricPoint: string;
+  creator: {
+    avatar: null | string;
+    email: string | null;
+    id: string;
+    publicKey: Address;
+    username: string;
+    accountStatus: boolean;
+  } | null;
+  collection: CollectionLayerG;
+  traits?: Trait[];
+  price?: BigNumberish;
+  sellStatus?: MarketEventType;
+  quoteToken?: Address;
+}
+export interface MetricDetail {
+  UserMetric: number;
+  VolumeIndividual: number;
+}
+
+export interface CollectionLayerG {
+  id: string;
+  name: string;
+  symbol: string;
+  address: string;
+  metadataJson: MetadataJson;
+  isVerified: boolean;
+  floorPrice: string;
+  floor: number;
+  avatar: string;
+}
+
+export interface MetadataJson {
+  id: string;
+  name: string;
+  banner: string;
+  category: Category[];
+  gameIcon: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  extract: string;
+}
+
+export interface Paging {
+  page?: number;
+  limit?: number;
+}
+
+export interface FilterLayerGNFTs extends Paging {
+  collectionAddress?: string;
+  collectionName?: string;
+  categoryName?: string;
+  symbol?: string;
+  nftName?: string;
+}

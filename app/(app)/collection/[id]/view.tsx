@@ -131,7 +131,7 @@ export default function CollectionView() {
         <BannerSectionCollection
           onUpdateSuccess={() => mutate()}
           collectionId={collectionData.collection.id}
-          creators={collectionData.collection.creators}
+          creators={collectionData.collection?.creators}
           cover={getCollectionBannerImage(collectionData.collection)}
           avatar={getCollectionAvatarImage(collectionData.collection)}
         />

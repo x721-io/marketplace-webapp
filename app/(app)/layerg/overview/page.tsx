@@ -1,10 +1,8 @@
-"use client";
-
-import SectionBanner from "@/components/PageBuilder/Header/SectionBanner";
-import TabRoot from "@/components/PageBuilder/TabRoot";
+import OverviewTab from "@/components/PageBuilder/Overview";
+import React from "react";
 import { ElementType, OrgProperties } from "@/components/PageBuilder/types";
 
-export const orgProperties: OrgProperties = {
+const orgProperties: OrgProperties = {
   title: "Keepers",
   description:
     "Phasellus pharetra porta sodales. Quisque a felis neque. Vivamus sed vulputate ex. Donec ullamcorper pharetra efficitur. Donec faucibus sapien non tellus...",
@@ -117,21 +115,6 @@ export const orgProperties: OrgProperties = {
   ],
 };
 
-// interface OrgViewState {
-//   currTabIndex: number;
-// }
-
-export default function OrgView() {
-  // const methods = useForm<OrgViewState>();
-
-  // const { currTabIndex } = methods.watch();
-
-  return (
-    // <FormProvider {...methods}>
-    <div className="w-full">
-      <SectionBanner orgProperties={orgProperties} />
-      <TabRoot />
-    </div>
-    // </FormProvider>
-  );
+export default function OrgPage() {
+  return <OverviewTab overviewElements={orgProperties.overviewElements} />;
 }

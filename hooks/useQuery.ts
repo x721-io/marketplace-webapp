@@ -444,3 +444,47 @@ export const useGetCollectionsAnalysis = (
     mutate,
   };
 };
+
+export const useGetLayerGNFTs = (
+  params: APIParams.FetchLayerGNFTs,
+  enabled: boolean = true
+) => {
+  const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
+    async (params) => {
+      const { collectionName, symbol, address, categoryName, nftName } = params;
+
+      const response = await nextAPI.get(API_ENDPOINTS.SEARCH_NFT_LAYER_G, {
+        params: sanitizeObject({
+          page: params.page,
+          limit: params.limit,
+          "collection[metadata][name]": collectionName,
+          "collection[symbol]": symbol,
+          "collection[address]": address,
+          "collection[metadata][categoryName]": categoryName,
+          nftName: nftName,
+        }),
+      });
+      return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
+    }
+  );
+
+  return {
+    data: data ?? [],
+    error,
+    isLoading,
+    size,
+    setSize,
+    mutate,
+  };
+};

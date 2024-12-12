@@ -1,41 +1,22 @@
 import { MyTabs } from "@/components/X721UIKits/Tabs";
-import { useState } from "react";
-import { orgProperties } from "@/app/(app)/[orgSlug]/view";
-import OverviewTab from "@/components/PageBuilder/Overview";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-interface Props {
-  isLoadingMetadata?: boolean;
-}
-
-export default function TabRoot({ isLoadingMetadata = false }: Props) {
+export default function OverView() {
   const [currTabIndex, setCurrTabIndex] = useState(1);
+  const router = useRouter();
 
-  const getComponentByCurrTabIndex = () => {
-    switch (currTabIndex) {
-      case 1:
-        return (
-          <OverviewTab overviewElements={orgProperties.overviewElements} />
-        );
-      case 2:
-        return (
-          <div className="max-h-[500px] overflow-y-auto tablet:pr-[20px]">
-            AAAA
-          </div>
-        );
-      case 3:
-        return (
-          <div className="max-h-[500px] overflow-y-auto tablet:pr-[20px]">
-            AAAA
-          </div>
-        );
-      case 4:
-        return (
-          <div className="max-h-[500px] overflow-y-auto tablet:pr-[20px]">
-            AAAA
-          </div>
-        );
+  console.log(currTabIndex);
+
+  useEffect(() => {
+    if (currTabIndex === 1) {
+      router.push("/layerg/overview");
+    } else if (currTabIndex === 2) {
+      router.push("/layerg/items");
+    } else if (currTabIndex === 3) {
+      router.push("/layerg/analytics");
     }
-  };
+  }, [currTabIndex, router]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -51,14 +32,13 @@ export default function TabRoot({ isLoadingMetadata = false }: Props) {
               List Item
             </div>
           </MyTabs.Item>
-          <MyTabs.Item tabIndex={4} active={currTabIndex === 4}>
+          <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
             <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
               Analytics
             </div>
           </MyTabs.Item>
         </MyTabs.Group>
       </div>
-      {getComponentByCurrTabIndex()}
     </div>
   );
 }

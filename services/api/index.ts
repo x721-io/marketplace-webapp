@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_API_URL } from "@/config/api";
+import { BASE_API_URL, BASE_LAYER_G_API_URL } from "@/config/api";
 
 const BASE_REQUEST_OPTIONS = {
   timeout: 10000,
@@ -25,6 +25,20 @@ const launchpadAPi = axios.create({
   baseURL: BASE_API_URL,
   ...BASE_REQUEST_OPTIONS,
 });
+
+const layerGApi = axios.create({
+  baseURL: BASE_LAYER_G_API_URL,
+  ...BASE_REQUEST_OPTIONS,
+});
+
+layerGApi.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    return Promise.reject(error.response.data);
+  }
+);
 
 marketplaceApi.interceptors.response.use(
   (response) => {
@@ -86,4 +100,10 @@ const getBackendAPI = () => {
   return backendAPI;
 };
 
-export { marketplaceApi, launchpadAPi, getMarketplaceApi, getBackendAPI };
+export {
+  marketplaceApi,
+  launchpadAPi,
+  getMarketplaceApi,
+  getBackendAPI,
+  layerGApi,
+};

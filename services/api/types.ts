@@ -19,6 +19,11 @@ export namespace APIParams {
     hasNext?: boolean;
   }
 
+  export interface Paging {
+    page: number;
+    limit: number;
+  }
+
   export interface WithAuth {
     accessToken?: string;
   }
@@ -28,6 +33,11 @@ export namespace APIParams {
     publicKey: Address;
     signature: Address;
     signer: string;
+  }
+
+  export interface LayerGCategory {
+    name?: string;
+    platform?: string;
   }
 
   export type UpdateProfile = Partial<
@@ -210,6 +220,30 @@ export namespace APIParams {
   export interface FloorPrice {
     address?: Address;
   }
+
+  export interface LayerGProjects extends Paging {
+    name?: Address;
+    categories?: string[];
+    platform?: string;
+  }
+
+  export interface LayerGSmartContract extends Paging {
+    networkID: number;
+    contractType?: string;
+    contractName?: string;
+    contractAddress?: string;
+    mode?: string;
+    ownerAddress?: string;
+    tokenIds?: string[];
+  }
+
+  export interface FetchLayerGNFTs extends PaginationParams {
+    collectionName?: string;
+    symbol?: string;
+    address?: Address;
+    categoryName?: string;
+    nftName?: string;
+  }
 }
 
 /********** =========== API Response types ========== ***********/
@@ -338,5 +372,100 @@ export namespace APIResponse {
 
   export interface FloorPrice {
     address: string;
+  }
+
+  export type Category = {
+    id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  export type LayerGCategory = Category[];
+
+  export interface GetLayerGProjects {
+    data: Daum[];
+    paging: Paging;
+  }
+
+  export interface Daum {
+    id: string;
+    name: string;
+    apiKeyID: string;
+    createdAt: string;
+    updatedAt: string;
+    platform: string[];
+    isEnabled: boolean;
+    nameSlug: string;
+    categories: CategoryLayerG[];
+    collections: Collection[];
+    banner: string;
+    gameIcon: string;
+  }
+
+  export interface CategoryLayerG {
+    id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  export interface Collection {
+    id: string;
+    name: string;
+    description: string;
+    avatarUrl: string;
+    projectId: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  export interface SmartContract {
+    id: string;
+    contractType: string;
+    networkID: number;
+    contractName: string;
+    tokenSymbol: string;
+    totalSupply?: number;
+    collectionId: string;
+    deployedAt: string;
+    updatedAt: string;
+    contractAddress: string;
+    nameSlug: any;
+  }
+
+  export interface Paging {
+    page: number;
+    limit: number;
+    total: number;
+  }
+
+  export interface GetLayerGSmartContracts {
+    data: SmartContract[];
+    paging: Paging;
+  }
+
+  export interface SmartContract {
+    id: string;
+    contractType: string;
+    networkID: number;
+    contractName: string;
+    tokenSymbol: string;
+    totalSupply?: number;
+    collectionId: string;
+    deployedAt: string;
+    updatedAt: string;
+    contractAddress: string;
+    nameSlug: any;
+    deployedOn: DeployedOn;
+    collection: Collection;
+  }
+
+  export interface DeployedOn {
+    id: number;
+    symbol: string;
+    name: string;
   }
 }

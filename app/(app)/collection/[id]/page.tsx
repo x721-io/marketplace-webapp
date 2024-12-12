@@ -41,9 +41,9 @@ export async function generateMetadata({
 
   if (response.status === "success" && response.data) {
     return {
-      title: `${response.data.collection.name} | X721`,
+      title: `${response.data.collection?.name} | X721`,
       openGraph: {
-        images: [response.data.collection.avatar ?? ""],
+        images: [response.data.collection?.avatarUrl ?? ""],
       },
     };
   }
