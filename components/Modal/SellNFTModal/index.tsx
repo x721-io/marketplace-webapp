@@ -365,7 +365,7 @@ export default function SellNFTModal({
                 />
               )}
               <FormValidationMessages errors={errors} />
-              {isMarketContractApprovedToken ? (
+              {/* {isMarketContractApprovedToken ? (
                 <Button type={"submit"} className="w-full" loading={loading}>
                   Put on sale
                 </Button>
@@ -378,7 +378,10 @@ export default function SellNFTModal({
                   handleApproveTokenForAll={handleApproveTokenForAll}
                   handleApproveTokenForSingle={handleApproveTokenForSingle}
                 />
-              )}
+              )} */}
+              <Button type={"submit"} className="w-full" loading={loading}>
+                  Put on sale
+                </Button>
             </form>
           </div>
         </MyModal.Body>

@@ -37,7 +37,7 @@ export default function OwnersTab({
       .map((owner) => {
         const sellInfo = marketData.sellInfo.find((item) => {
           return (
-            item.from?.signer?.toLowerCase() === owner.publicKey?.toLowerCase()
+            item.Maker?.publicKey.toLowerCase() === owner.publicKey?.toLowerCase()
           );
         });
         return {
@@ -54,9 +54,9 @@ export default function OwnersTab({
     if (!marketData) return;
     return marketData.bidInfo?.find((bid) => {
       return (
-        !!bid.to?.publicKey &&
+        !!bid.Maker?.publicKey &&
         !!userWallet &&
-        bid.to?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
+        bid.Maker?.publicKey?.toLowerCase() === userWallet?.toLowerCase()
       );
     });
   }, [marketData, userWallet]);

@@ -98,7 +98,19 @@ const abi = [
       { type: "uint16", name: "index", internalType: "uint16", indexed: false },
       {
         type: "uint256",
+        name: "takeQty",
+        internalType: "uint256",
+        indexed: false,
+      },
+      {
+        type: "uint256",
         name: "currentFilledValue",
+        internalType: "uint256",
+        indexed: false,
+      },
+      {
+        type: "uint256",
+        name: "randomValue",
         internalType: "uint256",
         indexed: false,
       },
@@ -249,12 +261,12 @@ const abi = [
       {
         type: "tuple",
         name: "order",
-        internalType: "struct X721Order.Order",
+        internalType: "struct LibOrder.Order",
         components: [
           {
             type: "uint8",
             name: "orderType",
-            internalType: "enum X721Order.OrderType",
+            internalType: "enum LibOrder.OrderType",
           },
           { type: "address", name: "maker", internalType: "address" },
           {
@@ -294,7 +306,7 @@ const abi = [
           {
             type: "tuple",
             name: "originFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -303,7 +315,7 @@ const abi = [
           {
             type: "tuple",
             name: "royaltyFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -326,12 +338,12 @@ const abi = [
       {
         type: "tuple",
         name: "order",
-        internalType: "struct X721Order.Order",
+        internalType: "struct LibOrder.Order",
         components: [
           {
             type: "uint8",
             name: "orderType",
-            internalType: "enum X721Order.OrderType",
+            internalType: "enum LibOrder.OrderType",
           },
           { type: "address", name: "maker", internalType: "address" },
           {
@@ -371,7 +383,7 @@ const abi = [
           {
             type: "tuple",
             name: "originFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -380,7 +392,7 @@ const abi = [
           {
             type: "tuple",
             name: "royaltyFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -408,12 +420,12 @@ const abi = [
           {
             type: "tuple",
             name: "bidOrder",
-            internalType: "struct X721Order.Order",
+            internalType: "struct LibOrder.Order",
             components: [
               {
                 type: "uint8",
                 name: "orderType",
-                internalType: "enum X721Order.OrderType",
+                internalType: "enum LibOrder.OrderType",
               },
               { type: "address", name: "maker", internalType: "address" },
               {
@@ -453,7 +465,7 @@ const abi = [
               {
                 type: "tuple",
                 name: "originFee",
-                internalType: "struct X721Order.Fee",
+                internalType: "struct LibOrder.Fee",
                 components: [
                   {
                     type: "address",
@@ -466,7 +478,7 @@ const abi = [
               {
                 type: "tuple",
                 name: "royaltyFee",
-                internalType: "struct X721Order.Fee",
+                internalType: "struct LibOrder.Fee",
                 components: [
                   {
                     type: "address",
@@ -485,12 +497,12 @@ const abi = [
           {
             type: "tuple",
             name: "sellOrder",
-            internalType: "struct X721Order.Order",
+            internalType: "struct LibOrder.Order",
             components: [
               {
                 type: "uint8",
                 name: "orderType",
-                internalType: "enum X721Order.OrderType",
+                internalType: "enum LibOrder.OrderType",
               },
               { type: "address", name: "maker", internalType: "address" },
               {
@@ -530,7 +542,7 @@ const abi = [
               {
                 type: "tuple",
                 name: "originFee",
-                internalType: "struct X721Order.Fee",
+                internalType: "struct LibOrder.Fee",
                 components: [
                   {
                     type: "address",
@@ -543,7 +555,7 @@ const abi = [
               {
                 type: "tuple",
                 name: "royaltyFee",
-                internalType: "struct X721Order.Fee",
+                internalType: "struct LibOrder.Fee",
                 components: [
                   {
                     type: "address",
@@ -586,12 +598,12 @@ const abi = [
       {
         type: "tuple[]",
         name: "orderLefts",
-        internalType: "struct X721Order.Order[]",
+        internalType: "struct LibOrder.Order[]",
         components: [
           {
             type: "uint8",
             name: "orderType",
-            internalType: "enum X721Order.OrderType",
+            internalType: "enum LibOrder.OrderType",
           },
           { type: "address", name: "maker", internalType: "address" },
           {
@@ -631,7 +643,7 @@ const abi = [
           {
             type: "tuple",
             name: "originFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -640,7 +652,7 @@ const abi = [
           {
             type: "tuple",
             name: "royaltyFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -655,12 +667,12 @@ const abi = [
       {
         type: "tuple[]",
         name: "orderRights",
-        internalType: "struct X721Order.Order[]",
+        internalType: "struct LibOrder.Order[]",
         components: [
           {
             type: "uint8",
             name: "orderType",
-            internalType: "enum X721Order.OrderType",
+            internalType: "enum LibOrder.OrderType",
           },
           { type: "address", name: "maker", internalType: "address" },
           {
@@ -700,7 +712,7 @@ const abi = [
           {
             type: "tuple",
             name: "originFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -709,7 +721,7 @@ const abi = [
           {
             type: "tuple",
             name: "royaltyFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -844,12 +856,12 @@ const abi = [
       {
         type: "tuple",
         name: "order",
-        internalType: "struct X721Order.Order",
+        internalType: "struct LibOrder.Order",
         components: [
           {
             type: "uint8",
             name: "orderType",
-            internalType: "enum X721Order.OrderType",
+            internalType: "enum LibOrder.OrderType",
           },
           { type: "address", name: "maker", internalType: "address" },
           {
@@ -889,7 +901,7 @@ const abi = [
           {
             type: "tuple",
             name: "originFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -898,7 +910,7 @@ const abi = [
           {
             type: "tuple",
             name: "royaltyFee",
-            internalType: "struct X721Order.Fee",
+            internalType: "struct LibOrder.Fee",
             components: [
               { type: "address", name: "receiver", internalType: "address" },
               { type: "uint256", name: "amount", internalType: "uint256" },
@@ -1073,7 +1085,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0x8AEb29DCe7F69ee6D70387f98b65Eab27870cd9C";
+  "0x43D8fF47D2e07604e3284d7EdF5088EeB98Cb201";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
@@ -1319,7 +1331,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const { quantity, quoteToken, start, end, salt, totalPrice } = params;
+    const { quantity, quoteToken, start, end, salt, price } = params;
     const types = {
       Asset: [
         { name: "assetType", type: "uint8" },
@@ -1360,7 +1372,7 @@ const useMarketplaceV2 = (nft: NFT) => {
           takeAsset: {
             assetType: getTokenAssetType(quoteToken),
             contractAddress: quoteToken as Address,
-            value: BigInt(parseUnits(totalPrice.toString(), 18)),
+            value: BigInt(parseUnits(price.toString(), 18)),
             id: BigInt(0),
           },
           salt: BigInt(salt),
@@ -1383,7 +1395,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const { price, quantity, quoteToken, start, end, salt } = params;
+    const { totalPrice, quantity, quoteToken, start, end, salt } = params;
     const types = {
       Asset: [
         { name: "assetType", type: "uint8" },
@@ -1406,9 +1418,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         { name: "index", type: "uint16" },
       ],
     } as const;
-    const bidValue =
-      parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125;
-    const bidValueWei = parseUnits(bidValue.toString(), 18);
+    const bidValueWei = parseUnits(totalPrice.toString(), 18);
     try {
       const sig = await signTypedDataAsync({
         account: address,
@@ -1459,7 +1469,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     const takeAsset = {
       assetType: getTokenAssetType(quoteToken),
       contractAddress: quoteToken,
-      value: parseUnits(params.totalPrice.toString(), 18),
+      value: BigInt(parseUnits(price.toString(), 18)),
       id: BigInt(0).toString(),
     };
     const {
@@ -1495,11 +1505,9 @@ const useMarketplaceV2 = (nft: NFT) => {
         netPrice: parseUnits(params.netPrice.toString(), 18).toString(),
         index: 1,
       };
-      console.log({ body });
       await nextAPI.post("/order/single", body);
       return true;
     } catch (err) {
-      alert(err);
       return false;
     }
   };
@@ -1574,7 +1582,6 @@ const useMarketplaceV2 = (nft: NFT) => {
       await nextAPI.post("/order/single", body);
       return true;
     } catch (err) {
-      alert(err);
       return false;
     }
   };
@@ -1680,7 +1687,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     return result;
   };
 
-  const buySingle = async (order: OrderDetails) => {
+  const buySingle = async (order: OrderDetails, qty: number = 1) => {
     if (!address || !order.Maker) return;
     if (order.quoteToken !== ADDRESS_ZERO) {
       const allowance = await getERC20Allowance(order.takeAssetAddress);
@@ -1697,7 +1704,9 @@ const useMarketplaceV2 = (nft: NFT) => {
       address: contractExchangeV2Test,
       functionName: "matchOrders",
       value:
-        order.takeAssetType == 1 ? BigInt(order.takeAssetValue) : BigInt(0),
+        order.takeAssetType == 1
+          ? BigInt(order.takeAssetValue) * BigInt(qty)
+          : BigInt(0),
       args: [
         [
           {
@@ -1740,14 +1749,14 @@ const useMarketplaceV2 = (nft: NFT) => {
             makeAsset: {
               assetType: order.takeAssetType,
               contractAddress: order.takeAssetAddress as Address,
-              value: BigInt(order.takeAssetValue),
+              value: BigInt(order.takeAssetValue) * BigInt(qty),
               id: BigInt(order.takeAssetId),
             },
             taker: order.Maker.signer as Address,
             takeAsset: {
               assetType: order.makeAssetType,
               contractAddress: order.makeAssetAddress as Address,
-              value: BigInt(order.makeAssetValue),
+              value: BigInt(qty),
               id: BigInt(order.makeAssetId),
             },
             salt: BigInt(0),
@@ -1773,7 +1782,7 @@ const useMarketplaceV2 = (nft: NFT) => {
 
   const cancelOrder = async (order: OrderDetails) => {
     if (!address || !order.Maker) return;
-    await writeContract(config, {
+    await Web3Functions.writeContract({
       abi,
       address: contractExchangeV2Test,
       functionName: "cancelOrder",

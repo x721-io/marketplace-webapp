@@ -7,7 +7,7 @@ import {
   NFTMetadata,
 } from "@/types/entitites";
 import { Address } from "abitype";
-import { MarketEvent, MarketEventType } from "@/types/market";
+import { MarketEvent, MarketEventType, MarketEventV2 } from "@/types/market";
 import { Project, RoundStatus } from "@/types";
 import { FormState } from "@/types";
 
@@ -134,6 +134,11 @@ export namespace APIParams {
 
   export interface UserActivities extends PaginationParams {
     user: Address;
+  }
+
+  export interface PriceHistory {
+    collectionAddress: Address;
+    id: string;
   }
 
   export interface Search {
@@ -303,8 +308,8 @@ export namespace APIResponse {
   export type UserActivities = MarketEvent[];
 
   export interface NFTMarketData {
-    sellInfo: MarketEvent[];
-    bidInfo: MarketEvent[];
+    sellInfo: MarketEventV2[];
+    bidInfo: MarketEventV2[];
     owners: (Pick<
       User,
       | "username"

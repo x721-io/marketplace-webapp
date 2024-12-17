@@ -54,7 +54,12 @@ export namespace FormState {
     quoteToken: Address;
     price: string;
     quantity: string;
-    allowance: string;
+    start: number;
+    salt: string;
+    end: number;
+    daysRange: DaysRange;
+    netPrice: number;
+    totalPrice: number;
   }
 
   export interface AcceptBidNFT {

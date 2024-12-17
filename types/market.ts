@@ -75,7 +75,10 @@ export interface MarketEventV2 {
   quoteToken: Address;
   sig: string;
   timestamp: number;
+  start: number;
+  end: number;
   quantity: number;
+  filledQty: number;
 }
 
 export interface PartialOrderDetails {
@@ -100,3 +103,36 @@ export interface PartialOrderDetails {
 }
 
 export interface OrderDetails extends PartialOrderDetails, MarketEventV2 {}
+
+export interface PriceHistoryItem {
+  id: string;
+  index: number;
+  sig: string;
+  nonce: string;
+  fromId: string;
+  toId: string;
+  qtyMatch: number;
+  price: string;
+  priceNum: number;
+  timestamp: number;
+  From: {
+    id: string;
+    email: string;
+    avatar: any;
+    username: string;
+    publicKey: string;
+    accountStatus: boolean;
+    verifyEmail: boolean;
+    signer: string;
+  };
+  To: {
+    id: string;
+    email: string;
+    avatar: any;
+    username: string;
+    publicKey: string;
+    accountStatus: boolean;
+    verifyEmail: boolean;
+    signer: string;
+  };
+}

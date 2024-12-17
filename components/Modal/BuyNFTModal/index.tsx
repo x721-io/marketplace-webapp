@@ -1,5 +1,4 @@
 import { useCalculateFee } from "@/hooks/useMarket";
-import { useQueryClient } from "@tanstack/react-query";
 import Text from "@/components/Text";
 import Input from "@/components/Form/Input";
 import Button from "@/components/Button";
@@ -7,9 +6,8 @@ import { useForm } from "react-hook-form";
 import { formatUnits, MaxUint256, parseUnits } from "ethers";
 import { findTokenByAddress } from "@/utils/token";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, useBalance, useBlockNumber } from "wagmi";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { FormState, MarketEvent, NFT } from "@/types";
+import { FormState, MarketEvent, MarketEventV2, NFT } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
 import { formatDisplayedNumber } from "@/utils";
 import { numberRegex } from "@/utils/regex";
@@ -20,21 +18,22 @@ import { useMarketApproveERC20 } from "@/hooks/useMarketApproveERC20";
 import { useMarketplaceApi } from "@/hooks/useMarketplaceApi";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useBuyNFT from "@/hooks/useBuyNFT";
-import { Address } from "abitype";
-import { isIntegerString } from "@/utils/string";
-import { useSWRConfig } from "swr";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import { useGetMarketDataByNftId } from "@/hooks/useQuery";
+import { ADDRESS_ZERO } from "@/config/constants";
+import { Address, erc20Abi, formatEther } from "viem";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 
 interface Props extends MyModalProps {
   nft: NFT;
-  saleData: MarketEvent;
+  saleData: MarketEventV2;
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const { buySingle, deposit, getERC20Allowance, getOrderDetails } =
     useMarketplaceV2(nft);
-  const queryClient = useQueryClient();
-  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const { data: marketData, isLoading: isLoadingMarketData } =
+    useGetMarketDataByNftId(nft.collection.address as string, nft.id as string);
   const {
     buyURC1155UsingNative,
     buyURC1155UsingURC20,
@@ -53,7 +52,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   } = useForm<FormState.BuyNFT>({
     defaultValues: {
       quoteToken: saleData.quoteToken,
-      quantity: "",
+      quantity: "1",
     },
   });
   const [price, quantity, quoteToken, allowance] = watch([
@@ -66,7 +65,26 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     () => findTokenByAddress(saleData.quoteToken),
     [saleData]
   );
-  const { mutate } = useSWRConfig();
+  const { data: erc20TokenBalance } = useReadContract({
+    abi: erc20Abi,
+    account: address,
+    address: marketData.sellInfo[0].quoteToken as Address,
+    functionName: "balanceOf",
+    args: [address as Address],
+    query: {
+      enabled: !!address && marketData.sellInfo[0].quoteToken !== ADDRESS_ZERO,
+    },
+  });
+  const nativeTokenBalance = useBalance({
+    address,
+    query: {
+      enabled: !!address && marketData.sellInfo[0].quoteToken === ADDRESS_ZERO,
+    },
+  });
+  const quoteTokenBalance =
+    marketData.sellInfo[0].quoteToken === ADDRESS_ZERO
+      ? nativeTokenBalance.data?.value
+      : erc20TokenBalance;
   const [loading, setLoading] = useState(false);
   const {
     sellerFee,
@@ -82,14 +100,14 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       nft.collection.type === "ERC721"
         ? BigInt(saleData.price || "0")
         : BigInt(saleData.price || "0") *
-          BigInt(isIntegerString(quantity.toString()) ? quantity : "0"),
+          BigInt(quantity && !isNaN(Number(quantity)) ? quantity : "0"),
     onSuccess: (data) => {
       if (!saleData.price || isNaN(Number(saleData.price))) return;
       const priceBigint =
         nft.collection.type === "ERC721"
           ? BigInt(saleData.price || "0")
           : BigInt(saleData.price || "0") *
-            BigInt(isIntegerString(quantity.toString()) ? quantity : "0");
+            BigInt(quantity && !isNaN(Number(quantity)) ? quantity : "0");
       const { buyerFee } = data;
       const totalCostBigint = priceBigint + buyerFee;
       setValue("allowance", formatUnits(totalCostBigint, token?.decimal));
@@ -105,15 +123,18 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     nft.collection.type,
     parseUnits(price || "0", token?.decimal) + buyerFee
   );
+
   const formRules = {
     allowance: {
       required: true,
     },
   };
 
-  const { data: tokenBalance, queryKey } = useBalance({
+  const { data: tokenBalance } = useBalance({
     address: address,
-    query: { enabled: !!address && !!token?.address },
+    query: {
+      enabled: !!address && !!token?.address,
+    },
     token: token?.address === tokens.wu2u.address ? undefined : token?.address,
   });
 
@@ -121,7 +142,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!quantity) return BigInt(0);
     return (
       BigInt(saleData.price || "0") *
-      BigInt(isIntegerString(quantity.toString()) ? quantity : "0")
+      BigInt(quantity && !isNaN(Number(quantity)) ? quantity : "0")
     );
   }, [quantity, saleData]);
 
@@ -138,7 +159,6 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
         autoClose: 1000,
         closeButton: true,
       });
-      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
@@ -153,16 +173,14 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     if (!saleData) return;
     setLoading(true);
     try {
-      // await buyURC721UsingURC20(
-      //   quoteToken,
-      //   BigInt(saleData.price) + BigInt(buyerFee)
-      // );
-      await buyURC721UsingNative(BigInt(saleData.price) + BigInt(buyerFee));
+      await buyURC721UsingURC20(
+        quoteToken,
+        BigInt(saleData.price) + BigInt(buyerFee)
+      );
       toast.success(`Order has been fulfilled successfully`, {
         autoClose: 1000,
         closeButton: true,
       });
-      setTimeout(() => mutate("/api/collections"), 1500);
       onClose?.();
     } catch (err: any) {
       toast.error(`Error report: ${err.message}`, {
@@ -173,78 +191,73 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     }
   };
 
-  const handleBuyURC1155UsingNative = async (quantity: number) => {
-    if (!saleData) return;
-    setLoading(true);
-    try {
-      await buyURC1155UsingNative(
-        saleData.operationId,
-        BigInt(saleData.price) + BigInt(buyerFee),
-        quantity
-      );
-      toast.success(`Order has been fulfilled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-      setTimeout(() => mutate("/api/collections"), 1500);
-      onClose?.();
-    } catch (err: any) {
-      toast.error(`Error report: ${err.message}`, {
-        autoClose: 2500,
-        closeButton: true,
-      });
-      onClose?.();
-    }
-  };
+  // const handleBuyURC1155UsingNative = async (quantity: number) => {
+  //   if (!saleData) return;
+  //   setLoading(true);
+  //   try {
+  //     await buyURC1155UsingNative(
+  //       saleData.operationId,
+  //       BigInt(saleData.price) + BigInt(buyerFee),
+  //       quantity
+  //     );
+  //     toast.success(`Order has been fulfilled successfully`, {
+  //       autoClose: 1000,
+  //       closeButton: true,
+  //     });
+  //     onClose?.();
+  //   } catch (err: any) {
+  //     toast.error(`Error report: ${err.message}`, {
+  //       autoClose: 2500,
+  //       closeButton: true,
+  //     });
+  //     onClose?.();
+  //   }
+  // };
 
-  const handleBuyURC1155UsingURC20 = async (quantity: number) => {
-    if (!saleData) return;
-    setLoading(true);
-    try {
-      await buyURC1155UsingNative(
-        saleData.operationId,
-        BigInt(saleData.price) + BigInt(buyerFee),
-        quantity
-      );
-      toast.success(`Order has been fulfilled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-      setTimeout(() => mutate("/api/collections"), 1500);
-      onClose?.();
-      mutate("/api/collections");
-    } catch (err: any) {
-      toast.error(`Error report: ${err.message}`, {
-        autoClose: 2500,
-        closeButton: true,
-      });
-      onClose?.();
-    }
-  };
+  // const handleBuyURC1155UsingURC20 = async (quantity: number) => {
+  //   if (!saleData) return;
+  //   setLoading(true);
+  //   try {
+  //     await buyURC1155UsingURC20(saleData.operationId, quantity);
+  //     toast.success(`Order has been fulfilled successfully`, {
+  //       autoClose: 1000,
+  //       closeButton: true,
+  //     });
+  //     onClose?.();
+  //   } catch (err: any) {
+  //     toast.error(`Error report: ${err.message}`, {
+  //       autoClose: 2500,
+  //       closeButton: true,
+  //     });
+  //     onClose?.();
+  //   }
+  // };
 
   const onSubmit = async ({ quantity }: FormState.BuyNFT) => {
-    if (!saleData) return;
-    await api.getFloorPrice({ address: nft.collection.address });
-    switch (nft.collection.type) {
-      case "ERC721":
-        if (quoteToken === tokens.wu2u.address) {
-          await handleBuyURC721UsingNative();
-        } else {
-          await handleBuyURC721UsingURC20();
-        }
-        break;
-      case "ERC1155":
-        if (quoteToken === tokens.wu2u.address) {
-          await handleBuyURC1155UsingNative(Number(quantity));
-        } else {
-          await handleBuyURC1155UsingURC20(Number(quantity));
-        }
-        break;
-      default:
-        break;
-    }
-    setLoading(false);
-    reset();
+    // if (!saleData) return;
+    // await api.getFloorPrice({ address: nft.collection.address });
+    // switch (nft.collection.type) {
+    //   case "ERC721":
+    //     if (quoteToken === tokens.wu2u.address) {
+    //       await handleBuyURC721UsingNative();
+    //     } else {
+    //       await handleBuyURC721UsingURC20();
+    //     }
+    //     break;
+    //   case "ERC1155":
+    //     if (quoteToken === tokens.wu2u.address) {
+    //       await handleBuyURC1155UsingNative(quantity);
+    //     } else {
+    //       await handleBuyURC1155UsingURC20(quantity);
+    //     }
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // setLoading(false);
+    // reset();
+    // alert(1);
+    // await buySingle(marketData.sellInfo[0]);
   };
 
   const handleApproveMinAmount = () => {
@@ -304,9 +317,29 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     }
   };
 
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey });
-  }, [blockNumber, queryClient, queryKey]);
+  const handleBuy = async () => {
+    const orderDetails = await getOrderDetails(
+      marketData.sellInfo[0].sig,
+      marketData.sellInfo[0].index
+    );
+    if (!orderDetails) return;
+    await buySingle(orderDetails, Number(quantity));
+  };
+
+  const handleDeposit = async () => {
+    const orderDetails = await getOrderDetails(
+      marketData.sellInfo[0].sig,
+      marketData.sellInfo[0].index
+    );
+    if (
+      !orderDetails ||
+      erc20TokenBalance === null ||
+      erc20TokenBalance === undefined
+    )
+      return;
+    const depositAmt = BigInt(orderDetails.takeAssetValue) - erc20TokenBalance;
+    await deposit(orderDetails.takeAssetAddress, depositAmt.toString());
+  };
 
   return (
     <MyModal.Root show={show} onClose={onClose}>
@@ -348,7 +381,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
+              {/* <div className="flex items-center justify-between mb-1">
                 <label className="text-body-14 text-secondary font-semibold">
                   Buy using
                 </label>
@@ -361,15 +394,15 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                     )
                   )}
                 </Text>
-              </div>
+              </div> */}
               <Input readOnly value={token?.symbol} />
             </div>
 
             {nft.collection.type === "ERC721" && (
               <FeeCalculator
+                qty={Number(quantity)}
                 mode="buyer"
                 nft={nft}
-                qty={quantity ? Number(quantity) : 0}
                 price={BigInt(saleData?.price || "0")}
                 quoteToken={token?.address}
                 sellerFee={sellerFee}
@@ -378,6 +411,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 buyerFeeRatio={buyerFeeRatio}
                 netReceived={netReceived}
                 royaltiesFee={royaltiesFee}
+                tokenBalance={quoteTokenBalance ?? BigInt("0")}
               />
             )}
 
@@ -388,12 +422,9 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                     Quantity
                   </Text>
                   <Input
-                    type="number"
                     maxLength={3}
                     size={3}
                     error={!!errors.quantity}
-                    min="0"
-                    step="1"
                     register={register("quantity", {
                       pattern: {
                         value: numberRegex,
@@ -434,8 +465,8 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 </div>
 
                 <FeeCalculator
-                  qty={quantity ? Number(quantity) : 0}
                   mode="buyer"
+                  qty={Number(quantity)}
                   nft={nft}
                   price={totalPriceBN}
                   quoteToken={token?.address}
@@ -445,34 +476,26 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                   buyerFeeRatio={buyerFeeRatio}
                   netReceived={netReceived}
                   royaltiesFee={royaltiesFee}
+                  tokenBalance={quoteTokenBalance ?? BigInt("0")}
                 />
               </>
             )}
+            <Button
+              disabled={
+                !quoteTokenBalance ||
+                quoteTokenBalance < BigInt(marketData.sellInfo[0].price)
+              }
+              onClick={handleBuy}
+            >
+              Purchase Item
+            </Button>
 
-            {isTokenApproved ? (
-              <Button
-                type={"submit"}
-                className="w-full"
-                loading={loading}
-                disabled={isDisableBuy}
-              >
-                Purchase item
-              </Button>
-            ) : (
-              <ERC20TokenApproval
-                allowanceBalance={allowanceBalance}
-                quoteToken={quoteToken}
-                onApproveMinAmount={handleApproveMinAmount}
-                onAllowanceInput={() => handleAllowanceInput}
-                onApproveMaxAmount={handleApproveMaxAmount}
-                onApproveToken={handleApproveToken}
-                loading={loading}
-                registerAllowanceInput={register(
-                  "allowance",
-                  formRules.allowance
-                )}
-              />
-            )}
+            {quoteTokenBalance !== null &&
+              quoteTokenBalance !== undefined &&
+              quoteTokenBalance < BigInt(marketData.sellInfo[0].price) && (
+                <Button onClick={handleDeposit}>Deposit</Button>
+              )}
+
             <FormValidationMessages errors={errors} />
           </form>
         </div>

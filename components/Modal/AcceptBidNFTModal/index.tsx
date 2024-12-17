@@ -1,7 +1,7 @@
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { useMemo, useState } from "react";
-import { NFT, MarketEvent, FormState } from "@/types";
+import { NFT, FormState, MarketEventV2 } from "@/types";
 import FeeCalculator from "@/components/FeeCalculator";
 import Input from "@/components/Form/Input";
 import { numberRegex } from "@/utils/regex";
@@ -15,10 +15,11 @@ import { useAcceptBidURC1155, useAcceptBidURC721 } from "@/hooks/useBidNFT";
 import NFTApproval from "@/components/NFTApproval";
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props extends MyModalProps {
   nft: NFT;
-  bid?: MarketEvent;
+  bid?: MarketEventV2;
 }
 
 export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
@@ -38,6 +39,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     "quantity",
     "quoteToken",
   ]);
+  const { acceptBid, getOrderDetails} = useMarketplaceV2(nft);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
   const [loadingForAll, setLoadingForAll] = useState(false);
@@ -67,14 +69,16 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
   });
 
   const onSubmit = async ({ quantity }: FormState.AcceptBidNFT) => {
-    if (!bid || !bid.to?.signer) return;
+    if (!bid || !bid.Taker?.signer) return;
     const toastId = toast.loading("Preparing data...", { type: "info" });
     setLoading(true);
     try {
       if (type === "ERC721") {
-        await onAcceptBidURC721(bid.to.signer, bid.quoteToken);
+        await onAcceptBidURC721(bid.Taker.signer, bid.quoteToken);
       } else {
-        await onAcceptBidURC1155(bid.operationId, quantity);
+        const onrderDetails = await getOrderDetails(bid.sig, bid.index);
+        if(!onrderDetails) return;
+        await acceptBid(onrderDetails);
       }
       toast.update(toastId, {
         render: "Bid order has been fulfilled successfully",

@@ -8,6 +8,7 @@ import NFTMarketData = APIResponse.NFTMarketData;
 import { toast } from "react-toastify";
 import { useCancelSellURC1155, useCancelSellURC721 } from "@/hooks/useSellNFT";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -20,44 +21,30 @@ export default function CancelSellNFTModal({
   onClose,
   marketData,
 }: Props) {
+  const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const [loading, setLoading] = useState(false);
+  const [isCancelling, setCancelling] = useState(false);
   const onCancelSellURC721 = useCancelSellURC721(nft);
   const onCancelSellURC1155 = useCancelSellURC1155();
   const mySale = useMemo(() => {
     return marketData?.sellInfo?.find(
-      (item) => item.from?.signer?.toLowerCase() === wallet?.toLowerCase()
+      (item) => item.Maker?.publicKey.toLowerCase() === wallet?.toLowerCase()
     );
   }, [marketData, wallet]);
 
-  const handleCancelSell = async () => {
-    const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
+  const handleCancelOrder = async () => {
+    if (!marketData || !marketData.sellInfo[0]) return;
     try {
-      if (nft.collection.type === "ERC721") {
-        await onCancelSellURC721();
-      } else {
-        await onCancelSellURC1155(mySale?.operationId || "");
-      }
-      toast.update(toastId, {
-        render: "Sale cancelled successfully",
-        type: "success",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-      onClose?.();
-    } catch (e) {
-      console.error(e);
-      toast.update(toastId, {
-        render: "Sale cancelled failed",
-        type: "error",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
+      setCancelling(true);
+      const { sig, index } = marketData.sellInfo[0];
+      const orderDeatails = await getOrderDetails(sig, index);
+      if (!orderDeatails) return;
+      await cancelOrder(orderDeatails);
+    } catch (err: any) {
+      toast.error(`Error report: User rejected`);
     } finally {
-      setLoading(false);
+      setCancelling(false);
     }
   };
 
@@ -86,8 +73,8 @@ export default function CancelSellNFTModal({
               </Button>
               <Button
                 className="flex-1"
-                onClick={handleCancelSell}
-                loading={loading}
+                onClick={handleCancelOrder}
+                loading={isCancelling}
               >
                 Yes
               </Button>

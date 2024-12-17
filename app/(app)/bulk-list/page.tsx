@@ -9,9 +9,11 @@ import { nextAPI } from "@/services/api";
 import { useUserStore } from "@/store/users/store";
 import { daysRanges } from "@/types";
 import { parseUnits } from "ethers";
+import { useRouter } from "next/navigation";
 import { useAccount, useSignTypedData } from "wagmi";
 
 const BulkList = () => {
+  const router = useRouter();
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const { bulkOrders, removeBulkOrdersItem, upsertBulkOrdersItem } =
@@ -101,7 +103,7 @@ const BulkList = () => {
       .map((order: any, i: number) => {
         const {
           makeAssetType,
-          makeAssetId,
+          makeAssetId,  
           makeAssetAddress,
           makeAssetValue,
           taker,
@@ -148,7 +150,6 @@ const BulkList = () => {
         };
       })
       .filter((item) => item !== null);
-    console.log({ body2 });
     await nextAPI.post("/order/bulk", { orders: body2 });
   };
 
@@ -178,10 +179,22 @@ const BulkList = () => {
           {bulkOrders.map((o, i) => (
             <tr key={o.nft?.id ?? i}>
               <td className={columnClassName + " flex flex-col"}>
-                <div className="text-heading-xs !text-[1.1rem]">
+                <div
+                  onClick={() =>
+                    router.push(
+                      `/item/${o.nft?.collection.address}/${o.nft?.id}`
+                    )
+                  }
+                  className="text-heading-xs !text-[1.1rem] hover:underline cursor-pointer"
+                >
                   {o.nft?.name}
                 </div>
-                <div className="text-[rgba(0,0,0,0.5)]">
+                <div
+                  onClick={() =>
+                    router.push(`/collection/${o.nft?.collection.id}`)
+                  }
+                  className="text-[rgba(0,0,0,0.5)] hover:underline cursor-pointer"
+                >
                   {o.nft?.collection.name}
                 </div>
               </td>
@@ -190,7 +203,7 @@ const BulkList = () => {
                   type="number"
                   onChange={(e) => {
                     const updatedOrder = structuredClone(o);
-                    updatedOrder.totalPrice = Number(e.target.value);
+                    updatedOrder.quantity = Number(e.target.value);
                     upsertBulkOrdersItem(updatedOrder);
                   }}
                   value={o.quantity}
@@ -205,7 +218,7 @@ const BulkList = () => {
                     updatedOrder.totalPrice = Number(e.target.value);
                     upsertBulkOrdersItem(updatedOrder);
                   }}
-                  value={o.price}
+                  value={o.totalPrice}
                   className="p-2 rounded-md w-[80%]"
                 />
               </td>

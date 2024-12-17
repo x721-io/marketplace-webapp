@@ -20,6 +20,7 @@ import { Tooltip } from "react-tooltip";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-tooltip/dist/react-tooltip.css";
+import SaleInfo from "./SaleInfo";
 
 export default function NFTMarketData({
   nft,
@@ -198,7 +199,7 @@ export default function NFTMarketData({
                   Quantity
                 </Text>
                 <Text className="text-right" variant="heading-md">
-                  {saleData?.quantity}
+                  {saleData ? saleData.quantity - saleData.filledQty : 0}
                 </Text>
               </div>
             )}
@@ -207,6 +208,7 @@ export default function NFTMarketData({
 
         <NFTActions nft={nft} marketData={marketData} />
       </div>
+      <SaleInfo nft={nft} marketData={marketData} />
     </div>
   );
 }

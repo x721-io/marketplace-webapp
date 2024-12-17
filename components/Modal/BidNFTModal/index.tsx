@@ -3,7 +3,12 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { daysRanges, FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import { useAccount, useBalance, useBlockNumber, useReadContract } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  useReadContract,
+} from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import { tokens } from "@/config/tokens";
 import { useCalculateFee } from "@/hooks/useMarket";
@@ -14,7 +19,7 @@ import Input from "@/components/Form/Input";
 import { formatDisplayedNumber, genRandomNumber, isNumber } from "@/utils";
 import FeeCalculator from "@/components/FeeCalculator";
 import FormValidationMessages from "@/components/Form/ValidationMessages";
-import { decimalRegex, numberRegex } from "@/utils/regex";
+import { numberRegex } from "@/utils/regex";
 import NFTMarketData = APIResponse.NFTMarketData;
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
@@ -23,9 +28,8 @@ import Image from "next/image";
 import moment from "moment";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 import { ADDRESS_ZERO } from "@/config/constants";
-import { Address, erc20Abi } from "viem";
-import { useQueryClient } from "@tanstack/react-query";
 import StepsModal from "../StepsModal";
+import { Address, erc20Abi } from "viem";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -33,7 +37,6 @@ interface Props extends MyModalProps {
 }
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
-  const queryClient = useQueryClient();
   const {
     getERC20Allowance,
     createBidOrder,
@@ -61,7 +64,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormState.BidNFTV2>({
+  } = useForm<FormState.BidNFT>({
     defaultValues: {
       quantity: "1",
       price: "1",
@@ -119,7 +122,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const formRules = {
     price: {
       required: "Please input bid price",
-      pattern: { value: decimalRegex, message: "Wrong price input" },
       min: { value: 0, message: "Price cannot be zero" },
       validate: {
         isNumber: (v: any) => !isNaN(v) || "Please input a valid number",
@@ -149,15 +151,11 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     },
   };
 
-  const { data: nativeTokenBalance, queryKey } = useBalance({
+  const nativeTokenBalance = useBalance({
     address,
     query: {
       enabled: !!address,
     },
-  });
-
-  const { data: blockNumber } = useBlockNumber({
-    watch: true,
   });
 
   const onSubmit = async () => {
@@ -165,7 +163,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     setCurrentStep(0);
     setErrorStep(null);
     setCurrentFormState("CREATE");
-    const params: FormState.BidNFTV2 = {
+    const params: FormState.BidNFT = {
       quoteToken,
       price,
       quantity,
@@ -176,7 +174,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       netPrice:
         parseFloat(price.toString()) - parseFloat(price.toString()) * 0.0125,
       totalPrice:
-        parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125,
+        (parseFloat(price.toString()) + parseFloat(price.toString()) * 0.0125) *
+        Number(quantity),
     };
 
     const onApproveERC20Success = () => {
@@ -261,10 +260,10 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   };
 
   const handleDeposit = async () => {
-    if (!nativeTokenBalance) return;
+    if (!nativeTokenBalance || !nativeTokenBalance.data) return;
     try {
       const depositAmt = parseUnits(price, 18) - quoteTokenBalance!;
-      if (depositAmt > nativeTokenBalance.value) {
+      if (depositAmt > nativeTokenBalance.data.value) {
         toast.error(`You don't have enough ${tokens["u2u"].symbol}`);
         return;
       }
@@ -297,16 +296,9 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         });
       } else {
         clearErrors("price");
-        Text;
       }
     }
   }, [price, quoteTokenBalance]);
-
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey,
-    });
-  }, [blockNumber, queryClient, queryKey]);
 
   return (
     <>
@@ -359,7 +351,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                               type="number"
                             />
                           </div>
-                          <div>WU2U</div>
+                          <div>{token?.symbol}</div>
                         </div>
                         <div className="rounded-lg p-1">
                           <Icon name="chevronDown" width={14} height={14} />
@@ -371,7 +363,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                       .filter((t) => t !== "u2u")
                       .map((key) => (
                         <Dropdown.Item
-                          className="w-full rounded-md"
                           key={tokens[key].symbol}
                           onClick={() =>
                             setValue("quoteToken", tokens[key].address)
@@ -422,6 +413,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     />
                   </div>
                   <FeeCalculator
+                    qty={Number(quantity)}
                     mode="buyer"
                     nft={nft}
                     price={parseUnits(
@@ -435,12 +427,12 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     buyerFeeRatio={buyerFeeRatio}
                     netReceived={netReceived}
                     royaltiesFee={royaltiesFee}
-                    qty={quantity ? Number(quantity) : 0}
                     tokenBalance={quoteTokenBalance ?? BigInt(0)}
                   />
                 </div>
               ) : (
                 <FeeCalculator
+                  qty={Number(quantity)}
                   mode="buyer"
                   nft={nft}
                   price={parseUnits(
@@ -454,14 +446,13 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   buyerFeeRatio={buyerFeeRatio}
                   netReceived={netReceived}
                   royaltiesFee={royaltiesFee}
-                  qty={quantity ? Number(quantity) : 0}
                   tokenBalance={quoteTokenBalance ?? BigInt(0)}
                 />
               )}
 
               <div className="w-full flex flex-col">
                 <label className="text-body-14 text-secondary font-semibold mb-1">
-                  Offer&apos;s expiration date
+                  Offer's expiration date
                 </label>
                 <div className="w-full relative rounded-2xl">
                   <Dropdown.Root
@@ -484,7 +475,6 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                     {daysRanges.map((item) => (
                       <Dropdown.Item
                         key={item}
-                        className="w-full rounded-md"
                         onClick={() => {
                           setValue("daysRange", item);
                           const newEnd =

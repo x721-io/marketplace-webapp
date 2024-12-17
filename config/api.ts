@@ -29,4 +29,5 @@ export const API_ENDPOINTS = {
   TOTAL_COUNT: "/nft/general-count",
   FLOOR_PRICE: "/collection/floor-price",
   REFRESH: "/auth/refresh",
+  PRICE_HISTORY: "/nft/history-prices",
 };

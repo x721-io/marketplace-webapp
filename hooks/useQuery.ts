@@ -8,6 +8,7 @@ import useSWRInfinite from "swr/infinite";
 import { NextAPIResponse } from "@/types/api/api.response";
 import useSWRImmutable from "swr/immutable";
 import axios from "axios";
+import { PriceHistoryItem } from "@/types";
 
 export const useGetProfile = (address: Address | string) => {
   const { data, error, isLoading, mutate } =
@@ -444,6 +445,28 @@ export const useGetCollectionsAnalysis = (
     isLoading,
     size,
     setSize,
+    mutate,
+  };
+};
+
+export const useGetNftPriceHistory = (
+  params: APIParams.PriceHistory | null
+) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    params ? API_ENDPOINTS.PRICE_HISTORY : null,
+    async () => {
+      const response = await nextAPI.get(
+        API_ENDPOINTS.PRICE_HISTORY +
+          `?collection=${params?.collectionAddress}&id=${params?.id}`
+      );
+      console.log(response.data.data);
+      return response.data.data as PriceHistoryItem[];
+    }
+  );
+  return {
+    data: data ?? null,
+    error,
+    isLoading,
     mutate,
   };
 };

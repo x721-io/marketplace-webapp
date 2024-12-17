@@ -1,4 +1,4 @@
-import { MarketEvent, NFT } from "@/types";
+import { MarketEventV2, NFT } from "@/types";
 import {
   getUserAvatarImage,
   getUserLink,
@@ -18,7 +18,7 @@ import CancelBidNFTModal from "@/components/Modal/CancelBidNFTModal";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isOwner: boolean;
-  event: MarketEvent;
+  event: MarketEventV2;
   nft: NFT;
 }
 
@@ -26,8 +26,8 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
   const token = findTokenByAddress(event.quoteToken);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const isBidder = useMemo(() => {
-    if (!event.to || !wallet) return false;
-    return event.to.signer?.toLowerCase() === wallet.toLowerCase();
+    if (!event.Taker || !wallet) return false;
+    return event.Taker.signer?.toLowerCase() === wallet.toLowerCase();
   }, [event, wallet]);
   const [showAcceptBid, setShowAcceptBid] = useState(false);
   const [showCancelBid, setShowCancelBid] = useState(false);
@@ -39,10 +39,10 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
   return (
     <div className="flex items-center justify-between" {...rest}>
       <div className="flex items-center gap-2">
-        <Link href={getUserLink(event.to)}>
+        <Link href={event.Taker?.publicKey ? getUserLink(event.Taker) : ""}>
           <Image
             className="w-10 h-10 rounded-full"
-            src={getUserAvatarImage(event.to)}
+            src={getUserAvatarImage(event.Taker)}
             alt="user"
             width={40}
             height={40}
@@ -52,11 +52,11 @@ export default function NFTBidEvent({ isOwner, event, nft, ...rest }: Props) {
         <div className="flex flex-col">
           <div className="flex items-center gap-1 text-body-14">
             <Link
-              href={getUserLink(event.to)}
+              href={getUserLink(event.Taker)}
               className="font-semibold hover:underline"
             >
-              {event.to?.username ||
-                shortenAddress(event.to?.signer ?? event.to?.publicKey)}
+              {event.Taker?.username ||
+                shortenAddress(event.Taker?.signer ?? event.Taker?.publicKey)}
             </Link>
             <p className="text-secondary">
               Bid
