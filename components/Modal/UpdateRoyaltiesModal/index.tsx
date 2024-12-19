@@ -15,9 +15,10 @@ import { isAddress } from "ethers";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { useQueryClient } from "@tanstack/react-query";
+import { APIResponse } from "@/services/api/types";
 
 interface Props extends MyModalProps {
-  collection: Collection;
+  collection: APIResponse.Collection;
 }
 
 interface FormState {

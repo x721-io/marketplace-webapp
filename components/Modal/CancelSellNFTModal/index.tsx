@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useCancelSellURC1155, useCancelSellURC721 } from "@/hooks/useSellNFT";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import { useSWRConfig } from "swr";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -23,6 +24,7 @@ export default function CancelSellNFTModal({
 }: Props) {
   const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
   const wallet = useAuthStore((state) => state.profile?.publicKey);
+  const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);
   const [isCancelling, setCancelling] = useState(false);
   const onCancelSellURC721 = useCancelSellURC721(nft);
@@ -41,8 +43,22 @@ export default function CancelSellNFTModal({
       const orderDeatails = await getOrderDetails(sig, index);
       if (!orderDeatails) return;
       await cancelOrder(orderDeatails);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      onClose?.();
+      mutate([
+        `nft-market-data/${nft.id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
+      toast.success("Successfully cancelled order.");
     } catch (err: any) {
-      toast.error(`Error report: User rejected`);
+      if (err.message.includes("rejected")) {
+        toast.error(`Error report: User rejected the transaction.`);
+        return;
+      }
+      toast.error("Error report: cannot cancel order. Please try again later.");
     } finally {
       setCancelling(false);
     }

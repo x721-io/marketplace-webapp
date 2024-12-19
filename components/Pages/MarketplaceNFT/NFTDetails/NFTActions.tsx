@@ -175,6 +175,7 @@ export default function NFTActions({
         show={showBidModal}
         onClose={() => setShowBidModal(false)}
       />
+
       <CancelBidNFTModal
         bid={myBid}
         nft={nft}

@@ -2,11 +2,12 @@ import { useCancelBidNFT } from "@/hooks/useMarket";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { NFT, MarketEventV2 } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import { useSWRConfig } from "swr";
 import { useParams } from "next/navigation";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -15,38 +16,34 @@ interface Props extends MyModalProps {
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   const { id } = useParams();
-  const { onCancelBid, isLoading, error, isSuccess } = useCancelBidNFT(nft);
+  const { getOrderDetails, cancelOrder } = useMarketplaceV2(nft);
+  const [isLoading, setLoading] = useState(false);
   const { mutate } = useSWRConfig();
 
   const handleCancelBid = async () => {
     if (!bid) return;
     try {
-      // await onCancelBid(bid.);
-      mutate(`nft-market-data/${id}`);
+      setLoading(true);
+      const { sig, index } = bid;
+      const orderDetails = await getOrderDetails(sig, index);
+      if (!orderDetails) return;
+      await cancelOrder(orderDetails);
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      mutate([
+        `nft-market-data/${nft.id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
+      toast.success("Successfully cancelled order.");
+      onClose?.();
     } catch (e: any) {
-      console.error(e);
+      toast.error("Error report: cannot cancel order. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(`Error report: ${error.message}`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(`Bid cancelled successfully`, {
-        autoClose: 1000,
-        closeButton: true,
-      });
-      onClose?.();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
 
   return (
     <MyModal.Root show={show} onClose={onClose}>

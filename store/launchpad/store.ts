@@ -37,6 +37,14 @@ const DEFAULT_STATE: LaunchpadStoreState = {
     shortUrl: null,
     status: "PENDING",
     type: "ERC721",
+    floor: 1,
+    metadataJson: {
+      banner: "",
+      category: [],
+      gameIcon: "",
+      id: "",
+      name: "",
+    },
     creators: [
       {
         userId: "",

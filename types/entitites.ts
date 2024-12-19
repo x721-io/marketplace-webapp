@@ -66,6 +66,21 @@ export interface User {
   verifyEmail?: boolean;
 }
 
+export interface SaleInfo {
+  price: string;
+  priceNum: number;
+  netPrice: string;
+  netPriceNum: number;
+  quantity: number;
+  quoteToken: string;
+  orderStatus: string;
+  orderType: string;
+  index: number;
+  sig: string;
+  filledQty: number;
+  start: number;
+  end: number;
+}
 export interface NFT {
   id: string;
   u2uId: string;
@@ -92,6 +107,8 @@ export interface NFT {
   price?: BigNumberish;
   sellStatus?: MarketEventType;
   quoteToken?: Address;
+  sellInfo: SaleInfo | null;
+  bidInfo: SaleInfo | null;
 }
 
 export interface Collection {

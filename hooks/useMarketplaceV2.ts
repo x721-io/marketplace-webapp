@@ -1779,113 +1779,22 @@ const useMarketplaceV2 = (nft: NFT) => {
 
   const cancelOrder = async (order: OrderDetails) => {
     if (!address || !order.Maker) return;
-    await Web3Functions.writeContract({
-      abi,
-      address: contractExchangeV2Test,
-      functionName: "cancelOrder",
-      args: [
-        {
-          orderType: getOrderTypeIndex(order.orderType),
-          maker: order.Maker.signer,
-          makeAsset: {
-            assetType: order.makeAssetType,
-            contractAddress: order.makeAssetAddress as Address,
-            value: BigInt(order.makeAssetValue),
-            id: BigInt(order.makeAssetId),
-          },
-          taker: "0x0000000000000000000000000000000000000000",
-          takeAsset: {
-            assetType: order.takeAssetType,
-            contractAddress: order.takeAssetAddress as Address,
-            value: BigInt(order.takeAssetValue),
-            id: BigInt(order.takeAssetId),
-          },
-          salt: BigInt(order.salt),
-          start: BigInt(order.start),
-          end: BigInt(order.end),
-          originFee: {
-            receiver: contractExchangeV2Test,
-            amount: BigInt("500"),
-          },
-          royaltyFee: {
-            receiver: order.Maker.signer,
-            amount: BigInt("0"),
-          },
-          index: order.index,
-          proof: [],
-          root: order.root as Address,
-          sig: order.sig as any,
-        },
-      ],
-    });
-  };
-
-  const acceptBid = async (order: OrderDetails, acceptQty: number) => {
-    if (!address || !order.Maker) return;
-    const types = {
-      Asset: [
-        { name: "assetType", type: "uint8" },
-        { name: "contractAddress", type: "address" },
-        { name: "value", type: "uint256" },
-        { name: "id", type: "uint256" },
-      ],
-      Fee: [
-        { name: "receiver", type: "address" },
-        { name: "amount", type: "uint96" },
-      ],
-      Order: [
-        { name: "maker", type: "address" },
-        { name: "makeAsset", type: "Asset" },
-        { name: "taker", type: "address" },
-        { name: "takeAsset", type: "Asset" },
-        { name: "salt", type: "uint256" },
-        { name: "start", type: "uint256" },
-        { name: "end", type: "uint256" },
-        { name: "index", type: "uint16" },
-      ],
-    } as const;
-    const sellerSig = await signTypedDataAsync({
-      account: address,
-      domain: exchangeSignedDomain,
-      types,
-      primaryType: "Order",
-      message: {
-        maker: address,
-        makeAsset: {
-          assetType: order.takeAssetType,
-          contractAddress: order.takeAssetAddress as Address,
-          value: BigInt(acceptQty),
-          id: BigInt(order.takeAssetId),
-        },
-        taker: order.Maker.signer,
-        takeAsset: {
-          assetType: order.makeAssetType,
-          contractAddress: order.makeAssetAddress as Address,
-          value: BigInt(order.makeAssetValue),
-          id: BigInt(order.makeAssetId),
-        },
-        salt: BigInt(0),
-        start: BigInt(order.start),
-        end: BigInt(order.end),
-        index: order.index,
-      },
-    });
-    await writeContract(config, {
-      abi,
-      address: contractExchangeV2Test,
-      functionName: "directAcceptBid",
-      args: [
-        {
-          bidOrder: {
-            orderType: 2,
-            maker: order.Maker.signer as Address,
+    try {
+      await Web3Functions.writeContract({
+        abi,
+        address: contractExchangeV2Test,
+        functionName: "cancelOrder",
+        args: [
+          {
+            orderType: getOrderTypeIndex(order.orderType),
+            maker: order.Maker.signer,
             makeAsset: {
               assetType: order.makeAssetType,
               contractAddress: order.makeAssetAddress as Address,
               value: BigInt(order.makeAssetValue),
               id: BigInt(order.makeAssetId),
             },
-            taker: ADDRESS_ZERO,
+            taker: "0x0000000000000000000000000000000000000000",
             takeAsset: {
               assetType: order.takeAssetType,
               contractAddress: order.takeAssetAddress as Address,
@@ -1906,43 +1815,142 @@ const useMarketplaceV2 = (nft: NFT) => {
             index: order.index,
             proof: [],
             root: order.root as Address,
-            sig: order.sig as Address,
+            sig: order.sig as any,
           },
-          sellOrder: {
-            orderType: 2,
-            maker: address,
-            makeAsset: {
-              assetType: order.takeAssetType,
-              contractAddress: order.takeAssetAddress as Address,
-              value: BigInt(acceptQty),
-              id: BigInt(order.takeAssetId),
-            },
-            taker: order.Maker.signer,
-            takeAsset: {
-              assetType: order.makeAssetType,
-              contractAddress: order.makeAssetAddress as Address,
-              value: BigInt(order.makeAssetValue),
-              id: BigInt(order.makeAssetId),
-            },
-            salt: BigInt(0),
-            start: BigInt(order.start),
-            end: BigInt(order.end),
-            index: order.index,
-            originFee: {
-              receiver: contractExchangeV2Test,
-              amount: BigInt("500"),
-            },
-            royaltyFee: {
-              receiver: order.Maker.signer,
-              amount: BigInt("0"),
-            },
-            proof: [],
-            root: order.root as Address,
-            sig: sellerSig as Address,
+        ],
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const acceptBid = async (order: OrderDetails, acceptQty: number) => {
+    if (!address || !order.Maker) return;
+    try {
+      const types = {
+        Asset: [
+          { name: "assetType", type: "uint8" },
+          { name: "contractAddress", type: "address" },
+          { name: "value", type: "uint256" },
+          { name: "id", type: "uint256" },
+        ],
+        Fee: [
+          { name: "receiver", type: "address" },
+          { name: "amount", type: "uint96" },
+        ],
+        Order: [
+          { name: "maker", type: "address" },
+          { name: "makeAsset", type: "Asset" },
+          { name: "taker", type: "address" },
+          { name: "takeAsset", type: "Asset" },
+          { name: "salt", type: "uint256" },
+          { name: "start", type: "uint256" },
+          { name: "end", type: "uint256" },
+          { name: "index", type: "uint16" },
+        ],
+      } as const;
+      const sellerSig = await signTypedDataAsync({
+        account: address,
+        domain: exchangeSignedDomain,
+        types,
+        primaryType: "Order",
+        message: {
+          maker: address,
+          makeAsset: {
+            assetType: order.takeAssetType,
+            contractAddress: order.takeAssetAddress as Address,
+            value: BigInt(acceptQty),
+            id: BigInt(order.takeAssetId),
           },
+          taker: order.Maker.signer,
+          takeAsset: {
+            assetType: order.makeAssetType,
+            contractAddress: order.makeAssetAddress as Address,
+            value: BigInt(order.makeAssetValue),
+            id: BigInt(order.makeAssetId),
+          },
+          salt: BigInt(0),
+          start: BigInt(order.start),
+          end: BigInt(order.end),
+          index: order.index,
         },
-      ],
-    });
+      });
+      await writeContract(config, {
+        abi,
+        address: contractExchangeV2Test,
+        functionName: "directAcceptBid",
+        args: [
+          {
+            bidOrder: {
+              orderType: 2,
+              maker: order.Maker.signer as Address,
+              makeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(order.makeAssetValue),
+                id: BigInt(order.makeAssetId),
+              },
+              taker: ADDRESS_ZERO,
+              takeAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(order.takeAssetValue),
+                id: BigInt(order.takeAssetId),
+              },
+              salt: BigInt(order.salt),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              originFee: {
+                receiver: contractExchangeV2Test,
+                amount: BigInt("500"),
+              },
+              royaltyFee: {
+                receiver: order.Maker.signer,
+                amount: BigInt("0"),
+              },
+              index: order.index,
+              proof: [],
+              root: order.root as Address,
+              sig: order.sig as Address,
+            },
+            sellOrder: {
+              orderType: 2,
+              maker: address,
+              makeAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(acceptQty),
+                id: BigInt(order.takeAssetId),
+              },
+              taker: order.Maker.signer,
+              takeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(order.makeAssetValue),
+                id: BigInt(order.makeAssetId),
+              },
+              salt: BigInt(0),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              index: order.index,
+              originFee: {
+                receiver: contractExchangeV2Test,
+                amount: BigInt("500"),
+              },
+              royaltyFee: {
+                receiver: order.Maker.signer,
+                amount: BigInt("0"),
+              },
+              proof: [],
+              root: order.root as Address,
+              sig: sellerSig as Address,
+            },
+          },
+        ],
+      });
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   const generateBulkData = async (orders: FormState.SellNFTV2[]) => {

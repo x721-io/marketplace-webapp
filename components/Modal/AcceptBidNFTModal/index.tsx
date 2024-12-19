@@ -16,6 +16,7 @@ import NFTApproval from "@/components/NFTApproval";
 import { useMarketApproveNFT } from "@/hooks/useMarketApproveNFT";
 import { MyModal, MyModalProps } from "@/components/X721UIKits/Modal";
 import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
+import { useSWRConfig } from "swr";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -39,6 +40,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     "quantity",
     "quoteToken",
   ]);
+  const { mutate } = useSWRConfig();
   const { acceptBid, getOrderDetails } = useMarketplaceV2(nft);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
@@ -133,9 +135,31 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
         await handleApproveTokenForAll();
       }
     } else {
-      const orderDetails = await getOrderDetails(bid.sig, bid.index);
-      if (!orderDetails) return;
-      await acceptBid(orderDetails, quantity);
+      try {
+        setLoading(true);
+        const orderDetails = await getOrderDetails(bid.sig, bid.index);
+        if (!orderDetails) return;
+        await acceptBid(orderDetails, quantity);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        toast.success("Accept bid successfully");
+        mutate([
+          `nft-market-data/${nft.id}`,
+          {
+            collectionAddress: String(nft.collection.address),
+            id: String(nft.id),
+          },
+        ]);
+      } catch (err: any) {
+        if (err.message.includes("rejected")) {
+          toast.error("Error report: User rejected transaction");
+        } else {
+          toast.error(
+            "Error report: cannot accept bid. Please try again later"
+          );
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

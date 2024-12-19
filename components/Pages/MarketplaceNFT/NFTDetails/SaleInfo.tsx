@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import { useGetNftPriceHistory } from "@/hooks/useQuery";
 import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 const SaleInfo = ({
   marketData,
@@ -38,6 +39,7 @@ const SaleInfo = ({
   marketData?: APIResponse.NFTMarketData;
   nft: NFT;
 }) => {
+  const { mutate } = useSWRConfig();
   const router = useRouter();
   const { data: priceHistories } = useGetNftPriceHistory({
     collectionAddress: nft.collection.address,
@@ -96,8 +98,6 @@ const SaleInfo = ({
     );
   };
 
-  console.log(marketData?.sellInfo);
-
   const getSellListContent = () => {
     if (!marketData || marketData?.sellInfo.length === 0) {
       return (
@@ -143,7 +143,7 @@ const SaleInfo = ({
                 onClick={() => {
                   router.push(`/user/${s.Maker?.publicKey}`);
                 }}
-                className={columnClassName}
+                className={columnClassName + " hover:underline cursor-pointer"}
               >
                 {shortenAddress(s.Maker?.publicKey)}
               </td>
@@ -154,6 +154,7 @@ const SaleInfo = ({
                 }
               >
                 <button
+                  className="bg-[rgba(0,0,0,0.95)] text-white py-2 px-5 rounded-md"
                   onClick={() => {
                     if (profile?.publicKey !== s.Maker?.publicKey) {
                       setSaleData(s);
@@ -225,6 +226,7 @@ const SaleInfo = ({
                   (owner) => owner.publicKey === profile?.publicKey
                 ) !== -1 ? (
                   <button
+                    className="bg-[rgba(0,0,0,0.95)] text-white py-2 px-5 rounded-md"
                     onClick={() => {
                       setBidData(s);
                     }}
@@ -233,6 +235,7 @@ const SaleInfo = ({
                   </button>
                 ) : profile?.publicKey === s.Maker?.publicKey ? (
                   <button
+                    className="bg-[rgba(0,0,0,0.95)] text-white py-2 px-5 rounded-md"
                     onClick={() => {
                       setCancelBidData(s);
                     }}
@@ -255,7 +258,16 @@ const SaleInfo = ({
       const orderDeatails = await getOrderDetails(sig, index);
       if (!orderDeatails) return;
       await cancelOrder(orderDeatails);
-      setCancelSaleData(null);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      mutate([
+        `nft-market-data/${nft.id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
+      toast.success("Successfully cancelled order.");
+      setCancelBidData(null);
     } catch (err: any) {
       toast.error(`Error report: User rejected`);
     } finally {
@@ -399,7 +411,7 @@ const SaleInfo = ({
                     className="flex-1"
                     variant="secondary"
                     loading={isCancelling}
-                    onClick={() => setCancelSaleData(null)}
+                    onClick={() => setCancelBidData(null)}
                   >
                     Close
                   </Button>

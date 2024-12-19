@@ -149,6 +149,7 @@ export default function SellNFTModal({
   };
 
   const onSubmit = async () => {
+    setLoading(true);
     setErrorStep(null);
     setCurrentFormState("CREATE");
     const params: FormState.SellNFTV2 = {
@@ -170,15 +171,23 @@ export default function SellNFTModal({
     const onSignSuccess = () => {
       setCurrentStep(2);
     };
-    const onCreateOrderAPISuccess = () => {
-      // alert(true)
+    const onCreateOrderAPISuccess = async () => {
       setCurrentStep(3);
+      setLoading(false);
+      mutate([
+        `nft-market-data/${id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
     };
     const onRequestError = (
       requestType: "approve" | "sign" | "create_order_api",
       error: Error
     ) => {
       let errorStepIndex = -1;
+      setLoading(false);
       switch (requestType) {
         case "approve":
           errorStepIndex = 0;

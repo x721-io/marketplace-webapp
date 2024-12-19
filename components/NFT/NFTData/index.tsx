@@ -74,11 +74,11 @@ export default function NFTData({
             Properties
           </div>
         </MyTabs.Item>
-        <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
+        {/* <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
           <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
             Bids ({marketData?.bidInfo.length || 0})
           </div>
-        </MyTabs.Item>
+        </MyTabs.Item> */}
         <MyTabs.Item tabIndex={4} active={currTabIndex === 4}>
           <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
             Activities

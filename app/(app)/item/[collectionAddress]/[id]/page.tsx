@@ -65,6 +65,6 @@ export default async function NFTPage({ params }: { params: any }) {
       </div>
     );
   }
-  console.log(response.data.u2uId);
+
   return <NFTView item={response.data} />;
 }

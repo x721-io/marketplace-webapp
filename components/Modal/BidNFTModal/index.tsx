@@ -30,6 +30,7 @@ import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 import { ADDRESS_ZERO } from "@/config/constants";
 import StepsModal from "../StepsModal";
 import { Address, erc20Abi } from "viem";
+import { useSWRConfig } from "swr";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -37,6 +38,7 @@ interface Props extends MyModalProps {
 }
 
 export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
+  const { mutate } = useSWRConfig();
   const {
     getERC20Allowance,
     createBidOrder,
@@ -188,6 +190,16 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
 
     const onCreateOrderAPISuccess = () => {
       setCurrentStep(3);
+      mutate([
+        `nft-market-data/${nft.id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
+      toast.success("Bid successfully");
+      setCurrentFormState("INPUT");
+      onClose?.();
     };
 
     const onRequestError = (
