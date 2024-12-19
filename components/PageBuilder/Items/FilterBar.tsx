@@ -7,14 +7,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Input from "@/components/Form/Input";
 import SliderIcon from "@/components/Icon/Sliders";
 import CommandIcon from "@/components/Icon/Command";
-import { useCollectionFilterStore } from "@/store/filters/collections/store";
-import { useNFTFilterStore } from "@/store/filters/items/store";
-import { useUserFilterStore } from "@/store/filters/users/store";
 import Icon from "@/components/Icon";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
-import { MyTabs } from "@/components/X721UIKits/Tabs";
 import useQueryFilters from "@/hooks/useQueryFilters";
-import { useLayerGNFTFilterStore } from "@/store/filters/byLayerG/store";
+import { useLayerGNFTFilterStore } from "@/store/filters/layerg/byLayerG/store";
+import FilterIcon from "@/assets/svg/filter-icon";
 
 export default function FilterBar() {
   const searchParams = useSearchParams();
@@ -69,21 +66,13 @@ export default function FilterBar() {
       return nftFilters?.nftName;
     }
 
-    console.log("nftFilters", nftFilters.nftName);
     return "";
   }, [nftFilters]);
 
-  console.log("--------------", textSearch);
-
   const handleInputText = (value: string) => {
-    console.log("input", value);
-    if (value) {
-      return updateNFTFilters({
-        nftName: value,
-      });
-    } else {
-      return "";
-    }
+    return updateNFTFilters({
+      nftName: value || "",
+    });
   };
 
   // const sortCollections = (sortOptionCollection: any) => {
@@ -241,56 +230,52 @@ export default function FilterBar() {
 
   return (
     <div className="flex gap-4 flex-wrap justify-between desktop:flex-nowrap py-4">
-      <div className="order-1 desktop:order-1">
-        <Button
+      <div className="tablet:order-1">
+        <button
           onClick={() => handleToggleFilters()}
           className={
             showNFTFilters
-              ? "bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-[56px] "
-              : `bg-white shadow desktop:h-[55px] tablet:h-[55px] h-[56px]`
+              ? "bg-surface-soft desktop:h-[55px] tablet:h-[55px] h-auto p-4 tablet:px-4 tablet:py-3 laptop:px-6 laptop:py-4 rounded-xl flex items-center gap-2"
+              : `tablet:bg-white bg-surface-soft shadow desktop:h-[55px] tablet:h-[55px] h-auto p-4 tablet:px-4 tablet:py-3 laptop:px-6 laptop:py-4 rounded-xl flex items-center gap-2`
           }
-          scale="lg"
-          variant="secondary"
         >
-          Filters
-          <div className="p-1 bg-surface-medium rounded-lg">
-            <SliderIcon width={14} height={14} />
+          <p className="hidden tablet:block">Filters</p>
+          <div className="p-1 tablet:bg-surface-medium rounded-lg">
+            <SliderIcon width={16} height={16} />
           </div>
-        </Button>
+        </button>
       </div>
-      <div className="relative flex-1 order-2 desktop:order-3 tablet:min-w-[180px]">
+      <div className="relative flex-1 w-full order-2 desktop:order-3 tablet:min-w-[180px]">
         <Input
           onChange={(e) => handleInputText(e.target.value)}
           value={textSearch}
           type="text"
-          className="py-4 h-14"
+          className="py-4 h-14 w-full"
           placeholder="Search NFTs"
           appendIcon={<CommandIcon color="gray-500" width={14} height={14} />}
           appendIconContainerClass="w-6 h-6 bg-surface-medium rounded-lg top-1/4 right-4 py-0 pr-0 pl-1.5"
         />
       </div>
 
-      {!pathname.includes("users") && (
-        <div className="order-4 max-[768px]:flex-1">
-          <Dropdown.Root
-            label=""
-            icon={
-              <div className="bg-surface-soft flex items-center justify-between gap-3 rounded-2xl p-3 h-full cursor-pointer w-full">
-                {sortOption.name}
-                <div className="rounded-lg p-1 bg-surface-medium">
-                  <Icon name="chevronDown" width={14} height={14} />
-                </div>
-              </div>
-            }
-          >
-            {dropdownItems.map((item: any, i: any) => (
-              <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
-                {item.name}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Root>
-        </div>
-      )}
+      {/*<div className="order-4 tablet:flex-1">*/}
+      {/*  <Dropdown.Root*/}
+      {/*    label=""*/}
+      {/*    icon={*/}
+      {/*      <div className="bg-surface-soft flex items-center justify-between gap-3 rounded-2xl p-3 h-full cursor-pointer ">*/}
+      {/*        {sortOption.name}*/}
+      {/*        <div className="rounded-lg p-1 bg-surface-medium">*/}
+      {/*          <Icon name="chevronDown" width={14} height={14} />*/}
+      {/*        </div>*/}
+      {/*      </div>*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    {dropdownItems.map((item: any, i: any) => (*/}
+      {/*      <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>*/}
+      {/*        {item.name}*/}
+      {/*      </Dropdown.Item>*/}
+      {/*    ))}*/}
+      {/*  </Dropdown.Root>*/}
+      {/*</div>*/}
     </div>
   );
 }

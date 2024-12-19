@@ -93,9 +93,9 @@ export const useInfiniteScroll = ({
         []
       );
       const hasNextArray = data.map(
-        (currentPage: ListData) => currentPage.paging
+        (currentPage: ListData) => currentPage?.paging
       );
-      currentHasNext = hasNextArray[data.length - 1].hasNext;
+      currentHasNext = hasNextArray[data.length - 1]?.hasNext;
     }
 
     return { concatenatedData, currentHasNext };
@@ -105,9 +105,14 @@ export const useInfiniteScroll = ({
     loading || (page > 0 && data && data[page - 1] === undefined);
 
   useEffect(() => {
+    let lastScrollTop = 0;
+
     const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } = document.body;
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
+
       if (
+        scrollTop > lastScrollTop && // Check if scrolling down
         scrollTop > scrollHeight - clientHeight - offset &&
         !isLoadingMore &&
         page &&
@@ -115,12 +120,15 @@ export const useInfiniteScroll = ({
       ) {
         onNext();
       }
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isLoadingMore, page, list.currentHasNext]);
+  }, [isLoadingMore, page, list.currentHasNext, offset]);
 
   return {
     list,

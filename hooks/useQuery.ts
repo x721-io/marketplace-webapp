@@ -458,19 +458,34 @@ export const useGetLayerGNFTs = (
       };
     },
     async (params) => {
-      const { collectionName, symbol, address, categoryName, nftName } = params;
-
+      const {
+        collectionName,
+        symbol,
+        collectionAddress,
+        categoryName,
+        nftName,
+        status,
+      } = params;
       const response = await nextAPI.get(API_ENDPOINTS.SEARCH_NFT_LAYER_G, {
         params: sanitizeObject({
           page: params.page,
           limit: params.limit,
-          "collection[metadata][name]": collectionName,
+          "collection[metadata][name]": encodeURIComponent(
+            collectionName || ""
+          ),
           "collection[symbol]": symbol,
-          "collection[address]": address,
-          "collection[metadata][categoryName]": categoryName,
+          "collection[address]": collectionAddress,
+          "collection[metadata][categoryName]": encodeURIComponent(
+            categoryName || ""
+          ),
           nftName: nftName,
+          orderStatus: status?.orderStatus,
+          orderType: status?.orderType,
+          order: status?.order,
+          orderBy: status?.orderBy,
         }),
       });
+
       return response.data.data;
     },
     {

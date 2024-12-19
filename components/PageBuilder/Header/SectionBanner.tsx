@@ -112,7 +112,7 @@ export default function SectionBanner({
             </Text>
           </div>
 
-          <div className="  w-full flex items-end">
+          <div className=" hidden w-full flex items-end">
             <div className="flex justify-around flex-wrap w-full bg-surface-soft rounded-2xl">
               <div className="flex flex-1 flex-col items-center py-3 px-6">
                 <Text className="text-secondary">Floor</Text>

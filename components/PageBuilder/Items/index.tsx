@@ -1,51 +1,35 @@
-import { APIParams, APIResponse } from "@/services/api/types";
-import { FilterType } from "@/components/Filters/NFTFilters";
 import { classNames } from "@/utils/string";
 import React from "react";
 import Text from "@/components/Text";
-import MobileNFTFiltersModal from "@/components/Filters/MobileNFTFiltersModal";
 import { isMobile } from "react-device-detect";
 import { AssetType, LayerGNFT } from "@/types";
 import FilterBar from "@/components/PageBuilder/Items/FilterBar";
 import NFTCardSkeleton from "@/components/NFT/NFTCard/skeleton";
 import PageBuilderFilter from "@/components/PageBuilder/Filters/PageBuilderFilter";
 import LayergNFTCard from "@/components/PageBuilder/LayergNFTCard";
+import { useLayerGNFTFilterStore } from "@/store/filters/layerg/byLayerG/store";
+import MobileFiltersModal from "@/components/PageBuilder/Items/FilterMobile";
 
 interface Props {
   items?: LayerGNFT[];
-  showFilters: boolean;
-  filters?: FilterType[];
-  activeFilters: APIParams.FetchLayerGNFTs;
-  onApplyFilters: (filtersParams: APIParams.FetchLayerGNFTs) => void;
-  onResetFilters: () => void;
-  traitFilters?: APIResponse.CollectionDetails["traitAvailable"];
-  onClose?: () => void; // For mobile only: Close modal filters
   isLoading?: boolean;
   isLoadMore?: boolean | undefined;
   error?: boolean;
   dataCollectionType?: AssetType;
   userId?: string;
-  showCreateNFT?: boolean;
   hasNext: boolean;
 }
 
 export default function ListItems({
   items,
-  showFilters,
-  filters,
-  activeFilters,
-  onApplyFilters,
-  onResetFilters,
-  traitFilters,
-  onClose,
   isLoading,
   isLoadMore,
   error,
-  dataCollectionType,
-  userId,
-  showCreateNFT,
   hasNext,
 }: Props) {
+  const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
+    useLayerGNFTFilterStore();
+
   const renderList = () => {
     if (error && !items) {
       return (
@@ -137,19 +121,7 @@ export default function ListItems({
               : "tablet:flex-row"
           )}
         >
-          {/*{isMobile ? (*/}
-          {/*    <MobileNFTFiltersModal*/}
-          {/*        show={showFilters}*/}
-          {/*        activeFilters={activeFilters}*/}
-          {/*        onClose={onClose}*/}
-          {/*        onResetFilters={onResetFilters}*/}
-          {/*        baseFilters={filters}*/}
-          {/*        onApplyFilters={onApplyFilters}*/}
-          {/*        traitsFilter={traitFilters}*/}
-          {/*    />*/}
-          {/*) : (*/}
           <PageBuilderFilter />
-          {/*)}*/}
           <div className="flex-1">{renderList()}</div>
         </div>
       </div>

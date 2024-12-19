@@ -21,7 +21,6 @@ const ImgCheckbox: React.FC<Props> = ({
   imgSrc,
   contractAddress,
 }) => {
-  console.log("imgSrc", imgSrc);
   return (
     <div
       className={classNames(

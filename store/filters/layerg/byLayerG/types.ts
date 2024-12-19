@@ -1,14 +1,13 @@
 import { APIParams } from "@/services/api/types";
-import { FilterLayerGNFTs } from "@/types";
 
 export interface LayerGNFTFilterState {
   showFilters: boolean;
-  filters: FilterLayerGNFTs;
+  filters: APIParams.FetchLayerGNFTs;
 }
 
 export interface LayerGNFTFilterAction {
   toggleFilter: (bool?: boolean) => void;
-  setFilters: (filters: FilterLayerGNFTs) => void;
-  updateFilters: (filters: FilterLayerGNFTs) => void;
+  setFilters: (filters: APIParams.FetchLayerGNFTs) => void;
+  updateFilters: (filters: APIParams.FetchLayerGNFTs) => void;
   resetFilters: () => void;
 }

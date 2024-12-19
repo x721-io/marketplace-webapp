@@ -19,8 +19,8 @@ import BlurImage from "@/components/X721UIKits/BlurImage";
 export default function LayergNFTCard({
   name,
   id,
-  price,
-  sellStatus,
+  sellInfo,
+  bidInfo,
   collection,
   image,
   animationUrl,
@@ -86,41 +86,7 @@ export default function LayergNFTCard({
         );
     }
   };
-
-  const renderNFTData = () => {
-    switch (sellStatus) {
-      case "Bid":
-        return (
-          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-            Current bid:{" "}
-            <span className="text-primary font-semibold">
-              {formatDisplayedNumber(
-                formatUnits(price as string, token?.decimal)
-              )}
-            </span>{" "}
-            {token?.symbol}
-          </Text>
-        );
-      case "AskNew":
-        return (
-          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-            On sale for:{" "}
-            <span className="text-primary font-semibold">
-              {formatDisplayedNumber(
-                formatUnits(price as string, token?.decimal)
-              )}
-            </span>{" "}
-            {token?.symbol}
-          </Text>
-        );
-      default:
-        return (
-          <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-            No bid yet
-          </Text>
-        );
-    }
-  };
+  console.log("sellInfo", sellInfo);
 
   return (
     <Link
@@ -140,7 +106,27 @@ export default function LayergNFTCard({
         )}
       </div>
 
-      {renderNFTData()}
+      <div className="w-full flex items-center justify-between bg-surface-soft rounded-lg p-2">
+        <div className="w-full flex flex-col gap-2">
+          <p className="text-body-14  text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            Price
+          </p>
+          <p className="text-secondary font-semibold text-body-12">
+            {formatDisplayedNumber(formatUnits(0, token?.decimal))}
+          </p>{" "}
+          {/*{token?.symbol}*/}
+        </div>
+
+        <div className="w-full flex flex-col gap-2">
+          <p className="text-body-14 text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            Highest bid
+          </p>
+          <p className="text-secondary font-semibold text-body-12">
+            {formatDisplayedNumber(formatUnits(0, token?.decimal))}
+          </p>{" "}
+          {/*{token?.symbol}*/}
+        </div>
+      </div>
 
       <div className="w-full ">
         <div className="flex w-full  bg-surface-soft border-b  border-b-[#E3E3E3] items-center justify-between p-2 rounded-t-lg text-body-12">
@@ -148,13 +134,15 @@ export default function LayergNFTCard({
           <div className="flex gap-1 items-center bg-surface-soft ">
             <p className=" ">{collection?.metadataJson?.name}</p>
             <div className="rounded">
-              <Image
-                src={collection?.metadataJson?.gameIcon}
-                alt={collection?.metadataJson?.name}
-                width={16}
-                height={16}
-                className="rounded"
-              />
+              {collection?.metadataJson?.gameIcon && (
+                <Image
+                  src={collection?.metadataJson?.gameIcon}
+                  alt={collection?.metadataJson?.name}
+                  width={16}
+                  height={16}
+                  className="rounded"
+                />
+              )}
             </div>
           </div>
         </div>
@@ -162,13 +150,15 @@ export default function LayergNFTCard({
           <p className="text-tertiary ">Collection</p>
           <div className="flex gap-1 items-center ">
             <p className=" ">{collection?.name}</p>
-            <Image
-              src={collection?.avatar}
-              alt={collection?.name}
-              width={16}
-              height={16}
-              className="rounded"
-            />
+            {collection?.avatar && (
+              <Image
+                src={collection?.avatar}
+                alt={collection?.name || ""}
+                width={16}
+                height={16}
+                className="rounded"
+              />
+            )}
           </div>
         </div>
       </div>

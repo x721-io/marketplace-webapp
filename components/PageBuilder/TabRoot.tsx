@@ -6,8 +6,6 @@ export default function OverView() {
   const [currTabIndex, setCurrTabIndex] = useState(1);
   const router = useRouter();
 
-  console.log(currTabIndex);
-
   useEffect(() => {
     if (currTabIndex === 1) {
       router.push("/layerg/overview");

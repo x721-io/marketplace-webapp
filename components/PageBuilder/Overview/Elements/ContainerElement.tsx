@@ -6,7 +6,6 @@ import { useScreen } from "@/hooks/useDevice";
 
 const ContainerElement = (element: Container, index: number) => {
   const { screen } = useScreen();
-  console.log(screen);
   return (
     <div
       key={index}

@@ -1,186 +1,347 @@
-import Input from "@/components/Form/Input";
-import { APIParams } from "@/services/api/types";
 import React, { useState } from "react";
-import { classNames } from "@/utils/string";
+import Input from "@/components/Form/Input";
 import Collapsible from "@/components/Collapsible";
 import useSWR from "swr";
 import { useLayergApi } from "@/hooks/useLayerGApi";
-import MyCheckbox from "@/components/X721UIKits/Checkbox";
 import Checkbox from "@/components/X721UIKits/Checkbox/Checkbox";
-import Image from "next/image";
 import ImgCheckbox from "@/components/X721UIKits/Checkbox/ImgCheckbox";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
-import { useLayerGNFTFilterStore } from "@/store/filters/byLayerG/store";
+import { classNames } from "@/utils/string";
+import { useLayerGNFTFilterStore } from "@/store/filters/layerg/byLayerG/store";
+import { useLayergBaseFilterStore } from "@/store/filters/layerg/byBaseFilter/store";
+import { MyModal } from "@/components/X721UIKits/Modal";
+import { isMobile } from "react-device-detect";
 
 export interface CollectionProps {
   containerClass?: string;
 }
 
 export default function PageBuilderFilter({ containerClass }: CollectionProps) {
-  const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
+  const [isClose, setClose] = useState(false);
+
+  const { showFilters, updateFilters, resetFilters, toggleFilter } =
     useLayerGNFTFilterStore();
+  const {
+    categoryFilters,
+    projectFilters,
+    collectionFilters,
+    setStatusFilters,
+    setCategoryFilters,
+    updateCollectionFilters,
+    updateProjectFilters,
+    updateStatusFilters,
+    resetFilters: resetBaseFilters,
+  } = useLayergBaseFilterStore();
 
   const api = useLayergApi();
-  const { data: categoryData } = useSWR("categories", api.getCategoryData, {
-    refreshInterval: 50000,
-  });
 
-  const params = {
-    page: 1,
-    limit: 10,
-    total: 100,
-  };
+  const { data: categoryData } = useSWR(
+    ["category", categoryFilters],
+    () => api.getCategoryData(categoryFilters),
+    { refreshInterval: 50000 }
+  );
 
   const { data: projectData } = useSWR(
-    ["project", params],
-    () => api.getProjectData(params),
+    ["project", projectFilters],
+    () => api.getProjectData(projectFilters),
     { refreshInterval: 50000 }
   );
-
-  const paramsSMC = {
-    networkID: 2484,
-    page: 1,
-    limit: 10,
-    total: 100,
-  };
 
   const { data: smcData } = useSWR(
-    ["smcData", params],
-    () => api.getSmartContractData(paramsSMC),
+    ["smcData", collectionFilters],
+    () => api.getSmartContractData(collectionFilters),
     { refreshInterval: 50000 }
   );
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
-  const [selectedCollection, setSelectedCollection] = useState<string | null>(
-    null
-  );
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedCollection, setSelectedCollection] = useState({
+    name: "",
+    address: "",
+  });
+  const [selectedStatus, setSelectedStatus] = useState({
+    orderStatus: "",
+    orderType: "",
+  });
 
-  const isChecked = (name: string) => {
-    return selectedCategory === name;
-  };
-  const isCheckedGame = (name: string) => {
-    return selectedGame === name;
-  };
-  const isCheckedCollection = (name: string) => {
-    return selectedCollection === name;
-  };
   const handleSelectCategory = (name: string) => {
-    setSelectedCategory((prev) => (prev === name ? null : name));
+    setSelectedCategory((prev) => (prev === name ? "" : name));
+    setCategoryFilters({ name: name });
   };
 
-  const handleSelectGame = (name: string) => {
-    setSelectedGame((prev) => (prev === name ? null : name));
+  const handleSelectGame = (name: string, projectId: string) => {
+    setSelectedGame((prev) => (prev === name ? "" : name));
+    updateProjectFilters({ name: name });
+
+    if (name) {
+      updateCollectionFilters({ projectId });
+    }
   };
 
-  const handleSelectCollection = (name: string) => {
-    setSelectedCollection((prev) => (prev === name ? null : name));
+  const handleSelectCollection = (name: string, address: string) => {
+    setSelectedCollection((prev) =>
+      prev.name === name && prev.address === address
+        ? { name: "", address: "" }
+        : { name, address }
+    );
+    setCategoryFilters({
+      name: name,
+    });
+  };
+
+  const handleSelectStatus = (orderStatus: string, orderType: string) => {
+    setSelectedStatus((prev) =>
+      prev.orderStatus === orderStatus && prev.orderType === orderType
+        ? {
+            orderStatus: "",
+            orderType: "",
+          }
+        : { orderStatus, orderType }
+    );
+    updateFilters({ status: { orderStatus, orderType } });
+  };
+
+  const handleInputCollection = (value: string) => {
+    if (value.startsWith("0x")) {
+      updateCollectionFilters({ contractAddress: value });
+    } else {
+      updateCollectionFilters({ contractName: value });
+    }
+  };
+
+  const handleApplyFilters = () => {
+    updateFilters({
+      collectionAddress: selectedCollection.address || "",
+      collectionName: selectedGame || "",
+      categoryName: selectedCategory || "",
+    });
+    setClose(false);
+  };
+
+  const handleClearSelected = () => {
+    setSelectedCategory("");
+    setSelectedStatus({ orderStatus: "", orderType: "" });
+    setSelectedGame("null");
+    setSelectedCollection({ name: "", address: "" });
+    resetFilters();
+    resetBaseFilters();
+    setClose(false);
   };
 
   if (!showFilters) return null;
 
+  const statusOptions = [
+    { id: 1, name: "On Sale", orderStatus: "OPEN", orderType: "SINGLE" },
+  ];
+
   return (
     <>
-      <div
-        className={classNames(
-          "w-full tablet:w-72 flex flex-col rounded-2xl border",
-          containerClass
-        )}
-      >
-        <Collapsible header="Category">
-          <div className="flex flex-col gap-3 max-h-full ">
-            {categoryData &&
-              categoryData.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center justify-between `}
-                >
+      {isMobile ? (
+        <MyModal.Root
+          onClose={() => toggleFilter(false)}
+          show={isClose || showFilters}
+          className="flex items-center justify-center"
+        >
+          <MyModal.Header>NFT Filters</MyModal.Header>
+          <MyModal.Body>
+            <Collapsible header="Category">
+              <div className="flex flex-col gap-3 max-h-full">
+                {categoryData?.map((item) => (
                   <Checkbox
-                    checked={isChecked(item.name)}
+                    key={item.id}
+                    checked={selectedCategory === item.name}
                     onChange={() => handleSelectCategory(item.name)}
                     label={item.name}
                     className="extra-styles"
                   />
-                </div>
-              ))}
-          </div>
-        </Collapsible>
-        <Collapsible header="Games">
-          <Input
-            type="text"
-            containerClass="w-full "
-            scale="sm"
-            placeholder="game"
-            className="mb-2"
-          />
-          <div className="flex flex-col max-h-full ">
-            {projectData &&
-              projectData.data.map((project, idx) => (
-                <div
-                  className="w-full h-full flex justify-between items-center"
-                  key={project.id}
-                >
+                ))}
+              </div>
+            </Collapsible>
+
+            <Collapsible header="Games">
+              <Input
+                type="text"
+                className="p-3"
+                scale="sm"
+                placeholder="Search Game"
+                onChange={(e) => updateProjectFilters({ name: e.target.value })}
+              />
+              <div className="flex flex-col max-h-full mt-3">
+                {projectData?.data?.map((project) => (
                   <ImgCheckbox
-                    imgSrc={project?.gameIcon}
-                    checked={isCheckedGame(project.name)}
-                    onChange={() => handleSelectGame(project.name)}
+                    key={project.id}
+                    imgSrc={project.gameIcon}
+                    checked={selectedGame === project.name}
+                    onChange={() => handleSelectGame(project.name, project.id)}
                     label={project.name}
                     className="extra-styles"
                   />
-                </div>
-              ))}
-          </div>
-        </Collapsible>
-        <Collapsible header="Collections">
-          <Input
-            className="mb-2"
-            type="text"
-            containerClass="w-full "
-            scale="sm"
-            placeholder="text"
-          />
+                ))}
+              </div>
+            </Collapsible>
 
-          {smcData &&
-            smcData.data.map((smc, idx) => (
-              <div className="w-full h-full flex justify-between" key={smc.id}>
+            <Collapsible header="Collections">
+              <Input
+                type="text"
+                className="p-3 mb-3"
+                scale="sm"
+                placeholder="Search Category"
+                onChange={(e) => handleInputCollection(e.target.value)}
+              />
+              {smcData?.data?.map((smc) => (
                 <ImgCheckbox
-                  contractAddress={smc.contractAddress}
-                  imgSrc={smc?.collection?.avatarUrl}
-                  checked={isCheckedCollection(smc.contractName)}
-                  onChange={() => handleSelectCollection(smc.contractName)}
+                  key={smc.id}
+                  imgSrc={smc.collection?.avatarUrl}
+                  checked={
+                    selectedCollection.name === smc.contractName &&
+                    selectedCollection.address === smc.contractAddress
+                  }
+                  onChange={() =>
+                    handleSelectCollection(
+                      smc.contractName,
+                      smc.contractAddress
+                    )
+                  }
                   label={smc.contractName}
                   className="extra-styles"
                 />
-              </div>
-            ))}
-        </Collapsible>
+              ))}
+            </Collapsible>
 
-        {/*<div className="p-4 bg-primary">*/}
-        {/*  <Button*/}
-        {/*      className="w-full"*/}
-        {/*      variant="outlined"*/}
-        {/*      scale="sm"*/}
-        {/*      onClick={() => {*/}
-        {/*        updateFilters();*/}
-        {/*      }}*/}
-        {/*  >*/}
-        {/*    Apply*/}
-        {/*  </Button>*/}
-        {/*</div>*/}
-        <div className="p-4">
-          <Button
-            className="w-full"
-            variant="outlined"
-            scale="sm"
-            onClick={() => {
-              resetFilters();
-            }}
-          >
-            Reset <Icon name="refresh" width={12} height={12} />
-          </Button>
+            <Button
+              className="w-full mb-5"
+              variant="secondary"
+              scale="sm"
+              onClick={handleClearSelected}
+            >
+              Reset <Icon name="refresh" width={12} height={12} />
+            </Button>
+
+            <div className="flex items-center gap-2">
+              <Button
+                scale="sm"
+                className="flex-1"
+                variant="outlined"
+                onClick={() => toggleFilter(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                scale="sm"
+                className="flex-1"
+                onClick={handleApplyFilters}
+              >
+                Apply
+              </Button>
+            </div>
+          </MyModal.Body>
+        </MyModal.Root>
+      ) : (
+        <div
+          className={classNames(
+            "w-full tablet:w-72 flex flex-col rounded-2xl border",
+            containerClass
+          )}
+        >
+          <Collapsible header="Status">
+            <div className="flex flex-col gap-3 max-h-full">
+              {statusOptions.map((item) => (
+                <Checkbox
+                  key={item.id}
+                  checked={
+                    selectedStatus.orderStatus === item.orderStatus &&
+                    selectedStatus.orderType === item.orderType
+                  }
+                  onChange={() =>
+                    handleSelectStatus(item.orderStatus, item.orderType)
+                  }
+                  label={item.name}
+                  className="extra-styles"
+                />
+              ))}
+            </div>
+          </Collapsible>{" "}
+          <Collapsible header="Category">
+            <div className="flex flex-col gap-3 max-h-full">
+              {categoryData?.map((item) => (
+                <Checkbox
+                  key={item.id}
+                  checked={selectedCategory === item.name}
+                  onChange={() => handleSelectCategory(item.name)}
+                  label={item.name}
+                  className="extra-styles"
+                />
+              ))}
+            </div>
+          </Collapsible>
+          <Collapsible header="Games">
+            <Input
+              type="text"
+              className="p-3"
+              scale="sm"
+              placeholder="Search Game"
+              onChange={(e) => updateProjectFilters({ name: e.target.value })}
+            />
+            <div className="flex flex-col max-h-full mt-3">
+              {projectData?.data?.map((project) => (
+                <ImgCheckbox
+                  key={project.id}
+                  imgSrc={project.gameIcon}
+                  checked={selectedGame === project.name}
+                  onChange={() => handleSelectGame(project.name, project.id)}
+                  label={project.name}
+                  className="extra-styles"
+                />
+              ))}
+            </div>
+          </Collapsible>
+          <Collapsible header="Collections">
+            <Input
+              type="text"
+              className="p-3 mb-3"
+              scale="sm"
+              placeholder="Search Category"
+              onChange={(e) => handleInputCollection(e.target.value)}
+            />
+            {smcData?.data?.map((smc) => (
+              <ImgCheckbox
+                key={smc.id}
+                imgSrc={smc.collection?.avatarUrl}
+                checked={
+                  selectedCollection.name === smc.contractName &&
+                  selectedCollection.address === smc.contractAddress
+                }
+                onChange={() =>
+                  handleSelectCollection(smc.contractName, smc.contractAddress)
+                }
+                label={smc.contractName}
+                className="extra-styles"
+              />
+            ))}
+          </Collapsible>
+          <div className="p-4">
+            <Button
+              scale="sm"
+              className="w-full"
+              variant="primary"
+              onClick={handleApplyFilters}
+            >
+              Apply
+            </Button>
+          </div>
+          <div className="p-4">
+            <Button
+              className="w-full"
+              variant="outlined"
+              scale="sm"
+              onClick={handleClearSelected}
+            >
+              Reset <Icon name="refresh" width={12} height={12} />
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

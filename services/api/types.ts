@@ -5,6 +5,7 @@ import {
   NFT,
   User,
   NFTMetadata,
+  EntityStatus,
 } from "@/types/entitites";
 import { Address } from "abitype";
 import { MarketEvent, MarketEventType } from "@/types/market";
@@ -20,8 +21,8 @@ export namespace APIParams {
   }
 
   export interface Paging {
-    page: number;
-    limit: number;
+    page?: number;
+    limit?: number;
   }
 
   export interface WithAuth {
@@ -33,11 +34,6 @@ export namespace APIParams {
     publicKey: Address;
     signature: Address;
     signer: string;
-  }
-
-  export interface LayerGCategory {
-    name?: string;
-    platform?: string;
   }
 
   export type UpdateProfile = Partial<
@@ -222,27 +218,34 @@ export namespace APIParams {
   }
 
   export interface LayerGProjects extends Paging {
-    name?: Address;
-    categories?: string[];
-    platform?: string;
+    name?: string;
   }
 
   export interface LayerGSmartContract extends Paging {
-    networkID: number;
-    contractType?: string;
+    projectId?: string;
+    networkID?: number;
     contractName?: string;
     contractAddress?: string;
-    mode?: string;
-    ownerAddress?: string;
-    tokenIds?: string[];
   }
 
-  export interface FetchLayerGNFTs extends PaginationParams {
+  export interface FetchLayerGNFTs extends Paging {
+    collectionAddress?: string;
     collectionName?: string;
-    symbol?: string;
-    address?: Address;
     categoryName?: string;
+    symbol?: string;
     nftName?: string;
+    status?: LayerGStatus;
+  }
+
+  export interface LayerGCategory extends Paging {
+    name?: string;
+  }
+
+  export interface LayerGStatus {
+    orderStatus?: string;
+    orderType?: string;
+    order?: string;
+    orderBy?: string;
   }
 }
 
@@ -385,11 +388,11 @@ export namespace APIResponse {
   export type LayerGCategory = Category[];
 
   export interface GetLayerGProjects {
-    data: Daum[];
+    data: LayerGProjects[];
     paging: Paging;
   }
 
-  export interface Daum {
+  export interface LayerGProjects {
     id: string;
     name: string;
     apiKeyID: string;
@@ -420,6 +423,25 @@ export namespace APIResponse {
     projectId: string;
     createdAt: string;
     updatedAt: string;
+    type: AssetType;
+    address: Address;
+    txCreationHash: string;
+    status: string;
+    isVerified: boolean;
+    metadata: string;
+    shortUrl: any;
+    symbol: string;
+    categoryId: any;
+    avatar: string | null;
+    isActive: boolean;
+    isU2U: boolean;
+    category: any;
+    creators: { userId: string; user: User }[];
+    coverImage: string | null;
+    volumn: string;
+    totalOwner: number;
+    totalNft: number;
+    floorPrice: string;
   }
 
   export interface SmartContract {

@@ -64,7 +64,7 @@ export default function AddOverviewSectionModal({
       ],
     },
     // {
-    //   category: "Media Only",
+    //   byBaseFilter: "Media Only",
     //   options: [
     //     { option: "Image only", element: elementMediaOnly, exampleImage: MediaOnly },
     //     { option: "Video only", element: elementMediaOnly, exampleImage: MediaOnly },

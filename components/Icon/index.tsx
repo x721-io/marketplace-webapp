@@ -40,6 +40,7 @@ import RoundZeroIconZ from "./RoundZero";
 import PlusIcon from "./Plus";
 import VerifyDisableIcon from "./VerifyDisable";
 import VerifyIcon from "./Verify";
+import LinkIcon from "@/components/Icon/Link";
 
 type Color = keyof typeof defaultColors & keyof typeof colors;
 
@@ -141,6 +142,8 @@ export default function Icon({
         return <VerifyDisableIcon width={iconW} height={iconH} {...rest} />;
       case "verify-active":
         return <VerifyIcon width={iconW} height={iconH} {...rest} />;
+      case "link":
+        return <LinkIcon width={iconW} height={iconH} {...rest} />;
       default:
         return null;
     }

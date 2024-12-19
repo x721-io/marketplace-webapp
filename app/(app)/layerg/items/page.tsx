@@ -5,16 +5,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGetLayerGNFTs } from "@/hooks/useQuery";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import NFTCardSkeleton from "@/components/NFT/NFTCard/skeleton";
-import { useLayerGNFTFilterStore } from "@/store/filters/byLayerG/store";
+import { useLayerGNFTFilterStore } from "@/store/filters/layerg/byLayerG/store";
 
 export default function Items() {
-  debugger;
   const filtersTimeout = useRef<any>(null);
   const { showFilters, toggleFilter, filters, updateFilters, resetFilters } =
     useLayerGNFTFilterStore();
   const [decouncedFilters, setDebouncedFilters] = useState<any>(null);
-
-  console.log("decouncedFilters", decouncedFilters);
 
   const { error, isLoading, setSize, size, data, mutate } = useGetLayerGNFTs(
     decouncedFilters,
@@ -53,15 +50,10 @@ export default function Items() {
   }
 
   return (
-    <div className="w-full overflow-y-auto">
+    <div className="w-full h-full overflow-y-auto">
       <ListItems
-        onClose={() => toggleFilter(false)}
         isLoading={isLoading}
         isLoadMore={isLoadingMore}
-        activeFilters={filters}
-        onApplyFilters={updateFilters}
-        onResetFilters={resetFilters}
-        showFilters={true}
         items={items.concatenatedData}
         hasNext={items.currentHasNext}
       />

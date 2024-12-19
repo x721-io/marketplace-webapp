@@ -117,6 +117,8 @@ export interface Collection {
   totalNft: number;
   floorPrice: string;
   isVerified: boolean;
+  metadataJson: MetadataJson;
+  floor: number;
 }
 
 export interface Timeframe {
@@ -178,6 +180,7 @@ export interface LayerGNFT {
   nameSlug: string;
   isActive: boolean;
   metricPoint: string;
+  metricDetail: MetricDetail;
   creator: {
     avatar: null | string;
     email: string | null;
@@ -186,27 +189,19 @@ export interface LayerGNFT {
     username: string;
     accountStatus: boolean;
   } | null;
-  collection: CollectionLayerG;
+  collection: Collection;
+  sellInfo: SellInfo;
+  bidInfo: BidInfo;
+  derivedETH: number;
+  derivedUSD: number;
   traits?: Trait[];
-  price?: BigNumberish;
   sellStatus?: MarketEventType;
   quoteToken?: Address;
 }
+
 export interface MetricDetail {
   UserMetric: number;
   VolumeIndividual: number;
-}
-
-export interface CollectionLayerG {
-  id: string;
-  name: string;
-  symbol: string;
-  address: string;
-  metadataJson: MetadataJson;
-  isVerified: boolean;
-  floorPrice: string;
-  floor: number;
-  avatar: string;
 }
 
 export interface MetadataJson {
@@ -234,4 +229,28 @@ export interface FilterLayerGNFTs extends Paging {
   categoryName?: string;
   symbol?: string;
   nftName?: string;
+}
+
+export interface SellInfo {
+  price: string;
+  quantity: number;
+  quoteToken: string;
+  orderStatus: string;
+  orderType: string;
+  index: number;
+  sig: string;
+  start: number;
+  end: number;
+}
+
+export interface BidInfo {
+  price: string;
+  quantity: number;
+  quoteToken: string;
+  orderStatus: string;
+  orderType: string;
+  index: number;
+  sig: string;
+  start: number;
+  end: number;
 }

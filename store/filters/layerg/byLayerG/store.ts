@@ -12,6 +12,12 @@ export const DEFAULT_LAYER_G_NFT_FILTERS_STATE: LayerGNFTFilterState = {
     page: 1,
     limit: 20,
     nftName: "",
+    status: {
+      order: "",
+      orderBy: "",
+      orderStatus: "",
+      orderType: "",
+    },
   },
 };
 

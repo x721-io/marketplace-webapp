@@ -7,8 +7,10 @@ import { parseQueries } from "@/utils";
 
 export const useLayergApi = () => {
   return {
-    getCategoryData: (): Promise<APIResponse.LayerGCategory> => {
-      return layerGApi.get(API_ENDPOINTS.CATEGORY);
+    getCategoryData: (
+      params: APIParams.LayerGCategory
+    ): Promise<APIResponse.LayerGCategory> => {
+      return layerGApi.get(API_ENDPOINTS.CATEGORY + parseQueries(params));
     },
 
     getProjectData: (
