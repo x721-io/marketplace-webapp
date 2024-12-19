@@ -18,8 +18,6 @@ export interface CollectionProps {
 }
 
 export default function PageBuilderFilter({ containerClass }: CollectionProps) {
-  const [isClose, setClose] = useState(false);
-
   const { showFilters, updateFilters, resetFilters, toggleFilter } =
     useLayerGNFTFilterStore();
   const {
@@ -116,7 +114,7 @@ export default function PageBuilderFilter({ containerClass }: CollectionProps) {
       collectionName: selectedGame || "",
       categoryName: selectedCategory || "",
     });
-    setClose(false);
+    toggleFilter(false);
   };
 
   const handleClearSelected = () => {
@@ -126,7 +124,7 @@ export default function PageBuilderFilter({ containerClass }: CollectionProps) {
     setSelectedCollection({ name: "", address: "" });
     resetFilters();
     resetBaseFilters();
-    setClose(false);
+    toggleFilter(false);
   };
 
   if (!showFilters) return null;
@@ -140,74 +138,98 @@ export default function PageBuilderFilter({ containerClass }: CollectionProps) {
       {isMobile ? (
         <MyModal.Root
           onClose={() => toggleFilter(false)}
-          show={isClose || showFilters}
-          className="flex items-center justify-center"
+          show={showFilters}
+          className="flex items-center justify-center "
         >
           <MyModal.Header>NFT Filters</MyModal.Header>
           <MyModal.Body>
-            <Collapsible header="Category">
-              <div className="flex flex-col gap-3 max-h-full">
-                {categoryData?.map((item) => (
-                  <Checkbox
-                    key={item.id}
-                    checked={selectedCategory === item.name}
-                    onChange={() => handleSelectCategory(item.name)}
-                    label={item.name}
-                    className="extra-styles"
-                  />
-                ))}
-              </div>
-            </Collapsible>
+            <div className="overflow-y-auto h-[300px]">
+              <Collapsible header="Status">
+                <div className="flex flex-col gap-3 max-h-full">
+                  {statusOptions.map((item) => (
+                    <Checkbox
+                      key={item.id}
+                      checked={
+                        selectedStatus.orderStatus === item.orderStatus &&
+                        selectedStatus.orderType === item.orderType
+                      }
+                      onChange={() =>
+                        handleSelectStatus(item.orderStatus, item.orderType)
+                      }
+                      label={item.name}
+                      className="extra-styles"
+                    />
+                  ))}
+                </div>
+              </Collapsible>
+              <Collapsible header="Category">
+                <div className="flex flex-col gap-3 max-h-full">
+                  {categoryData?.map((item) => (
+                    <Checkbox
+                      key={item.id}
+                      checked={selectedCategory === item.name}
+                      onChange={() => handleSelectCategory(item.name)}
+                      label={item.name}
+                      className="extra-styles"
+                    />
+                  ))}
+                </div>
+              </Collapsible>
 
-            <Collapsible header="Games">
-              <Input
-                type="text"
-                className="p-3"
-                scale="sm"
-                placeholder="Search Game"
-                onChange={(e) => updateProjectFilters({ name: e.target.value })}
-              />
-              <div className="flex flex-col max-h-full mt-3">
-                {projectData?.data?.map((project) => (
-                  <ImgCheckbox
-                    key={project.id}
-                    imgSrc={project.gameIcon}
-                    checked={selectedGame === project.name}
-                    onChange={() => handleSelectGame(project.name, project.id)}
-                    label={project.name}
-                    className="extra-styles"
-                  />
-                ))}
-              </div>
-            </Collapsible>
-
-            <Collapsible header="Collections">
-              <Input
-                type="text"
-                className="p-3 mb-3"
-                scale="sm"
-                placeholder="Search Category"
-                onChange={(e) => handleInputCollection(e.target.value)}
-              />
-              {smcData?.data?.map((smc) => (
-                <ImgCheckbox
-                  key={smc.id}
-                  imgSrc={smc.collection?.avatarUrl}
-                  checked={
-                    selectedCollection.name === smc.contractName &&
-                    selectedCollection.address === smc.contractAddress
+              <Collapsible header="Games">
+                <Input
+                  type="text"
+                  className="p-3"
+                  scale="sm"
+                  placeholder="Search Game"
+                  onChange={(e) =>
+                    updateProjectFilters({ name: e.target.value })
                   }
-                  onChange={() =>
-                    handleSelectCollection(
-                      smc.contractName,
-                      smc.contractAddress
-                    )
-                  }
-                  label={smc.contractName}
-                  className="extra-styles"
                 />
-              ))}
-            </Collapsible>
+                <div className="flex flex-col max-h-full mt-3">
+                  {projectData?.data?.map((project) => (
+                    <ImgCheckbox
+                      key={project.id}
+                      imgSrc={project.gameIcon}
+                      checked={selectedGame === project.name}
+                      onChange={() =>
+                        handleSelectGame(project.name, project.id)
+                      }
+                      label={project.name}
+                      className="extra-styles"
+                    />
+                  ))}
+                </div>
+              </Collapsible>
+
+              <Collapsible header="Collections">
+                <Input
+                  type="text"
+                  className="p-3 mb-3"
+                  scale="sm"
+                  placeholder="Search Category"
+                  onChange={(e) => handleInputCollection(e.target.value)}
+                />
+                {smcData?.data?.map((smc) => (
+                  <ImgCheckbox
+                    key={smc.id}
+                    imgSrc={smc.collection?.avatarUrl}
+                    checked={
+                      selectedCollection.name === smc.contractName &&
+                      selectedCollection.address === smc.contractAddress
+                    }
+                    onChange={() =>
+                      handleSelectCollection(
+                        smc.contractName,
+                        smc.contractAddress
+                      )
+                    }
+                    label={smc.contractName}
+                    className="extra-styles"
+                  />
+                ))}
+              </Collapsible>
+            </div>
 
             <Button
               className="w-full mb-5"
@@ -261,7 +283,7 @@ export default function PageBuilderFilter({ containerClass }: CollectionProps) {
                 />
               ))}
             </div>
-          </Collapsible>{" "}
+          </Collapsible>
           <Collapsible header="Category">
             <div className="flex flex-col gap-3 max-h-full">
               {categoryData?.map((item) => (

@@ -15,6 +15,7 @@ import { LayerGNFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
 import BlurImage from "@/components/X721UIKits/BlurImage";
+import { Address } from "abitype";
 
 export default function LayergNFTCard({
   name,
@@ -24,13 +25,20 @@ export default function LayergNFTCard({
   collection,
   image,
   animationUrl,
-  quoteToken,
   creator,
 }: LayerGNFT) {
   const displayMedia = image || animationUrl;
 
   const fileExtension = displayMedia.split(".").pop();
-  const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
+
+  const token = useMemo(() => {
+    const quoteToken = sellInfo?.quoteToken || bidInfo?.quoteToken;
+    if (!quoteToken || Object.keys(quoteToken).length === 0) {
+      return null;
+    }
+    return findTokenByAddress(quoteToken as Address);
+  }, [sellInfo, bidInfo]);
+
   const fileType = useMemo(() => {
     if (!fileExtension) return "image";
 
@@ -86,7 +94,6 @@ export default function LayergNFTCard({
         );
     }
   };
-  console.log("sellInfo", sellInfo);
 
   return (
     <Link
@@ -107,24 +114,37 @@ export default function LayergNFTCard({
       </div>
 
       <div className="w-full flex items-center justify-between bg-surface-soft rounded-lg p-2">
-        <div className="w-full flex flex-col gap-2">
+        <div className=" flex flex-col gap-1">
           <p className="text-body-14  text-primary whitespace-nowrap overflow-hidden text-ellipsis">
             Price
           </p>
-          <p className="text-secondary font-semibold text-body-12">
-            {formatDisplayedNumber(formatUnits(0, token?.decimal))}
-          </p>{" "}
-          {/*{token?.symbol}*/}
+          {sellInfo ? (
+            <p className="text-secondary font-semibold text-body-12">
+              {formatDisplayedNumber(formatUnits(sellInfo?.price || 0, 18))}{" "}
+              {token?.symbol}
+            </p>
+          ) : (
+            <p className="text-secondary font-semibold text-body-12">
+              Not for sale
+            </p>
+          )}
         </div>
 
-        <div className="w-full flex flex-col gap-2">
+        <div className=" flex flex-col gap-1">
           <p className="text-body-14 text-primary whitespace-nowrap overflow-hidden text-ellipsis">
             Highest bid
           </p>
-          <p className="text-secondary font-semibold text-body-12">
-            {formatDisplayedNumber(formatUnits(0, token?.decimal))}
-          </p>{" "}
-          {/*{token?.symbol}*/}
+
+          {!bidInfo || Object.keys(bidInfo).length === 0 ? (
+            <p className="text-secondary font-semibold text-body-12">
+              Not for sale
+            </p>
+          ) : (
+            <p className="text-secondary text-right font-semibold text-body-12">
+              {formatDisplayedNumber(formatUnits(bidInfo?.price || 0, 18))}{" "}
+              {token?.symbol}
+            </p>
+          )}
         </div>
       </div>
 

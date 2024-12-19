@@ -1,33 +1,16 @@
 "use client";
 
-import { TabsRef } from "flowbite-react";
-import Button from "@/components/Button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import Input from "@/components/Form/Input";
 import SliderIcon from "@/components/Icon/Sliders";
 import CommandIcon from "@/components/Icon/Command";
 import Icon from "@/components/Icon";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
-import useQueryFilters from "@/hooks/useQueryFilters";
 import { useLayerGNFTFilterStore } from "@/store/filters/layerg/byLayerG/store";
-import FilterIcon from "@/assets/svg/filter-icon";
 
 export default function FilterBar() {
   const searchParams = useSearchParams();
-  const {
-    addFilterItems,
-    removeFilterItems,
-    filters: customFilters,
-    getFilterBykey,
-    clearFilters,
-  } = useQueryFilters();
-  const tabs = [
-    { label: "NFTs", href: "/explore/items" },
-    { label: "Collections", href: "/explore/collections" },
-    { label: "Users", href: "/explore/users" },
-  ];
-
   const dropdownItems = [
     { name: "All", order: "", orderBy: "all" },
     { name: "Price: Ascending", order: "asc", orderBy: "price" },
@@ -36,9 +19,6 @@ export default function FilterBar() {
     { name: "Date: Descending", order: "desc", orderBy: "time" },
   ];
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const tabsRef = useRef<TabsRef>(null);
   const [sortOption, setSortOption] = useState({
     name: "All",
     order: "",
@@ -74,20 +54,6 @@ export default function FilterBar() {
       nftName: value || "",
     });
   };
-
-  // const sortCollections = (sortOptionCollection: any) => {
-  //   updateCollectionFilters({
-  //     orderBy: sortOptionCollection?.orderBy,
-  //     order: sortOptionCollection?.order,
-  //   });
-  // };
-
-  // const sortNFTs = (sortOptionNFT: any) => {
-  //   updateNFTFilters({
-  //     orderBy: sortOptionNFT?.orderBy,
-  //     order: sortOptionNFT?.order,
-  //   });
-  // };
 
   const handleChange = (selectedOption: any) => {
     let order = "",
@@ -127,15 +93,9 @@ export default function FilterBar() {
     }
     setSortOption({ name, order, orderBy });
     if (order !== "") {
-      addFilterItems([
-        { item: { key: "sortBy", values: [orderBy] }, type: "single" },
-        {
-          item: { key: "sortDirection", values: [order] },
-          type: "single",
-        },
-      ]);
+      updateNFTFilters({ status: { order: order, orderBy: orderBy } });
     } else {
-      removeFilterItems(["sortBy", "sortDirection"]);
+      resetNFTFilters();
     }
   };
 
@@ -257,25 +217,25 @@ export default function FilterBar() {
         />
       </div>
 
-      {/*<div className="order-4 tablet:flex-1">*/}
-      {/*  <Dropdown.Root*/}
-      {/*    label=""*/}
-      {/*    icon={*/}
-      {/*      <div className="bg-surface-soft flex items-center justify-between gap-3 rounded-2xl p-3 h-full cursor-pointer ">*/}
-      {/*        {sortOption.name}*/}
-      {/*        <div className="rounded-lg p-1 bg-surface-medium">*/}
-      {/*          <Icon name="chevronDown" width={14} height={14} />*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*    }*/}
-      {/*  >*/}
-      {/*    {dropdownItems.map((item: any, i: any) => (*/}
-      {/*      <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>*/}
-      {/*        {item.name}*/}
-      {/*      </Dropdown.Item>*/}
-      {/*    ))}*/}
-      {/*  </Dropdown.Root>*/}
-      {/*</div>*/}
+      <div className="order-4 tablet:flex-1 tablet:max-w-[200px]">
+        <Dropdown.Root
+          label=""
+          icon={
+            <div className="bg-surface-soft flex items-center justify-between gap-3 rounded-2xl p-3 h-full cursor-pointer ">
+              {sortOption.name}
+              <div className="rounded-lg p-1 bg-surface-medium">
+                <Icon name="chevronDown" width={14} height={14} />
+              </div>
+            </div>
+          }
+        >
+          {dropdownItems.map((item: any, i: any) => (
+            <Dropdown.Item key={i} onClick={() => handleChange(item.name)}>
+              {item.name}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Root>
+      </div>
     </div>
   );
 }
