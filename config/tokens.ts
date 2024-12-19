@@ -21,7 +21,7 @@ export const tokens: Record<string, Token> = {
     name: "U2U",
     symbol: "U2U",
     decimal: 18,
-    address: ADDRESS_ZERO,
+    address: process.env.NEXT_PUBLIC_U2U_NATIVE_TOKEN_CONTRACT as Address,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
   // weth: {
@@ -42,7 +42,10 @@ export const tokens: Record<string, Token> = {
 
 export const tokenOptions = Object.values(tokens).map((token) => {
   if (token.address === tokens.wu2u.address) {
-    return { label: "WU2U", value: tokens.wu2u.address };
+    return { label: "wU2U", value: tokens.wu2u.address };
+  }
+  if (token.address === tokens.u2u.address) {
+    return { label: "U2U", value: tokens.u2u.address };
   }
   return { label: token.symbol, value: token.address };
 });
