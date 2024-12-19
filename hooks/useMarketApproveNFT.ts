@@ -24,7 +24,10 @@ export const useMarketApproveNFT = (nft: NFT) => {
       ? contracts.erc721Base.abi
       : contracts.erc1155Base.abi) as any,
     functionName: "isApprovedForAll",
-    args: [wallet as Address, marketContract.address],
+    args: [
+      wallet as Address,
+      process.env.NEXT_PUBLIC_NFT_TRANSFER_PROXY_CONTRACT as any,
+    ],
     scopeKey: "isMarketContractApprovedForAll",
     query: { enabled: !!wallet },
   });
@@ -71,7 +74,7 @@ export const useMarketApproveNFT = (nft: NFT) => {
           ? contracts.erc721Base.abi
           : contracts.erc1155Base.abi) as any,
         functionName: "setApprovalForAll",
-        args: [marketContract.address, true],
+        args: [process.env.NEXT_PUBLIC_NFT_TRANSFER_PROXY_CONTRACT, true],
         value: BigInt(0) as any,
       });
       queryClient.invalidateQueries({ queryKey: isApproveAllQueryKey });
@@ -87,7 +90,10 @@ export const useMarketApproveNFT = (nft: NFT) => {
         address: nft.collection.address,
         abi: contracts.erc721Base.abi,
         functionName: "approve",
-        args: [contracts.erc721Market.address, BigInt(nft.u2uId ?? nft.id)],
+        args: [
+          process.env.NEXT_PUBLIC_NFT_TRANSFER_PROXY_CONTRACT as any,
+          BigInt(nft.u2uId ?? nft.id),
+        ],
         value: BigInt(0) as any,
       });
       queryClient.invalidateQueries({ queryKey: isApproveSingleQueryKey });

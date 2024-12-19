@@ -29,6 +29,7 @@ import {
   YAxis,
 } from "recharts";
 import { useGetNftPriceHistory } from "@/hooks/useQuery";
+import { useRouter } from "next/navigation";
 
 const SaleInfo = ({
   marketData,
@@ -37,7 +38,7 @@ const SaleInfo = ({
   marketData?: APIResponse.NFTMarketData;
   nft: NFT;
 }) => {
-  console.log({ marketData });
+  const router = useRouter();
   const { data: priceHistories } = useGetNftPriceHistory({
     collectionAddress: nft.collection.address,
     id: nft.id,
@@ -51,6 +52,9 @@ const SaleInfo = ({
     null
   );
   const [bidData, setBidData] = useState<MarketEventV2 | null>(null);
+  const [cancelBidData, setCancelBidData] = useState<MarketEventV2 | null>(
+    null
+  );
   const columnClassName = "text-left p-3";
   const headerTextClassName =
     "text-heading-sm !text-[1rem] text-[rgba(0,0,0,0.75)] tracking-wide";
@@ -135,22 +139,27 @@ const SaleInfo = ({
               <td className={columnClassName}>
                 {moment(s.end * 1000).fromNow()}
               </td>
-              <td className={columnClassName}>
+              <td
+                onClick={() => {
+                  router.push(`/user/${s.Maker?.publicKey}`);
+                }}
+                className={columnClassName}
+              >
                 {shortenAddress(s.Maker?.publicKey)}
               </td>
-              <td className={columnClassName + "w-full text-center"}>
+              <td
+                className={
+                  columnClassName +
+                  "w-full text-center hover:underline cursor-pointer"
+                }
+              >
                 <button
                   onClick={() => {
-                    if (
-                      marketData?.owners.findIndex(
-                        (owner) => owner.publicKey === profile?.publicKey
-                      ) !== -1 ||
-                      profile?.publicKey === s.Maker?.publicKey
-                    ) {
-                      setCancelSaleData(s);
+                    if (profile?.publicKey !== s.Maker?.publicKey) {
+                      setSaleData(s);
                       return;
                     }
-                    setSaleData(s);
+                    setCancelSaleData(s);
                   }}
                 >
                   {profile?.publicKey !== s.Maker?.publicKey ? "Buy" : "Cancel"}
@@ -203,19 +212,34 @@ const SaleInfo = ({
               <td className={columnClassName}>
                 {moment(s.end * 1000).fromNow()}
               </td>
-              <td className={columnClassName}>
+              <td
+                onClick={() => {
+                  router.push(`/user/${s.Maker?.publicKey}`);
+                }}
+                className={columnClassName + " hover:underline cursor-pointer"}
+              >
                 {shortenAddress(s.Maker?.publicKey)}
               </td>
               <td className={columnClassName + "w-full text-center"}>
-                <button onClick={() => setBidData(s)}>
-                  {marketData?.owners.findIndex(
-                    (owner) => owner.publicKey === profile?.publicKey
-                  ) !== -1
-                    ? "Accept"
-                    : profile?.publicKey !== s.Maker?.publicKey
-                    ? "Buy"
-                    : "Cancel"}
-                </button>
+                {marketData?.owners.findIndex(
+                  (owner) => owner.publicKey === profile?.publicKey
+                ) !== -1 ? (
+                  <button
+                    onClick={() => {
+                      setBidData(s);
+                    }}
+                  >
+                    Accept
+                  </button>
+                ) : profile?.publicKey === s.Maker?.publicKey ? (
+                  <button
+                    onClick={() => {
+                      setCancelBidData(s);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                ) : null}
               </td>
             </tr>
           ))}
@@ -223,11 +247,11 @@ const SaleInfo = ({
     );
   };
 
-  const handleCancelOrder = async () => {
-    if (!marketData || !marketData.sellInfo[0]) return;
+  const handleCancelOrder = async (type: "bid" | "sale") => {
     try {
       setCancelling(true);
-      const { sig, index } = marketData.sellInfo[0];
+      const { sig, index } =
+        type === "sale" ? (cancelSaleData as any) : (cancelBidData as any);
       const orderDeatails = await getOrderDetails(sig, index);
       if (!orderDeatails) return;
       await cancelOrder(orderDeatails);
@@ -336,7 +360,52 @@ const SaleInfo = ({
                   </Button>
                   <Button
                     className="flex-1"
-                    onClick={handleCancelOrder}
+                    onClick={() => handleCancelOrder("sale")}
+                    loading={isCancelling}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </MyModal.Body>
+        </MyModal.Root>
+      )}
+      {marketData && cancelBidData && (
+        <MyModal.Root
+          show={cancelBidData !== null}
+          onClose={() => setCancelBidData(null)}
+        >
+          <MyModal.Body className="pb-5">
+            <div className="flex flex-col justify-center gap-4 items-center">
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="font-bold">
+                  <Text className="mb-3 text-center" variant="heading-xs">
+                    Cancel bidding
+                  </Text>
+                  <Text className="text-secondary" variant="body-16">
+                    Cancel sale for{" "}
+                    <span className="text-primary font-bold">{nft.name}</span>{" "}
+                    from{" "}
+                    <span className="text-primary font-bold">
+                      {nft.collection.name}
+                    </span>{" "}
+                    collection
+                  </Text>
+                </div>
+
+                <div className="w-full flex gap-4">
+                  <Button
+                    className="flex-1"
+                    variant="secondary"
+                    loading={isCancelling}
+                    onClick={() => setCancelSaleData(null)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    onClick={() => handleCancelOrder("bid")}
                     loading={isCancelling}
                   >
                     Yes

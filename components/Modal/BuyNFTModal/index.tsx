@@ -374,7 +374,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 value={formatUnits(saleData?.price || "0", 18)}
                 appendIcon={
                   nft.collection.type === "ERC1155" && (
-                    <Text>Quantity: {saleData?.quantity}</Text>
+                    <Text>
+                      Quantity:{" "}
+                      {saleData ? saleData.quantity - saleData.filledQty : 0}
+                    </Text>
                   )
                 }
               />
