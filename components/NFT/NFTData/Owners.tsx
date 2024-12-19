@@ -37,7 +37,8 @@ export default function OwnersTab({
       .map((owner) => {
         const sellInfo = marketData.sellInfo.find((item) => {
           return (
-            item.Maker?.publicKey.toLowerCase() === owner.publicKey?.toLowerCase()
+            item.Maker?.publicKey.toLowerCase() ===
+            owner.publicKey?.toLowerCase()
           );
         });
         return {

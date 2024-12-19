@@ -1085,7 +1085,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0x43D8fF47D2e07604e3284d7EdF5088EeB98Cb201";
+  "0xC00CA3801B1D0AFCc7157980Eb0DC926902eE04C";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
@@ -1387,11 +1387,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     }
   };
 
-  const signBidOrderData = async (
-    params: FormState.BidNFTV2,
-    nft: NFT,
-    marketData: APIResponse.NFTMarketData
-  ) => {
+  const signBidOrderData = async (params: FormState.BidNFTV2, nft: NFT) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
@@ -1433,7 +1429,7 @@ const useMarketplaceV2 = (nft: NFT) => {
             value: bidValueWei,
             id: BigInt(0),
           },
-          taker: marketData.owners[0].signer,
+          taker: ADDRESS_ZERO,
           takeAsset: {
             assetType: getNftAssetType(),
             contractAddress: collectionAddress,
@@ -1527,8 +1523,7 @@ const useMarketplaceV2 = (nft: NFT) => {
 
   const createBidAPI = async (
     params: FormState.BidNFTV2,
-    sig: `0x${string}`,
-    taker: Address
+    sig: `0x${string}`
   ) => {
     if (!address) return false;
     const { collection } = nft;
@@ -1564,7 +1559,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         makeAssetId: make_asset_id.toString(),
         makeAssetAddress: make_asset_address,
         makeAssetValue: make_asset_value.toString(),
-        taker,
+        taker: ADDRESS_ZERO,
         takeAssetType: take_asset_type,
         takeAssetAddress: take_asset_address,
         takeAssetValue: take_asset_value.toString(),
@@ -1668,7 +1663,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     params.start = Math.floor(params.start / 1000);
     params.end = Math.floor(params.end / 1000);
     setIsSigningOrderData(true);
-    const sig = await signBidOrderData(params, nft, marketData);
+    const sig = await signBidOrderData(params, nft);
     setIsSigningOrderData(false);
     if (!sig) {
       onRequestError("sign", new Error("Failed to sign bid data"));
@@ -1677,7 +1672,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     onSignSuccess();
 
     setCreatingOrder(true);
-    const result = await createBidAPI(params, sig, marketData.owners[0].signer);
+    const result = await createBidAPI(params, sig);
     if (!result) {
       onRequestError("create_order_api", new Error("Failed to create order"));
       return false;
@@ -1698,7 +1693,6 @@ const useMarketplaceV2 = (nft: NFT) => {
         );
       }
     }
-
     await writeContract(config, {
       abi,
       address: contractExchangeV2Test,
@@ -1744,7 +1738,10 @@ const useMarketplaceV2 = (nft: NFT) => {
         ],
         [
           {
-            orderType: getOrderTypeIndex(order.orderType),
+            orderType:
+              getOrderTypeIndex(order.orderType) === 1
+                ? 0
+                : getOrderTypeIndex(order.orderType),
             maker: address,
             makeAsset: {
               assetType: order.takeAssetType,
@@ -1823,8 +1820,8 @@ const useMarketplaceV2 = (nft: NFT) => {
     });
   };
 
-  const acceptBid = async (order: OrderDetails) => {
-    if (!address || !order.Maker || !order.Taker) return;
+  const acceptBid = async (order: OrderDetails, acceptQty: number) => {
+    if (!address || !order.Maker) return;
     const types = {
       Asset: [
         { name: "assetType", type: "uint8" },
@@ -1853,11 +1850,11 @@ const useMarketplaceV2 = (nft: NFT) => {
       types,
       primaryType: "Order",
       message: {
-        maker: order.Taker.signer,
+        maker: address,
         makeAsset: {
           assetType: order.takeAssetType,
           contractAddress: order.takeAssetAddress as Address,
-          value: BigInt(order.takeAssetValue),
+          value: BigInt(acceptQty),
           id: BigInt(order.takeAssetId),
         },
         taker: order.Maker.signer,
@@ -1888,7 +1885,7 @@ const useMarketplaceV2 = (nft: NFT) => {
               value: BigInt(order.makeAssetValue),
               id: BigInt(order.makeAssetId),
             },
-            taker: order.Taker.signer,
+            taker: ADDRESS_ZERO,
             takeAsset: {
               assetType: order.takeAssetType,
               contractAddress: order.takeAssetAddress as Address,
@@ -1913,11 +1910,11 @@ const useMarketplaceV2 = (nft: NFT) => {
           },
           sellOrder: {
             orderType: 2,
-            maker: order.Taker.signer,
+            maker: address,
             makeAsset: {
               assetType: order.takeAssetType,
               contractAddress: order.takeAssetAddress as Address,
-              value: BigInt(order.takeAssetValue),
+              value: BigInt(acceptQty),
               id: BigInt(order.takeAssetId),
             },
             taker: order.Maker.signer,

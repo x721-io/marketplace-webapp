@@ -38,7 +38,8 @@ export default function NFTCard(nft: NFT) {
     name,
     id,
     price,
-    sellStatus,
+    orderStatus,
+    orderType,
     collection,
     image,
     animationUrl,
@@ -108,7 +109,7 @@ export default function NFTCard(nft: NFT) {
   };
 
   const renderNFTData = () => {
-    switch (sellStatus) {
+    switch (orderStatus) {
       case "Bid":
         return (
           <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">

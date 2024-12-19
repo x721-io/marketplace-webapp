@@ -144,20 +144,20 @@ export const useNFTMarketStatus = (
     }
     if (type === "ERC1155") {
       // Find the lowest price in sell data
-      const a =  sellInfo?.reduce((prev, curr) => {
+      const a = sellInfo?.reduce((prev, curr) => {
         return parseEther(String(prev.price)) < parseEther(String(curr.price))
           ? prev
           : curr;
       });
       console.log(a);
-      return a
+      return a;
     }
   }, [sellInfo]);
 
   const isSeller = useMemo(() => {
     if (type === "ERC721") return isOwner;
     return saleData?.Maker?.publicKey.toLowerCase() === wallet?.toLowerCase();
-  }, [type, isOwner, saleData, wallet]);  
+  }, [type, isOwner, saleData, wallet]);
 
   return {
     saleData,

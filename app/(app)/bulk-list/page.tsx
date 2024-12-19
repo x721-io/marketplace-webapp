@@ -8,6 +8,7 @@ import { exchangeSignedDomain } from "@/hooks/useMarketplaceV2";
 import { nextAPI } from "@/services/api";
 import { useUserStore } from "@/store/users/store";
 import { daysRanges } from "@/types";
+import { genRandomNumber } from "@/utils";
 import { parseUnits } from "ethers";
 import { useRouter } from "next/navigation";
 import { useAccount, useSignTypedData } from "wagmi";
@@ -16,8 +17,12 @@ const BulkList = () => {
   const router = useRouter();
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
-  const { bulkOrders, removeBulkOrdersItem, upsertBulkOrdersItem } =
-    useUserStore();
+  const {
+    bulkOrders,
+    removeBulkOrdersItem,
+    upsertBulkOrdersItem,
+    removeAllBulkOrderItems,
+  } = useUserStore();
 
   const columnClassName = "text-left p-3";
   const headerTextClassName =
@@ -25,12 +30,13 @@ const BulkList = () => {
 
   const generateBulkData = async () => {
     if (!address) return false;
+    const salt = genRandomNumber(8, 10).toString();
     const body = bulkOrders
       .map((order, i) => {
         if (!order.nft) return null;
         const { collection } = order.nft;
         const { address: collectionAddress } = collection;
-        const { end, price, quantity, quoteToken, start, salt } = order;
+        const { end, price, quantity, quoteToken, start } = order;
         const makeAsset = {
           assetType: 3,
           contractAddress: collectionAddress,
@@ -65,7 +71,7 @@ const BulkList = () => {
           takeAssetAddress: take_asset_address,
           takeAssetValue: take_asset_value.toString(),
           takeAssetId: take_asset_id.toString(),
-          salt: salt.toString(),
+          salt,
           start: Math.floor(start / 1000).toString(),
           end: Math.floor(end / 1000).toString(),
           orderType: "BULK",
@@ -86,6 +92,7 @@ const BulkList = () => {
       BulkOrder: [
         { name: "maker", type: "address" },
         { name: "root", type: "bytes32" },
+        { name: "salt", type: "uint256" },
       ],
     } as const;
     const sig = await signTypedDataAsync({
@@ -96,61 +103,65 @@ const BulkList = () => {
       message: {
         maker: address,
         root: response.data.data.root,
+        salt: BigInt(salt),
       },
     });
 
-    const body2 = body
-      .map((order: any, i: number) => {
-        const {
-          makeAssetType,
-          makeAssetId,  
-          makeAssetAddress,
-          makeAssetValue,
-          taker,
-          takeAssetType,
-          takeAssetAddress,
-          takeAssetValue,
-          takeAssetId,
-          salt,
-          start,
-          end,
-          orderType,
-          price,
-          totalPice,
-          netPrice,
-          index,
-          nft,
-          quantity,
-          quoteToken,
-        } = order;
-        return {
-          makeAssetType,
-          makeAssetId,
-          makeAssetAddress,
-          makeAssetValue,
-          taker,
-          takeAssetType,
-          takeAssetAddress,
-          takeAssetValue,
-          takeAssetId,
-          salt,
-          start,
-          end,
-          orderType,
-          price,
-          totalPice,
-          netPrice,
-          index,
-          nft,
-          quantity,
-          quoteToken,
-          sig,
-          root: response.data.data.root,
-          proof: response.data.data.proof[i],
-        };
-      })
-      .filter((item) => item !== null);
-    await nextAPI.post("/order/bulk", { orders: body2 });
+    try {
+      const body2 = body
+        .map((order: any, i: number) => {
+          const {
+            makeAssetType,
+            makeAssetId,
+            makeAssetAddress,
+            makeAssetValue,
+            taker,
+            takeAssetType,
+            takeAssetAddress,
+            takeAssetValue,
+            takeAssetId,
+            salt,
+            start,
+            end,
+            orderType,
+            price,
+            totalPice,
+            netPrice,
+            index,
+            nft,
+            quantity,
+            quoteToken,
+          } = order;
+          return {
+            makeAssetType,
+            makeAssetId,
+            makeAssetAddress,
+            makeAssetValue,
+            taker,
+            takeAssetType,
+            takeAssetAddress,
+            takeAssetValue,
+            takeAssetId,
+            salt,
+            start,
+            end,
+            orderType,
+            price,
+            totalPice,
+            netPrice,
+            index,
+            nft,
+            quantity,
+            quoteToken,
+            sig,
+            root: response.data.data.root,
+            proof: response.data.data.proof[i],
+          };
+        })
+        .filter((item) => item !== null);
+      await nextAPI.post("/order/bulk", { orders: body2 });
+      removeAllBulkOrderItems();
+    } catch (err) {}
   };
 
   return (
@@ -215,10 +226,18 @@ const BulkList = () => {
                   type="number"
                   onChange={(e) => {
                     const updatedOrder = structuredClone(o);
-                    updatedOrder.totalPrice = Number(e.target.value);
+                    updatedOrder.price = Number(e.target.value);
+                    const netPrice =
+                      parseFloat(updatedOrder.price.toString()) -
+                      parseFloat(updatedOrder.price.toString()) * 0.0125;
+                    const totalPrice =
+                      parseFloat(updatedOrder.price.toString()) +
+                      parseFloat(updatedOrder.price.toString()) * 0.0125;
+                    updatedOrder.totalPrice = totalPrice;
+                    updatedOrder.netPrice = netPrice;
                     upsertBulkOrdersItem(updatedOrder);
                   }}
-                  value={o.totalPrice}
+                  value={o.price}
                   className="p-2 rounded-md w-[80%]"
                 />
               </td>

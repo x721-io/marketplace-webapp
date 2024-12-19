@@ -262,7 +262,9 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
   const handleDeposit = async () => {
     if (!nativeTokenBalance || !nativeTokenBalance.data) return;
     try {
-      const depositAmt = parseUnits(price, 18) - quoteTokenBalance!;
+      const totalPrice = Number(price) * Number(quantity);
+      const depositAmt =
+        parseUnits(totalPrice.toString(), 18) - quoteTokenBalance!;
       if (depositAmt > nativeTokenBalance.data.value) {
         toast.error(`You don't have enough ${tokens["u2u"].symbol}`);
         return;
@@ -289,7 +291,8 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       return;
     }
     if (isNumber(quoteTokenBalance)) {
-      if (parseUnits(price, 18) > quoteTokenBalance!) {
+      const totalPrice = Number(price) * Number(quantity);
+      if (parseUnits(totalPrice.toString(), 18) > quoteTokenBalance!) {
         setError("price", {
           type: "custom",
           message: `You don't have enough ${tokens["wu2u"].symbol}`,
@@ -298,7 +301,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
         clearErrors("price");
       }
     }
-  }, [price, quoteTokenBalance]);
+  }, [price, quoteTokenBalance, clearErrors, setError, quantity]);
 
   return (
     <>
@@ -452,7 +455,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
 
               <div className="w-full flex flex-col">
                 <label className="text-body-14 text-secondary font-semibold mb-1">
-                  Offer's expiration date
+                  Offer&rsquo;s expiration date
                 </label>
                 <div className="w-full relative rounded-2xl">
                   <Dropdown.Root

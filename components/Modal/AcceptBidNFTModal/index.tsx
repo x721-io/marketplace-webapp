@@ -39,7 +39,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     "quantity",
     "quoteToken",
   ]);
-  const { acceptBid, getOrderDetails} = useMarketplaceV2(nft);
+  const { acceptBid, getOrderDetails } = useMarketplaceV2(nft);
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
   const [loadingForAll, setLoadingForAll] = useState(false);
@@ -67,41 +67,6 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
       if (!price || isNaN(Number(price))) return;
     },
   });
-
-  const onSubmit = async ({ quantity }: FormState.AcceptBidNFT) => {
-    if (!bid || !bid.Taker?.signer) return;
-    const toastId = toast.loading("Preparing data...", { type: "info" });
-    setLoading(true);
-    try {
-      if (type === "ERC721") {
-        await onAcceptBidURC721(bid.Taker.signer, bid.quoteToken);
-      } else {
-        const onrderDetails = await getOrderDetails(bid.sig, bid.index);
-        if(!onrderDetails) return;
-        await acceptBid(onrderDetails);
-      }
-      toast.update(toastId, {
-        render: "Bid order has been fulfilled successfully",
-        type: "success",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-      onClose?.();
-    } catch (e) {
-      console.error(e);
-      toast.update(toastId, {
-        render: "Failed to accept bid",
-        type: "error",
-        autoClose: 1000,
-        closeButton: true,
-        isLoading: false,
-      });
-    } finally {
-      setLoading(false);
-      reset();
-    }
-  };
 
   const handleApproveTokenForSingle = async () => {
     const toastId = toast.loading("Preparing data...", { type: "info" });
@@ -159,11 +124,26 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     }
   };
 
+  const handleAcceptBid = async () => {
+    if (!bid) return;
+    if (!isMarketContractApprovedToken) {
+      if (nft.collection.type === "ERC721") {
+        await handleApproveTokenForSingle();
+      } else {
+        await handleApproveTokenForAll();
+      }
+    } else {
+      const orderDetails = await getOrderDetails(bid.sig, bid.index);
+      if (!orderDetails) return;
+      await acceptBid(orderDetails, quantity);
+    }
+  };
+
   return (
     <MyModal.Root show={show} onClose={onClose}>
       <MyModal.Body className="tablet:p-10">
         <div className="flex flex-col justify-center items-center gap-4">
-          <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+          <form className="w-full">
             <div className="font-bold mb-2">
               <Text className="mb-3 text-center" variant="heading-xs">
                 Accept Bid
@@ -254,7 +234,11 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
                   >
                     Cancel
                   </Button>
-                  <Button className="flex-1" type="submit" loading={loading}>
+                  <Button
+                    className="flex-1"
+                    onClick={() => handleAcceptBid()}
+                    loading={loading}
+                  >
                     Accept bid
                   </Button>
                 </>

@@ -20,6 +20,9 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -34,13 +37,14 @@ const SaleInfo = ({
   marketData?: APIResponse.NFTMarketData;
   nft: NFT;
 }) => {
+  console.log({ marketData });
   const { data: priceHistories } = useGetNftPriceHistory({
     collectionAddress: nft.collection.address,
     id: nft.id,
   });
   const [isCancelling, setCancelling] = useState(false);
   const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
-  const [activeAccordIds, setActiveAccordIds] = useState<number[]>([0, 1]);
+  const [activeAccordIds, setActiveAccordIds] = useState<number[]>([0, 1, 2]);
   const { profile } = useAuthStore();
   const [saleData, setSaleData] = useState<MarketEventV2 | null>(null);
   const [cancelSaleData, setCancelSaleData] = useState<MarketEventV2 | null>(
@@ -87,6 +91,8 @@ const SaleInfo = ({
       </div>
     );
   };
+
+  console.log(marketData?.sellInfo);
 
   const getSellListContent = () => {
     if (!marketData || marketData?.sellInfo.length === 0) {
@@ -147,13 +153,7 @@ const SaleInfo = ({
                     setSaleData(s);
                   }}
                 >
-                  {marketData?.owners.findIndex(
-                    (owner) => owner.publicKey === profile?.publicKey
-                  ) !== -1
-                    ? "Cancel"
-                    : profile?.publicKey !== s.Maker?.publicKey
-                    ? "Buy"
-                    : "Cancel"}
+                  {profile?.publicKey !== s.Maker?.publicKey ? "Buy" : "Cancel"}
                 </button>
               </td>
             </tr>
@@ -240,41 +240,43 @@ const SaleInfo = ({
   };
 
   const renderPriceChart = () => {
+    if (priceHistories && priceHistories.length > 0) {
+      return (
+        <div className="w-full relative aspect-video pt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              width={730}
+              height={250}
+              data={priceHistories.map((item) => {
+                return {
+                  datetime: moment(item.timestamp * 1000).format(
+                    "HH:MM MMM DD"
+                  ),
+                  price: item.priceNum,
+                };
+              })}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="datetime" />
+              <YAxis dataKey="price" />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#121212"
+                strokeWidth={1.5}
+              />
+              {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      );
+    }
     return (
-      <div className="w-full relative aspect-video">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            width={500}
-            height={400}
-            data={
-              priceHistories
-                ? priceHistories.map((item) => {
-                    return {
-                      datetime: moment(item.timestamp * 1000).format("HH:MM MMM DD"),
-                      price: item.priceNum,
-                    };
-                  })
-                : []
-            }
-            margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="datetime" />
-            <YAxis dataKey="price" />
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="price"
-              stroke="#8884d8"
-              fill="#8884d8"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="w-full text-balance text-center flex flex-col">
+        <div>No events have occurred yet</div>
+        <div>Check back later</div>
       </div>
     );
   };

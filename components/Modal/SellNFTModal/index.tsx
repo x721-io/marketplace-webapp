@@ -380,8 +380,8 @@ export default function SellNFTModal({
                 />
               )} */}
               <Button type={"submit"} className="w-full" loading={loading}>
-                  Put on sale
-                </Button>
+                Put on sale
+              </Button>
             </form>
           </div>
         </MyModal.Body>
