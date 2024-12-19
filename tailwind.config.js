@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        oscura: "Oscura, sans-serif",
+      },
       screens: {
         mobile: "480px",
         tablet: "768px",

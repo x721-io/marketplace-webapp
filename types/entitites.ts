@@ -117,6 +117,8 @@ export interface Collection {
   totalNft: number;
   floorPrice: string;
   isVerified: boolean;
+  metadataJson: MetadataJson;
+  floor: number;
 }
 
 export interface Timeframe {
@@ -160,3 +162,95 @@ export type CollectionStatisticItem = {
   createdAt: string;
   collection: Collection;
 };
+
+export interface LayerGNFT {
+  id: string;
+  u2uId: string;
+  name: string;
+  status: EntityStatus;
+  tokenUri: string;
+  txCreationHash: string;
+  creatorId: string;
+  collectionId: string;
+  image: string;
+  animationUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  nameSlug: string;
+  isActive: boolean;
+  metricPoint: string;
+  metricDetail: MetricDetail;
+  creator: {
+    avatar: null | string;
+    email: string | null;
+    id: string;
+    publicKey: Address;
+    username: string;
+    accountStatus: boolean;
+  } | null;
+  collection: Collection;
+  sellInfo: SellInfo;
+  bidInfo: BidInfo;
+  derivedETH: number;
+  derivedUSD: number;
+  traits?: Trait[];
+  sellStatus?: MarketEventType;
+  quoteToken?: Address;
+}
+
+export interface MetricDetail {
+  UserMetric: number;
+  VolumeIndividual: number;
+}
+
+export interface MetadataJson {
+  id: string;
+  name: string;
+  banner: string;
+  category: Category[];
+  gameIcon: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  extract: string;
+}
+
+export interface Paging {
+  page?: number;
+  limit?: number;
+}
+
+export interface FilterLayerGNFTs extends Paging {
+  collectionAddress?: string;
+  collectionName?: string;
+  categoryName?: string;
+  symbol?: string;
+  nftName?: string;
+}
+
+export interface SellInfo {
+  price: string;
+  quantity: number;
+  quoteToken: string;
+  orderStatus: string;
+  orderType: string;
+  index: number;
+  sig: string;
+  start: number;
+  end: number;
+}
+
+export interface BidInfo {
+  price: string;
+  quantity: number;
+  quoteToken: string;
+  orderStatus: string;
+  orderType: string;
+  index: number;
+  sig: string;
+  start: number;
+  end: number;
+}

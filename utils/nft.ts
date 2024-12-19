@@ -20,6 +20,8 @@ export const convertImageUrl = (url?: string): string => {
     ipfsPrefix.some((prefix) => url.includes(prefix))
   ) {
     return url;
+  } else if (url.startsWith("https://ipfs")) {
+    return url;
   } else {
     return baseURL + encodeURIComponent(url);
   }

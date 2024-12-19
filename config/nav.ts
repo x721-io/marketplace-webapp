@@ -33,4 +33,12 @@ export const navs: NavItem[] = [
       { href: LAUNCHPAD_APPLY_URL as string, external: true, label: "Apply" },
     ],
   },
+  {
+    label: "LayerG",
+    href: "/layerg/overview",
+    // items: [
+    //   { href: "/launchpad", label: "Projects" },
+    //   { href: LAUNCHPAD_APPLY_URL as string, external: true, label: "Apply" },
+    // ],
+  },
 ];

@@ -1,4 +1,6 @@
 export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+export const BASE_LAYER_G_API_URL =
+  process.env.NEXT_PUBLIC_BASE_LAYER_G_API_URL;
 
 export const API_ENDPOINTS = {
   CONNECT: "/auth/connect",
@@ -30,4 +32,8 @@ export const API_ENDPOINTS = {
   FLOOR_PRICE: "/collection/floor-price",
   REFRESH: "/auth/refresh",
   PRICE_HISTORY: "/nft/history-prices",
+  CATEGORY: "api/project/categories",
+  LAYER_G_PROJECT: "api/project",
+  LAYER_G_SMART_CONTRACT: "api/smc",
+  SEARCH_NFT_LAYER_G: "/layerg",
 };
