@@ -58,6 +58,7 @@ export type Container = {
   children?: Element[];
   styles?: React.CSSProperties;
   path?: string;
+  element?: Container;
 };
 
 export type Video = {

@@ -4,7 +4,12 @@
 import { Image as ImageType } from "../../types";
 import { useScreen } from "@/hooks/useScreen";
 
-const ImageElement = (element: ImageType, index: number) => {
+interface Props {
+  element: ImageType;
+  index: number;
+}
+
+const ImageElement = ({ element, index }: Props) => {
   const { screen } = useScreen();
   return (
     <div

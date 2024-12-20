@@ -1,4 +1,4 @@
-import { Element, ElementType } from "../../types";
+import { ButtonLink, Container, Element, ElementType, Text } from "../../types";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { GrEdit } from "react-icons/gr";
@@ -8,18 +8,20 @@ import ImageElement from "@/components/PageBuilder/Overview/Elements/ImageElemen
 import VideoElement from "@/components/PageBuilder/Overview/Elements/VideoElement";
 import TextElement from "@/components/PageBuilder/Overview/Elements/TextElement";
 
-export const generateElement = (element: Element, index: number) => {
+export const generateElement = (element: any, index: number) => {
   switch (element.type) {
     case ElementType.CONTAINER:
-      return ContainerElement(element, index);
+      return <ContainerElement element={element} index={index} />;
     case ElementType.BUTTON_LINK:
-      return ButtonLinkElement(element, index);
+      return <ButtonLinkElement element={element} index={index} />;
     case ElementType.TEXT:
-      return TextElement(element, index);
+      return <TextElement element={element as Text} index={index} />;
     case ElementType.VIDEO:
-      return VideoElement(element, index);
+      return <VideoElement element={element} index={index} />;
     case ElementType.IMAGE:
-      return ImageElement(element, index);
+      return <ImageElement element={element} index={index} />;
+    default:
+      return null;
   }
 };
 

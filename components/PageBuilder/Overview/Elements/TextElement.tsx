@@ -3,7 +3,11 @@
 import { Text } from "../../types";
 import { useScreen } from "@/hooks/useScreen";
 
-const TextElement = (element: Text, index: number) => {
+interface Props {
+  element: Text;
+  index: number;
+}
+const TextElement = ({ element, index }: Props) => {
   const { screen } = useScreen();
 
   return (

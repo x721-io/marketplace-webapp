@@ -1,10 +1,20 @@
 import { MyTabs } from "@/components/X721UIKits/Tabs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function OverView() {
-  const [currTabIndex, setCurrTabIndex] = useState(1);
   const router = useRouter();
+
+  const storedTabIndex = useMemo(() => {
+    const savedIndex = sessionStorage.getItem("profilePageTabIndex");
+    return savedIndex ? parseInt(savedIndex, 10) : 0;
+  }, []);
+
+  const [currTabIndex, setCurrTabIndex] = useState(storedTabIndex);
+
+  useEffect(() => {
+    sessionStorage.setItem("profilePageTabIndex", currTabIndex.toString());
+  }, [currTabIndex]);
 
   useEffect(() => {
     if (currTabIndex === 1) {
@@ -30,11 +40,11 @@ export default function OverView() {
               List Item
             </div>
           </MyTabs.Item>
-          <MyTabs.Item tabIndex={3} active={currTabIndex === 3}>
-            <div className="min-w-fit whitespace-nowrap text-[0.925rem]">
-              Analytics
-            </div>
-          </MyTabs.Item>
+          {/*<MyTabs.Item tabIndex={3} active={currTabIndex === 3}>*/}
+          {/*  <div className="min-w-fit whitespace-nowrap text-[0.925rem]">*/}
+          {/*    Analytics*/}
+          {/*  </div>*/}
+          {/*</MyTabs.Item>*/}
         </MyTabs.Group>
       </div>
     </div>

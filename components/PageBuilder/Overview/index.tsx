@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Element, ElementType } from "../types";
 import EditOverviewSectionModal from "@/components/PageBuilder/Overview/CRUD/EditSectionModal";
 import AddOverviewSectionModal from "@/components/PageBuilder/Overview/CRUD/AddOnSectionModal";
@@ -19,86 +19,104 @@ export default function OverviewTab({
     ...overviewElements,
   ]);
 
-  const handleAddNewElement = (element: Element) => {
+  const handleAddNewElement = useCallback((element: Element) => {
     setDraftedElements((prev) => [...prev, element]);
     setShowAddSectionModal(false);
-  };
+  }, []);
 
-  const handleMoveDown = (index: number) => {
-    const newElements = [...draftedElements];
-    const element = newElements.splice(index, 1)[0];
-    newElements.splice(index + 1, 0, element);
-    setDraftedElements(newElements);
-  };
+  const handleMoveDown = useCallback((index: number) => {
+    setDraftedElements((prev) => {
+      if (index < prev.length - 1) {
+        const newElements = [...prev];
+        const [movedElement] = newElements.splice(index, 1);
+        newElements.splice(index + 1, 0, movedElement);
+        return newElements;
+      }
+      return prev;
+    });
+  }, []);
 
-  const handleMoveUp = (index: number) => {
-    const newElements = [...draftedElements];
-    const element = newElements.splice(index, 1)[0];
-    newElements.splice(index - 1, 0, element);
-    setDraftedElements(newElements);
-  };
+  const handleMoveUp = useCallback((index: number) => {
+    setDraftedElements((prev) => {
+      if (index > 0) {
+        const newElements = [...prev];
+        const [movedElement] = newElements.splice(index, 1);
+        newElements.splice(index - 1, 0, movedElement);
+        return newElements;
+      }
+      return prev;
+    });
+  }, []);
 
-  const handleDelete = (index: number) => {
-    const newElements = [...draftedElements];
-    newElements.splice(index, 1);
-    setDraftedElements(newElements);
-  };
+  const handleDelete = useCallback((index: number) => {
+    setDraftedElements((prev) => {
+      const newElements = [...prev];
+      newElements.splice(index, 1);
+      return newElements;
+    });
+  }, []);
 
-  const handleOnEdit = (index: number) => {
+  const handleOnEdit = useCallback((index: number) => {
     setEditIndex(index);
-  };
+  }, []);
 
-  const handleUpdateElement = (path: string, updatedElement: Element) => {
-    const updatedDraftedElements = [...draftedElements];
-    const indices = path.split("-").map(Number);
-    let currentItem = updatedDraftedElements;
-    for (let i = 0; i < indices.length - 1; i++) {
-      if (currentItem[indices[i]] && currentItem[indices[i]].children) {
-        currentItem = currentItem[indices[i]].children ?? [];
-      } else {
-        console.error("Invalid path");
-        return;
-      }
-    }
-    const finalIndex = indices[indices.length - 1];
-    if (currentItem[finalIndex]) {
-      delete updatedElement.path;
-      currentItem[finalIndex] = updatedElement;
-    } else {
-      console.error("Invalid path at the final index");
-    }
-    setDraftedElements(updatedDraftedElements);
-  };
+  const handleUpdateElement = useCallback(
+    (path: string, updatedElement: Element) => {
+      setDraftedElements((prev) => {
+        const updatedDraftedElements = [...prev];
+        const indices = path.split("-").map(Number);
+        let currentItem = updatedDraftedElements;
+        for (let i = 0; i < indices.length - 1; i++) {
+          if (currentItem[indices[i]] && currentItem[indices[i]].children) {
+            currentItem = currentItem[indices[i]].children ?? [];
+          } else {
+            console.error("Invalid path");
+            return prev;
+          }
+        }
+        const finalIndex = indices[indices.length - 1];
+        if (currentItem[finalIndex]) {
+          delete updatedElement.path;
+          currentItem[finalIndex] = updatedElement;
+        } else {
+          console.error("Invalid path at the final index");
+        }
+        return updatedDraftedElements;
+      });
+    },
+    []
+  );
 
-  const handleUpdateBG = (
-    newBG: string,
-    index: number,
-    type: "color" | "image"
-  ) => {
-    const updatedDraftedElements = [...draftedElements];
-    if (updatedDraftedElements[index].type === ElementType.CONTAINER) {
-      switch (type) {
-        case "color":
-          updatedDraftedElements[index].background = newBG;
-          break;
-        case "image":
-          updatedDraftedElements[index].backgroundImage = newBG;
-          break;
-        default:
-      }
-    }
-    setDraftedElements(updatedDraftedElements);
-  };
+  const handleUpdateBG = useCallback(
+    (newBG: string, index: number, type: "color" | "image") => {
+      setDraftedElements((prev) => {
+        const updatedDraftedElements = [...prev];
+        if (updatedDraftedElements[index].type === ElementType.CONTAINER) {
+          switch (type) {
+            case "color":
+              updatedDraftedElements[index].background = newBG;
+              break;
+            case "image":
+              updatedDraftedElements[index].backgroundImage = newBG;
+              break;
+            default:
+          }
+        }
+        return updatedDraftedElements;
+      });
+    },
+    []
+  );
 
   return (
     <div className="w-full relative flex flex-col gap-10">
       <div className="w-full relative flex flex-col">
         {draftedElements.map((e, i) => (
           <CRUD
-            onEdit={handleOnEdit}
-            onMoveDown={handleMoveDown}
-            onMoveUp={handleMoveUp}
-            onDelete={handleDelete}
+            onEdit={() => handleOnEdit(i)}
+            onMoveDown={() => handleMoveDown(i)}
+            onMoveUp={() => handleMoveUp(i)}
+            onDelete={() => handleDelete(i)}
             key={i}
             element={e}
             index={i}

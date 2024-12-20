@@ -110,12 +110,17 @@ export default function EditOverviewSectionModal({
   useEffect(() => {
     if (textElements.length > 0 && containerElements.length > 0) {
       const path = textElements[0].path;
-      const containerElement = containerElements.find((containerElement) =>
-        path.startsWith(containerElement.path)
+      const foundContainerElements = containerElements.filter(
+        (containerElement) => path.startsWith(containerElement.path)
       );
-      if (!containerElement) return;
-      setTextContainerElement(containerElement);
-      setJustifyContent(containerElement.justifyContent ?? "flex-start");
+      if (foundContainerElements.length === 0) return;
+      setTextContainerElement(
+        foundContainerElements[foundContainerElements.length - 1]
+      );
+      setJustifyContent(
+        foundContainerElements[foundContainerElements.length - 1]
+          .justifyContent ?? "flex-start"
+      );
     }
   }, [containerElements, textElements]);
 
@@ -161,6 +166,7 @@ export default function EditOverviewSectionModal({
   };
 
   const handleUploadImage = (file?: Blob) => {
+    let reader;
     // alert(1233);
     if (!file) {
       setMediaSrc(null);
@@ -171,10 +177,10 @@ export default function EditOverviewSectionModal({
       const objectURL = URL.createObjectURL(file);
       setMediaSrc(objectURL);
       if (file.type.startsWith("image")) {
-        var reader = new FileReader();
+        reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function (e) {
-          var image = new Image();
+          const image = new Image();
           if (e.target?.result) {
             image.src = e.target.result as any;
             image.onload = function () {
@@ -196,10 +202,10 @@ export default function EditOverviewSectionModal({
           }
         };
       } else if (file.type.startsWith("video")) {
-        var reader = new FileReader();
+        reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function (e) {
-          var video = document.createElement("video");
+          const video = document.createElement("video");
           if (e.target?.result) {
             video.src = e.target.result as any;
             video.addEventListener("loadedmetadata", function (e) {
