@@ -3,7 +3,12 @@
 import { Video } from "../../types";
 import { useScreen } from "@/hooks/useDevice";
 
-const VideoElement = (element: Video, index: number) => {
+interface Props {
+  element: Video;
+  index: number;
+}
+
+const VideoElement = ({ element, index }: Props) => {
   const { screen } = useScreen();
 
   return (

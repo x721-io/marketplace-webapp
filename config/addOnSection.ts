@@ -236,6 +236,7 @@ export const elementTextRightMediaLeft: Element = {
           responsive: true,
           background: "transparent",
           justifyContent: "center",
+          alignItems: "center",
           flexDirection: "column",
           styles: {
             width: "100%",

@@ -2,7 +2,12 @@
 
 import { ButtonLink } from "../../types";
 
-const ButtonLinkElement = (element: ButtonLink, index: number) => {
+interface Props {
+  element: ButtonLink;
+  index: number;
+}
+
+const ButtonLinkElement = ({ element, index }: Props) => {
   return (
     <button
       onClick={() => window.open(element.href, "_blank")}

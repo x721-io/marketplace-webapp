@@ -4,7 +4,12 @@ import { Container } from "../../types";
 import { generateElement } from "@/components/PageBuilder/Overview/CRUD";
 import { useScreen } from "@/hooks/useDevice";
 
-const ContainerElement = (element: Container, index: number) => {
+interface Props {
+  element: Container;
+  index: number;
+}
+
+const ContainerElement = ({ element, index }: Props) => {
   const { screen } = useScreen();
   return (
     <div
