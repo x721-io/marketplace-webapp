@@ -69,14 +69,14 @@ const Statistics: React.FC<Props> = ({
         case "floorPrice":
           setFilters({
             ...filters,
-            orderBy: AnalysisModeSort.floorPrice,
+            orderBy: AnalysisModeSort.floor,
             order: currentSorting.direction,
           });
           break;
         case "volume":
           setFilters({
             ...filters,
-            orderBy: AnalysisModeSort.volume,
+            orderBy: AnalysisModeSort.vol,
             order: currentSorting.direction,
           });
           break;
@@ -101,7 +101,7 @@ const Statistics: React.FC<Props> = ({
   const resetFilters = () => {
     setFilters({
       ...filters,
-      orderBy: AnalysisModeSort.volume,
+      orderBy: AnalysisModeSort.vol,
       order: "desc",
       type: AnalysisType.ONEDAY,
       min: "",
@@ -117,7 +117,7 @@ const Statistics: React.FC<Props> = ({
   useEffect(() => {
     setFilters({
       ...filters,
-      orderBy: AnalysisModeSort.volume,
+      orderBy: AnalysisModeSort.vol,
       order: "desc",
       type: AnalysisType.ONEDAY,
       min: "",

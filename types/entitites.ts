@@ -152,8 +152,8 @@ export enum AnalysisType {
 }
 
 export enum AnalysisModeSort {
-  floorPrice = "floorPrice",
-  volume = "volume",
+  floor = "floor",
+  vol = "vol",
   owner = "owner",
   items = "items",
 }
