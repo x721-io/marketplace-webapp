@@ -74,8 +74,8 @@ export default function NFTImage({ item }: { item: NFT }) {
             <BlurImage
               src={displayMedia}
               alt=""
-              width={512}
-              height={512}
+              width={410}
+              height={410}
               className="object-cover w-full h-full rounded-2xl mb-10"
             />
           </div>

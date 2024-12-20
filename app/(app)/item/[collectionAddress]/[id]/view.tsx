@@ -56,7 +56,7 @@ export default function NFTView({ item }: { item: NFT }) {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full flex justify-center items-center">
-        <div className="tablet:py-[60px] py-6 flex flex-col desktop:w-[80%] desktop:mx-auto tablet:w-[646px] w-full justify-center">
+        <div className="tablet:py-[60px] py-6 flex flex-col desktop:w-[80%] desktop:mx-auto tablet:w-[646px] w-full desktop:px-0 px-4 justify-center">
           <div className="flex desktop:gap-16 tablet:gap-8 gap-8 desktop:flex-row flex-col items-center w-full tablet:items-start">
             <div className="flex flex-col w-full gap-10">
               <div className="flex gap-4 justify-center flex-col tablet:flex-row w-full tablet:w-auto">
@@ -82,7 +82,7 @@ export default function NFTView({ item }: { item: NFT }) {
                 />
               </div>
             </div>
-            <div className="w-full pr-10">
+            <div className="w-full desktop:pr-10">
               <NFTMarketData
                 nft={item}
                 marketData={marketData}
@@ -92,7 +92,7 @@ export default function NFTView({ item }: { item: NFT }) {
           </div>
         </div>
       </div>
-      <div className="tablet:py-[60px] py-6 flex flex-col desktop:w-[80%] gap-5 desktop:mx-auto tablet:w-[646px] w-full justify-center">
+      <div className="tablet:py-[60px] py-6 flex flex-col desktop:w-[80%] gap-5 desktop:mx-auto tablet:w-[646px] w-full desktop:px-0 px-4 justify-center">
         <div className="w-full text-[1.25rem]">More From This Collection</div>
         <div
           className={classNames(
