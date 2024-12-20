@@ -95,37 +95,9 @@ export default function OwnersTab({
                   </Link>
                   <div>
                     <p className="font-medium text-body-16">{owner.username}</p>
-                    {!!owner.sellInfo ? (
-                      <p className="text-secondary text-body-14 font-semibold break-all">
-                        {owner.sellInfo.quantity}/{owner.quantity} item(s) on
-                        sale for
-                        <span className="text-primary">
-                          {" "}
-                          {formatDisplayedNumber(
-                            formatEther(owner.sellInfo.price)
-                          )}{" "}
-                          {token?.symbol}
-                        </span>{" "}
-                        each
-                      </p>
-                    ) : (
-                      <p className="flex items-center gap-1">
-                        <p className="text-secondary font-semibold text-body-14  break-all w-auto overflow-hidden whitespace-nowrap block max-w-[150px] text-ellipsis ">
-                          {formatDisplayedNumber(owner.quantity)}
-                        </p>
-                        <p className="text-secondary font-semibold text-body-14">
-                          {" "}
-                          edition(s) -
-                        </p>{" "}
-                        <span className="font-bold text-body-14">
-                          {" "}
-                          Not for sale
-                        </span>
-                      </p>
-                    )}
                   </div>
                 </div>
-                <ConnectWalletButton showConnectButton>
+                {/* <ConnectWalletButton showConnectButton>
                   {owner?.publicKey?.toLowerCase() ===
                   userWallet?.toLowerCase() ? (
                     <div className="text-body-14 font-medium text-secondary p-2 rounded-lg bg-surface-soft w-[90px] tablet:w-[120px] desktop:w-[120px] text-center">
@@ -145,16 +117,16 @@ export default function OwnersTab({
                   ) : (
                     ""
                   )}
-                </ConnectWalletButton>
+                </ConnectWalletButton> */}
 
-                {owner.sellInfo && (
+                {/* {owner.sellInfo && (
                   <BuyNFTModal
                     saleData={owner.sellInfo}
                     nft={nft}
                     show={modals[owner.id]}
                     onClose={() => setModals({ ...modals, [owner.id]: false })}
                   />
-                )}
+                )} */}
               </div>
             );
           })

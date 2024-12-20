@@ -258,7 +258,7 @@ const SaleInfo = ({
       const orderDeatails = await getOrderDetails(sig, index);
       if (!orderDeatails) return;
       await cancelOrder(orderDeatails);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 4000));
       mutate([
         `nft-market-data/${nft.id}`,
         {
