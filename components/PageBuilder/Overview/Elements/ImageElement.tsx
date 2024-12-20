@@ -2,7 +2,7 @@
 "use client";
 
 import { Image as ImageType } from "../../types";
-import { useScreen } from "@/hooks/useDevice";
+import { useScreen } from "@/hooks/useScreen";
 
 const ImageElement = (element: ImageType, index: number) => {
   const { screen } = useScreen();

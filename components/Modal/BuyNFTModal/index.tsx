@@ -23,6 +23,7 @@ import { useGetMarketDataByNftId } from "@/hooks/useQuery";
 import { ADDRESS_ZERO } from "@/config/constants";
 import { Address, erc20Abi, formatEther } from "viem";
 import { useAccount, useBalance, useReadContract } from "wagmi";
+import { useSWRConfig } from "swr";
 
 interface Props extends MyModalProps {
   nft: NFT;
@@ -30,6 +31,7 @@ interface Props extends MyModalProps {
 }
 
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
+  const [isBuying, setBuying] = useState(false);
   const { buySingle, deposit, getERC20Allowance, getOrderDetails } =
     useMarketplaceV2(nft);
   const { data: marketData, isLoading: isLoadingMarketData } =
@@ -55,6 +57,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
       quantity: "1",
     },
   });
+  const { mutate } = useSWRConfig();
   const [price, quantity, quoteToken, allowance] = watch([
     "price",
     "quantity",
@@ -114,11 +117,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
     },
   });
 
-  const {
-    allowance: allowanceBalance,
-    isTokenApproved,
-    onApproveToken,
-  } = useMarketApproveERC20(
+  const { allowance: allowanceBalance, onApproveToken } = useMarketApproveERC20(
     token?.address as Address,
     nft.collection.type,
     parseUnits(price || "0", token?.decimal) + buyerFee
@@ -318,12 +317,41 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   };
 
   const handleBuy = async () => {
-    const orderDetails = await getOrderDetails(
-      marketData.sellInfo[0].sig,
-      marketData.sellInfo[0].index
-    );
-    if (!orderDetails) return;
-    await buySingle(orderDetails, Number(quantity));
+    try {
+      setBuying(true);
+      const orderDetails = await getOrderDetails(
+        marketData.sellInfo[0].sig,
+        marketData.sellInfo[0].index
+      );
+      if (!orderDetails) return;
+      await buySingle(orderDetails, Number(quantity));
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      mutate([
+        `nft-market-data/${nft.id}`,
+        {
+          collectionAddress: String(nft.collection.address),
+          id: String(nft.id),
+        },
+      ]);
+      toast.success(`Order has been fulfilled successfully`, {
+        autoClose: 1000,
+        closeButton: true,
+      });
+    } catch (err: any) {
+      if (err.message.includes("rejected")) {
+        toast.error(`Error report: User rejected the transaction.`, {
+          autoClose: 2500,
+          closeButton: true,
+        });
+        return;
+      }
+      toast.error(`Error report: Buy error. Please try again later.`, {
+        autoClose: 2500,
+        closeButton: true,
+      });
+    } finally {
+      setBuying(false);
+    }
   };
 
   const handleDeposit = async () => {
@@ -488,6 +516,7 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
                 !quoteTokenBalance ||
                 quoteTokenBalance < BigInt(marketData.sellInfo[0].price)
               }
+              loading={isBuying}
               onClick={handleBuy}
             >
               Purchase Item

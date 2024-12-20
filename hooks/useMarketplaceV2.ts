@@ -1684,97 +1684,101 @@ const useMarketplaceV2 = (nft: NFT) => {
 
   const buySingle = async (order: OrderDetails, qty: number = 1) => {
     if (!address || !order.Maker) return;
-    if (order.quoteToken !== ADDRESS_ZERO) {
-      const allowance = await getERC20Allowance(order.takeAssetAddress);
-      if (allowance < BigInt(order.takeAssetValue)) {
-        await approveERC20TokenAmt(
-          order.takeAssetAddress,
-          BigInt(order.takeAssetValue)
-        );
+    try {
+      if (order.quoteToken !== ADDRESS_ZERO) {
+        const allowance = await getERC20Allowance(order.takeAssetAddress);
+        if (allowance < BigInt(order.takeAssetValue)) {
+          await approveERC20TokenAmt(
+            order.takeAssetAddress,
+            BigInt(order.takeAssetValue)
+          );
+        }
       }
+      await writeContract(config, {
+        abi,
+        address: contractExchangeV2Test,
+        functionName: "matchOrders",
+        value:
+          order.takeAssetType == 1
+            ? BigInt(order.takeAssetValue) * BigInt(qty)
+            : BigInt(0),
+        args: [
+          [
+            {
+              orderType: getOrderTypeIndex(order.orderType),
+              maker: order.Maker.signer,
+              makeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(order.makeAssetValue),
+                id: BigInt(order.makeAssetId),
+              },
+              taker: ADDRESS_ZERO,
+              takeAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(order.takeAssetValue),
+                id: BigInt(order.takeAssetId),
+              },
+              salt: BigInt(order.salt),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              originFee: {
+                amount: BigInt(0),
+                receiver: contractExchangeV2Test,
+              },
+              royaltyFee: {
+                receiver: order.Maker.signer,
+                amount: BigInt("0"),
+              },
+              index: order.index,
+              proof: (order.proof as any) ?? [],
+              root: order.root as Address,
+              sig: order.sig as any,
+            },
+          ],
+          [
+            {
+              orderType:
+                getOrderTypeIndex(order.orderType) === 1
+                  ? 0
+                  : getOrderTypeIndex(order.orderType),
+              maker: address,
+              makeAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(order.takeAssetValue) * BigInt(qty),
+                id: BigInt(order.takeAssetId),
+              },
+              taker: order.Maker.signer as Address,
+              takeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(qty),
+                id: BigInt(order.makeAssetId),
+              },
+              salt: BigInt(0),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              originFee: {
+                amount: BigInt(0),
+                receiver: contractExchangeV2Test,
+              },
+              royaltyFee: {
+                receiver: order.Maker.signer,
+                amount: BigInt("0"),
+              },
+              index: order.index,
+              proof: [],
+              root: order.root as Address,
+              sig: "0x",
+            },
+          ],
+        ],
+      });
+    } catch (err: any) {
+      throw err;
     }
-    await writeContract(config, {
-      abi,
-      address: contractExchangeV2Test,
-      functionName: "matchOrders",
-      value:
-        order.takeAssetType == 1
-          ? BigInt(order.takeAssetValue) * BigInt(qty)
-          : BigInt(0),
-      args: [
-        [
-          {
-            orderType: getOrderTypeIndex(order.orderType),
-            maker: order.Maker.signer,
-            makeAsset: {
-              assetType: order.makeAssetType,
-              contractAddress: order.makeAssetAddress as Address,
-              value: BigInt(order.makeAssetValue),
-              id: BigInt(order.makeAssetId),
-            },
-            taker: ADDRESS_ZERO,
-            takeAsset: {
-              assetType: order.takeAssetType,
-              contractAddress: order.takeAssetAddress as Address,
-              value: BigInt(order.takeAssetValue),
-              id: BigInt(order.takeAssetId),
-            },
-            salt: BigInt(order.salt),
-            start: BigInt(order.start),
-            end: BigInt(order.end),
-            originFee: {
-              amount: BigInt(0),
-              receiver: contractExchangeV2Test,
-            },
-            royaltyFee: {
-              receiver: order.Maker.signer,
-              amount: BigInt("0"),
-            },
-            index: order.index,
-            proof: (order.proof as any) ?? [],
-            root: order.root as Address,
-            sig: order.sig as any,
-          },
-        ],
-        [
-          {
-            orderType:
-              getOrderTypeIndex(order.orderType) === 1
-                ? 0
-                : getOrderTypeIndex(order.orderType),
-            maker: address,
-            makeAsset: {
-              assetType: order.takeAssetType,
-              contractAddress: order.takeAssetAddress as Address,
-              value: BigInt(order.takeAssetValue) * BigInt(qty),
-              id: BigInt(order.takeAssetId),
-            },
-            taker: order.Maker.signer as Address,
-            takeAsset: {
-              assetType: order.makeAssetType,
-              contractAddress: order.makeAssetAddress as Address,
-              value: BigInt(qty),
-              id: BigInt(order.makeAssetId),
-            },
-            salt: BigInt(0),
-            start: BigInt(order.start),
-            end: BigInt(order.end),
-            originFee: {
-              amount: BigInt(0),
-              receiver: contractExchangeV2Test,
-            },
-            royaltyFee: {
-              receiver: order.Maker.signer,
-              amount: BigInt("0"),
-            },
-            index: order.index,
-            proof: [],
-            root: order.root as Address,
-            sig: "0x",
-          },
-        ],
-      ],
-    });
   };
 
   const cancelOrder = async (order: OrderDetails) => {

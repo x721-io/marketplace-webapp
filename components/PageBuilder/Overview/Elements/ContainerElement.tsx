@@ -2,7 +2,7 @@
 
 import { Container } from "../../types";
 import { generateElement } from "@/components/PageBuilder/Overview/CRUD";
-import { useScreen } from "@/hooks/useDevice";
+import { useScreen } from "@/hooks/useScreen";
 
 const ContainerElement = (element: Container, index: number) => {
   const { screen } = useScreen();

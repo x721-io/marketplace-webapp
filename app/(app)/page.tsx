@@ -9,7 +9,7 @@ import LayerGBannerMb from "@/public/images/banner-sm.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
-import { useScreen } from "@/hooks/useDevice";
+import { useScreen } from "@/hooks/useScreen";
 import { useMemo } from "react";
 
 export default function Home() {

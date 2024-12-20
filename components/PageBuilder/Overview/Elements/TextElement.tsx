@@ -1,7 +1,7 @@
 "use client";
 
 import { Text } from "../../types";
-import { useScreen } from "@/hooks/useDevice";
+import { useScreen } from "@/hooks/useScreen";
 
 const TextElement = (element: Text, index: number) => {
   const { screen } = useScreen();

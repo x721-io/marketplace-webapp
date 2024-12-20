@@ -55,7 +55,7 @@ export default function NFTData({
   };
 
   return (
-    <div className="pb-7 tablet:w-full overflow-auto">
+    <div className="pb-7 w-full overflow-auto">
       <MyTabs.Group style="underline" onActiveTabChange={setCurrTabIndex}>
         {nft.collection.type === "ERC1155" && (
           <MyTabs.Item tabIndex={0} active={currTabIndex === 0}>

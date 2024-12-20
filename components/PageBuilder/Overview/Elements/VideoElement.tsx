@@ -1,7 +1,7 @@
 "use client";
 
 import { Video } from "../../types";
-import { useScreen } from "@/hooks/useDevice";
+import { useScreen } from "@/hooks/useScreen";
 
 const VideoElement = (element: Video, index: number) => {
   const { screen } = useScreen();
