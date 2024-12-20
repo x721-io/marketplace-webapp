@@ -3,12 +3,7 @@ import Text from "@/components/Text";
 import Button from "@/components/Button";
 import { daysRanges, FormState, NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
-import {
-  useAccount,
-  useBalance,
-  useContractRead,
-  useReadContract,
-} from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 import { findTokenByAddress } from "@/utils/token";
 import { tokens } from "@/config/tokens";
 import { useCalculateFee } from "@/hooks/useMarket";
@@ -378,6 +373,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                       .filter((t) => t !== "u2u")
                       .map((key) => (
                         <Dropdown.Item
+                          className="!w-full"
                           key={tokens[key].symbol}
                           onClick={() =>
                             setValue("quoteToken", tokens[key].address)
@@ -489,6 +485,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                   >
                     {daysRanges.map((item) => (
                       <Dropdown.Item
+                        className="!w-full"
                         key={item}
                         onClick={() => {
                           setValue("daysRange", item);

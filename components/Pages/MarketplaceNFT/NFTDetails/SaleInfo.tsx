@@ -278,7 +278,7 @@ const SaleInfo = ({
   const renderPriceChart = () => {
     if (priceHistories && priceHistories.length > 0) {
       return (
-        <div className="w-full relative aspect-video pt-4">
+        <div className="w-full relative aspect-video pt-4 border-t-[1px] pt-3">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               width={730}
@@ -310,8 +310,8 @@ const SaleInfo = ({
       );
     }
     return (
-      <div className="w-full text-balance text-center flex flex-col">
-        <div>No events have occurred yet</div>
+      <div className="w-full text-balance text-center flex flex-col text-[rgba(0,0,0,0.45)] text-[1.1rem] border-t-[1px] pt-3">
+        <div className="">No events have occurred yet</div>
         <div>Check back later</div>
       </div>
     );
