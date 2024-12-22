@@ -27,10 +27,10 @@ export const navs: NavItem[] = [
   },
   {
     label: "Launchpad",
-    href: "/launchpad",
-    items: [
-      { href: "/launchpad", label: "Projects" },
-      { href: LAUNCHPAD_APPLY_URL as string, external: true, label: "Apply" },
-    ],
+    href: "/maintenance",
+    // items: [
+    //   { href: "/launchpad", label: "Projects" },
+    //   { href: LAUNCHPAD_APPLY_URL as string, external: true, label: "Apply" },
+    // ],
   },
 ];
