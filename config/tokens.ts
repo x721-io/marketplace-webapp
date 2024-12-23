@@ -53,4 +53,4 @@ export const tokenOptions = Object.values(tokens)
     }
     return { label: token.symbol, value: token.address, index: token.index };
   })
-  .toSorted((a, b) => a.index - b.index);
+  .sort((a, b) => a.index - b.index);
