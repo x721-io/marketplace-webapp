@@ -10,7 +10,7 @@ const BASE_FILTERS = {
   creatorAddress: undefined,
   priceMax: "",
   priceMin: "",
-  sellStatus: undefined,
+  orderStatus: undefined,
   owner: undefined,
   page: 1,
   limit: 20,
@@ -29,7 +29,7 @@ const DEFAULT_FILTERS_BY_USER = {
     showFilters: false,
     filters: {
       ...BASE_FILTERS,
-      sellStatus: "AskNew",
+      orderStatus: "OPEN",
     },
   },
 };
@@ -108,9 +108,9 @@ export const useFilterByUser = create(
                       mode === "onSale"
                         ? state[userAddress][mode].filters.owner
                         : undefined,
-                    sellStatus:
+                    orderStatus:
                       mode === "onSale"
-                        ? state[userAddress][mode].filters.sellStatus
+                        ? state[userAddress][mode].filters.orderStatus
                         : undefined,
                   },
                   showFilters: state[userAddress][mode].showFilters,

@@ -130,8 +130,8 @@ export const useGetNFTs = (
         API_ENDPOINTS.SEARCH_NFT,
         sanitizeObject({
           ...params,
-          sellStatus:
-            Number(priceMin) || Number(priceMax) ? "AskNew" : params.sellStatus,
+          orderStatus:
+            Number(priceMin) || Number(priceMax) ? "OPEN" : params.orderStatus,
           priceMin: bigintMin?.toString(),
           priceMax: bigintMax?.toString(),
         })

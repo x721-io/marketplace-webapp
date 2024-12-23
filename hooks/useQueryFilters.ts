@@ -71,6 +71,33 @@ function useQueryFilters(defaultFilters: FilterItem[] = []) {
     window.history.replaceState(null, "", "?" + searchParams.toString());
   };
 
+  const resetAndAddFilterItems = (
+    items: { item: FilterItem; type: "single" | "mutiple" }[]
+  ) => {
+    const currentFilters: FilterItem[] = [];
+    if (items.length > 0) {
+      items.forEach((item) => {
+        currentFilters.push(item.item);
+      });
+      const searchParams = new URLSearchParams(window.location.search);
+      currentFilters.forEach((filter) => {
+        if (filter.values.length > 0) {
+          searchParams.set(filter.key, filter.values.join(","));
+        } else {
+          if (!searchParams.has(filter.key)) {
+            return;
+          }
+          searchParams.delete(filter.key);
+        }
+      });
+      setFilters(currentFilters);
+      window.history.replaceState(null, "", "?" + searchParams.toString());
+    } else {
+      setFilters([]);
+      window.history.replaceState(null, "", "?" + "");
+    }
+  };
+
   const getFilterBykey = (key: string) => {
     return filters.find((ele) => ele.key === key);
   };
@@ -97,6 +124,7 @@ function useQueryFilters(defaultFilters: FilterItem[] = []) {
     removeFilterItems,
     getFilterBykey,
     clearFilters,
+    resetAndAddFilterItems,
   };
 }
 

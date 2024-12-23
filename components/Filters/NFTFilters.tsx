@@ -122,10 +122,14 @@ export default function NFTFilters({
               <MyRadio
                 id="status-all"
                 value="status-all"
-                checked={getFilterBykey("sellStatus") === undefined}
+                checked={getFilterBykey("orderStatus") === undefined}
                 onChange={() => {
-                  removeFilterItems(["sellStatus"]);
-                  handleChange({ sellStatus: undefined, updateOnChange: true });
+                  removeFilterItems(["orderStatus", "orderType"]);
+                  handleChange({
+                    orderStatus: undefined,
+                    orderType: undefined,
+                    updateOnChange: true,
+                  });
                 }}
               />
               <Label htmlFor="status-all">All</Label>
@@ -134,21 +138,69 @@ export default function NFTFilters({
               <MyRadio
                 id="AskNew"
                 value="AskNew"
-                checked={getFilterBykey("sellStatus")?.values[0] === "AskNew"}
+                checked={
+                  getFilterBykey("orderStatus")?.values[0] === "OPEN" &&
+                  getFilterBykey("orderType")?.values[0] === "SINGLE"
+                }
                 onChange={() => {
                   addFilterItems([
                     {
                       item: {
-                        key: "sellStatus",
-                        values: ["AskNew"],
+                        key: "orderStatus",
+                        values: ["OPEN"],
+                      },
+                      type: "single",
+                    },
+                    {
+                      item: {
+                        key: "orderType",
+                        values: ["SINGLE"],
                       },
                       type: "single",
                     },
                   ]);
-                  handleChange({ sellStatus: "AskNew", updateOnChange: true });
+                  handleChange({
+                    orderStatus: "OPEN",
+                    orderType: "SINGLE",
+                    updateOnChange: true,
+                  });
                 }}
               />
               <Label htmlFor="AskNew">Buy now</Label>
+            </div>
+            <div className="flex gap-3 items-center">
+              <MyRadio
+                id="AskNew"
+                value="AskNew"
+                checked={
+                  getFilterBykey("orderStatus")?.values[0] === "OPEN" &&
+                  getFilterBykey("orderType")?.values[0] === "BID"
+                }
+                onChange={() => {
+                  addFilterItems([
+                    {
+                      item: {
+                        key: "orderStatus",
+                        values: ["OPEN"],
+                      },
+                      type: "single",
+                    },
+                    {
+                      item: {
+                        key: "orderType",
+                        values: ["BID"],
+                      },
+                      type: "single",
+                    },
+                  ]);
+                  handleChange({
+                    orderStatus: "OPEN",
+                    orderType: "BID",
+                    updateOnChange: true,
+                  });
+                }}
+              />
+              <Label htmlFor="AskNew">Bid now</Label>
             </div>
           </div>
         </Collapsible>

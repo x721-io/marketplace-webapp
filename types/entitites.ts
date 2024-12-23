@@ -105,7 +105,6 @@ export interface NFT {
   collection: Collection;
   traits?: Trait[];
   price?: BigNumberish;
-  sellStatus?: MarketEventType;
   quoteToken?: Address;
   sellInfo: SaleInfo | null;
   bidInfo: SaleInfo | null;
@@ -212,7 +211,6 @@ export interface LayerGNFT {
   derivedETH: number;
   derivedUSD: number;
   traits?: Trait[];
-  sellStatus?: MarketEventType;
   quoteToken?: Address;
 }
 

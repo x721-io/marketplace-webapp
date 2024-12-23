@@ -15,7 +15,7 @@ const DEFAULT_FILTERS_BY_COLLECTION = {
     creatorAddress: undefined,
     priceMax: "",
     priceMin: "",
-    sellStatus: undefined,
+    orderStatus: undefined,
     owner: undefined,
     page: 1,
     limit: 20,

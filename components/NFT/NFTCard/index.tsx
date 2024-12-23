@@ -145,25 +145,29 @@ export default function NFTCard(nft: NFT) {
     return (
       <div className="w-full flex desktop:flex-row flex-col items-center justify-between text-[0.9rem] pt-2 pb-2 px-1 gap-2">
         <div className="flex flex-col w-full">
-          <div>Price</div>
-          <div>
+          <p className="text-body-14 text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            Price
+          </p>
+          <p className="text-secondary font-semibold text-body-14">
             {sellInfo
               ? `${formatUnits(sellInfo.price, 18)} ${
                   findTokenByAddress(sellInfo.quoteToken as any)?.symbol ??
                   "U2U"
                 }`
               : "None"}
-          </div>
+          </p>
         </div>
         <div className="flex flex-col desktop:text-right text-left w-full">
-          <div>Highest bid</div>
-          <div>
+          <p className="text-body-14 text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            Highest bid
+          </p>
+          <p className="text-secondary font-semibold text-body-14">
             {bidInfo
               ? `${formatUnits(bidInfo.price, 18)} ${
                   findTokenByAddress(bidInfo.quoteToken as any)?.symbol ?? "U2U"
                 }`
               : "No bids yet"}
-          </div>
+          </p>
         </div>
       </div>
     );

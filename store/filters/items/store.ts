@@ -12,13 +12,13 @@ export const DEFAULT_NFT_FILTERS_STATE: NFTFilterState = {
     creatorAddress: undefined,
     priceMax: "",
     priceMin: "",
-    sellStatus: undefined,
     owner: undefined,
     page: 1,
     limit: 20,
     quoteToken: undefined,
     order: "",
     orderBy: "",
+    orderStatus: undefined,
   },
 };
 

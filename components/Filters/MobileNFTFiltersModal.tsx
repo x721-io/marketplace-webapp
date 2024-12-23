@@ -32,8 +32,12 @@ export default function MobileNFTFiltersModal({
     isTraitSelected,
     handleSelectTrait,
   } = useNFTFilters(activeFilters, onApplyFilters);
-  const { addFilterItems, removeFilterItems, getFilterBykey, clearFilters } =
-    useQueryFilters();
+  const {
+    addFilterItems,
+    removeFilterItems,
+    resetAndAddFilterItems,
+    clearFilters,
+  } = useQueryFilters();
 
   const handleCloseModal = () => {
     handleChange(activeFilters); // reset to previous state
@@ -90,8 +94,13 @@ export default function MobileNFTFiltersModal({
                 <MyRadio
                   id="status-all"
                   value=""
-                  checked={localFilters.sellStatus === undefined}
-                  onChange={() => handleChange({ sellStatus: undefined })}
+                  checked={localFilters.orderStatus === undefined}
+                  onChange={() =>
+                    handleChange({
+                      orderStatus: undefined,
+                      orderType: undefined,
+                    })
+                  }
                 />
                 <Label htmlFor="status-all">All</Label>
               </div>
@@ -99,8 +108,10 @@ export default function MobileNFTFiltersModal({
                 <MyRadio
                   id="status-buy"
                   value="AskNew"
-                  checked={localFilters.sellStatus === "AskNew"}
-                  onChange={() => handleChange({ sellStatus: "AskNew" })}
+                  checked={localFilters.orderStatus === "OPEN"}
+                  onChange={() =>
+                    handleChange({ orderStatus: "OPEN", orderType: "SINGLE" })
+                  }
                 />
                 <Label htmlFor="type-buy">Buy now</Label>
               </div>
@@ -209,7 +220,16 @@ export default function MobileNFTFiltersModal({
                 type: "single" | "mutiple";
               }[] = [];
               Object.keys(localFilters).forEach((key) => {
-                if (key === "sellStatus" || key === "type") {
+                if (
+                  key === "orderStatus" ||
+                  key === "type" ||
+                  key === "orderType"
+                ) {
+                  if (
+                    localFilters[key as keyof typeof localFilters] === undefined
+                  ) {
+                    return;
+                  }
                   filterItems.push({
                     item: {
                       key,
@@ -223,7 +243,7 @@ export default function MobileNFTFiltersModal({
                   });
                 }
               });
-              addFilterItems(filterItems);
+              resetAndAddFilterItems(filterItems);
               handleApplyFilters();
               onClose?.();
             }}

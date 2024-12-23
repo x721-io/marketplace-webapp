@@ -145,10 +145,10 @@ export const useMarketplaceApi = () => {
           API_ENDPOINTS.SEARCH_NFT,
           sanitizeObject({
             ...params,
-            sellStatus:
+            orderStatus:
               Number(priceMin) || Number(priceMax)
-                ? "AskNew"
-                : params.sellStatus,
+                ? "OPEN"
+                : params.orderStatus,
             priceMin: bigintMin?.toString(),
             priceMax: bigintMax?.toString(),
           })

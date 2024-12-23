@@ -125,12 +125,13 @@ export namespace APIParams {
     creatorAddress?: Address;
     priceMax?: string;
     priceMin?: string;
-    sellStatus?: MarketEventType;
     owner?: Address;
     name?: string;
     quoteToken?: Address;
     order?: string;
     orderBy?: string;
+    orderStatus?: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
+    orderType?: "BUlK" | "SINGLE" | "BID";
   }
 
   export interface NFTEvents extends PaginationParams {
