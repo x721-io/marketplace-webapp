@@ -27,9 +27,12 @@ export default function LayergNFTCard({
   animationUrl,
   creator,
 }: LayerGNFT) {
-  const displayMedia = image || animationUrl;
+  const defaultImage =
+    "https://ug-assets-dev.s3.ap-southeast-1.amazonaws.com/80bd9c76-bf24-491f-9205-130e485c379e-LayerGDefaultImg.png";
 
-  const fileExtension = displayMedia.split(".").pop();
+  const displayMedia = image || animationUrl || defaultImage;
+
+  const fileExtension = displayMedia?.split(".").pop();
 
   const token = useMemo(() => {
     const quoteToken = sellInfo?.quoteToken || bidInfo?.quoteToken;
