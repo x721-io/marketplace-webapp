@@ -150,7 +150,10 @@ export default function NFTCard(nft: NFT) {
           </p>
           <p className="text-secondary font-semibold text-body-14">
             {sellInfo
-              ? `${formatUnits(sellInfo.price, 18)} ${
+              ? `${formatUnits(
+                  sellInfo.price,
+                  findTokenByAddress(sellInfo.quoteToken as any)?.decimal
+                )} ${
                   findTokenByAddress(sellInfo.quoteToken as any)?.symbol ??
                   "U2U"
                 }`
@@ -163,7 +166,10 @@ export default function NFTCard(nft: NFT) {
           </p>
           <p className="text-secondary font-semibold text-body-14">
             {bidInfo
-              ? `${formatUnits(bidInfo.price, 18)} ${
+              ? `${formatUnits(
+                  bidInfo.price,
+                  findTokenByAddress(bidInfo.quoteToken as any)?.decimal
+                )} ${
                   findTokenByAddress(bidInfo.quoteToken as any)?.symbol ?? "U2U"
                 }`
               : "No bids yet"}

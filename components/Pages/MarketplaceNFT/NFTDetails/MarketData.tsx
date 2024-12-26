@@ -179,7 +179,9 @@ export default function NFTMarketData({
                 <div className="flex items-start justify-between">
                   <Text variant="heading-md">
                     <span className="text-primary font-semibold">
-                      {formatDisplayedNumber(formatUnits(saleData?.price || 0))}
+                      {formatDisplayedNumber(
+                        formatUnits(saleData?.price || 0, token?.decimal ?? 18)
+                      )}
                     </span>
                     &nbsp;
                     <span className="text-secondary">{token?.symbol}</span>

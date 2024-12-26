@@ -27,6 +27,14 @@ export const tokens: Record<string, Token> = {
     address: process.env.NEXT_PUBLIC_WU2U_CONTRACT as Address,
     logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
   },
+  pusdt: {
+    name: "Pegged USDT",
+    symbol: "pUSDT",
+    index: 1,
+    decimal: 6,
+    address: "0x8Fef26D79DA3Ac2AE5DaC2acfb5A802Fb043E6F0" as Address,
+    logo: "https://play-lh.googleusercontent.com/NLVnM9o_BuPceMiPEiTCiMsD0KeCjzZqPc_Cj6iMPyzsHXReGkssZihl2vf6NL7qXpI",
+  },
   // weth: {
   //   name: "WETH",
   //   symbol: "WETH",

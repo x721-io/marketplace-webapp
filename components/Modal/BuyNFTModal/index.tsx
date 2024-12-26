@@ -512,10 +512,10 @@ export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
               </>
             )}
             <Button
-              disabled={
-                !quoteTokenBalance ||
-                quoteTokenBalance < BigInt(marketData.sellInfo[0].price)
-              }
+              // disabled={
+              //   !quoteTokenBalance ||
+              //   quoteTokenBalance < BigInt(marketData.sellInfo[0].price)
+              // }
               loading={isBuying}
               onClick={handleBuy}
             >

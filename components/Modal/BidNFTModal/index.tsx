@@ -299,10 +299,17 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     }
     if (isNumber(quoteTokenBalance)) {
       const totalPrice = Number(price) * Number(quantity);
-      if (parseUnits(totalPrice.toString(), 18) > quoteTokenBalance!) {
+      const key = Object.keys(tokens).find(
+        (k) => tokens[k].address === quoteToken
+      );
+      if (!key) return;
+      if (
+        parseUnits(totalPrice.toString(), tokens[key].decimal) >
+        quoteTokenBalance!
+      ) {
         setError("price", {
           type: "custom",
-          message: `You don't have enough ${tokens["wu2u"].symbol}`,
+          message: `You don't have enough ${tokens[key].symbol}`,
         });
       } else {
         clearErrors("price");
@@ -512,7 +519,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
                 >
                   Make offer
                 </Button>
-                {errors.price && (
+                {errors.price && quoteToken === tokens["wu2u"].address && (
                   <Button
                     loading={isDepositing}
                     className="flex-1"

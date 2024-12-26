@@ -14,7 +14,7 @@ import { MarketEventV2, NFT } from "@/types";
 import { shortenAddress } from "@/utils/string";
 import moment from "moment";
 import { useState } from "react";
-import { formatEther } from "viem";
+import { Address, formatEther, formatUnits, parseUnits } from "viem";
 import { toast } from "react-toastify";
 import {
   Area,
@@ -31,6 +31,9 @@ import {
 import { useGetNftPriceHistory } from "@/hooks/useQuery";
 import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
+import { formatDisplayedNumber } from "@/utils";
+import { findTokenByAddress } from "@/utils/token";
+import { tokens } from "@/config/tokens";
 
 const SaleInfo = ({
   marketData,
@@ -68,6 +71,9 @@ const SaleInfo = ({
       setActiveAccordIds((prev) => [...prev, accordId]);
     }
   };
+
+  const getTokenInfo = (address: Address) =>
+    findTokenByAddress(address) ?? tokens["u2u"];
 
   const renderAccord = (
     title: string,
@@ -114,7 +120,7 @@ const SaleInfo = ({
           <th className={columnClassName + " w-[20%] " + headerTextClassName}>
             Unit Price
           </th>
-          <th className={columnClassName + " w-[22%] " + headerTextClassName}>
+          <th className={"text-center w-[22%] " + headerTextClassName}>
             Quantity
           </th>
           <th className={columnClassName + " w-[22%] " + headerTextClassName}>
@@ -133,9 +139,17 @@ const SaleInfo = ({
           marketData.sellInfo.map((s) => (
             <tr key={s.id}>
               <td className={columnClassName + " flex flex-col"}>
-                {formatEther(BigInt(s.price), "wei")}
+                {formatDisplayedNumber(
+                  formatUnits(
+                    BigInt(s.price),
+                    getTokenInfo(s.quoteToken)?.decimal
+                  )
+                )}{" "}
+                {getTokenInfo(s.quoteToken).symbol}
               </td>
-              <td className={columnClassName}>{s.quantity - s.filledQty}</td>
+              <td className={columnClassName + " text-center"}>
+                {s.quantity - s.filledQty}
+              </td>
               <td className={columnClassName}>
                 {moment(s.end * 1000).fromNow()}
               </td>
@@ -188,7 +202,7 @@ const SaleInfo = ({
           <th className={columnClassName + " w-[20%] " + headerTextClassName}>
             Unit Price
           </th>
-          <th className={columnClassName + " w-[22%] " + headerTextClassName}>
+          <th className={"text-center w-[22%] " + headerTextClassName}>
             Quantity
           </th>
           <th className={columnClassName + " w-[22%] " + headerTextClassName}>
@@ -207,9 +221,17 @@ const SaleInfo = ({
           marketData.bidInfo.map((s) => (
             <tr key={s.id}>
               <td className={columnClassName + " flex flex-col"}>
-                {formatEther(BigInt(s.price), "wei")}
+                {formatDisplayedNumber(
+                  formatUnits(
+                    BigInt(s.price),
+                    getTokenInfo(s.quoteToken)?.decimal
+                  )
+                )}{" "}
+                {getTokenInfo(s.quoteToken).symbol}
               </td>
-              <td className={columnClassName}>{s.quantity - s.filledQty}</td>
+              <td className={columnClassName + " text-center"}>
+                {s.quantity - s.filledQty}
+              </td>
               <td className={columnClassName}>
                 {moment(s.end * 1000).fromNow()}
               </td>

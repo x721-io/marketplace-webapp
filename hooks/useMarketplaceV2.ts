@@ -1,10 +1,11 @@
 import { ADDRESS_ZERO } from "@/config/constants";
 import { contracts } from "@/config/contracts";
+import { tokens } from "@/config/tokens";
 import { config } from "@/config/wagmi";
 import { nextAPI } from "@/services/api";
 import { APIResponse } from "@/services/api/types";
 import { Web3Functions } from "@/services/web3";
-import { FormState, NFT, OrderDetails, OrderType } from "@/types";
+import { FormState, NFT, OrderDetails } from "@/types";
 import { useState } from "react";
 import { Address, encodeAbiParameters, parseUnits } from "viem";
 import { useAccount, useSignTypedData } from "wagmi";
@@ -1085,7 +1086,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0xC00CA3801B1D0AFCc7157980Eb0DC926902eE04C";
+  "0xf404d40b19644e28407ad4Da56392F8Ab87406CD";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
@@ -1101,6 +1102,14 @@ const useMarketplaceV2 = (nft: NFT) => {
   const [isSigningOrderData, setIsSigningOrderData] = useState(false);
   const [isCreatingOrder, setCreatingOrder] = useState(false);
   const [isDepositing, setDepositing] = useState(false);
+
+  const getTokenConfig = (address: Address) => {
+    const key = Object.keys(tokens).find(
+      (key) => tokens[key].address.toLowerCase() === address.toLowerCase()
+    );
+    if (!key) return null;
+    return tokens[key];
+  };
 
   const getOrderDetails = async (
     sig: string,
@@ -1297,7 +1306,9 @@ const useMarketplaceV2 = (nft: NFT) => {
     const { collection } = nft;
     const { address: collectionAddress } = collection;
     const { price, quantity, quoteToken } = params;
-    const takeValue = parseUnits(price.toString(), 18);
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
+    const takeValue = parseUnits(price.toString(), tokenConfig.decimal);
 
     return encodeAbiParameters(
       [
@@ -1354,6 +1365,8 @@ const useMarketplaceV2 = (nft: NFT) => {
         { name: "index", type: "uint16" },
       ],
     } as const;
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
     try {
       const sig = await signTypedDataAsync({
         account: address,
@@ -1372,7 +1385,7 @@ const useMarketplaceV2 = (nft: NFT) => {
           takeAsset: {
             assetType: getTokenAssetType(quoteToken),
             contractAddress: quoteToken as Address,
-            value: BigInt(parseUnits(price.toString(), 18)),
+            value: BigInt(parseUnits(price.toString(), tokenConfig.decimal)),
             id: BigInt(0),
           },
           salt: BigInt(salt),
@@ -1414,7 +1427,9 @@ const useMarketplaceV2 = (nft: NFT) => {
         { name: "index", type: "uint16" },
       ],
     } as const;
-    const bidValueWei = parseUnits(totalPrice.toString(), 18);
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
+    const bidValueWei = parseUnits(totalPrice.toString(), tokenConfig.decimal);
     try {
       const sig = await signTypedDataAsync({
         account: address,
@@ -1456,6 +1471,8 @@ const useMarketplaceV2 = (nft: NFT) => {
     const { collection } = nft;
     const { address: collectionAddress } = collection;
     const { end, price, quantity, quoteToken, start, salt } = params;
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
     const makeAsset = {
       assetType: getNftAssetType(),
       contractAddress: collectionAddress,
@@ -1465,7 +1482,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     const takeAsset = {
       assetType: getTokenAssetType(quoteToken),
       contractAddress: quoteToken,
-      value: BigInt(parseUnits(price.toString(), 18)),
+      value: BigInt(parseUnits(price.toString(), tokenConfig.decimal)),
       id: BigInt(0).toString(),
     };
     const {
@@ -1496,9 +1513,12 @@ const useMarketplaceV2 = (nft: NFT) => {
         end: end.toString(),
         sig,
         orderType: "SINGLE",
-        price: parseUnits(price.toString(), 18).toString(),
+        price: parseUnits(price.toString(), tokenConfig.decimal).toString(),
         totalPice: take_asset_value.toString(),
-        netPrice: parseUnits(params.netPrice.toString(), 18).toString(),
+        netPrice: parseUnits(
+          params.netPrice.toString(),
+          tokenConfig.decimal
+        ).toString(),
         index: 1,
       };
       await nextAPI.post("/order/single", body);
@@ -1529,10 +1549,12 @@ const useMarketplaceV2 = (nft: NFT) => {
     const { collection } = nft;
     const { address: collectionAddress } = collection;
     const { end, quantity, quoteToken, start, salt } = params;
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
     const makeAsset = {
       assetType: getTokenAssetType(quoteToken),
       contractAddress: quoteToken,
-      value: parseUnits(params.totalPrice.toString(), 18),
+      value: parseUnits(params.totalPrice.toString(), tokenConfig.decimal),
       id: BigInt(0).toString(),
     };
     const takeAsset = {
@@ -1570,7 +1592,10 @@ const useMarketplaceV2 = (nft: NFT) => {
         sig,
         orderType: "BID",
         price: make_asset_value.toString(),
-        netPrice: parseUnits(params.netPrice.toString(), 18).toString(),
+        netPrice: parseUnits(
+          params.netPrice.toString(),
+          tokenConfig.decimal
+        ).toString(),
         index: 1,
       };
       console.log({ body });
@@ -1647,11 +1672,13 @@ const useMarketplaceV2 = (nft: NFT) => {
     if (!address) return false;
     const { quoteToken, totalPrice } = params;
     const allowance = await getERC20Allowance(quoteToken);
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return false;
     if (totalPrice > allowance) {
       setApproving(true);
       const result = await approveERC20TokenAmt(
         params.quoteToken,
-        parseUnits(totalPrice.toString(), 18)
+        parseUnits(totalPrice.toString(), tokenConfig.decimal)
       );
       setApproving(false);
       if (!result) return false;
@@ -1965,6 +1992,8 @@ const useMarketplaceV2 = (nft: NFT) => {
         const { collection } = order.nft;
         const { address: collectionAddress } = collection;
         const { end, price, quantity, quoteToken, start, salt } = order;
+        const tokenConfig = getTokenConfig(quoteToken);
+        if (!tokenConfig) return null;
         const makeAsset = {
           assetType: getNftAssetType(),
           contractAddress: collectionAddress,
@@ -1974,7 +2003,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         const takeAsset = {
           assetType: getTokenAssetType(quoteToken),
           contractAddress: quoteToken,
-          value: parseUnits(order.totalPrice.toString(), 18),
+          value: parseUnits(order.totalPrice.toString(), tokenConfig.decimal),
           id: BigInt(0).toString(),
         };
         const {
@@ -2003,9 +2032,12 @@ const useMarketplaceV2 = (nft: NFT) => {
           start: start.toString(),
           end: end.toString(),
           orderType: "SINGLE",
-          price: parseUnits(price.toString(), 18).toString(),
+          price: parseUnits(price.toString(), tokenConfig.decimal).toString(),
           totalPice: take_asset_value.toString(),
-          netPrice: parseUnits(order.netPrice.toString(), 18).toString(),
+          netPrice: parseUnits(
+            order.netPrice.toString(),
+            tokenConfig.decimal
+          ).toString(),
           index: i,
         };
       })
