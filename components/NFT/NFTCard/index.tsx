@@ -188,7 +188,7 @@ export default function NFTCard(nft: NFT) {
 
   return (
     <div className="group cursor-pointer relative overflow-hidden">
-      {1 !== 1 && isOwner && !isOnSale && pathName.startsWith("/user") && (
+      {isOwner && !isOnSale && pathName.startsWith("/user") && (
         <div
           onClick={() => router.push(`/item/${collection.address}/${id}`)}
           className="absolute top-0 left-0 z-10 w-full h-full rounded-md px-3 py-2 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-200"

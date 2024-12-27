@@ -1,21 +1,40 @@
 "use client";
 
+import ERC1155 from "@/abi/ERC1155";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { Dropdown } from "@/components/X721UIKits/Dropdown";
 import { ADDRESS_ZERO } from "@/config/constants";
-import { exchangeSignedDomain } from "@/hooks/useMarketplaceV2";
+import {
+  contractNFTTransferProxy,
+  exchangeSignedDomain,
+} from "@/hooks/useMarketplaceV2";
 import { nextAPI } from "@/services/api";
+import { Web3Functions } from "@/services/web3";
 import { useUserStore } from "@/store/users/store";
-import { daysRanges } from "@/types";
+import { Collection, daysRanges, NFT } from "@/types";
 import { genRandomNumber } from "@/utils";
 import { parseUnits } from "ethers";
+import { get } from "http";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Address, erc721Abi } from "viem";
 import { useAccount, useSignTypedData } from "wagmi";
+import MultiApproveForAllModal from "./MultiApproveForAllModal";
+import ListingModal from "./ListingModal";
 
 const BulkList = () => {
+  const [errorStep, setErrorStep] = useState<{
+    stepIndex: number;
+    reason: string;
+  } | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
   const { address } = useAccount();
+  const [notApprovedForAllCollections, setNotApprovedForAllCollections] =
+    useState<Collection[]>([]);
+  const [isOpenMultiApproveModal, setOpenMultiApproveModal] = useState(false);
+  const [isOpenListingModal, setOpenListingModal] = useState(false);
   const { signTypedDataAsync } = useSignTypedData();
   const {
     bulkOrders,
@@ -24,12 +43,83 @@ const BulkList = () => {
     removeAllBulkOrderItems,
   } = useUserStore();
 
+  const checkIfApprovedForAll = async (collection: Collection) => {
+    if (!address) return false;
+    if (!collection.type) return false;
+    const isApprovedForAll = await Web3Functions.readContract({
+      abi: collection.type === "ERC721" ? erc721Abi : ERC1155,
+      functionName: "isApprovedForAll",
+      address: collection.address,
+      args: [address, contractNFTTransferProxy],
+    });
+    return isApprovedForAll;
+  };
+
   const columnClassName = "text-left p-3";
   const headerTextClassName =
     "uppercase text-heading-sm !text-[0.9rem] text-[rgba(0,0,0,0.75)] tracking-wide";
 
-  const generateBulkData = async () => {
+  const getNotApprovedForAllCollections = async (): Promise<Collection[]> => {
+    const notApprovedForAllCollections: Collection[] = [];
+    await Promise.all(
+      bulkOrders.map(async (order) => {
+        if (order.nft) {
+          if (order.nft.collection.type) {
+            const isApprovedForAll = await checkIfApprovedForAll(
+              order.nft.collection
+            );
+            const isExisted = notApprovedForAllCollections.find(
+              (collection) => collection.id === order.nft!.collection.id
+            );
+            if (!isApprovedForAll && !isExisted) {
+              notApprovedForAllCollections.push(order.nft.collection);
+            }
+          }
+        }
+      })
+    );
+    return notApprovedForAllCollections;
+  };
+
+  const signListingData = async (root: Address, salt: string) => {
+    if (!address) return null;
+    try {
+      const types = {
+        BulkOrder: [
+          { name: "maker", type: "address" },
+          { name: "root", type: "bytes32" },
+          { name: "salt", type: "uint256" },
+        ],
+      } as const;
+      const sig = await signTypedDataAsync({
+        account: address,
+        domain: exchangeSignedDomain,
+        types,
+        primaryType: "BulkOrder",
+        message: {
+          maker: address,
+          root,
+          salt: BigInt(salt),
+        },
+      });
+      return sig;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const generateBulkData = async (skipCheckApprove: boolean = false) => {
     if (!address) return false;
+    if (!skipCheckApprove) {
+      const notApprovedForAllCollections =
+        await getNotApprovedForAllCollections();
+      if (notApprovedForAllCollections.length > 0) {
+        setOpenMultiApproveModal(true);
+        setNotApprovedForAllCollections(notApprovedForAllCollections);
+        return;
+      }
+    }
+    setOpenListingModal(true);
     const salt = genRandomNumber(8, 10).toString();
     const body = bulkOrders
       .map((order, i) => {
@@ -88,24 +178,34 @@ const BulkList = () => {
     const response = await nextAPI.post("/order/generate-bulk-data", {
       orders: body,
     });
-    const types = {
-      BulkOrder: [
-        { name: "maker", type: "address" },
-        { name: "root", type: "bytes32" },
-        { name: "salt", type: "uint256" },
-      ],
-    } as const;
-    const sig = await signTypedDataAsync({
-      account: address,
-      domain: exchangeSignedDomain,
-      types,
-      primaryType: "BulkOrder",
-      message: {
-        maker: address,
-        root: response.data.data.root,
-        salt: BigInt(salt),
-      },
-    });
+
+    // const types = {
+    //   BulkOrder: [
+    //     { name: "maker", type: "address" },
+    //     { name: "root", type: "bytes32" },
+    //     { name: "salt", type: "uint256" },
+    //   ],
+    // } as const;
+    // const sig = await signTypedDataAsync({
+    //   account: address,
+    //   domain: exchangeSignedDomain,
+    //   types,
+    //   primaryType: "BulkOrder",
+    //   message: {
+    //     maker: address,
+    //     root: response.data.data.root,
+    //     salt: BigInt(salt),
+    //   },
+    // });
+
+    const sig = await signListingData(response.data.data.root, salt);
+    if (!sig) {
+      setErrorStep({
+        stepIndex: 0,
+        reason: "Sign listing data failed. Please try again",
+      });
+      return;
+    }
 
     try {
       const body2 = body
@@ -164,8 +264,14 @@ const BulkList = () => {
     } catch (err) {}
   };
 
+  const onRetry = async () => {
+    setErrorStep(null);
+    setCurrentStep(0);
+    generateBulkData(true);
+  };
+
   return (
-    <div className="w-[70%] mx-auto pt-10 flex flex-col h-screen overflow-y-auto">
+    <div className="w-[70%] mx-auto pt-5 flex flex-col h-[750px] overflow-y-auto">
       <div className="w-full font-bold text-[2rem]">List for sale</div>
       <div className="w-full font-medium text-[1.1rem]">
         {bulkOrders.length} {bulkOrders.length > 1 ? "items" : "item"}
@@ -212,13 +318,17 @@ const BulkList = () => {
               <td className={columnClassName}>
                 <input
                   type="number"
+                  disabled={o.nft?.collection.type !== "ERC1155"}
                   onChange={(e) => {
+                    if (Number(e.target.value) <= 0) return;
                     const updatedOrder = structuredClone(o);
-                    updatedOrder.quantity = Number(e.target.value);
-                    upsertBulkOrdersItem(updatedOrder);
+                    if (o.nft?.collection.type === "ERC1155") {
+                      updatedOrder.quantity = Number(e.target.value);
+                      upsertBulkOrdersItem(updatedOrder);
+                    }
                   }}
                   value={o.quantity}
-                  className="p-2 rounded-md w-[80%]"
+                  className="rounded-md w-[60%] disabled:cursor-not-allowed disabled:brightness-95 text-center"
                 />
               </td>
               <td className={columnClassName}>
@@ -293,12 +403,46 @@ const BulkList = () => {
             </tr>
           ))}
         </table>
-        <div className="w-full fixed bottom-0 left-0 h-[80px] border-solid border-t-[1px] flex items-center justify-end px-10">
+        <div className="w-full fixed bottom-0 left-0 h-[80px] border-solid border-t-[1px] flex items-center justify-end px-10 bg-white">
           <Button onClick={() => generateBulkData()} className="text-[1.25rem]">
             List
           </Button>
         </div>
       </div>
+      <MultiApproveForAllModal
+        collections={notApprovedForAllCollections}
+        isOpen={isOpenMultiApproveModal}
+        onClose={() => setOpenMultiApproveModal(false)}
+        onList={() => {
+          if (isOpenMultiApproveModal) {
+            setOpenMultiApproveModal(false);
+          }
+          generateBulkData();
+        }}
+        onApproveSucces={(approvedCollection) =>
+          setNotApprovedForAllCollections((collection) =>
+            collection.filter((c) => c.id !== approvedCollection.id)
+          )
+        }
+      />
+      <ListingModal
+        title="Listing NFTs"
+        erorStep={errorStep}
+        isOpen={isOpenListingModal}
+        onClose={() => setOpenListingModal(false)}
+        currentStep={currentStep}
+        onRetry={onRetry}
+        steps={[
+          {
+            title: "Sign listing data",
+            description: "",
+          },
+          {
+            title: "Create listing data",
+            description: "",
+          },
+        ]}
+      />
     </div>
   );
 };
