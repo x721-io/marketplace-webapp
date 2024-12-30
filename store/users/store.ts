@@ -49,6 +49,10 @@ export const useUserStore = create(
           set((state) => ({
             bulkOrders: [],
           })),
+        replaceAllBulkOrdersItems: (items: FormState.SellNFTV2[]) =>
+          set((state) => ({
+            bulkOrders: items,
+          })),
       }),
       { name: "user-storage" }
     )

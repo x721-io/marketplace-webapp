@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   ALLOWED_AUDIO_TYPES,
   ALLOWED_IMAGE_TYPES,
   ALLOWED_VIDEO_TYPES,
 } from "@/config/constants";
 import { NFT } from "@/types";
-import { convertImageUrl } from "@/utils/nft";
+import { convertImageUrl, defaultLayerGImage } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
 
 export default function NFTImage({ item }: { item: NFT }) {
@@ -34,7 +34,20 @@ export default function NFTImage({ item }: { item: NFT }) {
   }, [fileExtension]);
 
   const renderMedia = () => {
-    if (!displayMedia) return null;
+    if (!displayMedia) {
+      if (item.collection.metadataJson) {
+        return (
+          <BlurImage
+            src={defaultLayerGImage}
+            alt=""
+            width={410}
+            height={410}
+            className="object-cover w-full h-full rounded-2xl mb-10"
+          />
+        );
+      }
+      return null;
+    }
     switch (fileType) {
       case "audio":
         return (

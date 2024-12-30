@@ -1,6 +1,9 @@
 import { BASE_API_URL } from "@/config/api";
 import { ALLOWED_DOMAIN_URL } from "@/config/constants";
 
+export const defaultLayerGImage =
+  "https://ug-assets-dev.s3.ap-southeast-1.amazonaws.com/80bd9c76-bf24-491f-9205-130e485c379e-LayerGDefaultImg.png";
+
 export const parseImageUrl = (url?: string) => {
   if (!url) return "";
   return BASE_API_URL + "/common/ipfs-serve?ipfsPath=" + url;
