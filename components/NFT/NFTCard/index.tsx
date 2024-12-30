@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Image from "next/image";
 import Text from "@/components/Text";
 import { formatUnits } from "ethers";
@@ -15,7 +15,7 @@ import { formatDisplayedNumber } from "@/utils";
 import { NFT } from "@/types";
 import { findTokenByAddress } from "@/utils/token";
 import Icon from "@/components/Icon";
-import { convertImageUrl } from "@/utils/nft";
+import { convertImageUrl, defaultLayerGImage } from "@/utils/nft";
 import BlurImage from "@/components/X721UIKits/BlurImage";
 import { useUserStore } from "@/store/users/store";
 import { useGetMarketDataByNftId } from "@/hooks/useQuery";
@@ -100,7 +100,15 @@ export default function NFTCard(nft: NFT) {
         return (
           <BlurImage
             className="cursor-pointer rounded-xl object-cover w-full desktop:h-[220px] tablet:h-[180px] h-[130px] "
-            src={displayMedia}
+            src={
+              nft.collection.metadataJson
+                ? displayMedia !== "" &&
+                  displayMedia !== null &&
+                  displayMedia !== undefined
+                  ? displayMedia
+                  : defaultLayerGImage
+                : displayMedia
+            }
             alt="image"
             width={220}
             height={220}

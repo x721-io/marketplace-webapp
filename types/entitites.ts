@@ -133,7 +133,7 @@ export interface Collection {
   totalNft: number;
   floorPrice: string;
   isVerified: boolean;
-  metadataJson: MetadataJson;
+  metadataJson?: MetadataJson;
   floor: number;
 }
 
@@ -219,14 +219,6 @@ export interface MetricDetail {
   VolumeIndividual: number;
 }
 
-export interface MetadataJson {
-  id: string;
-  name: string;
-  banner: string;
-  category: Category[];
-  gameIcon: string;
-}
-
 export interface Category {
   id: string;
   name: string;
@@ -268,4 +260,18 @@ export interface BidInfo {
   sig: string;
   start: number;
   end: number;
+}
+
+export interface MetadataJson {
+  id: string;
+  name: string;
+  banner: string;
+  category: Category[];
+  gameIcon: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  extract: string;
 }
