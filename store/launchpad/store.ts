@@ -38,6 +38,7 @@ const DEFAULT_STATE: LaunchpadStoreState = {
     status: "PENDING",
     type: "ERC721",
     floor: 1,
+    vol: "0",
     metadataJson: {
       banner: "",
       category: [],
