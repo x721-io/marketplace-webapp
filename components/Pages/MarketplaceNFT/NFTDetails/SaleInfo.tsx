@@ -49,7 +49,7 @@ const SaleInfo = ({
     id: nft.id,
   });
   const [isCancelling, setCancelling] = useState(false);
-  const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
+  const { cancelOrder, getOrderDetails } = useMarketplaceV2();
   const [activeAccordIds, setActiveAccordIds] = useState<number[]>([0, 1, 2]);
   const { profile } = useAuthStore();
   const [saleData, setSaleData] = useState<MarketEventV2 | null>(null);
@@ -239,9 +239,14 @@ const SaleInfo = ({
                 onClick={() => {
                   router.push(`/user/${s.Maker?.publicKey}`);
                 }}
-                className={columnClassName + " hover:underline cursor-pointer"}
+                className={
+                  columnClassName +
+                  " hover:underline cursor-pointer text-[#1877F2] !font-bold"
+                }
               >
-                {shortenAddress(s.Maker?.publicKey)}
+                {s.Maker?.username
+                  ? s.Maker.username
+                  : shortenAddress(s.Maker?.publicKey)}
               </td>
               <td className={columnClassName + "w-full text-center"}>
                 {marketData?.owners.findIndex(

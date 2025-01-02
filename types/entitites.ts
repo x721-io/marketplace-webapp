@@ -129,6 +129,7 @@ export interface Collection {
   coverImage: string | null;
   avatar: string | null;
   volumn: string;
+  vol: string;
   totalOwner: number;
   totalNft: number;
   floorPrice: string;

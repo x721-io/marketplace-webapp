@@ -5,6 +5,7 @@ import MainFooter from "@/components/Layout/MainFooter";
 import MainBody from "@/components/Layout/MainBody";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Cart from "../Cart";
 
 export default function MainLayout({
   children,
@@ -21,7 +22,10 @@ export default function MainLayout({
   return (
     <main className="flex flex-col min-h-screen">
       <MainHeader />
-      <MainBody>{children}</MainBody>
+      <MainBody>
+        {children}
+        <Cart />
+      </MainBody>
       {pathName !== "/bulk-list" && <MainFooter />}
     </main>
   );

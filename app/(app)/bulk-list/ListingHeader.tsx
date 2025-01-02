@@ -39,7 +39,7 @@ export default function ListingHeader({ onApply, appliedIndexes }: Props) {
   };
 
   return (
-    <div className="w-full bg-[rgba(0,0,0,0.025)] rounded-md py-3 px-5 flex items-center gap-6 shadow-md border-solid border-[0.5px]">
+    <div className="w-full bg-[rgba(0,0,0,0.025)] rounded-md py-3 px-5 flex items-center gap-6 shadow-sm border-solid border-[0.5px]">
       <div className="text-heading-md !font-bold !text-[1.1rem] tracking-[0.5px] text-[rgba(0,0,0,0.6)]">
         Apply to {appliedIndexes.length}{" "}
         {appliedIndexes.length > 1 ? "items" : "item"}

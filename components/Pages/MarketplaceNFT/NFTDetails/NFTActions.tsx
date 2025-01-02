@@ -13,6 +13,8 @@ import { NFT } from "@/types";
 import { APIResponse } from "@/services/api/types";
 import TransferNFTModal from "@/components/Modal/TransferNFT";
 import { useWrongNetwork } from "@/hooks/useAuth";
+import { useAppSettingsStore } from "@/store/app-settings/store";
+import { ca } from "date-fns/locale";
 
 export default function NFTActions({
   nft,
@@ -21,6 +23,7 @@ export default function NFTActions({
   nft: NFT;
   marketData?: APIResponse.NFTMarketData;
 }) {
+  const { addToCart, toggleCart, removeFromCart, cart } = useAppSettingsStore();
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const { isOwner, isOnSale, saleData, isSeller } = useNFTMarketStatus(
     nft.collection.type,
@@ -44,6 +47,17 @@ export default function NFTActions({
   const [showCancelBidModal, setShowCancelBidModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const { isWrongNetwork, switchToCorrectNetwork } = useWrongNetwork();
+
+  const isInCart = useMemo(() => {
+    if (cart.items.length === 0) return false;
+    const index = cart.items.findIndex(
+      (item) =>
+        item.nftData.id === nft.id &&
+        item.nftData.collectionId === nft.collectionId
+    );
+    return index !== -1;
+  }, [cart.items]);
+
   if (isOwner) {
     return (
       <div className="w-full">
@@ -138,8 +152,30 @@ export default function NFTActions({
           <Button className="flex-1" onClick={() => setShowBuyModal(true)}>
             Buy Now
           </Button>
-          <Button className="w-12 !min-w-0 !p-2" disabled>
-            <Icon name="shoppingBag" width={16} height={16} />
+          <Button
+            className="w-12 !min-w-0 !p-2"
+            onClick={() => {
+              if (!marketData) return;
+              if (!isInCart) {
+                addToCart({
+                  nftData: nft,
+                  marketData,
+                });
+              } else {
+                removeFromCart({
+                  nftData: nft,
+                  marketData,
+                });
+              }
+              toggleCart(true);
+            }}
+          >
+            <Icon
+              name="plus"
+              width={24}
+              height={24}
+              className={`${isInCart && "rotate-45"} `}
+            />
           </Button>
         </div>
       ) : !!myBid ? (

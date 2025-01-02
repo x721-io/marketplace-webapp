@@ -22,7 +22,7 @@ export default function CancelSellNFTModal({
   onClose,
   marketData,
 }: Props) {
-  const { cancelOrder, getOrderDetails } = useMarketplaceV2(nft);
+  const { cancelOrder, getOrderDetails } = useMarketplaceV2();
   const wallet = useAuthStore((state) => state.profile?.publicKey);
   const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);

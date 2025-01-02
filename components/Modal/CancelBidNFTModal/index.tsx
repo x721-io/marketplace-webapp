@@ -16,7 +16,7 @@ interface Props extends MyModalProps {
 
 export default function CancelBidNFTModal({ nft, show, onClose, bid }: Props) {
   const { id } = useParams();
-  const { getOrderDetails, cancelOrder } = useMarketplaceV2(nft);
+  const { getOrderDetails, cancelOrder } = useMarketplaceV2();
   const [isLoading, setLoading] = useState(false);
   const { mutate } = useSWRConfig();
 

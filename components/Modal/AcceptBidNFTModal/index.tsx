@@ -41,7 +41,7 @@ export default function AcceptBidNFTModal({ nft, show, onClose, bid }: Props) {
     "quoteToken",
   ]);
   const { mutate } = useSWRConfig();
-  const { acceptBid, getOrderDetails } = useMarketplaceV2(nft);
+  const { acceptBid, getOrderDetails } = useMarketplaceV2();
   const token = useMemo(() => findTokenByAddress(quoteToken), [quoteToken]);
   const [loading, setLoading] = useState(false);
   const [loadingForAll, setLoadingForAll] = useState(false);
