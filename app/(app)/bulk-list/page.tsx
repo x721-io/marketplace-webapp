@@ -503,7 +503,7 @@ const BulkList = () => {
                       upsertBulkOrdersItem(updatedOrder);
                     }}
                     value={o.quoteToken}
-                    className="p-2 rounded-r-md w-[50%] border-l-0 outline-none"
+                    className="p-2 rounded-r-md !rounded-l-none w-[50%] !border-l-0 outline-none"
                   >
                     {Object.keys(tokens).map((key) => (
                       <option key={key} value={tokens[key].address}>

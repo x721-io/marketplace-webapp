@@ -1095,7 +1095,7 @@ export const exchangeSignedDomain = {
   verifyingContract: contractExchangeV2Test,
 } as any;
 
-const useMarketplaceV2 = (nft: NFT) => {
+const useMarketplaceV2 = () => {
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const [isApproving, setApproving] = useState(false);
@@ -1127,17 +1127,33 @@ const useMarketplaceV2 = (nft: NFT) => {
     }
   };
 
-  const getCollectionType = (): "ERC721" | "ERC1155" | null => {
+  const getMultiOrdersDetails = async (
+    orders: Array<{
+      sig: string;
+      index: number;
+    }>
+  ): Promise<OrderDetails[] | null> => {
+    try {
+      const response = await nextAPI.post("/order/verify-list ", {
+        orders,
+      });
+      return response.data.data as OrderDetails[];
+    } catch (err: any) {
+      return null;
+    }
+  };
+
+  const getCollectionType = (nft: NFT): "ERC721" | "ERC1155" | null => {
     if (nft.collection.type !== "ERC721" && nft.collection.type !== "ERC1155")
       return null;
     return nft.collection.type;
   };
 
-  const checkIfApprovedForAll = async () => {
+  const checkIfApprovedForAll = async (nft: NFT) => {
     if (!address) return false;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const type = getCollectionType();
+    const type = getCollectionType(nft);
     if (!type) return false;
     try {
       const isApproveForAll =
@@ -1208,11 +1224,11 @@ const useMarketplaceV2 = (nft: NFT) => {
     }
   };
 
-  const approveAll = async () => {
+  const approveAll = async (nft: NFT) => {
     if (!address) return false;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
-    const type = getCollectionType();
+    const type = getCollectionType(nft);
     if (!type) return false;
     try {
       const result =
@@ -1258,11 +1274,11 @@ const useMarketplaceV2 = (nft: NFT) => {
     return tokenAddress === ADDRESS_ZERO ? 1 : 2;
   };
 
-  const getNftAssetType = (): 3 | 4 => {
+  const getNftAssetType = (nft: NFT): 3 | 4 => {
     return nft.collection.type === "ERC721" ? 3 : 4;
   };
 
-  const getSellOrderEncodedData = (params: FormState.SellNFT) => {
+  const getSellOrderEncodedData = (nft: NFT, params: FormState.SellNFT) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
@@ -1284,7 +1300,7 @@ const useMarketplaceV2 = (nft: NFT) => {
       ],
       [
         address,
-        getNftAssetType(),
+        getNftAssetType(nft),
         collectionAddress,
         BigInt(quantity),
         BigInt(nft.u2uId ?? nft.id),
@@ -1330,7 +1346,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         takeValue,
         BigInt(0),
         marketData.owners[0].signer,
-        getNftAssetType(),
+        getNftAssetType(nft),
         collectionAddress,
         BigInt(quantity),
         BigInt(nft.u2uId ?? nft.id),
@@ -1338,7 +1354,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     );
   };
 
-  const signSellOrderData = async (params: FormState.SellNFTV2) => {
+  const signSellOrderData = async (nft: NFT, params: FormState.SellNFTV2) => {
     if (!address) return null;
     const { collection } = nft;
     const { address: collectionAddress } = collection;
@@ -1376,7 +1392,7 @@ const useMarketplaceV2 = (nft: NFT) => {
         message: {
           maker: address,
           makeAsset: {
-            assetType: getNftAssetType(),
+            assetType: getNftAssetType(nft),
             contractAddress: collectionAddress as Address,
             value: BigInt(quantity),
             id: BigInt(nft.u2uId ?? nft.id),
@@ -1446,7 +1462,7 @@ const useMarketplaceV2 = (nft: NFT) => {
           },
           taker: ADDRESS_ZERO,
           takeAsset: {
-            assetType: getNftAssetType(),
+            assetType: getNftAssetType(nft),
             contractAddress: collectionAddress,
             value: BigInt(quantity),
             id: BigInt(nft.u2uId ?? nft.id),
@@ -1464,6 +1480,7 @@ const useMarketplaceV2 = (nft: NFT) => {
   };
 
   const createSellAPI = async (
+    nft: NFT,
     params: FormState.SellNFTV2,
     sig: `0x${string}`
   ) => {
@@ -1474,7 +1491,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     const tokenConfig = getTokenConfig(quoteToken);
     if (!tokenConfig) return;
     const makeAsset = {
-      assetType: getNftAssetType(),
+      assetType: getNftAssetType(nft),
       contractAddress: collectionAddress,
       value: BigInt(quantity).toString(),
       id: nft.u2uId ?? nft.id,
@@ -1542,6 +1559,7 @@ const useMarketplaceV2 = (nft: NFT) => {
   };
 
   const createBidAPI = async (
+    nft: NFT,
     params: FormState.BidNFTV2,
     sig: `0x${string}`
   ) => {
@@ -1558,7 +1576,7 @@ const useMarketplaceV2 = (nft: NFT) => {
       id: BigInt(0).toString(),
     };
     const takeAsset = {
-      assetType: getNftAssetType(),
+      assetType: getNftAssetType(nft),
       contractAddress: collectionAddress,
       value: BigInt(quantity).toString(),
       id: nft.u2uId ?? nft.id,
@@ -1607,6 +1625,7 @@ const useMarketplaceV2 = (nft: NFT) => {
   };
 
   const createSellOrder = async (
+    nft: NFT,
     params: FormState.SellNFTV2,
     onApproveSuccess: () => void,
     onSignSuccess: () => void,
@@ -1618,10 +1637,10 @@ const useMarketplaceV2 = (nft: NFT) => {
   ): Promise<boolean> => {
     if (!address) return false;
 
-    const isApproved = await checkIfApprovedForAll();
+    const isApproved = await checkIfApprovedForAll(nft);
     if (!isApproved) {
       setApproving(true);
-      const result = await approveAll();
+      const result = await approveAll(nft);
       setApproving(false);
       if (!result) {
         onRequestError("approve", new Error("Failed to approve"));
@@ -1636,7 +1655,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     setIsSigningOrderData(true);
     params.start = Math.floor(params.start / 1000);
     params.end = Math.floor(params.end / 1000);
-    const sig = await signSellOrderData(params);
+    const sig = await signSellOrderData(nft, params);
     setIsSigningOrderData(false);
     if (!sig) {
       onRequestError("sign", new Error("Failed to sign order data"));
@@ -1646,7 +1665,7 @@ const useMarketplaceV2 = (nft: NFT) => {
 
     setCreatingOrder(true);
     // const result = false;
-    const result = await createSellAPI(params, sig);
+    const result = await createSellAPI(nft, params, sig);
     // await new Promise((resolve) => setTimeout(resolve, 2000));
     setCreatingOrder(false);
     if (!result) {
@@ -1699,7 +1718,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     onSignSuccess();
 
     setCreatingOrder(true);
-    const result = await createBidAPI(params, sig);
+    const result = await createBidAPI(nft, params, sig);
     if (!result) {
       onRequestError("create_order_api", new Error("Failed to create order"));
       return false;
@@ -1802,6 +1821,109 @@ const useMarketplaceV2 = (nft: NFT) => {
             },
           ],
         ],
+      });
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const buyBulk = async (orders: OrderDetails[], qty: number = 1) => {
+    if (!address) return;
+    try {
+      // if (order.quoteToken !== ADDRESS_ZERO) {
+      //   const allowance = await getERC20Allowance(order.takeAssetAddress);
+      //   if (allowance < BigInt(order.takeAssetValue)) {
+      //     await approveERC20TokenAmt(
+      //       order.takeAssetAddress,
+      //       BigInt(order.takeAssetValue)
+      //     );
+      //   }
+      // }
+      const value = orders
+        .filter((order) => order.takeAssetType === 1)
+        .reduce((prev, curr) => prev + Number(curr.takeAssetValue), 0);
+
+      const leftOrders: any[] = [];
+      const rightOrders: any[] = [];
+      orders.forEach((order) => {
+        if (!order.Maker) return null;
+        const leftOrder = {
+          orderType: getOrderTypeIndex(order.orderType),
+          maker: order.Maker.signer,
+          makeAsset: {
+            assetType: order.makeAssetType,
+            contractAddress: order.makeAssetAddress as Address,
+            value: BigInt(order.makeAssetValue),
+            id: BigInt(order.makeAssetId),
+          },
+          taker: ADDRESS_ZERO,
+          takeAsset: {
+            assetType: order.takeAssetType,
+            contractAddress: order.takeAssetAddress as Address,
+            value: BigInt(order.takeAssetValue),
+            id: BigInt(order.takeAssetId),
+          },
+          salt: BigInt(order.salt),
+          start: BigInt(order.start),
+          end: BigInt(order.end),
+          originFee: {
+            amount: BigInt(0),
+            receiver: contractExchangeV2Test,
+          },
+          royaltyFee: {
+            receiver: order.Maker.signer,
+            amount: BigInt("0"),
+          },
+          index: order.index,
+          proof: (order.proof as any) ?? [],
+          root: order.root as Address,
+          sig: order.sig as any,
+        };
+        const rightOrder = {
+          orderType:
+            getOrderTypeIndex(order.orderType) === 1
+              ? 0
+              : getOrderTypeIndex(order.orderType),
+          maker: address,
+          makeAsset: {
+            assetType: order.takeAssetType,
+            contractAddress: order.takeAssetAddress as Address,
+            value: BigInt(order.takeAssetValue) * BigInt(qty),
+            id: BigInt(order.takeAssetId),
+          },
+          taker: order.Maker.signer as Address,
+          takeAsset: {
+            assetType: order.makeAssetType,
+            contractAddress: order.makeAssetAddress as Address,
+            value: BigInt(qty),
+            id: BigInt(order.makeAssetId),
+          },
+          salt: BigInt(0),
+          start: BigInt(order.start),
+          end: BigInt(order.end),
+          originFee: {
+            amount: BigInt(0),
+            receiver: contractExchangeV2Test,
+          },
+          royaltyFee: {
+            receiver: order.Maker.signer,
+            amount: BigInt("0"),
+          },
+          index: order.index,
+          proof: [],
+          root: order.root as Address,
+          sig: "0x",
+        };
+        leftOrders.push(leftOrder);
+        rightOrders.push(rightOrder);
+      });
+
+      await writeContract(config, {
+        abi,
+        address: contractExchangeV2Test,
+        functionName: "matchOrders",
+        value: BigInt(value),
+        args: [leftOrders, rightOrders],
       });
     } catch (err: any) {
       throw err;
@@ -1995,10 +2117,10 @@ const useMarketplaceV2 = (nft: NFT) => {
         const tokenConfig = getTokenConfig(quoteToken);
         if (!tokenConfig) return null;
         const makeAsset = {
-          assetType: getNftAssetType(),
+          assetType: getNftAssetType(order.nft),
           contractAddress: collectionAddress,
           value: BigInt(quantity).toString(),
-          id: nft.u2uId ?? nft.id,
+          id: order.nft.u2uId ?? order.nft.id,
         };
         const takeAsset = {
           assetType: getTokenAssetType(quoteToken),
@@ -2056,6 +2178,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     deposit,
     approveAll,
     buySingle,
+    buyBulk,
     acceptBid,
     generateBulkData,
     signSellOrderData,
@@ -2065,6 +2188,7 @@ const useMarketplaceV2 = (nft: NFT) => {
     isSigningOrderData,
     isCreatingOrder,
     isDepositing,
+    getMultiOrdersDetails,
   };
 };
 

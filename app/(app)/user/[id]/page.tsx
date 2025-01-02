@@ -145,7 +145,7 @@ export default function ProfilePage() {
           bottom: bulkOrders.length > 0 && isValidSession ? "0px" : "-70px",
           transition: "bottom 0.25s",
         }}
-        className="fixed left-0 w-full h-[70px] bg-white border-solid border-t-[1px] flex items-center justify-end px-10"
+        className="fixed z-50 left-0 w-full h-[70px] bg-white border-solid border-t-[1px] flex items-center justify-end px-10"
       >
         <button
           onClick={() => router.push("/bulk-list")}

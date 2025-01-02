@@ -102,7 +102,10 @@ export interface PartialOrderDetails {
   proof: string[];
 }
 
-export interface OrderDetails extends PartialOrderDetails, MarketEventV2 {}
+export interface OrderDetails
+  extends PartialOrderDetails,
+    MarketEventV2,
+    VerifyOrder {}
 
 export interface PriceHistoryItem {
   id: string;
@@ -135,4 +138,8 @@ export interface PriceHistoryItem {
     verifyEmail: boolean;
     signer: string;
   };
+}
+
+export interface VerifyOrder {
+  isSuccess?: boolean;
 }

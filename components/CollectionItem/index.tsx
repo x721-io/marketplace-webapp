@@ -18,6 +18,7 @@ import Icon from "@/components/Icon";
 import MySpinner from "../X721UIKits/Spinner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import { parseEther } from "viem";
 
 const CollectionItem = ({
   c,
@@ -82,7 +83,7 @@ const CollectionItem = ({
               <div className="flex items-center gap-1 flex-col">
                 <Text className="text-body-12 text-secondary">Volume</Text>
                 <Text className="text-body-12">
-                  {formatDisplayedNumber(formatUnits(c.volumn || 0))} U2U
+                  {parseEther(c.volumn.toString().toString())} U2U
                 </Text>
               </div>
               <div className="flex items-center gap-1 flex-col">

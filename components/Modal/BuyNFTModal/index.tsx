@@ -33,7 +33,7 @@ interface Props extends MyModalProps {
 export default function BuyNFTModal({ nft, saleData, show, onClose }: Props) {
   const [isBuying, setBuying] = useState(false);
   const { buySingle, deposit, getERC20Allowance, getOrderDetails } =
-    useMarketplaceV2(nft);
+    useMarketplaceV2();
   const { data: marketData, isLoading: isLoadingMarketData } =
     useGetMarketDataByNftId(nft.collection.address as string, nft.id as string);
   const {

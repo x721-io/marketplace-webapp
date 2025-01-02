@@ -40,7 +40,7 @@ export default function SellNFTModal({
   onClose,
 }: Props) {
   const { id } = useParams();
-  const { createSellOrder } = useMarketplaceV2(nft);
+  const { createSellOrder } = useMarketplaceV2();
   const [currentFormState, setCurrentFormState] = useState<"INPUT" | "CREATE">(
     "INPUT"
   );
@@ -205,6 +205,7 @@ export default function SellNFTModal({
       });
     };
     await createSellOrder(
+      nft,
       params,
       onApproveSuccess,
       onSignSuccess,

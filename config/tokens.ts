@@ -59,6 +59,11 @@ export const tokenOptions = Object.values(tokens)
     if (token.address === tokens.wu2u.address) {
       return { label: "WU2U", value: tokens.wu2u.address, index: token.index };
     }
-    return { label: token.symbol, value: token.address, index: token.index };
+    return {
+      label: token.symbol,
+      value: token.address,
+      index: token.index,
+      decimal: token.decimal,
+    };
   })
   .sort((a, b) => a.index - b.index);

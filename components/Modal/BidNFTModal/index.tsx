@@ -42,7 +42,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     isSigningOrderData,
     deposit,
     isDepositing,
-  } = useMarketplaceV2(nft);
+  } = useMarketplaceV2();
   const { address } = useAccount();
   const [errorStep, setErrorStep] = useState<{
     stepIndex: number;
