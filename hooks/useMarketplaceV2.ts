@@ -1830,21 +1830,35 @@ const useMarketplaceV2 = () => {
   const buyBulk = async (orders: OrderDetails[], qty: number = 1) => {
     if (!address) return;
     try {
-      // if (order.quoteToken !== ADDRESS_ZERO) {
-      //   const allowance = await getERC20Allowance(order.takeAssetAddress);
-      //   if (allowance < BigInt(order.takeAssetValue)) {
-      //     await approveERC20TokenAmt(
-      //       order.takeAssetAddress,
-      //       BigInt(order.takeAssetValue)
-      //     );
-      //   }
-      // }
       const value = orders
         .filter((order) => order.takeAssetType === 1)
         .reduce((prev, curr) => prev + Number(curr.takeAssetValue), 0);
 
       const leftOrders: any[] = [];
       const rightOrders: any[] = [];
+      const failedApprovedTokens: string[] = [];
+
+      await Promise.all(
+        orders.map(async (order) => {
+          if (order.quoteToken !== ADDRESS_ZERO) {
+            const allowance = await getERC20Allowance(order.takeAssetAddress);
+            if (allowance < BigInt(order.takeAssetValue)) {
+              const result = await approveERC20TokenAmt(
+                order.takeAssetAddress,
+                BigInt(order.takeAssetValue)
+              );
+              if (!result) {
+                failedApprovedTokens.push(order.takeAssetAddress);
+              }
+            }
+          }
+        })
+      );
+
+      if (failedApprovedTokens.length > 0) {
+        throw new Error();
+      }
+
       orders.forEach((order) => {
         if (!order.Maker) return null;
         const leftOrder = {

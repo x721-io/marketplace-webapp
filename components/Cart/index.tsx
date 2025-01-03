@@ -79,19 +79,20 @@ const Cart: React.FC<Props> = () => {
     }
   };
 
-  if (!cart.isOpen) {
-    return null;
-  }
-
   return (
     <div
       ref={cartRef}
-      className="flex flex-col fixed right-5 top-[50%] -translate-y-[50%] h-[750px] w-[400px] bg-white z-[100] rounded-lg shadow-2xl border-solid border-[1px] px-5 pb-5 pt-4"
+      style={{
+        right: cart.isOpen ? "20px" : "-400px",
+        opacity: cart.isOpen ? 1 : 0,
+        transition: "right 0.2s ease-in-out, opacity 0.4s ease-in-out",
+      }}
+      className="flex flex-col fixed top-[50%] -translate-y-[50%] h-[750px] w-[400px] bg-white z-[100] rounded-lg shadow-2xl border-solid border-[1px] px-5 pb-5 pt-4"
     >
       <div className="flex items-center !font-bold text-[1.5rem] tracking-[0.5px]">
         Cart ({cart.items.length})
       </div>
-      <div className="w-full flex-1 overflow-y-auto pt-5">
+      <div className="w-full flex-1 overflow-y-auto overflow-x-hidden pt-5">
         {cart.items.map((item) => (
           <div
             key={item.nftData.collection.id + "/" + item.nftData.id}

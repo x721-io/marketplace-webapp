@@ -150,7 +150,7 @@ const BulkList = () => {
           id: order.nft.u2uId ?? order.nft.id,
         };
         const takeAsset = {
-          assetType: 1,
+          assetType: quoteToken === ADDRESS_ZERO ? 1 : 2,
           contractAddress: quoteToken,
           value: parseUnits(order.totalPrice.toString(), decimal),
           id: BigInt(0).toString(),

@@ -13,11 +13,11 @@ import WETH_ABI from "@/abi/WETH";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 import { Address } from "abitype";
 import { erc20Abi } from "viem";
 import { useQueryClient } from "@tanstack/react-query";
 import { Web3Functions } from "@/services/web3";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function TokenBalances() {
   const queryClient = useQueryClient();
@@ -73,7 +73,7 @@ export default function TokenBalances() {
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: getTokenBalancesQK });
     queryClient.invalidateQueries({ queryKey: getU2UBalanceQK });
-  }, [blockNumber, queryClient]);
+  }, [blockNumber, queryClient, getTokenBalancesQK, getU2UBalanceQK]);
 
   return (
     <div className="flex flex-col h-full justify-between">
@@ -114,7 +114,9 @@ export default function TokenBalances() {
                   />
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="Hello world!"
+                    data-tooltip-content={`${parseFloat(
+                      balance.toString()
+                    ).toFixed(3)} ${token.symbol}`}
                   >
                     <p className="font-semibold break-all w-auto overflow-hidden whitespace-nowrap block desktop:max-w-[60px] tablet:max-w-[60px] max-w-[150px] text-ellipsis ">
                       {balance}
