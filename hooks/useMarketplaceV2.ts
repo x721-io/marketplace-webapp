@@ -1827,12 +1827,15 @@ const useMarketplaceV2 = () => {
     }
   };
 
-  const buyBulk = async (orders: OrderDetails[], qty: number = 1) => {
+  const buyBulk = async (orders: Array<OrderDetails & { qty: number }>) => {
     if (!address) return;
     try {
       const value = orders
         .filter((order) => order.takeAssetType === 1)
-        .reduce((prev, curr) => prev + Number(curr.takeAssetValue), 0);
+        .reduce(
+          (prev, curr) => prev + Number(curr.takeAssetValue) * curr.qty,
+          0
+        );
 
       const leftOrders: any[] = [];
       const rightOrders: any[] = [];
@@ -1902,14 +1905,14 @@ const useMarketplaceV2 = () => {
           makeAsset: {
             assetType: order.takeAssetType,
             contractAddress: order.takeAssetAddress as Address,
-            value: BigInt(order.takeAssetValue) * BigInt(qty),
+            value: BigInt(order.takeAssetValue) * BigInt(order.qty),
             id: BigInt(order.takeAssetId),
           },
           taker: order.Maker.signer as Address,
           takeAsset: {
             assetType: order.makeAssetType,
             contractAddress: order.makeAssetAddress as Address,
-            value: BigInt(qty),
+            value: BigInt(order.qty),
             id: BigInt(order.makeAssetId),
           },
           salt: BigInt(0),

@@ -160,11 +160,13 @@ export default function NFTActions({
                 addToCart({
                   nftData: nft,
                   marketData,
+                  qty: 1,
                 });
               } else {
                 removeFromCart({
                   nftData: nft,
                   marketData,
+                  qty: 1,
                 });
               }
               toggleCart(true);

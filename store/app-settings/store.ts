@@ -70,6 +70,24 @@ export const useAppSettingsStore = create(
             };
           });
         },
+        updateCartItem(item) {
+          set((state) => {
+            const index = state.cart.items.findIndex(
+              (_item) =>
+                _item.nftData.id === item.nftData.id &&
+                _item.nftData.collection.id === item.nftData.collection.id
+            );
+            if (index === -1) return state;
+            const items = [...state.cart.items];
+            items[index] = item;
+            return {
+              cart: {
+                ...state.cart,
+                items,
+              },
+            };
+          });
+        },
       }),
       { name: "app-settings" }
     )

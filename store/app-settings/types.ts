@@ -11,6 +11,7 @@ export enum Theme {
 export type CartItem = {
   marketData: APIResponse.NFTMarketData;
   nftData: NFT;
+  qty: number;
 };
 
 export type Cart = {
@@ -29,4 +30,5 @@ export interface AppSettingsActions {
   setCartItems: (items: CartItem[]) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart(item: CartItem): void;
+  updateCartItem: (item: CartItem) => void;
 }
