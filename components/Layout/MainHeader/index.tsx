@@ -9,12 +9,15 @@ import SearchInput from "@/components/Layout/MainHeader/SearchInput";
 import MenuModal from "@/components/Modal/MenuModal";
 import { getUserAvatarImage } from "@/utils/string";
 import NavbarMenu from "@/components/Layout/MainHeader/NavbarMenu";
+import { useAppSettingsStore } from "@/store/app-settings/store";
+import BagIcon from "@/assets/svg/bag-icon";
 
 export const HEADER_HEIGHT = 88;
 
 export default function MainHeader() {
   const user = useAuthStore((state) => state.profile);
   const [showMenu, setShowMenu] = useState(false);
+  const { cart, toggleCart } = useAppSettingsStore();
 
   return (
     <nav
@@ -57,6 +60,19 @@ export default function MainHeader() {
                 />
               </div>
             </ConnectWalletButton>
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => toggleCart(true)}
+              className="w-[50px] h-[50px] rounded-xl bg-surface-soft flex justify-center items-center relative"
+            >
+              <BagIcon width={22} height={22} />
+              {cart.items.length > 0 && (
+                <div className="absolute right-1 top-0 w-6 h-6 rounded-full bg-[#8258FF] flex items-center justify-center text-[white] text-[12px] font-normal">
+                  {cart.items.length}
+                </div>
+              )}
+            </button>
           </div>
           <button
             className="block tablet:hidden !p-0"

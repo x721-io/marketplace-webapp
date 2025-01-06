@@ -6,6 +6,9 @@ import { formatUnits } from "ethers";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import Icon from "../Icon";
+import TrashIcon from "@/assets/svg/trash-icon";
+import Link from "next/link";
+import { useAppSettingsStore } from "@/store/app-settings/store";
 
 type Props = {
   item: TCartItem;
@@ -14,6 +17,7 @@ type Props = {
 };
 
 const CartItem: React.FC<Props> = ({ item, onUpdateQty, onRemove }) => {
+  const { toggleCart } = useAppSettingsStore();
   const token = useMemo(
     () => findTokenByAddress(item.marketData.sellInfo[0].quoteToken),
     [item.marketData.sellInfo]
@@ -30,10 +34,16 @@ const CartItem: React.FC<Props> = ({ item, onUpdateQty, onRemove }) => {
       />
       <div className="flex-1 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div className="!font-semibold text-[16px] tracking-[0.5px]">
+          <Link
+            onClick={() => toggleCart(false)}
+            href={`/item/${item.nftData.collection.address}/${item.nftData.id}`}
+            className="!font-semibold text-[16px] tracking-[0.5px] cursor-pointer hover:underline"
+          >
             {item.nftData.name}
-          </div>
-          <button onClick={onRemove}>Remove</button>
+          </Link>
+          <button onClick={onRemove}>
+            <TrashIcon width={20} height={20} />
+          </button>
         </div>
         {item.nftData.collection.type === "ERC1155" && (
           <div className="flex items-center justify-between">
