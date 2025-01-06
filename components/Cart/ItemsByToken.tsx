@@ -12,9 +12,10 @@ type Props = {
     items: TCartItem[];
     quoteToken: `0x${string}`;
   };
+  isCollapseAll: boolean;
 };
 
-const ItemsByToken: React.FC<Props> = ({ groupedItems }) => {
+const ItemsByToken: React.FC<Props> = ({ groupedItems, isCollapseAll }) => {
   const { removeFromCart, updateCartItem } = useAppSettingsStore();
 
   const token = useMemo(
@@ -53,7 +54,7 @@ const ItemsByToken: React.FC<Props> = ({ groupedItems }) => {
             <div>{groupedItems.items.length} NFTs</div>
           </div>
         }
-        collapseAll={false}
+        collapseAll={isCollapseAll}
       >
         <Accordion.Content>
           <div className="w-full flex flex-col">
