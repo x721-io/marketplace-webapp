@@ -23,7 +23,11 @@ import { useNFTMarketStatus } from "@/hooks/useMarket";
 import { usePathname, useRouter } from "next/navigation";
 import { Address } from "abitype";
 
-export default function NFTCard(nft: NFT) {
+type Props = {
+  nft: NFT;
+};
+
+const NFTCard: React.FC<Props> = ({ nft }) => {
   const router = useRouter();
   const pathName = usePathname();
   const { data: marketData } = useGetMarketDataByNftId(
@@ -118,38 +122,6 @@ export default function NFTCard(nft: NFT) {
   };
 
   const renderNFTData = () => {
-    // switch (orderStatus) {
-    //   case "Bid":
-    //     return (
-    //       <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-    //         Current bid:{" "}
-    //         <span className="text-primary font-semibold">
-    //           {formatDisplayedNumber(
-    //             formatUnits(price as string, token?.decimal)
-    //           )}
-    //         </span>{" "}
-    //         {token?.symbol}
-    //       </Text>
-    //     );
-    //   case "AskNew":
-    //     return (
-    //       <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-    //         On sale for:{" "}
-    //         <span className="text-primary font-semibold">
-    //           {formatDisplayedNumber(
-    //             formatUnits(price as string, token?.decimal)
-    //           )}
-    //         </span>{" "}
-    //         {token?.symbol}
-    //       </Text>
-    //     );
-    //   default:
-    //     return (
-    //       <Text className="text-body-12 px-1 text-secondary whitespace-nowrap overflow-hidden text-ellipsis">
-    //         No bid yet
-    //       </Text>
-    //     );
-    // }
     return (
       <div className="w-full flex desktop:flex-row flex-col items-center justify-between text-[0.9rem] pt-2 pb-2 px-1 gap-2">
         <div className="flex flex-col w-full">
@@ -260,4 +232,6 @@ export default function NFTCard(nft: NFT) {
       </Link>
     </div>
   );
-}
+};
+
+export default NFTCard;

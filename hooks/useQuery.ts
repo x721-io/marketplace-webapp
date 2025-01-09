@@ -528,3 +528,48 @@ export const useGetLayerGNFTs = (
     mutate,
   };
 };
+
+export const useGetCollectionOrders = (
+  params: APIParams.FetchCollectionOrders,
+  enabled: boolean = true
+) => {
+  const { data, error, isLoading, mutate, size, setSize } = useSWRInfinite(
+    (index) => {
+      if (!enabled) return null;
+      return {
+        ...params,
+        page: index + 1,
+      };
+    },
+    async (params) => {
+      let searchQuery = "";
+
+      Object.keys(params).forEach((key) => {
+        if (params[key as keyof APIParams.FetchCollectionOrders]) {
+          searchQuery += `${key}=${
+            params[key as keyof APIParams.FetchCollectionOrders]
+          }&`;
+        }
+      });
+
+      const response = await nextAPI.get(
+        `${API_ENDPOINTS.SEARCH_COLLECTION_ORDERS}?${searchQuery}`
+      );
+
+      return response.data.data;
+    },
+    {
+      initialSize: 1,
+      revalidateFirstPage: false,
+    }
+  );
+
+  return {
+    data: data ?? [],
+    error,
+    isLoading,
+    size,
+    setSize,
+    mutate,
+  };
+};

@@ -36,4 +36,5 @@ export const API_ENDPOINTS = {
   LAYER_G_PROJECT: "api/project",
   LAYER_G_SMART_CONTRACT: "api/smc",
   SEARCH_NFT_LAYER_G: "/layerg",
+  SEARCH_COLLECTION_ORDERS: "/nft/sweep-orders",
 };

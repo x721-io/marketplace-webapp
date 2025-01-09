@@ -134,6 +134,16 @@ export namespace APIParams {
     orderType?: "BUlK" | "SINGLE" | "BID";
   }
 
+  export interface FetchCollectionOrders extends PaginationParams {
+    collectionAddress?: string;
+    name?: string;
+    quoteToken?: Address;
+    order?: string;
+    orderBy?: string;
+    orderStatus?: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
+    orderType?: "BUlK" | "SINGLE" | "BID";
+  }
+
   export interface NFTEvents extends PaginationParams {
     tokenId: string;
     collectionAddress: Address;

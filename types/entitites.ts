@@ -80,6 +80,7 @@ export interface SaleInfo {
   filledQty: number;
   start: number;
   end: number;
+  maker?: User;
 }
 export interface NFT {
   id: string;

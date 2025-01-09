@@ -57,13 +57,13 @@ const Cart: React.FC<Props> = () => {
     try {
       setLoading(true);
       setInvalidOrders([]);
-      const verifyInput = cart.items.map((item) => {
+      const verifyInputs = cart.items.map((item) => {
         return {
           sig: item.marketData.sellInfo[0].sig,
           index: item.marketData.sellInfo[0].index,
         };
       });
-      const ordersDetails = await getMultiOrdersDetails(verifyInput);
+      const ordersDetails = await getMultiOrdersDetails(verifyInputs);
       if (!ordersDetails) return;
       const invalidOrders = ordersDetails.filter((order) => !order.isSuccess);
       if (invalidOrders.length > 0) {

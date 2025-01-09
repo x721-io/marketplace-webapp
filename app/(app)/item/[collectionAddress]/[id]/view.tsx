@@ -107,7 +107,7 @@ export default function NFTView({ item }: { item: NFT }) {
           {!isLoadingRelatedNfts &&
             relatedItems.concatenatedData?.length > 0 &&
             relatedItems.concatenatedData.map((nft, i) => (
-              <NFTCard {...nft} key={i} />
+              <NFTCard nft={nft} key={i} />
             ))}
         </div>
       </div>
