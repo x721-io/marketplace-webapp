@@ -12,6 +12,7 @@ const DEFAULT_STATE: AppSettingsState = {
     items: [],
     isOpen: false,
   },
+  checkoutItems: [],
 };
 
 export const useAppSettingsStore = create(
@@ -85,6 +86,40 @@ export const useAppSettingsStore = create(
                 ...state.cart,
                 items,
               },
+            };
+          });
+        },
+        setCheckoutItems(items) {
+          set(() => ({
+            checkoutItems: items,
+          }));
+        },
+        removeFromCheckout(item) {
+          set((state) => {
+            const index = state.checkoutItems.findIndex(
+              (_item) =>
+                _item.nftData.id === item.nftData.id &&
+                _item.nftData.collection.id === item.nftData.collection.id
+            );
+            if (index === -1) return state;
+            const items = state.checkoutItems.filter((_, i) => i !== index);
+            return {
+              checkoutItems: items,
+            };
+          });
+        },
+        updateCheckoutItem(item) {
+          set((state) => {
+            const index = state.checkoutItems.findIndex(
+              (_item) =>
+                _item.nftData.id === item.nftData.id &&
+                _item.nftData.collection.id === item.nftData.collection.id
+            );
+            if (index === -1) return state;
+            const items = [...state.checkoutItems];
+            items[index] = item;
+            return {
+              checkoutItems: items,
             };
           });
         },

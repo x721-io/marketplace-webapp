@@ -13,10 +13,20 @@ type Props = {
     quoteToken: `0x${string}`;
   };
   isCollapseAll: boolean;
+  type?: "cart" | "checkout";
 };
 
-const ItemsByToken: React.FC<Props> = ({ groupedItems, isCollapseAll }) => {
-  const { removeFromCart, updateCartItem } = useAppSettingsStore();
+const ItemsByToken: React.FC<Props> = ({
+  groupedItems,
+  isCollapseAll,
+  type = "cart",
+}) => {
+  const {
+    removeFromCart,
+    updateCartItem,
+    removeFromCheckout,
+    updateCheckoutItem,
+  } = useAppSettingsStore();
 
   const token = useMemo(
     () => findTokenByAddress(groupedItems.quoteToken),
@@ -67,9 +77,17 @@ const ItemsByToken: React.FC<Props> = ({ groupedItems, isCollapseAll }) => {
               >
                 <CartItem
                   item={item}
-                  onRemove={() => removeFromCart(item)}
+                  onRemove={() =>
+                    type === "cart"
+                      ? removeFromCart(item)
+                      : removeFromCheckout(item)
+                  }
                   onUpdateQty={(newQty) => {
-                    updateCartItem({ ...item, qty: newQty });
+                    if (type === "cart") {
+                      updateCartItem({ ...item, qty: newQty });
+                    } else {
+                      updateCheckoutItem({ ...item, qty: newQty });
+                    }
                   }}
                 />
               </div>

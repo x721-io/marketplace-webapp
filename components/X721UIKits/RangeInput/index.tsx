@@ -7,7 +7,7 @@ type Props = {
   step?: number;
   value: number;
   onChange: (value: number) => void;
-  width?: number;
+  width?: string;
   activeColor?: string;
 };
 
@@ -17,7 +17,7 @@ const RangeInput: React.FC<Props> = ({
   step = 1,
   value,
   onChange,
-  width = 200,
+  width = "200px",
   activeColor = "#040404",
 }) => {
   const sliderRef = useRef<HTMLInputElement>(null);
@@ -25,6 +25,7 @@ const RangeInput: React.FC<Props> = ({
   useEffect(() => {
     const inactiveColor = "#e3e3e3";
     if (!sliderRef.current) return;
+    document.documentElement.style.setProperty("--activeColor", activeColor);
     const ratio = ((value - min) / (max - min)) * 100;
     sliderRef.current.style.background = `linear-gradient(90deg, ${activeColor} ${ratio}%, ${inactiveColor} ${ratio}%)`;
     if (ratio < 100) {
@@ -36,13 +37,13 @@ const RangeInput: React.FC<Props> = ({
     } else {
       sliderRef.current.style.borderRadius = "0px 10px 10px 0px";
     }
-  }, [min, max, value]);
+  }, [min, max, value, activeColor]);
 
   return (
     <input
       ref={sliderRef}
       name="range"
-      className={`inputRange w-[${width}px] [&::-webkit-slider-thumb]:!bg-[${activeColor}]`}
+      className={`inputRange w-[${width}]`}
       type="range"
       value={value}
       min={min}

@@ -142,6 +142,9 @@ export namespace APIParams {
     orderBy?: string;
     orderStatus?: "OPEN" | "CANCELLED" | "FILLED" | "PENDING";
     orderType?: "BUlK" | "SINGLE" | "BID";
+    priceMax?: BigInt;
+    sortBy?: string;
+    sortDirection?: "asc" | "desc";
   }
 
   export interface NFTEvents extends PaginationParams {

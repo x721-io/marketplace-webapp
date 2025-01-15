@@ -1086,7 +1086,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0xf404d40b19644e28407ad4Da56392F8Ab87406CD";
+  "0x2732759384D59913C7a6d4f30EDB391782854B13";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
@@ -1553,6 +1553,8 @@ const useMarketplaceV2 = () => {
         return 1;
       case "BID":
         return 2;
+      case "BID_COLLECTION":
+        return 3;
       default:
         return 4;
     }
@@ -1561,7 +1563,8 @@ const useMarketplaceV2 = () => {
   const createBidAPI = async (
     nft: NFT,
     params: FormState.BidNFTV2,
-    sig: `0x${string}`
+    sig: `0x${string}`,
+    bidType: "NFT" | "COLLECTION" = "NFT"
   ) => {
     if (!address) return false;
     const { collection } = nft;
@@ -1608,7 +1611,7 @@ const useMarketplaceV2 = () => {
         start: start.toString(),
         end: end.toString(),
         sig,
-        orderType: "BID",
+        orderType: bidType,
         price: make_asset_value.toString(),
         netPrice: parseUnits(
           params.netPrice.toString(),

@@ -22,6 +22,7 @@ export type Cart = {
 export type AppSettingsState = {
   theme: Theme;
   cart: Cart;
+  checkoutItems: CartItem[];
 };
 
 export interface AppSettingsActions {
@@ -31,4 +32,7 @@ export interface AppSettingsActions {
   addToCart: (item: CartItem) => void;
   removeFromCart(item: CartItem): void;
   updateCartItem: (item: CartItem) => void;
+  setCheckoutItems: (items: CartItem[]) => void;
+  removeFromCheckout(item: CartItem): void;
+  updateCheckoutItem: (item: CartItem) => void;
 }
