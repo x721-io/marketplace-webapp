@@ -1086,7 +1086,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0x2732759384D59913C7a6d4f30EDB391782854B13";
+  "0xf404d40b19644e28407ad4Da56392F8Ab87406CD";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
