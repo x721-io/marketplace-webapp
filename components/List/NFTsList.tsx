@@ -84,12 +84,12 @@ export default function NFTsList({
     }
     if (!items?.length) {
       return (
-        <>
+        <div className="w-full flex desktop:flex-row flex-col gap-4 ">
           {showCreateNFT
             ? myId === userId && (
                 <Link href={`/create/nft/${dataCollectionType}`}>
-                  <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px] w-full ">
-                    <Button variant="primary">Create an NFT</Button>
+                  <div className="flex items-center justify-center rounded-xl border border-1 hover:shadow-md border-soft transition-all h-[295px] desktop:w-[250px]">
+                    <Button variant="primary">Create a NFT</Button>
                   </div>
                 </Link>
               )
@@ -99,7 +99,7 @@ export default function NFTsList({
               Nothing to show
             </Text>
           </div>
-        </>
+        </div>
       );
     }
     return (
@@ -117,7 +117,7 @@ export default function NFTsList({
           {showCreateNFT && myId === userId && (
             <Link href={`/create/nft/${dataCollectionType}`}>
               <div className="flex items-center justify-center rounded-xl hover:shadow-md transition-all h-[295px] desktop:w-auto w-full border">
-                <Button variant="primary">Create an NFT</Button>
+                <Button variant="primary">Create a NFT</Button>
               </div>
             </Link>
           )}

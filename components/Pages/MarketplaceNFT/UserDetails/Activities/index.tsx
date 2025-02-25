@@ -21,7 +21,7 @@ export default function Activities({
     !!wallet ? { page, limit, user: wallet.toLowerCase() as Address } : null
   );
 
-  if (!data || !data?.length) {
+  if (!data || (!data?.length && isShow)) {
     return (
       <div className="p-7 rounded-2xl border border-disabled border-dashed mt-7">
         <Text className="text-secondary text-center text-sm">
