@@ -90,7 +90,7 @@ export interface PartialOrderDetails {
   makeAssetAddress: Address;
   makeAssetValue: string;
   makeAssetId: string;
-  takeAssetType: 1;
+  takeAssetType: number;
   takeAssetAddress: Address;
   takeAssetValue: string;
   takeAssetId: string;

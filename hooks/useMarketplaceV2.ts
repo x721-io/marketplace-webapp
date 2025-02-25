@@ -84,6 +84,12 @@ const abi = [
     name: "FillOrder",
     inputs: [
       {
+        type: "uint8",
+        name: "orderType",
+        internalType: "enum LibOrder.OrderType",
+        indexed: false,
+      },
+      {
         type: "address",
         name: "maker",
         internalType: "address",
@@ -100,6 +106,12 @@ const abi = [
       {
         type: "uint256",
         name: "takeQty",
+        internalType: "uint256",
+        indexed: false,
+      },
+      {
+        type: "uint256",
+        name: "takeAssetId",
         internalType: "uint256",
         indexed: false,
       },
@@ -458,6 +470,169 @@ const abi = [
                   },
                   { type: "uint256", name: "value", internalType: "uint256" },
                   { type: "uint256", name: "id", internalType: "uint256" },
+                ],
+              },
+              { type: "uint256", name: "salt", internalType: "uint256" },
+              { type: "uint256", name: "start", internalType: "uint256" },
+              { type: "uint256", name: "end", internalType: "uint256" },
+              {
+                type: "tuple",
+                name: "originFee",
+                internalType: "struct LibOrder.Fee",
+                components: [
+                  {
+                    type: "address",
+                    name: "receiver",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
+                ],
+              },
+              {
+                type: "tuple",
+                name: "royaltyFee",
+                internalType: "struct LibOrder.Fee",
+                components: [
+                  {
+                    type: "address",
+                    name: "receiver",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
+                ],
+              },
+              { type: "bytes", name: "sig", internalType: "bytes" },
+              { type: "bytes32", name: "root", internalType: "bytes32" },
+              { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
+              { type: "uint16", name: "index", internalType: "uint16" },
+            ],
+          },
+          {
+            type: "tuple",
+            name: "sellOrder",
+            internalType: "struct LibOrder.Order",
+            components: [
+              {
+                type: "uint8",
+                name: "orderType",
+                internalType: "enum LibOrder.OrderType",
+              },
+              { type: "address", name: "maker", internalType: "address" },
+              {
+                type: "tuple",
+                name: "makeAsset",
+                internalType: "struct LibAsset.Asset",
+                components: [
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
+                  {
+                    type: "address",
+                    name: "contractAddress",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "value", internalType: "uint256" },
+                  { type: "uint256", name: "id", internalType: "uint256" },
+                ],
+              },
+              { type: "address", name: "taker", internalType: "address" },
+              {
+                type: "tuple",
+                name: "takeAsset",
+                internalType: "struct LibAsset.Asset",
+                components: [
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
+                  {
+                    type: "address",
+                    name: "contractAddress",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "value", internalType: "uint256" },
+                  { type: "uint256", name: "id", internalType: "uint256" },
+                ],
+              },
+              { type: "uint256", name: "salt", internalType: "uint256" },
+              { type: "uint256", name: "start", internalType: "uint256" },
+              { type: "uint256", name: "end", internalType: "uint256" },
+              {
+                type: "tuple",
+                name: "originFee",
+                internalType: "struct LibOrder.Fee",
+                components: [
+                  {
+                    type: "address",
+                    name: "receiver",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
+                ],
+              },
+              {
+                type: "tuple",
+                name: "royaltyFee",
+                internalType: "struct LibOrder.Fee",
+                components: [
+                  {
+                    type: "address",
+                    name: "receiver",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "amount", internalType: "uint256" },
+                ],
+              },
+              { type: "bytes", name: "sig", internalType: "bytes" },
+              { type: "bytes32", name: "root", internalType: "bytes32" },
+              { type: "bytes32[]", name: "proof", internalType: "bytes32[]" },
+              { type: "uint16", name: "index", internalType: "uint16" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "function",
+    stateMutability: "payable",
+    outputs: [],
+    name: "directAcceptBidCollection",
+    inputs: [
+      {
+        type: "tuple",
+        name: "direct",
+        internalType: "struct LibDirectTransfer.AcceptBidCollection",
+        components: [
+          {
+            type: "tuple",
+            name: "bidOrder",
+            internalType: "struct LibOrder.BidCollectionOrder",
+            components: [
+              { type: "address", name: "maker", internalType: "address" },
+              {
+                type: "tuple",
+                name: "makeAsset",
+                internalType: "struct LibAsset.Asset",
+                components: [
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
+                  {
+                    type: "address",
+                    name: "contractAddress",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "value", internalType: "uint256" },
+                  { type: "uint256", name: "id", internalType: "uint256" },
+                ],
+              },
+              { type: "address", name: "taker", internalType: "address" },
+              {
+                type: "tuple",
+                name: "bidCollectionAsset",
+                internalType: "struct LibAsset.CollectionAsset",
+                components: [
+                  { type: "uint8", name: "assetType", internalType: "uint8" },
+                  {
+                    type: "address",
+                    name: "contractAddress",
+                    internalType: "address",
+                  },
+                  { type: "uint256", name: "value", internalType: "uint256" },
                 ],
               },
               { type: "uint256", name: "salt", internalType: "uint256" },
@@ -1086,7 +1261,7 @@ export const contractNFTTransferProxy =
 export const contractERC20TransferProxy =
   "0x04893e14B9c943088e1a1420A516a68216009ab7";
 export const contractExchangeV2Test =
-  "0xf404d40b19644e28407ad4Da56392F8Ab87406CD";
+  "0xE08220850cdcE11aeB6Cd686F2e4D0934AD80ae6";
 
 export const exchangeSignedDomain = {
   name: "X721Exchange",
@@ -1479,6 +1654,76 @@ const useMarketplaceV2 = () => {
     }
   };
 
+  const signBidCollectionOrderData = async (
+    params: FormState.BidNFTV2,
+    nft: NFT
+  ) => {
+    if (!address) return null;
+    const { collection } = nft;
+    const { address: collectionAddress } = collection;
+    const { totalPrice, quantity, quoteToken, start, end, salt } = params;
+    const types = {
+      Asset: [
+        { name: "assetType", type: "uint8" },
+        { name: "contractAddress", type: "address" },
+        { name: "value", type: "uint256" },
+        { name: "id", type: "uint256" },
+      ],
+      CollectionAsset: [
+        { name: "assetType", type: "uint8" },
+        { name: "contractAddress", type: "address" },
+        { name: "value", type: "uint256" },
+      ],
+      Fee: [
+        { name: "receiver", type: "address" },
+        { name: "amount", type: "uint96" },
+      ],
+      BidCollectionOrder: [
+        { name: "maker", type: "address" },
+        { name: "makeAsset", type: "Asset" },
+        { name: "taker", type: "address" },
+        { name: "bidCollectionAsset", type: "CollectionAsset" },
+        { name: "salt", type: "uint256" },
+        { name: "start", type: "uint256" },
+        { name: "end", type: "uint256" },
+        { name: "index", type: "uint16" },
+      ],
+    } as const;
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
+    const bidValueWei = parseUnits(totalPrice.toString(), tokenConfig.decimal);
+    try {
+      const sig = await signTypedDataAsync({
+        account: address,
+        domain: exchangeSignedDomain,
+        types,
+        primaryType: "BidCollectionOrder",
+        message: {
+          maker: address,
+          makeAsset: {
+            assetType: getTokenAssetType(quoteToken),
+            contractAddress: quoteToken,
+            value: bidValueWei,
+            id: BigInt(0),
+          },
+          taker: ADDRESS_ZERO,
+          bidCollectionAsset: {
+            assetType: 3,
+            contractAddress: collectionAddress,
+            value: BigInt(quantity),
+          },
+          salt: BigInt(salt),
+          start: BigInt(start),
+          end: BigInt(end),
+          index: 1,
+        },
+      });
+      return sig;
+    } catch (err: any) {
+      return null;
+    }
+  };
+
   const createSellAPI = async (
     nft: NFT,
     params: FormState.SellNFTV2,
@@ -1627,6 +1872,70 @@ const useMarketplaceV2 = () => {
     }
   };
 
+  const createBidCollectionAPI = async (
+    nft: NFT,
+    params: FormState.BidNFTV2,
+    sig: `0x${string}`
+  ) => {
+    if (!address) return false;
+    const { collection } = nft;
+    const { address: collectionAddress } = collection;
+    const { end, quantity, quoteToken, start, salt } = params;
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return;
+    const makeAsset = {
+      assetType: getTokenAssetType(quoteToken),
+      contractAddress: quoteToken,
+      value: parseUnits(params.totalPrice.toString(), tokenConfig.decimal),
+      id: BigInt(0).toString(),
+    };
+    const takeAsset = {
+      assetType: getNftAssetType(nft),
+      contractAddress: collectionAddress,
+      value: BigInt(quantity).toString(),
+      id: nft.u2uId ?? nft.id,
+    };
+    const {
+      assetType: make_asset_type,
+      contractAddress: make_asset_address,
+      value: make_asset_value,
+      id: make_asset_id,
+    } = makeAsset;
+    const {
+      assetType: take_asset_type,
+      contractAddress: take_asset_address,
+      value: take_asset_value,
+    } = takeAsset;
+    try {
+      const body = {
+        makeAssetType: make_asset_type,
+        makeAssetId: make_asset_id.toString(),
+        makeAssetAddress: make_asset_address,
+        makeAssetValue: make_asset_value.toString(),
+        taker: ADDRESS_ZERO,
+        takeAssetType: take_asset_type,
+        takeAssetAddress: take_asset_address,
+        takeAssetValue: take_asset_value.toString(),
+        takeAssetId: "0",
+        salt: salt.toString(),
+        start: start.toString(),
+        end: end.toString(),
+        sig,
+        offerType: "BID_COLLECTION",
+        price: make_asset_value.toString(),
+        netPrice: parseUnits(
+          params.netPrice.toString(),
+          tokenConfig.decimal
+        ).toString(),
+        index: 1,
+      };
+      await nextAPI.post("/order/offer-collection", body);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
+
   const createSellOrder = async (
     nft: NFT,
     params: FormState.SellNFTV2,
@@ -1696,7 +2005,7 @@ const useMarketplaceV2 = () => {
     const allowance = await getERC20Allowance(quoteToken);
     const tokenConfig = getTokenConfig(quoteToken);
     if (!tokenConfig) return false;
-    if (totalPrice > allowance) {
+    if (parseUnits(totalPrice.toString(), 18) > allowance) {
       setApproving(true);
       const result = await approveERC20TokenAmt(
         params.quoteToken,
@@ -1722,6 +2031,58 @@ const useMarketplaceV2 = () => {
 
     setCreatingOrder(true);
     const result = await createBidAPI(nft, params, sig);
+    if (!result) {
+      onRequestError("create_order_api", new Error("Failed to create order"));
+      return false;
+    }
+    setCreatingOrder(false);
+    onCreateOrderAPISuccess();
+    return result;
+  };
+
+  const createBidCollectionOrder = async (
+    params: FormState.BidNFTV2,
+    nft: NFT,
+    marketData: APIResponse.NFTMarketData,
+    onApproveERC20Success: () => void,
+    onSignSuccess: () => void,
+    onCreateOrderAPISuccess: () => void,
+    onRequestError: (
+      requestType: "approve" | "sign" | "create_order_api",
+      error: Error
+    ) => void
+  ): Promise<boolean> => {
+    if (!address) return false;
+    const { quoteToken, totalPrice } = params;
+    const allowance = await getERC20Allowance(quoteToken);
+    const tokenConfig = getTokenConfig(quoteToken);
+    if (!tokenConfig) return false;
+    if (parseUnits(totalPrice.toString(), 18) > allowance) {
+      setApproving(true);
+      const result = await approveERC20TokenAmt(
+        params.quoteToken,
+        parseUnits(totalPrice.toString(), tokenConfig.decimal)
+      );
+      setApproving(false);
+      if (!result) return false;
+    }
+    onApproveERC20Success();
+
+    // const encodedData = getBidOrderEncodedData(params, nft, marketData);
+    // if (!encodedData) return false;
+    params.start = Math.floor(params.start / 1000);
+    params.end = Math.floor(params.end / 1000);
+    setIsSigningOrderData(true);
+    const sig = await signBidCollectionOrderData(params, nft);
+    setIsSigningOrderData(false);
+    if (!sig) {
+      onRequestError("sign", new Error("Failed to sign bid data"));
+      return false;
+    }
+    onSignSuccess();
+
+    setCreatingOrder(true);
+    const result = await createBidCollectionAPI(nft, params, sig);
     if (!result) {
       onRequestError("create_order_api", new Error("Failed to create order"));
       return false;
@@ -2126,6 +2487,176 @@ const useMarketplaceV2 = () => {
     }
   };
 
+  const acceptBidCollecton = async (acceptQty: number) => {
+    const order = {
+      index: 1,
+      sig: "0x5edc35554141b26388e2ddb510535934c5ce28395d703f4ed859a20b3129c02111e27a6cfd85e029579380f280e758bb4e16d5203ad27373e05f5216ff6c0eeb1c",
+      makeAssetType: 2,
+      makeAssetAddress: "0x79538ce1712498fd1b9a9861e62acb257d7506fc",
+      makeAssetValue: "4050000000000000000",
+      makeAssetId: "0",
+      takeAssetType: 3,
+      takeAssetAddress: "0x4d02e861755c59ec315d9f5d406604d59b21b28b",
+      takeAssetValue: "2",
+      salt: "13861643320143626661",
+      start: 1739345941,
+      end: 1741937941,
+      offerStatus: "OPEN",
+      offerType: "BID_COLLECTION",
+      collectionId: "624b91a4-2017-4592-aa15-41f42904ccdd",
+      quantity: 2,
+      price: "4050000000000000000",
+      priceNum: 4.05,
+      netPrice: "1975000000000000000",
+      netPriceNum: 1.975,
+      createAt: "2025-02-12T07:39:14.077Z",
+      updatedAt: "2025-02-12T07:39:14.077Z",
+      quoteToken: "0x79538ce1712498fd1b9a9861e62acb257d7506fc",
+      filledQty: 0,
+      root: "0x0000000000000000000000000000000000000000000000000000000000000000",
+      takeAssetId: "0",
+      tokenId: null,
+      Maker: {
+        id: "6314b2bf-e1e2-42fb-b920-fe805659426e",
+        email: "testuser1@gmail.com",
+        avatar: null,
+        username: "testuser1",
+        publicKey: "0xF0b612FD9C9B4e1518F867818a0f72BB2159959f",
+        accountStatus: false,
+        verifyEmail: false,
+        signer: "0xf0b612fd9c9b4e1518f867818a0f72bb2159959f",
+      },
+    };
+    if (!address || !order.Maker) return;
+    try {
+      const types = {
+        Asset: [
+          { name: "assetType", type: "uint8" },
+          { name: "contractAddress", type: "address" },
+          { name: "value", type: "uint256" },
+          { name: "id", type: "uint256" },
+        ],
+        Fee: [
+          { name: "receiver", type: "address" },
+          { name: "amount", type: "uint96" },
+        ],
+        Order: [
+          { name: "maker", type: "address" },
+          { name: "makeAsset", type: "Asset" },
+          { name: "taker", type: "address" },
+          { name: "takeAsset", type: "Asset" },
+          { name: "salt", type: "uint256" },
+          { name: "start", type: "uint256" },
+          { name: "end", type: "uint256" },
+          { name: "index", type: "uint16" },
+        ],
+      } as const;
+      const sellerSig = await signTypedDataAsync({
+        account: address,
+        domain: exchangeSignedDomain,
+        types,
+        primaryType: "Order",
+        message: {
+          maker: address,
+          makeAsset: {
+            assetType: order.takeAssetType,
+            contractAddress: order.takeAssetAddress as Address,
+            value: BigInt(acceptQty),
+            id: BigInt(
+              "108876780894566954452331977665283960660695562117204225657578741662069813149697"
+            ),
+          },
+          taker: order.Maker.signer as Address,
+          takeAsset: {
+            assetType: order.makeAssetType,
+            contractAddress: order.makeAssetAddress as Address,
+            value: BigInt(order.makeAssetValue),
+            id: BigInt(order.makeAssetId),
+          },
+          salt: BigInt(0),
+          start: BigInt(order.start),
+          end: BigInt(order.end),
+          index: order.index,
+        },
+      });
+      await writeContract(config, {
+        abi,
+        address: contractExchangeV2Test,
+        functionName: "directAcceptBidCollection",
+        args: [
+          {
+            bidOrder: {
+              maker: order.Maker.signer as Address,
+              makeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(order.makeAssetValue),
+                id: BigInt(order.makeAssetId),
+              },
+              taker: ADDRESS_ZERO,
+              bidCollectionAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(order.takeAssetValue),
+              },
+              salt: BigInt(order.salt),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              originFee: {
+                receiver: contractExchangeV2Test,
+                amount: BigInt("500"),
+              },
+              royaltyFee: {
+                receiver: address,
+                amount: BigInt("0"),
+              },
+              index: order.index,
+              proof: [],
+              root: "0x0000000000000000000000000000000000000000000000000000000000000000" as Address,
+              sig: order.sig as Address,
+            },
+            sellOrder: {
+              orderType: 3,
+              maker: address,
+              makeAsset: {
+                assetType: order.takeAssetType,
+                contractAddress: order.takeAssetAddress as Address,
+                value: BigInt(acceptQty),
+                id: BigInt(
+                  "108876780894566954452331977665283960660695562117204225657578741662069813149697"
+                ),
+              },
+              taker: order.Maker.signer as Address,
+              takeAsset: {
+                assetType: order.makeAssetType,
+                contractAddress: order.makeAssetAddress as Address,
+                value: BigInt(order.makeAssetValue),
+                id: BigInt(order.makeAssetId),
+              },
+              salt: BigInt(0),
+              start: BigInt(order.start),
+              end: BigInt(order.end),
+              index: order.index,
+              originFee: {
+                receiver: contractExchangeV2Test,
+                amount: BigInt("500"),
+              },
+              royaltyFee: {
+                receiver: address,
+                amount: BigInt("0"),
+              },
+              proof: [],
+              root: "0x0000000000000000000000000000000000000000000000000000000000000000" as Address,
+              sig: sellerSig as Address,
+            },
+          },
+        ],
+      });
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
   const generateBulkData = async (orders: FormState.SellNFTV2[]) => {
     if (!address) return false;
     const body = orders
@@ -2209,6 +2740,8 @@ const useMarketplaceV2 = () => {
     isCreatingOrder,
     isDepositing,
     getMultiOrdersDetails,
+    createBidCollectionOrder,
+    acceptBidCollecton,
   };
 };
 

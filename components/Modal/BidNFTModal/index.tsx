@@ -42,6 +42,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     isSigningOrderData,
     deposit,
     isDepositing,
+    createBidCollectionOrder,
   } = useMarketplaceV2();
   const { address } = useAccount();
   const [errorStep, setErrorStep] = useState<{
@@ -63,7 +64,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
     formState: { errors },
   } = useForm<FormState.BidNFT>({
     defaultValues: {
-      quantity: "1",
+      quantity: "2",
       price: "1",
       start: new Date().getTime(),
       end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
@@ -219,7 +220,7 @@ export default function BidNFTModal({ nft, show, onClose, marketData }: Props) {
       });
     };
     try {
-      await createBidOrder(
+      await createBidCollectionOrder(
         { ...params },
         nft,
         marketData,

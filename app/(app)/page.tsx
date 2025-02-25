@@ -11,10 +11,12 @@ import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { useScreen } from "@/hooks/useScreen";
 import { useMemo } from "react";
+import useMarketplaceV2 from "@/hooks/useMarketplaceV2";
 
 export default function Home() {
   const router = useRouter();
   const { screen } = useScreen();
+  const { acceptBidCollecton } = useMarketplaceV2();
 
   const Img = useMemo(() => {
     if (screen === "desktop") {
@@ -54,6 +56,7 @@ export default function Home() {
         <span className="font-semibold text-[#252525] text-[32px]">
           Trending
         </span>
+        <button onClick={() => acceptBidCollecton(1)}>Accept bid</button>
       </div>
       <Statistics disableFilters={true} />
     </div>
