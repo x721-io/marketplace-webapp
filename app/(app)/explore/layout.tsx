@@ -27,10 +27,10 @@ export default function ExploreLayout({
     <div className="flex flex-col px-4 tablet:px-10 desktop:px-20">
       <div className="flex flex-col gap-4 desktop:gap-8 py-4 tablet:py-8 desktop:py-10">
         <div>
-          <Text className="text-body-18 tablet:text-body-24 desktop:text-body-32 font-semibold tablet:mb-1.5 desktop:mb-2">
+          <h1 className="text-body-18 tablet:text-body-24 desktop:text-body-32 font-semibold tablet:mb-1.5 desktop:mb-2">
             {title}
-          </Text>
-          <Text className="text-secondary">{caption}</Text>
+          </h1>
+          <h2 className="text-secondary">{caption}</h2>
         </div>
 
         <ExploreSectionNavbar />

@@ -50,6 +50,7 @@ export default function ExploreCollectionsPage() {
 
   return (
     <div className="flex gap-6 flex-col desktop:flex-row">
+      <h1 className="hidden" />
       {isMobile ? (
         <MobileCollectionFiltersModal
           onApplyFilters={updateFilters}

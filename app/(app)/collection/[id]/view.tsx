@@ -128,6 +128,7 @@ export default function CollectionView() {
     }
     return (
       <div className="w-full relative overflow-x-hidden">
+        <h1 className="hidden" />
         <BannerSectionCollection
           onUpdateSuccess={() => mutate()}
           collectionId={collectionData.collection.id}
